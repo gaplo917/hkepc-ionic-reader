@@ -1,0 +1,10 @@
+<ion-view view-title="{{topic.name}}">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#/tab/topics/{{topic.id}}/posts/{{post.id}}">
+        <h2>{{post.name}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
