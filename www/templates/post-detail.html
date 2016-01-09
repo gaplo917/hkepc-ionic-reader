@@ -1,0 +1,42 @@
+<ion-view view-title="{{post.title}}">
+  <ion-content class="padding">
+    <div class="list card" ng-repeat="post in posts">
+
+      <div class="item item-avatar">
+        <img src="{{post.author.image}}">
+        <h2>{{post.author.name}}</h2>
+        <p>{{post.createdAt}}</p>
+      </div>
+
+      <style>
+        img{
+          height:auto;
+          width:100% !important;
+        }
+        img[src$=".gif"]{
+          height:auto;
+          width:auto!important;
+        }
+      </style>
+      <div class="item item-body" ng-bind-html="post.content">
+      </div>
+
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" ng-click="like()">
+          <i class="icon ion-thumbsup" ng-style="likedStyle"></i>
+          Like
+        </a>
+        <a class="tab-item" >
+          <i class="icon ion-chatbox"></i>
+          Comment
+        </a>
+        <a class="tab-item" >
+          <i class="icon ion-share"></i>
+          Share
+        </a>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-view>
+
