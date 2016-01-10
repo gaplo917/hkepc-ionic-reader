@@ -1,4 +1,18 @@
 <ion-view view-title="{{post.title}}">
+
+  <style>
+    *{
+      word-break: break-all;
+    }
+    img{
+      height:auto;
+      width:100% !important;
+    }
+    img[src$=".gif"]{
+      height:auto;
+      width:auto!important;
+    }
+  </style>
   <ion-content class="padding" on-swipe-left="onSwipeLeft()">
     <div class="list card" ng-repeat="post in posts">
 
@@ -8,16 +22,6 @@
         <p>{{post.createdAt}}</p>
       </div>
 
-      <style>
-        img{
-          height:auto;
-          width:100% !important;
-        }
-        img[src$=".gif"]{
-          height:auto;
-          width:auto!important;
-        }
-      </style>
       <div class="item item-body" ng-bind-html="post.content">
       </div>
 
