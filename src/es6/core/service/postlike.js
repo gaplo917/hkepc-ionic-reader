@@ -1,43 +1,44 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-export var postLike = {
-  name: '$postlike',
+export var messageLike = {
+  name: '$messagelike',
 
   impl: ['$localstorage',function ($localstorage) {
+    var key = 'like.messages'
     return {
-      add: (post) =>{
+      add: (message) =>{
         "use strict";
-        let likedPosts = $localstorage.getObject("like.posts")
-        console.log('likedPosts',likedPosts)
+        let liked = $localstorage.getObject(key)
+        console.log('likedPosts',liked)
 
-        if(Object.keys(likedPosts).length == 0){
-          $localstorage.setObject("like.posts",[post])
+        if(Object.keys(liked).length == 0){
+          $localstorage.setObject(key,[message])
         }
         else{
-          let filteredPosts = likedPosts
-              .filter((p) => p.id !== post.id || p.inAppUrl !== post.inAppUrl)
+          let filtered = liked
+              .filter((msg) => msg.id !== message.id || msg.inAppUrl !== message.inAppUrl)
 
-          filteredPosts.push(post)
+          filtered.push(message)
 
-          $localstorage.setObject("like.posts",filteredPosts)
+          $localstorage.setObject(key,filtered)
         }
       },
-      remove: (post) =>{
+      remove: (message) =>{
         "use strict";
-        let likedPosts = $localstorage.getObject("like.posts")
-        let filteredPosts = likedPosts
-                              .filter((p) => p.id !== post.id || p.inAppUrl !== post.inAppUrl)
+        let liked = $localstorage.getObject(key)
+        let filtered = liked
+                              .filter((msg) => msg.id !== message.id || msg.inAppUrl !== message.inAppUrl)
 
-        $localstorage.setObject("like.posts",filteredPosts)
+        $localstorage.setObject(key,filtered)
 
       },
 
-      isLikedPost: (post) => {
+      isLikedPost: (message) => {
         "use strict";
-        let likedPosts = $localstorage.getObject("like.posts")
+        let likedPosts = $localstorage.getObject(key)
         return Object.keys(likedPosts).length > 0
-            ? likedPosts.filter((p) => p.id == post.id && p.inAppUrl == post.inAppUrl).length == 1
+            ? likedPosts.filter((msg) => msg.id == message.id && msg.inAppUrl == message.inAppUrl).length == 1
             : false;
       }
     }

@@ -18561,11 +18561,6 @@ var ForumController = exports.ForumController = function () {
       //$scope.$on('$ionicView.enter', function(e) {
       //})
 
-      // init the view model
-      //angular.extend($scope,{
-      //  topics:[]
-      //})
-
       $scope.$on('$ionicView.loaded', function (e) {
 
         $http.get(HKEPC.forum.index).then(function (resp) {
@@ -18602,7 +18597,6 @@ var ForumController = exports.ForumController = function () {
       var page = $stateParams.page;
 
       angular.extend($scope, {
-        posts: [],
         topic: {
           id: topicId,
           name: HKEPC.data.topics["" + topicId],
@@ -18644,7 +18638,7 @@ var ForumController = exports.ForumController = function () {
     }
   }, {
     key: "getPost",
-    value: function getPost($scope, $http, $stateParams, $sce, $localstorage, $state, $location, $postlike) {
+    value: function getPost($scope, $http, $stateParams, $sce, $state, $location, $messagelike) {
 
       var topicId = $stateParams.topicId;
       var postId = $stateParams.postId;
@@ -18654,16 +18648,15 @@ var ForumController = exports.ForumController = function () {
 
       // add action
       angular.extend($scope, {
-        posts: [],
-        like: function like(post) {
-          console.log('like', post);
+        like: function like(message) {
+          console.log('like', message);
 
-          if ($postlike.isLikedPost(post)) {
-            $postlike.remove(post);
-            post.likedStyle = {};
+          if ($messagelike.isLikedPost(message)) {
+            $messagelike.remove(message);
+            message.likedStyle = {};
           } else {
-            $postlike.add(post);
-            post.likedStyle = { color: '#0c60ee' };
+            $messagelike.add(message);
+            message.likedStyle = { color: '#0c60ee' };
           }
         },
         onSwipeLeft: function onSwipeLeft() {
@@ -18694,30 +18687,36 @@ var ForumController = exports.ForumController = function () {
           var firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix');
 
           // PostHtml map to the model
-          var posts = $('#postlist > div').map(function (i, elem) {
+          var messages = $('#postlist > div').map(function (i, elem) {
             var postSource = cheerio.load($(this).html());
 
             return {
               id: postSource('table').attr('id'),
-              title: postTitle,
-              page: page,
               inAppUrl: postUrl,
+              createdAt: postSource('.posterinfo .authorinfo em').text(),
+              content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()),
+              post: {
+                id: postId,
+                topicId: topicId,
+                title: postTitle,
+                page: page
+              },
               author: {
                 image: postSource('.postauthor .avatar img').attr('src'),
                 name: postSource('.postauthor > .postinfo').text()
-              },
-              createdAt: postSource('.posterinfo .authorinfo em').text(),
-              content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html())
+              }
             };
-          }).get().map(function (post, i) {
-            post.likedStyle = $postlike.isLikedPost(post) ? { color: '#0c60ee' } : {};
+          }).get().map(function (message, i) {
+            message.likedStyle = $messagelike.isLikedPost(message) ? { color: '#0c60ee' } : {};
 
-            return post;
+            return message;
           });
 
           angular.extend($scope, {
-            postTitle: postTitle,
-            posts: posts,
+            post: {
+              title: postTitle
+            },
+            messages: messages,
             topic: {
               id: topicId
             }
@@ -19021,46 +19020,47 @@ Object.defineProperty(exports, "__esModule", {
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-var postLike = exports.postLike = {
-  name: '$postlike',
+var messageLike = exports.messageLike = {
+  name: '$messagelike',
 
   impl: ['$localstorage', function ($localstorage) {
+    var key = 'like.messages';
     return {
-      add: function add(post) {
+      add: function add(message) {
         "use strict";
 
-        var likedPosts = $localstorage.getObject("like.posts");
-        console.log('likedPosts', likedPosts);
+        var liked = $localstorage.getObject(key);
+        console.log('likedPosts', liked);
 
-        if (Object.keys(likedPosts).length == 0) {
-          $localstorage.setObject("like.posts", [post]);
+        if (Object.keys(liked).length == 0) {
+          $localstorage.setObject(key, [message]);
         } else {
-          var filteredPosts = likedPosts.filter(function (p) {
-            return p.id !== post.id || p.inAppUrl !== post.inAppUrl;
+          var filtered = liked.filter(function (msg) {
+            return msg.id !== message.id || msg.inAppUrl !== message.inAppUrl;
           });
 
-          filteredPosts.push(post);
+          filtered.push(message);
 
-          $localstorage.setObject("like.posts", filteredPosts);
+          $localstorage.setObject(key, filtered);
         }
       },
-      remove: function remove(post) {
+      remove: function remove(message) {
         "use strict";
 
-        var likedPosts = $localstorage.getObject("like.posts");
-        var filteredPosts = likedPosts.filter(function (p) {
-          return p.id !== post.id || p.inAppUrl !== post.inAppUrl;
+        var liked = $localstorage.getObject(key);
+        var filtered = liked.filter(function (msg) {
+          return msg.id !== message.id || msg.inAppUrl !== message.inAppUrl;
         });
 
-        $localstorage.setObject("like.posts", filteredPosts);
+        $localstorage.setObject(key, filtered);
       },
 
-      isLikedPost: function isLikedPost(post) {
+      isLikedPost: function isLikedPost(message) {
         "use strict";
 
-        var likedPosts = $localstorage.getObject("like.posts");
-        return Object.keys(likedPosts).length > 0 ? likedPosts.filter(function (p) {
-          return p.id == post.id && p.inAppUrl == post.inAppUrl;
+        var likedPosts = $localstorage.getObject(key);
+        return Object.keys(likedPosts).length > 0 ? likedPosts.filter(function (msg) {
+          return msg.id == message.id && msg.inAppUrl == message.inAppUrl;
         }).length == 1 : false;
       }
     };
@@ -19079,7 +19079,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 /**
  * Register the service
  */
-angular.module('starter.services', []).factory(Services.localStorage.name, Services.localStorage.impl).factory(Services.postLike.name, Services.postLike.impl).factory('Chats', function () {
+angular.module('starter.services', []).factory(Services.localStorage.name, Services.localStorage.impl).factory(Services.messageLike.name, Services.messageLike.impl).factory('Chats', function () {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
