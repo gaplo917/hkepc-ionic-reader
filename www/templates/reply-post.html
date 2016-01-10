@@ -1,0 +1,22 @@
+<ion-view view-title="Account">
+  <ion-content>
+    <ion-list>
+    <ion-toggle  ng-model="settings.enableFriends">
+        Enable Friends
+    </ion-toggle>
+    </ion-list>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Username</span>
+        <input type="text" placeholder="Username" ng-model="user.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input type="password" placeholder="Password" ng-model="user.password">
+      </label>
+      <div class="padding">
+        <button class="button button-block button-positive activated" ng-click="login(user.username,user.password)">Login</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
