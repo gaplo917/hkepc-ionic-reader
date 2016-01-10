@@ -1,5 +1,6 @@
 module.exports = {
   getQueryVariable: (query, variable) => {
+    if(query == "" || !query) return "";
     let vars =  decodeURIComponent(query).split('?')[1].split('&')
     for (let i = 0; i < vars.length; i++) {
       let pair = vars[i].split('=')

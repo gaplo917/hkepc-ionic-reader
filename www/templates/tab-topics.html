@@ -3,11 +3,23 @@
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="android" ng-show="topics.length == 0"></ion-spinner>
     </div>
-    <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap" href="#/tab/topics/{{topic.id}}/page/1">
-        <h2>{{topic.name}}</h2>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
+    <ion-list >
+      <span ng-repeat="topic in topics">
+        <div ng-show="topic.groupName" class="item item-divider" >
+          {{topic.groupName}}
+        </div>
+        <ion-item
+            ng-show="!topic.groupName"
+            class="item-remove-animate item-icon-right"
+            type="item-text-wrap"
+            href="#/tab/topics/{{topic.id}}/page/1">
+
+          <h2>{{topic.name}}</h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small style="color:#aaaaaa">{{topic.description}}</small>
+        </ion-item>
+      </span>
+
     </ion-list>
   </ion-content>
 </ion-view>

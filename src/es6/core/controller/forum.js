@@ -25,17 +25,28 @@ export class ForumController {
       $http
           .get(HKEPC.forum.index)
           .then((resp) => {
-            console.log('Success', resp.data)
             let $ = cheerio.load(resp.data, {decodeEntities: true})
 
             let topics = []
 
-            $('a.caption').each(function (i, elem) {
-              if (URLUtils.getQueryVariable($(this).attr('href'), 'fid') == 120)
-                topics.push({
-                  id: URLUtils.getQueryVariable($(this).attr('href'), 'fid'),
-                  name: decodeURIComponent($(this).text())
-                })
+            $('#mainIndex > div').each(function (i, elem) {
+              let source = cheerio.load($(this).html())
+
+              const groupName = $(this).hasClass('group')
+                              ? source('a').text()
+                              : undefined
+
+              const topicId = URLUtils.getQueryVariable($('.forumInfo .caption').attr('href'), 'fid')
+              const topicName = source('.forumInfo .caption').text()
+              const description = source('.forumInfo p').next().text()
+
+              topics.push({
+                id: topicId,
+                name: topicName,
+                groupName: groupName,
+                description: description
+              })
+
             })
 
             angular.extend($scope,{
@@ -69,12 +80,23 @@ export class ForumController {
 
               let $ = cheerio.load(resp.data)
 
-              const posts = $('.threadlist table tbody tr th a').not('.threadpages > a').map(function (i, elem) {
+              const posts = $('.threadlist table tbody').map(function (i, elem) {
+                let postSource = cheerio.load($(this).html())
+
                 return {
-                  id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
-                  name: $(this).text()
+                  id: URLUtils.getQueryVariable(postSource('tr .subject a').attr('href'), 'tid'),
+                  name: postSource('tr .subject a').text(),
+                  author:{
+                    name: postSource('tr .author a').text()
+                  },
+                  count:{
+                    view: postSource('tr .nums em').text(),
+                    reply: postSource('tr .nums strong').text()
+                  },
+                  publishDate: postSource('tr .author em').text()
                 }
               }).get()
+                .filter((post) => post.id != "")
 
 
               // push into the array
@@ -95,7 +117,7 @@ export class ForumController {
     $scope.slideToPage = (page) => {
       alert(page)
     }
-    $scope.$on('$ionicView.loaded', function(e) {
+    $scope.$on('$ionicView.enter', function(e) {
       $scope.loadMore()
     })
   }
