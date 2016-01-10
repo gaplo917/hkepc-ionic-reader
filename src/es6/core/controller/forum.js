@@ -98,7 +98,7 @@ export class ForumController {
     })
   }
 
-  static getPost($scope,$http, $stateParams,$sce,$localstorage,$state,$location,$postlike) {
+  static getPost($scope,$http, $stateParams,$sce,$state,$location,$messagelike) {
 
     const topicId = $stateParams.topicId
     const postId = $stateParams.postId
@@ -108,16 +108,16 @@ export class ForumController {
 
     // add action
     angular.extend($scope,{
-      like: (post) => {
-        console.log('like',post)
+      like: (message) => {
+        console.log('like',message)
 
-        if($postlike.isLikedPost(post)){
-          $postlike.remove(post)
-          post.likedStyle = {}
+        if($messagelike.isLikedPost(message)){
+          $messagelike.remove(message)
+          message.likedStyle = {}
         }
         else {
-          $postlike.add(post)
-          post.likedStyle = {color: '#0c60ee'}
+          $messagelike.add(message)
+          message.likedStyle = {color: '#0c60ee'}
         }
 
       },
@@ -156,35 +156,41 @@ export class ForumController {
             const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
 
             // PostHtml map to the model
-            const posts = $('#postlist > div').map(function (i,elem) {
+            const messages = $('#postlist > div').map(function (i,elem) {
               let postSource = cheerio.load($(this).html())
 
               return {
                 id: postSource('table').attr('id'),
-                title: postTitle,
-                page: page,
                 inAppUrl: postUrl,
-                author:{
-                  image: postSource('.postauthor .avatar img').attr('src'),
-                  name : postSource('.postauthor > .postinfo').text()
-                },
                 createdAt: postSource('.posterinfo .authorinfo em').text(),
                 content : $sce.trustAsHtml(
                     postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()
-                )
+                ),
+                post:{
+                  id: postId,
+                  topicId: topicId,
+                  title: postTitle,
+                  page: page
+                },
+                author:{
+                  image: postSource('.postauthor .avatar img').attr('src'),
+                  name : postSource('.postauthor > .postinfo').text()
+                }
               }
             }).get()
-              .map((post,i) => {
-                post.likedStyle = $postlike.isLikedPost(post)
+              .map((message,i) => {
+                message.likedStyle = $messagelike.isLikedPost(message)
                     ? {color: '#0c60ee'}
                     : {}
 
-                return post;
+                return message;
               })
 
             angular.extend($scope,{
-              postTitle: postTitle,
-              posts: posts,
+              post:{
+                title: postTitle
+              },
+              messages: messages,
               topic: {
                 id : topicId
               }

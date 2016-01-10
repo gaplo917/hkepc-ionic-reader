@@ -6,7 +6,7 @@ import * as Services from './service/index'
 angular.module('starter.services', [])
 
 .factory(Services.localStorage.name,Services.localStorage.impl)
-.factory(Services.postLike.name,Services.postLike.impl)
+.factory(Services.messageLike.name,Services.messageLike.impl)
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
