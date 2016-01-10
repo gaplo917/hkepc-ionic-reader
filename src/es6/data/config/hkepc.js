@@ -13,8 +13,5 @@ module.exports = {
   },
 
   data:{
-    topics:{
-      "120" : "興趣百科"
-    }
   }
 }
