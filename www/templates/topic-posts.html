@@ -13,14 +13,23 @@
           type="item-text-wrap"
           href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
         <h2>{{post.name}}</h2>
+        <small style="color:#aaa">{{post.publishDate}} @ {{post.author.name}}</small>
+        <small style="float:right;color:#aaa">{{post.count.reply}} / {{post.count.view}}</small>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
+    <style>
+      .ispinner .spinner {
+        stroke: #32c453;
+        fill: #32c453;
+      }
+    </style>
     <ion-infinite-scroll
+        class="ispinner"
+        style="text-align: center;"
         on-infinite="loadMore()"
-        immediate-check="false"
         spinner="android"
-        icon="android"
+        immediate-check="false"
         distance="1%">
     </ion-infinite-scroll>
   </ion-content>
