@@ -36,7 +36,7 @@ export class ForumController {
                               ? source('a').text()
                               : undefined
 
-              const topicId = URLUtils.getQueryVariable($('.forumInfo .caption').attr('href'), 'fid')
+              const topicId = URLUtils.getQueryVariable(source('.forumInfo .caption').attr('href'), 'fid')
               const topicName = source('.forumInfo .caption').text()
               const description = source('.forumInfo p').next().text()
 
@@ -83,9 +83,11 @@ export class ForumController {
               const posts = $('.threadlist table tbody').map(function (i, elem) {
                 let postSource = cheerio.load($(this).html())
 
+                console.log(postSource('tr .subject a').text())
                 return {
-                  id: URLUtils.getQueryVariable(postSource('tr .subject a').attr('href'), 'tid'),
-                  name: postSource('tr .subject a').text(),
+                  id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
+                  tag: postSource('tr .subject em a').text(),
+                  name: postSource('tr .subject span a').text(),
                   author:{
                     name: postSource('tr .author a').text()
                   },
