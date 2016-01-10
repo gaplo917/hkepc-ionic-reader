@@ -37,9 +37,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AccountCtrl', ($scope,$http,$localstorage) => {
-  $scope.settings = {
-    enableFriends: true
-  }
 
   $scope.user = $localstorage.getObject("user")
 
