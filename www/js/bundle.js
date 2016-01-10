@@ -18509,7 +18509,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
 }).config(['$httpProvider', function ($httpProvider) {
-  //$httpProvider.defaults.withCredentials = true;
+  if (window.location.href.startsWith("file://")) $httpProvider.defaults.withCredentials = true;
 }]);
 
 },{"./controller/index":69}],68:[function(require,module,exports){
@@ -19108,35 +19108,18 @@ angular.module('starter.services', []).factory(Services.localStorage.name, Servi
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
-//module.exports = {
-//  domain: 'http://www.hkepc.com/',
-//  forum: {
-//    image:'http://www.hkepc.com/forum/',
-//    index: 'http://www.hkepc.com/forum/index.php',
-//    topics: (topicId,page) => `http://www.hkepc.com/forum/forumdisplay.php?fid=${topicId}&page=${page}`,
-//    posts: (topicId,postId,page) => `http://www.hkepc.com/forum/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
-//    login: 'http://www.hkepc.com/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
-//  },
-//
-//  data:{
-//    topics:{
-//      "120" : "興趣百科"
-//    }
-//  }
-//}
-
 module.exports = {
   domain: 'http://www.hkepc.com/',
   forum: {
-    image: '/forum/',
-    index: '/forum/index.php',
+    image: 'http://www.hkepc.com/forum/',
+    index: 'http://www.hkepc.com/forum/index.php',
     topics: function topics(topicId, page) {
-      return '/forum/forumdisplay.php?fid=' + topicId + '&page=' + page;
+      return 'http://www.hkepc.com/forum/forumdisplay.php?fid=' + topicId + '&page=' + page;
     },
     posts: function posts(topicId, postId, page) {
-      return '/forum/viewthread.php?fid=' + topicId + '&tid=' + postId + '&page=' + page;
+      return 'http://www.hkepc.com/forum/viewthread.php?fid=' + topicId + '&tid=' + postId + '&page=' + page;
     },
-    login: '/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
+    login: 'http://www.hkepc.com/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
   },
 
   data: {
@@ -19145,6 +19128,23 @@ module.exports = {
     }
   }
 };
+
+//module.exports = {
+//  domain: 'http://www.hkepc.com/',
+//  forum: {
+//    image:'/forum/',
+//    index: '/forum/index.php',
+//    topics: (topicId,page) => `/forum/forumdisplay.php?fid=${topicId}&page=${page}`,
+//    posts: (topicId,postId,page) => `/forum/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
+//    login: '/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
+//  },
+//
+//  data:{
+//    topics:{
+//      "120" : "興趣百科"
+//    }
+//  }
+//}
 
 },{}],77:[function(require,module,exports){
 'use strict';
