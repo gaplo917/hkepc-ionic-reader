@@ -56,10 +56,39 @@ export class ForumController {
     const page = $stateParams.page
 
     angular.extend($scope,{
+      pages:[],
       topic: {
         id: topicId,
-        name: HKEPC.data.topics[`${topicId}`],
-        page: page
+        name: HKEPC.data.topics[`${topicId}`]
+      },
+      loadMore: () => {
+        const nextPage = $scope.pages.length + 1
+        $http
+            .get(HKEPC.forum.topics(topicId, nextPage))
+            .then((resp) => {
+
+              let $ = cheerio.load(resp.data)
+
+              const posts = $('.threadlist table tbody tr th a').not('.threadpages > a').map(function (i, elem) {
+                return {
+                  id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
+                  name: $(this).text()
+                }
+              }).get()
+
+
+              // push into the array
+              $scope.pages.push({
+                posts: posts,
+                num: nextPage
+              })
+
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+              // For JSON responses, resp.data contains the result
+            }, (err) => {
+              console.error('ERR', JSON.stringify(err))
+              // err.status will contain the status code
+            })
       }
     })
 
@@ -67,34 +96,7 @@ export class ForumController {
       alert(page)
     }
     $scope.$on('$ionicView.loaded', function(e) {
-
-      $http
-          .get(HKEPC.forum.topics(topicId, page))
-          .then((resp) => {
-
-            let $ = cheerio.load(resp.data)
-
-            const posts = $('.threadlist table tbody tr th a').not('.threadpages > a').map(function (i, elem) {
-              return {
-                id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
-                name: $(this).text()
-              }
-            }).get()
-
-            angular.extend($scope,{
-              posts:posts,
-              topic: {
-                id: topicId,
-                name: HKEPC.data.topics[`${topicId}`],
-                page: page
-              }
-            })
-
-            // For JSON responses, resp.data contains the result
-          }, (err) => {
-            console.error('ERR', JSON.stringify(err))
-            // err.status will contain the status code
-          })
+      $scope.loadMore()
     })
   }
 
