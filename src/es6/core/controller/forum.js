@@ -4,6 +4,7 @@
 import * as cheerio from "cheerio"
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
+import {GeneralHtml} from "../model/general-html"
 
 export class ForumController {
 
@@ -46,8 +47,14 @@ export class ForumController {
   static getPosts($scope,$http,$stateParams) {
     "use strict";
     const topicId = $stateParams.topicId
+    const page = $stateParams.page
+
+    $scope.slideToPage = (page) => {
+      alert(page)
+    }
+
     $http
-        .get(HKEPC.forum.topics(topicId))
+        .get(HKEPC.forum.topics(topicId,page))
         .then((resp) => {
           console.log('Success', resp.data)
 
@@ -67,7 +74,8 @@ export class ForumController {
           $scope.posts = posts
           $scope.topic = {
             id: topicId,
-            name: HKEPC.data.topics[`${topicId}`]
+            name: HKEPC.data.topics[`${topicId}`],
+            page: page
           }
 
           // For JSON responses, resp.data contains the result
@@ -77,107 +85,71 @@ export class ForumController {
         })
   }
 
-  static getPost($scope,$http, $stateParams,$sce,$localstorage,$state) {
+  static getPost($scope,$http, $stateParams,$sce,$localstorage,$state,$location,$postlike) {
+
     const topicId = $stateParams.topicId
     const postId = $stateParams.postId
+    const page = $stateParams.page
+
+    $scope
+
     let postUrl = URLUtils.buildUrlFromState($state,$stateParams)
 
+    // add action
+    angular.extend($scope,{
+      like: (post) => {
+        console.log('like',post)
 
-    let likedPosts = $localstorage.getObject("like.posts")
-    console.log('likedPosts',likedPosts)
-
-    let isLiked = Object.keys(likedPosts).length > 0
-                        ? likedPosts.filter((url) => url == postUrl).length == 1
-                        : false;
-
-    console.log('isliked',isLiked)
-
-    $scope.likedStyle = isLiked ? { color: '#0c60ee'} : {}
-
-    $scope.like = () => {
-      console.log('like',postUrl)
-
-      let likedPosts = $localstorage.getObject("like.posts")
-      console.log('likedPosts',likedPosts)
-
-      if(Object.keys(likedPosts).length == 0){
-        $localstorage.setObject("like.posts",[postUrl])
-        $scope.likedStyle = {color: '#0c60ee'}
-      }
-      else{
-        let filteredPosts = likedPosts
-          .filter((url) => url !== postUrl)
-
-        const originLen = likedPosts.length
-        const filteredLen = filteredPosts.length
-
-        // do not add back to the list, if the user trigger when isLiked = true
-        if(originLen - filteredLen == 0) {
-          filteredPosts.push(postUrl)
-
-          console.log("update UI")
-          $scope.likedStyle = {color: '#0c60ee'}
+        if($postlike.isLikedPost(post)){
+          $postlike.remove(post)
+          post.likedStyle = {}
         }
-        else{
-          console.log("update UI2")
-
-          $scope.likedStyle = {}
+        else {
+          $postlike.add(post)
+          post.likedStyle = {color: '#0c60ee'}
         }
 
-        $localstorage.setObject("like.posts",filteredPosts)
-      }
+      },
+      onSwipeLeft: () => {
+        let nextPostUrl = URLUtils.buildUrlFromState($state,{
+          topicId: topicId,
+          postId : postId,
+          page: parseInt(page) + 1
+        })
 
-    }
+        $location.url(nextPostUrl.replace('#',''));
+      }
+    })
 
     $http
-        .get(HKEPC.forum.posts(topicId,postId))
+        .get(HKEPC.forum.posts(topicId,postId,page))
         .then((resp) => {
-          //console.log('Success', resp.data)
-          let posts = []
+          const html = new GeneralHtml(cheerio.load(resp.data))
 
-          $scope.debug = resp.data
+          let $ = html
+                    .removeIframe()
+                    .processImgUrl(HKEPC.forum.image)
+                    .getCheerio()
 
-          let $ = cheerio.load(resp.data)
+          // remove the hkepc forum text
+          const title = html
+                          .getTitle()
+                          .split('-')[0]
 
           // select the current login user
           const currentUsername = $('#umenu > cite').html()
 
-          // remove iframe
-          $('iframe').remove()
-
-          // select the post title
-          const title = $('title').text().split('-')[0]
-
-          // parsing the image( ie. relativePath, lazy loading )
-          $('img').each(function(i,e) {
-            function isRelativeUrlImg(url){
-              return ! (url.startsWith('http://') || url.startsWith('https://'))
-            }
-
-            const lazyImg = $(this).attr('file')
-
-            if(lazyImg){
-              console.log('lazy',lazyImg)
-              $(this).attr('src',lazyImg)
-            }
-
-            const imgSrc = $(this).attr('src') || ""
-
-            if(isRelativeUrlImg(imgSrc)){
-              console.log('gif',imgSrc)
-              $(this).attr('src',`http://www.hkepc.com/forum/${imgSrc}`)
-            }
-
-          })
-
           // the first post
           const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
 
-          // forEach Post map to the model
-          $('#postlist > div').each(function (i,elem) {
+          // PostHtml map to the model
+          const posts = $('#postlist > div').map(function (i,elem) {
             let postSource = cheerio.load($(this).html())
 
-            posts.push({
+            return {
+              id: postSource('table').attr('id'),
+              title: title,
+              inAppUrl: postUrl,
               author:{
                 image: postSource('.postauthor .avatar img').attr('src'),
                 name : postSource('.postauthor > .postinfo').text()
@@ -185,17 +157,23 @@ export class ForumController {
               createdAt: postSource('.posterinfo .authorinfo em').text(),
               content : $sce.trustAsHtml(
                   postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()
-              ),
-              title: title
+              )
+            }
+          }).get()
+            .map((post,i) => {
+              post.likedStyle = $postlike.isLikedPost(post)
+                                ? {color: '#0c60ee'}
+                                : {}
+
+              return post;
             })
+
+          angular.extend($scope,{
+            posts: posts,
+            topic: {
+              id : topicId
+            }
           })
-
-          // pass the model to view
-          $scope.posts = posts
-
-          $scope.topic = {
-            id : topicId
-          }
 
           // For JSON responses, resp.data contains the result
         }, (err) => {

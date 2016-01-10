@@ -12,6 +12,11 @@ module.exports = {
 
   buildUrlFromState: ($state,$stateParams) => {
     "use strict";
-    return $state.href($state.current.name, $stateParams, {absolute: true})
+    return $state.href($state.current.name, $stateParams)
+  },
+
+  isRelativeUrl: (url) =>{
+    if(!url) return false;
+    else return ! (url.startsWith('http://') || url.startsWith('https://'))
   }
 }
