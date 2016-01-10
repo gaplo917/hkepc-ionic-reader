@@ -1642,7 +1642,7 @@ exports.update = function(arr, parent) {
 // module.exports = $.extend(exports);
 
 }).call(this,{"isBuffer":require("../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js")})
-},{"../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":83,"htmlparser2":48}],9:[function(require,module,exports){
+},{"../../../../../../usr/local/lib/node_modules/browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":85,"htmlparser2":48}],9:[function(require,module,exports){
 /**
  * Module dependencies
  */
@@ -4112,7 +4112,7 @@ FeedHandler.prototype.onend = function(){
 
 module.exports = FeedHandler;
 
-},{"./index.js":48,"util":102}],43:[function(require,module,exports){
+},{"./index.js":48,"util":104}],43:[function(require,module,exports){
 var Tokenizer = require("./Tokenizer.js");
 
 /*
@@ -4464,7 +4464,7 @@ Parser.prototype.done = Parser.prototype.end;
 
 module.exports = Parser;
 
-},{"./Tokenizer.js":46,"events":81,"util":102}],44:[function(require,module,exports){
+},{"./Tokenizer.js":46,"events":83,"util":104}],44:[function(require,module,exports){
 module.exports = ProxyHandler;
 
 function ProxyHandler(cbs){
@@ -4528,7 +4528,7 @@ Object.keys(EVENTS).forEach(function(name){
 		throw Error("wrong number of arguments!");
 	}
 });
-},{"../":48,"./WritableStream.js":47,"util":102}],46:[function(require,module,exports){
+},{"../":48,"./WritableStream.js":47,"util":104}],46:[function(require,module,exports){
 module.exports = Tokenizer;
 
 var decodeCodePoint = require("entities/lib/decode_codepoint.js"),
@@ -5458,7 +5458,7 @@ WritableStream.prototype._write = function(chunk, encoding, cb){
 	this._parser.write(chunk);
 	cb();
 };
-},{"./Parser.js":43,"readable-stream":76,"stream":99,"util":102}],48:[function(require,module,exports){
+},{"./Parser.js":43,"readable-stream":78,"stream":101,"util":104}],48:[function(require,module,exports){
 var Parser = require("./Parser.js"),
     DomHandler = require("domhandler");
 
@@ -18509,7 +18509,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
 }).config(['$httpProvider', function ($httpProvider) {
-  $httpProvider.defaults.withCredentials = true;
+  //$httpProvider.defaults.withCredentials = true;
 }]);
 
 },{"./controller/index":69}],68:[function(require,module,exports){
@@ -18535,6 +18535,8 @@ var HKEPC = _interopRequireWildcard(_hkepc);
 var _url = require("../../utils/url");
 
 var URLUtils = _interopRequireWildcard(_url);
+
+var _generalHtml = require("../model/general-html");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -18583,7 +18585,13 @@ var ForumController = exports.ForumController = function () {
       "use strict";
 
       var topicId = $stateParams.topicId;
-      $http.get(HKEPC.forum.topics(topicId)).then(function (resp) {
+      var page = $stateParams.page;
+
+      $scope.slideToPage = function (page) {
+        alert(page);
+      };
+
+      $http.get(HKEPC.forum.topics(topicId, page)).then(function (resp) {
         console.log('Success', resp.data);
 
         $scope.debug = resp.data;
@@ -18602,7 +18610,8 @@ var ForumController = exports.ForumController = function () {
         $scope.posts = posts;
         $scope.topic = {
           id: topicId,
-          name: HKEPC.data.topics["" + topicId]
+          name: HKEPC.data.topics["" + topicId],
+          page: page
         };
 
         // For JSON responses, resp.data contains the result
@@ -18613,117 +18622,81 @@ var ForumController = exports.ForumController = function () {
     }
   }, {
     key: "getPost",
-    value: function getPost($scope, $http, $stateParams, $sce, $localstorage, $state) {
+    value: function getPost($scope, $http, $stateParams, $sce, $localstorage, $state, $location, $postlike) {
+
       var topicId = $stateParams.topicId;
       var postId = $stateParams.postId;
+      var page = $stateParams.page;
+
+      $scope;
+
       var postUrl = URLUtils.buildUrlFromState($state, $stateParams);
 
-      var likedPosts = $localstorage.getObject("like.posts");
-      console.log('likedPosts', likedPosts);
+      // add action
+      angular.extend($scope, {
+        like: function like(post) {
+          console.log('like', post);
 
-      var isLiked = Object.keys(likedPosts).length > 0 ? likedPosts.filter(function (url) {
-        return url == postUrl;
-      }).length == 1 : false;
-
-      console.log('isliked', isLiked);
-
-      $scope.likedStyle = isLiked ? { color: '#0c60ee' } : {};
-
-      $scope.like = function () {
-        console.log('like', postUrl);
-
-        var likedPosts = $localstorage.getObject("like.posts");
-        console.log('likedPosts', likedPosts);
-
-        if (Object.keys(likedPosts).length == 0) {
-          $localstorage.setObject("like.posts", [postUrl]);
-          $scope.likedStyle = { color: '#0c60ee' };
-        } else {
-          var filteredPosts = likedPosts.filter(function (url) {
-            return url !== postUrl;
+          if ($postlike.isLikedPost(post)) {
+            $postlike.remove(post);
+            post.likedStyle = {};
+          } else {
+            $postlike.add(post);
+            post.likedStyle = { color: '#0c60ee' };
+          }
+        },
+        onSwipeLeft: function onSwipeLeft() {
+          var nextPostUrl = URLUtils.buildUrlFromState($state, {
+            topicId: topicId,
+            postId: postId,
+            page: parseInt(page) + 1
           });
 
-          var originLen = likedPosts.length;
-          var filteredLen = filteredPosts.length;
-
-          // do not add back to the list, if the user trigger when isLiked = true
-          if (originLen - filteredLen == 0) {
-            filteredPosts.push(postUrl);
-
-            console.log("update UI");
-            $scope.likedStyle = { color: '#0c60ee' };
-          } else {
-            console.log("update UI2");
-
-            $scope.likedStyle = {};
-          }
-
-          $localstorage.setObject("like.posts", filteredPosts);
+          $location.url(nextPostUrl.replace('#', ''));
         }
-      };
+      });
 
-      $http.get(HKEPC.forum.posts(topicId, postId)).then(function (resp) {
-        //console.log('Success', resp.data)
-        var posts = [];
+      $http.get(HKEPC.forum.posts(topicId, postId, page)).then(function (resp) {
+        var html = new _generalHtml.GeneralHtml(cheerio.load(resp.data));
 
-        $scope.debug = resp.data;
+        var $ = html.removeIframe().processImgUrl(HKEPC.forum.image).getCheerio();
 
-        var $ = cheerio.load(resp.data);
+        // remove the hkepc forum text
+        var title = html.getTitle().split('-')[0];
 
         // select the current login user
         var currentUsername = $('#umenu > cite').html();
 
-        // remove iframe
-        $('iframe').remove();
-
-        // select the post title
-        var title = $('title').text().split('-')[0];
-
-        // parsing the image( ie. relativePath, lazy loading )
-        $('img').each(function (i, e) {
-          function isRelativeUrlImg(url) {
-            return !(url.startsWith('http://') || url.startsWith('https://'));
-          }
-
-          var lazyImg = $(this).attr('file');
-
-          if (lazyImg) {
-            console.log('lazy', lazyImg);
-            $(this).attr('src', lazyImg);
-          }
-
-          var imgSrc = $(this).attr('src') || "";
-
-          if (isRelativeUrlImg(imgSrc)) {
-            console.log('gif', imgSrc);
-            $(this).attr('src', "http://www.hkepc.com/forum/" + imgSrc);
-          }
-        });
-
         // the first post
         var firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix');
 
-        // forEach Post map to the model
-        $('#postlist > div').each(function (i, elem) {
+        // PostHtml map to the model
+        var posts = $('#postlist > div').map(function (i, elem) {
           var postSource = cheerio.load($(this).html());
 
-          posts.push({
+          return {
+            id: postSource('table').attr('id'),
+            title: title,
+            inAppUrl: postUrl,
             author: {
               image: postSource('.postauthor .avatar img').attr('src'),
               name: postSource('.postauthor > .postinfo').text()
             },
             createdAt: postSource('.posterinfo .authorinfo em').text(),
-            content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()),
-            title: title
-          });
+            content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html())
+          };
+        }).get().map(function (post, i) {
+          post.likedStyle = $postlike.isLikedPost(post) ? { color: '#0c60ee' } : {};
+
+          return post;
         });
 
-        // pass the model to view
-        $scope.posts = posts;
-
-        $scope.topic = {
-          id: topicId
-        };
+        angular.extend($scope, {
+          posts: posts,
+          topic: {
+            id: topicId
+          }
+        });
 
         // For JSON responses, resp.data contains the result
       }, function (err) {
@@ -18736,7 +18709,7 @@ var ForumController = exports.ForumController = function () {
   return ForumController;
 }();
 
-},{"../../data/config/hkepc":74,"../../utils/url":75,"cheerio":1}],69:[function(require,module,exports){
+},{"../../data/config/hkepc":76,"../../utils/url":77,"../model/general-html":71,"cheerio":1}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18781,7 +18754,7 @@ var post = exports.post = {
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
   config: {
-    url: '/topics/:topicId/posts/:postId',
+    url: '/topics/:topicId/posts/:postId/page/:page',
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
@@ -18858,7 +18831,89 @@ angular.module('starter.controllers', []).controller(Controllers.topics.name, Co
   };
 });
 
-},{"../data/config/hkepc":74,"../utils/url":75,"./controller/index":69,"cheerio":1}],71:[function(require,module,exports){
+},{"../data/config/hkepc":76,"../utils/url":77,"./controller/index":69,"cheerio":1}],71:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Gaplo917 on 10/1/2016.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GeneralHtml = undefined;
+
+var _url = require('../../utils/url');
+
+var URLUtils = _interopRequireWildcard(_url);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GeneralHtml = exports.GeneralHtml = function () {
+  function GeneralHtml(cheerioSource) {
+    _classCallCheck(this, GeneralHtml);
+
+    this.source = cheerioSource;
+  }
+
+  _createClass(GeneralHtml, [{
+    key: 'removeIframe',
+    value: function removeIframe() {
+      this.source('iframe').remove();
+      return this;
+    }
+  }, {
+    key: 'processImgUrl',
+    value: function processImgUrl(imagePrefix) {
+      var _this = this;
+
+      this.source('img').each(function (i, e) {
+
+        var lazyImg = _this.source(e).attr('file');
+
+        if (lazyImg) {
+          console.log('lazy', lazyImg);
+          _this.source(e).attr('src', lazyImg);
+        }
+
+        var imgSrc = _this.source(e).attr('src');
+
+        if (URLUtils.isRelativeUrl(imgSrc)) {
+          console.log('relative', imgSrc);
+          _this.source(e).attr('src', '' + imagePrefix + imgSrc);
+        }
+      });
+
+      return this;
+    }
+  }, {
+    key: 'getTitle',
+    value: function getTitle() {
+      return this.source('title').text();
+    }
+  }, {
+    key: 'getCheerio',
+    value: function getCheerio() {
+      return this.source;
+    }
+  }, {
+    key: 'html',
+    value: function html() {
+      return this.source.html();
+    }
+  }, {
+    key: 'text',
+    value: function text() {
+      return this.source.text();
+    }
+  }]);
+
+  return GeneralHtml;
+}();
+
+},{"../../utils/url":77}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18867,23 +18922,41 @@ Object.defineProperty(exports, "__esModule", {
 
 var _localstorage = require('./localstorage');
 
-var _loop = function _loop(_key2) {
-  if (_key2 === "default") return 'continue';
-  Object.defineProperty(exports, _key2, {
+var _loop = function _loop(_key3) {
+  if (_key3 === "default") return 'continue';
+  Object.defineProperty(exports, _key3, {
     enumerable: true,
     get: function get() {
-      return _localstorage[_key2];
+      return _localstorage[_key3];
     }
   });
 };
 
-for (var _key2 in _localstorage) {
-  var _ret = _loop(_key2);
+for (var _key3 in _localstorage) {
+  var _ret = _loop(_key3);
 
   if (_ret === 'continue') continue;
 }
 
-},{"./localstorage":72}],72:[function(require,module,exports){
+var _postlike = require('./postlike');
+
+var _loop2 = function _loop2(_key4) {
+  if (_key4 === "default") return 'continue';
+  Object.defineProperty(exports, _key4, {
+    enumerable: true,
+    get: function get() {
+      return _postlike[_key4];
+    }
+  });
+};
+
+for (var _key4 in _postlike) {
+  var _ret2 = _loop2(_key4);
+
+  if (_ret2 === 'continue') continue;
+}
+
+},{"./localstorage":73,"./postlike":74}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18913,7 +18986,62 @@ var localStorage = exports.localStorage = {
   }]
 };
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Created by Gaplo917 on 10/1/2016.
+ */
+var postLike = exports.postLike = {
+  name: '$postlike',
+
+  impl: ['$localstorage', function ($localstorage) {
+    return {
+      add: function add(post) {
+        "use strict";
+
+        var likedPosts = $localstorage.getObject("like.posts");
+        console.log('likedPosts', likedPosts);
+
+        if (Object.keys(likedPosts).length == 0) {
+          $localstorage.setObject("like.posts", [post]);
+        } else {
+          var filteredPosts = likedPosts.filter(function (p) {
+            return p.id !== post.id || p.inAppUrl !== post.inAppUrl;
+          });
+
+          filteredPosts.push(post);
+
+          $localstorage.setObject("like.posts", filteredPosts);
+        }
+      },
+      remove: function remove(post) {
+        "use strict";
+
+        var likedPosts = $localstorage.getObject("like.posts");
+        var filteredPosts = likedPosts.filter(function (p) {
+          return p.id !== post.id || p.inAppUrl !== post.inAppUrl;
+        });
+
+        $localstorage.setObject("like.posts", filteredPosts);
+      },
+
+      isLikedPost: function isLikedPost(post) {
+        "use strict";
+
+        var likedPosts = $localstorage.getObject("like.posts");
+        return Object.keys(likedPosts).length > 0 ? likedPosts.filter(function (p) {
+          return p.id == post.id && p.inAppUrl == post.inAppUrl;
+        }).length == 1 : false;
+      }
+    };
+  }]
+};
+
+},{}],75:[function(require,module,exports){
 'use strict';
 
 var _index = require('./service/index');
@@ -18925,7 +19053,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 /**
  * Register the service
  */
-angular.module('starter.services', []).factory(Services.localStorage.name, Services.localStorage.impl).factory('Chats', function () {
+angular.module('starter.services', []).factory(Services.localStorage.name, Services.localStorage.impl).factory(Services.postLike.name, Services.postLike.impl).factory('Chats', function () {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -18974,23 +19102,41 @@ angular.module('starter.services', []).factory(Services.localStorage.name, Servi
   };
 });
 
-},{"./service/index":71}],74:[function(require,module,exports){
+},{"./service/index":72}],76:[function(require,module,exports){
 'use strict';
 
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
+//module.exports = {
+//  domain: 'http://www.hkepc.com/',
+//  forum: {
+//    image:'http://www.hkepc.com/forum/',
+//    index: 'http://www.hkepc.com/forum/index.php',
+//    topics: (topicId,page) => `http://www.hkepc.com/forum/forumdisplay.php?fid=${topicId}&page=${page}`,
+//    posts: (topicId,postId,page) => `http://www.hkepc.com/forum/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
+//    login: 'http://www.hkepc.com/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
+//  },
+//
+//  data:{
+//    topics:{
+//      "120" : "興趣百科"
+//    }
+//  }
+//}
+
 module.exports = {
   domain: 'http://www.hkepc.com/',
   forum: {
-    index: 'http://www.hkepc.com/forum/index.php',
-    topics: function topics(topicId) {
-      return 'http://www.hkepc.com/forum/forumdisplay.php?fid=' + topicId;
+    image: '/forum/',
+    index: '/forum/index.php',
+    topics: function topics(topicId, page) {
+      return '/forum/forumdisplay.php?fid=' + topicId + '&page=' + page;
     },
-    posts: function posts(topicId, postId) {
-      return 'http://www.hkepc.com/forum/viewthread.php?fid=' + topicId + '&tid=' + postId;
+    posts: function posts(topicId, postId, page) {
+      return '/forum/viewthread.php?fid=' + topicId + '&tid=' + postId + '&page=' + page;
     },
-    login: 'http://www.hkepc.com/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
+    login: '/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
   },
 
   data: {
@@ -19000,7 +19146,7 @@ module.exports = {
   }
 };
 
-},{}],75:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -19018,13 +19164,17 @@ module.exports = {
   buildUrlFromState: function buildUrlFromState($state, $stateParams) {
     "use strict";
 
-    return $state.href($state.current.name, $stateParams, { absolute: true });
+    return $state.href($state.current.name, $stateParams);
+  },
+
+  isRelativeUrl: function isRelativeUrl(url) {
+    if (!url) return false;else return !(url.startsWith('http://') || url.startsWith('https://'));
   }
 };
 
-},{}],76:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 
-},{}],77:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -20576,7 +20726,7 @@ function blitBuffer (src, dst, offset, length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":78,"ieee754":79,"isarray":80}],78:[function(require,module,exports){
+},{"base64-js":80,"ieee754":81,"isarray":82}],80:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -20702,7 +20852,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],79:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -20788,14 +20938,14 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],80:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],81:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -21095,7 +21245,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],82:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -21120,7 +21270,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],83:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 /**
  * Determine if an object is Buffer
  *
@@ -21139,12 +21289,12 @@ module.exports = function (obj) {
     ))
 }
 
-},{}],84:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],85:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -21237,10 +21387,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],86:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":87}],87:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":89}],89:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -21324,7 +21474,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":89,"./_stream_writable":91,"core-util-is":92,"inherits":82,"process-nextick-args":93}],88:[function(require,module,exports){
+},{"./_stream_readable":91,"./_stream_writable":93,"core-util-is":94,"inherits":84,"process-nextick-args":95}],90:[function(require,module,exports){
 // a passthrough stream.
 // basically just the most minimal sort of Transform stream.
 // Every written chunk gets output as-is.
@@ -21353,7 +21503,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":90,"core-util-is":92,"inherits":82}],89:[function(require,module,exports){
+},{"./_stream_transform":92,"core-util-is":94,"inherits":84}],91:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -22332,7 +22482,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":87,"_process":85,"buffer":77,"core-util-is":92,"events":81,"inherits":82,"isarray":84,"process-nextick-args":93,"string_decoder/":100,"util":76}],90:[function(require,module,exports){
+},{"./_stream_duplex":89,"_process":87,"buffer":79,"core-util-is":94,"events":83,"inherits":84,"isarray":86,"process-nextick-args":95,"string_decoder/":102,"util":78}],92:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -22531,7 +22681,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":87,"core-util-is":92,"inherits":82}],91:[function(require,module,exports){
+},{"./_stream_duplex":89,"core-util-is":94,"inherits":84}],93:[function(require,module,exports){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, encoding, cb), and it'll handle all
 // the drain event emission and buffering.
@@ -23062,7 +23212,7 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":87,"buffer":77,"core-util-is":92,"events":81,"inherits":82,"process-nextick-args":93,"util-deprecate":94}],92:[function(require,module,exports){
+},{"./_stream_duplex":89,"buffer":79,"core-util-is":94,"events":83,"inherits":84,"process-nextick-args":95,"util-deprecate":96}],94:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -23173,7 +23323,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../../../insert-module-globals/node_modules/is-buffer/index.js")})
-},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":83}],93:[function(require,module,exports){
+},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":85}],95:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -23197,7 +23347,7 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":85}],94:[function(require,module,exports){
+},{"_process":87}],96:[function(require,module,exports){
 (function (global){
 
 /**
@@ -23268,10 +23418,10 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],95:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":88}],96:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":90}],98:[function(require,module,exports){
 var Stream = (function (){
   try {
     return require('st' + 'ream'); // hack to fix a circular dependency issue when used with browserify
@@ -23285,13 +23435,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":87,"./lib/_stream_passthrough.js":88,"./lib/_stream_readable.js":89,"./lib/_stream_transform.js":90,"./lib/_stream_writable.js":91}],97:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":89,"./lib/_stream_passthrough.js":90,"./lib/_stream_readable.js":91,"./lib/_stream_transform.js":92,"./lib/_stream_writable.js":93}],99:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":90}],98:[function(require,module,exports){
+},{"./lib/_stream_transform.js":92}],100:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":91}],99:[function(require,module,exports){
+},{"./lib/_stream_writable.js":93}],101:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -23420,7 +23570,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":81,"inherits":82,"readable-stream/duplex.js":86,"readable-stream/passthrough.js":95,"readable-stream/readable.js":96,"readable-stream/transform.js":97,"readable-stream/writable.js":98}],100:[function(require,module,exports){
+},{"events":83,"inherits":84,"readable-stream/duplex.js":88,"readable-stream/passthrough.js":97,"readable-stream/readable.js":98,"readable-stream/transform.js":99,"readable-stream/writable.js":100}],102:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -23643,14 +23793,14 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":77}],101:[function(require,module,exports){
+},{"buffer":79}],103:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],102:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -24240,4 +24390,4 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":101,"_process":85,"inherits":82}]},{},[67,70,73,75]);
+},{"./support/isBuffer":103,"_process":87,"inherits":84}]},{},[67,70,75,77]);
