@@ -1,10 +1,4 @@
 {
   "name": "myApp",
-  "app_id": "",
-	"proxies": [
-	  {
-	    "path": "/forum",
-	    "proxyUrl": "http://www.hkepc.com/forum"
-	  }
-	]
+  "app_id": ""
 }

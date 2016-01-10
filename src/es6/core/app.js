@@ -77,7 +77,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 
 })
 .config(['$httpProvider', function($httpProvider) {
-  //$httpProvider.defaults.withCredentials = true;
+  if(window.location.href.startsWith("file://")) {
+    // true if ionic is run in ios/android to allow use of cookies
+    $httpProvider.defaults.withCredentials = true;
+  }
 }])
 
 ;
