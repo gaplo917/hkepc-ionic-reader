@@ -100,7 +100,7 @@ export class ForumController {
     })
   }
 
-  static getPost($scope,$http, $stateParams,$sce,$state,$location,$messagelike) {
+  static getPost($scope,$http, $stateParams,$sce,$state,$location,$message) {
 
     const topicId = $stateParams.topicId
     const postId = $stateParams.postId
@@ -113,12 +113,12 @@ export class ForumController {
       like: (message) => {
         console.log('like',message)
 
-        if($messagelike.isLikedPost(message)){
-          $messagelike.remove(message)
+        if($message.isLikedPost(message)){
+          $message.remove(message)
           message.likedStyle = {}
         }
         else {
-          $messagelike.add(message)
+          $message.add(message)
           message.likedStyle = {color: '#0c60ee'}
         }
 
@@ -181,7 +181,7 @@ export class ForumController {
               }
             }).get()
               .map((message,i) => {
-                message.likedStyle = $messagelike.isLikedPost(message)
+                message.likedStyle = $message.isLikedPost(message)
                     ? {color: '#0c60ee'}
                     : {}
 
@@ -205,6 +205,9 @@ export class ForumController {
           })
     })
 
+  }
+
+  static replyPost() {
 
   }
 

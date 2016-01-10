@@ -1,8 +1,8 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-export var messageLike = {
-  name: '$messagelike',
+export var message = {
+  name: '$message',
 
   impl: ['$localstorage',function ($localstorage) {
     var key = 'like.messages'
