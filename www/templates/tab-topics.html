@@ -1,7 +1,10 @@
-<ion-view view-title="Topic">
+<ion-view ng-init="topics=[]" view-title="論壇版塊">
   <ion-content>
+    <div class="spinner">
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="topics.length == 0"></ion-spinner>
+    </div>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap" href="#/tab/topics/{{topic.id}}">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap" href="#/tab/topics/{{topic.id}}/page/1">
         <h2>{{topic.name}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>

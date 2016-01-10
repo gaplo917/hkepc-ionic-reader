@@ -1,4 +1,4 @@
-<ion-view view-title="{{post.title}}">
+<ion-view ng-init="postTitle='下載中';posts=[]" view-title="{{postTitle}}">
 
   <style>
     *{
@@ -14,6 +14,9 @@
     }
   </style>
   <ion-content class="padding" on-swipe-left="onSwipeLeft()">
+    <div class="spinner">
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="posts.length == 0"></ion-spinner>
+    </div>
     <div class="list card" ng-repeat="post in posts">
 
       <div class="item item-avatar">

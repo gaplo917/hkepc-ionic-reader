@@ -22,7 +22,7 @@ export var posts = {
   state:'tab.topics-posts',
   name:"PostsCtrl",
   config: {
-    url: '/topics/:topicId',
+    url: '/topics/:topicId/page/:page',
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',

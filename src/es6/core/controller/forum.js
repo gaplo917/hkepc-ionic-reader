@@ -19,70 +19,83 @@ export class ForumController {
     //
     //$scope.$on('$ionicView.enter', function(e) {
     //})
-    $http
-      .get(HKEPC.forum.index)
-      .then((resp) => {
-        console.log('Success', resp.data)
-        let $ = cheerio.load(resp.data,{decodeEntities: true})
 
-        let topics = []
+    $scope.$on('$ionicView.loaded', function(e) {
 
-        $('a.caption').each(function (i, elem) {
-          if(URLUtils.getQueryVariable($(this).attr('href'),'fid') == 120)
-            topics.push({
-              id : URLUtils.getQueryVariable($(this).attr('href'),'fid'),
-              name : decodeURIComponent($(this).text())
+      $http
+          .get(HKEPC.forum.index)
+          .then((resp) => {
+            console.log('Success', resp.data)
+            let $ = cheerio.load(resp.data, {decodeEntities: true})
+
+            let topics = []
+
+            $('a.caption').each(function (i, elem) {
+              if (URLUtils.getQueryVariable($(this).attr('href'), 'fid') == 120)
+                topics.push({
+                  id: URLUtils.getQueryVariable($(this).attr('href'), 'fid'),
+                  name: decodeURIComponent($(this).text())
+                })
             })
-        })
 
-        $scope.topics = topics
+            angular.extend($scope,{
+              topics:topics
+            })
 
-        // For JSON responses, resp.data contains the result
-      }, (err) => {
-        alert("error")
-        console.error('ERR', JSON.stringify(err))
-        // err.status will contain the status code
-      })
+            // For JSON responses, resp.data contains the result
+          }, (err) => {
+            alert("error")
+            console.error('ERR', JSON.stringify(err))
+            // err.status will contain the status code
+          })
+    })
   }
   static getPosts($scope,$http,$stateParams) {
     "use strict";
     const topicId = $stateParams.topicId
     const page = $stateParams.page
 
+    angular.extend($scope,{
+      topic: {
+        id: topicId,
+        name: HKEPC.data.topics[`${topicId}`],
+        page: page
+      }
+    })
+
     $scope.slideToPage = (page) => {
       alert(page)
     }
+    $scope.$on('$ionicView.loaded', function(e) {
 
-    $http
-        .get(HKEPC.forum.topics(topicId,page))
-        .then((resp) => {
-          console.log('Success', resp.data)
+      $http
+          .get(HKEPC.forum.topics(topicId, page))
+          .then((resp) => {
 
-          $scope.debug = resp.data
+            let $ = cheerio.load(resp.data)
 
-          let $ = cheerio.load(resp.data)
+            const posts = $('.threadlist table tbody tr th a').not('.threadpages > a').map(function (i, elem) {
+              return {
+                id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
+                name: $(this).text()
+              }
+            }).get()
 
-          let posts = []
-
-          $('.threadlist table tbody tr th a').not('.threadpages > a').each(function (i, elem) {
-            posts.push({
-              id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
-              name: $(this).text()
+            angular.extend($scope,{
+              posts:posts,
+              topic: {
+                id: topicId,
+                name: HKEPC.data.topics[`${topicId}`],
+                page: page
+              }
             })
+
+            // For JSON responses, resp.data contains the result
+          }, (err) => {
+            console.error('ERR', JSON.stringify(err))
+            // err.status will contain the status code
           })
-
-          $scope.posts = posts
-          $scope.topic = {
-            id: topicId,
-            name: HKEPC.data.topics[`${topicId}`],
-            page: page
-          }
-
-          // For JSON responses, resp.data contains the result
-        }, (err) => {
-          console.error('ERR', JSON.stringify(err))
-          // err.status will contain the status code
-        })
+    })
   }
 
   static getPost($scope,$http, $stateParams,$sce,$localstorage,$state,$location,$postlike) {
@@ -90,8 +103,6 @@ export class ForumController {
     const topicId = $stateParams.topicId
     const postId = $stateParams.postId
     const page = $stateParams.page
-
-    $scope
 
     let postUrl = URLUtils.buildUrlFromState($state,$stateParams)
 
@@ -121,65 +132,71 @@ export class ForumController {
       }
     })
 
-    $http
-        .get(HKEPC.forum.posts(topicId,postId,page))
-        .then((resp) => {
-          const html = new GeneralHtml(cheerio.load(resp.data))
+    $scope.$on('$ionicView.enter', function(e) {
 
-          let $ = html
-                    .removeIframe()
-                    .processImgUrl(HKEPC.forum.image)
-                    .getCheerio()
+      $http
+          .get(HKEPC.forum.posts(topicId,postId,page))
+          .then((resp) => {
+            const html = new GeneralHtml(cheerio.load(resp.data))
 
-          // remove the hkepc forum text
-          const title = html
-                          .getTitle()
-                          .split('-')[0]
+            let $ = html
+                .removeIframe()
+                .processImgUrl(HKEPC.forum.image)
+                .getCheerio()
 
-          // select the current login user
-          const currentUsername = $('#umenu > cite').html()
+            // remove the hkepc forum text
+            const postTitle = html
+                .getTitle()
+                .split('-')[0]
 
-          // the first post
-          const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
+            // select the current login user
+            const currentUsername = $('#umenu > cite').html()
 
-          // PostHtml map to the model
-          const posts = $('#postlist > div').map(function (i,elem) {
-            let postSource = cheerio.load($(this).html())
+            // the first post
+            const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
 
-            return {
-              id: postSource('table').attr('id'),
-              title: title,
-              inAppUrl: postUrl,
-              author:{
-                image: postSource('.postauthor .avatar img').attr('src'),
-                name : postSource('.postauthor > .postinfo').text()
-              },
-              createdAt: postSource('.posterinfo .authorinfo em').text(),
-              content : $sce.trustAsHtml(
-                  postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()
-              )
-            }
-          }).get()
-            .map((post,i) => {
-              post.likedStyle = $postlike.isLikedPost(post)
-                                ? {color: '#0c60ee'}
-                                : {}
+            // PostHtml map to the model
+            const posts = $('#postlist > div').map(function (i,elem) {
+              let postSource = cheerio.load($(this).html())
 
-              return post;
+              return {
+                id: postSource('table').attr('id'),
+                title: postTitle,
+                page: page,
+                inAppUrl: postUrl,
+                author:{
+                  image: postSource('.postauthor .avatar img').attr('src'),
+                  name : postSource('.postauthor > .postinfo').text()
+                },
+                createdAt: postSource('.posterinfo .authorinfo em').text(),
+                content : $sce.trustAsHtml(
+                    postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()
+                )
+              }
+            }).get()
+              .map((post,i) => {
+                post.likedStyle = $postlike.isLikedPost(post)
+                    ? {color: '#0c60ee'}
+                    : {}
+
+                return post;
+              })
+
+            angular.extend($scope,{
+              postTitle: postTitle,
+              posts: posts,
+              topic: {
+                id : topicId
+              }
             })
 
-          angular.extend($scope,{
-            posts: posts,
-            topic: {
-              id : topicId
-            }
+            // For JSON responses, resp.data contains the result
+          }, (err) => {
+            console.error('ERR', JSON.stringify(err))
+            // err.status will contain the status code
           })
+    })
 
-          // For JSON responses, resp.data contains the result
-        }, (err) => {
-          console.error('ERR', JSON.stringify(err))
-          // err.status will contain the status code
-        })
 
   }
 

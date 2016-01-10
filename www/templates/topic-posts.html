@@ -1,6 +1,12 @@
-<ion-view view-title="{{topic.name}}">
+<ion-view ng-init="posts=[]" view-title="{{topic.name}}">
   <ion-content>
+    <div class="spinner">
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="posts.length == 0"></ion-spinner>
+    </div>
     <ion-list>
+      <div class="item item-divider">
+        第 {{topic.page}} 頁
+      </div>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
         <h2>{{post.name}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
