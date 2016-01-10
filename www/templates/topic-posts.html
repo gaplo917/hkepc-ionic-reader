@@ -1,16 +1,27 @@
-<ion-view ng-init="posts=[]" view-title="{{topic.name}}">
+<ion-view view-title="{{topic.name}}">
   <ion-content>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="android" ng-show="posts.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="pages.length == 0"></ion-spinner>
     </div>
-    <ion-list>
+    <ion-list ng-repeat="page in pages">
       <div class="item item-divider">
-        第 {{topic.page}} 頁
+        第 {{page.num}} 頁
       </div>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
+      <ion-item
+          class="item-remove-animate item-icon-right item-text-wrap"
+          ng-repeat="post in page.posts"
+          type="item-text-wrap"
+          href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
         <h2>{{post.name}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
+    <ion-infinite-scroll
+        on-infinite="loadMore()"
+        immediate-check="false"
+        spinner="android"
+        icon="android"
+        distance="1%">
+    </ion-infinite-scroll>
   </ion-content>
 </ion-view>

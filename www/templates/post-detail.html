@@ -1,4 +1,4 @@
-<ion-view ng-init="post.title='下載中';messages=[]" view-title="{{post.title}}">
+<ion-view ng-init="post.title='下載中';messages=[]" view-title="">
 
   <style>
     *{
@@ -13,7 +13,12 @@
       width:auto!important;
     }
   </style>
-  <ion-content class="padding" on-swipe-left="onSwipeLeft()">
+
+
+  <ion-content class="padding" on-swipe-left="onSwipeLeft()" style="background-color:#f2f2f2">
+    <div style="text-align:center">
+      <h4 class="title">{{post.title}}</h4>
+    </div>
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="android" ng-show="messages.length == 0"></ion-spinner>
     </div>
