@@ -18509,7 +18509,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
 }).config(['$httpProvider', function ($httpProvider) {
-  if (window.location.href.startsWith("file://")) $httpProvider.defaults.withCredentials = true;
+  if (window.location.href.startsWith("file://")) {
+    // true if ionic is run in ios/android to allow use of cookies
+    $httpProvider.defaults.withCredentials = true;
+  }
 }]);
 
 },{"./controller/index":69}],68:[function(require,module,exports){
@@ -18557,26 +18560,37 @@ var ForumController = exports.ForumController = function () {
       //
       //$scope.$on('$ionicView.enter', function(e) {
       //})
-      $http.get(HKEPC.forum.index).then(function (resp) {
-        console.log('Success', resp.data);
-        var $ = cheerio.load(resp.data, { decodeEntities: true });
 
-        var topics = [];
+      // init the view model
+      //angular.extend($scope,{
+      //  topics:[]
+      //})
 
-        $('a.caption').each(function (i, elem) {
-          if (URLUtils.getQueryVariable($(this).attr('href'), 'fid') == 120) topics.push({
-            id: URLUtils.getQueryVariable($(this).attr('href'), 'fid'),
-            name: decodeURIComponent($(this).text())
+      $scope.$on('$ionicView.loaded', function (e) {
+
+        $http.get(HKEPC.forum.index).then(function (resp) {
+          console.log('Success', resp.data);
+          var $ = cheerio.load(resp.data, { decodeEntities: true });
+
+          var topics = [];
+
+          $('a.caption').each(function (i, elem) {
+            if (URLUtils.getQueryVariable($(this).attr('href'), 'fid') == 120) topics.push({
+              id: URLUtils.getQueryVariable($(this).attr('href'), 'fid'),
+              name: decodeURIComponent($(this).text())
+            });
           });
+
+          angular.extend($scope, {
+            topics: topics
+          });
+
+          // For JSON responses, resp.data contains the result
+        }, function (err) {
+          alert("error");
+          console.error('ERR', JSON.stringify(err));
+          // err.status will contain the status code
         });
-
-        $scope.topics = topics;
-
-        // For JSON responses, resp.data contains the result
-      }, function (err) {
-        alert("error");
-        console.error('ERR', JSON.stringify(err));
-        // err.status will contain the status code
       });
     }
   }, {
@@ -18587,37 +18601,45 @@ var ForumController = exports.ForumController = function () {
       var topicId = $stateParams.topicId;
       var page = $stateParams.page;
 
-      $scope.slideToPage = function (page) {
-        alert(page);
-      };
-
-      $http.get(HKEPC.forum.topics(topicId, page)).then(function (resp) {
-        console.log('Success', resp.data);
-
-        $scope.debug = resp.data;
-
-        var $ = cheerio.load(resp.data, { decodeEntities: true });
-
-        var posts = [];
-
-        $('.threadlist table tbody tr th a').not('.threadpages > a').each(function (i, elem) {
-          posts.push({
-            id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
-            name: decodeURIComponent($(this).text())
-          });
-        });
-
-        $scope.posts = posts;
-        $scope.topic = {
+      angular.extend($scope, {
+        posts: [],
+        topic: {
           id: topicId,
           name: HKEPC.data.topics["" + topicId],
           page: page
-        };
+        }
+      });
 
-        // For JSON responses, resp.data contains the result
-      }, function (err) {
-        console.error('ERR', JSON.stringify(err));
-        // err.status will contain the status code
+      $scope.slideToPage = function (page) {
+        alert(page);
+      };
+      $scope.$on('$ionicView.loaded', function (e) {
+
+        $http.get(HKEPC.forum.topics(topicId, page)).then(function (resp) {
+
+          var $ = cheerio.load(resp.data);
+
+          var posts = $('.threadlist table tbody tr th a').not('.threadpages > a').map(function (i, elem) {
+            return {
+              id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
+              name: $(this).text()
+            };
+          }).get();
+
+          angular.extend($scope, {
+            posts: posts,
+            topic: {
+              id: topicId,
+              name: HKEPC.data.topics["" + topicId],
+              page: page
+            }
+          });
+
+          // For JSON responses, resp.data contains the result
+        }, function (err) {
+          console.error('ERR', JSON.stringify(err));
+          // err.status will contain the status code
+        });
       });
     }
   }, {
@@ -18628,12 +18650,11 @@ var ForumController = exports.ForumController = function () {
       var postId = $stateParams.postId;
       var page = $stateParams.page;
 
-      $scope;
-
       var postUrl = URLUtils.buildUrlFromState($state, $stateParams);
 
       // add action
       angular.extend($scope, {
+        posts: [],
         like: function like(post) {
           console.log('like', post);
 
@@ -18656,52 +18677,57 @@ var ForumController = exports.ForumController = function () {
         }
       });
 
-      $http.get(HKEPC.forum.posts(topicId, postId, page)).then(function (resp) {
-        var html = new _generalHtml.GeneralHtml(cheerio.load(resp.data));
+      $scope.$on('$ionicView.enter', function (e) {
 
-        var $ = html.removeIframe().processImgUrl(HKEPC.forum.image).getCheerio();
+        $http.get(HKEPC.forum.posts(topicId, postId, page)).then(function (resp) {
+          var html = new _generalHtml.GeneralHtml(cheerio.load(resp.data));
 
-        // remove the hkepc forum text
-        var title = html.getTitle().split('-')[0];
+          var $ = html.removeIframe().processImgUrl(HKEPC.forum.image).getCheerio();
 
-        // select the current login user
-        var currentUsername = $('#umenu > cite').html();
+          // remove the hkepc forum text
+          var postTitle = html.getTitle().split('-')[0];
 
-        // the first post
-        var firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix');
+          // select the current login user
+          var currentUsername = $('#umenu > cite').html();
 
-        // PostHtml map to the model
-        var posts = $('#postlist > div').map(function (i, elem) {
-          var postSource = cheerio.load($(this).html());
+          // the first post
+          var firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix');
 
-          return {
-            id: postSource('table').attr('id'),
-            title: title,
-            inAppUrl: postUrl,
-            author: {
-              image: postSource('.postauthor .avatar img').attr('src'),
-              name: postSource('.postauthor > .postinfo').text()
-            },
-            createdAt: postSource('.posterinfo .authorinfo em').text(),
-            content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html())
-          };
-        }).get().map(function (post, i) {
-          post.likedStyle = $postlike.isLikedPost(post) ? { color: '#0c60ee' } : {};
+          // PostHtml map to the model
+          var posts = $('#postlist > div').map(function (i, elem) {
+            var postSource = cheerio.load($(this).html());
 
-          return post;
+            return {
+              id: postSource('table').attr('id'),
+              title: postTitle,
+              page: page,
+              inAppUrl: postUrl,
+              author: {
+                image: postSource('.postauthor .avatar img').attr('src'),
+                name: postSource('.postauthor > .postinfo').text()
+              },
+              createdAt: postSource('.posterinfo .authorinfo em').text(),
+              content: $sce.trustAsHtml(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html())
+            };
+          }).get().map(function (post, i) {
+            post.likedStyle = $postlike.isLikedPost(post) ? { color: '#0c60ee' } : {};
+
+            return post;
+          });
+
+          angular.extend($scope, {
+            postTitle: postTitle,
+            posts: posts,
+            topic: {
+              id: topicId
+            }
+          });
+
+          // For JSON responses, resp.data contains the result
+        }, function (err) {
+          console.error('ERR', JSON.stringify(err));
+          // err.status will contain the status code
         });
-
-        angular.extend($scope, {
-          posts: posts,
-          topic: {
-            id: topicId
-          }
-        });
-
-        // For JSON responses, resp.data contains the result
-      }, function (err) {
-        console.error('ERR', JSON.stringify(err));
-        // err.status will contain the status code
       });
     }
   }]);
@@ -18739,7 +18765,7 @@ var posts = exports.posts = {
   state: 'tab.topics-posts',
   name: "PostsCtrl",
   config: {
-    url: '/topics/:topicId',
+    url: '/topics/:topicId/page/:page',
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',
@@ -19128,23 +19154,6 @@ module.exports = {
     }
   }
 };
-
-//module.exports = {
-//  domain: 'http://www.hkepc.com/',
-//  forum: {
-//    image:'/forum/',
-//    index: '/forum/index.php',
-//    topics: (topicId,page) => `/forum/forumdisplay.php?fid=${topicId}&page=${page}`,
-//    posts: (topicId,postId,page) => `/forum/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
-//    login: '/forum/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1'
-//  },
-//
-//  data:{
-//    topics:{
-//      "120" : "興趣百科"
-//    }
-//  }
-//}
 
 },{}],77:[function(require,module,exports){
 'use strict';

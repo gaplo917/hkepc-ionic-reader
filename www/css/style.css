@@ -1,1 +1,12 @@
 /* Empty. Add your own CSS if you like */
+div.spinner {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    height: 85px;
+    text-align: center;
+}
+.spinner svg {
+    width: 19% !important;
+    height: 85px !important;
+}
