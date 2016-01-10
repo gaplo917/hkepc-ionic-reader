@@ -13,8 +13,14 @@
           type="item-text-wrap"
           href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
         <h2>{{post.name}}</h2>
-        <small style="color:#aaa">{{post.publishDate}} @ {{post.author.name}}</small>
-        <small style="float:right;color:#aaa">{{post.count.reply}} / {{post.count.view}}</small>
+        <div>
+          <small style="color:#aaa">{{post.publishDate}} @ {{post.author.name}}</small>
+          <small style="float:right;color:#aaa">{{post.count.reply}} / {{post.count.view}}</small>
+        </div>
+        <div>
+          <a ng-show="post.tag"><small>#{{post.tag}}</small></a>
+        </div>
+
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
