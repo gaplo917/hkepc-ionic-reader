@@ -37,7 +37,7 @@ export var post = {
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
   config:{
-    url: '/topics/:topicId/posts/:postId',
+    url: '/topics/:topicId/posts/:postId/page/:page',
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
