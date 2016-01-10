@@ -68,10 +68,6 @@ export class ForumController {
 
     angular.extend($scope,{
       pages:[],
-      topic: {
-        id: topicId,
-        name: HKEPC.data.topics[`${topicId}`]
-      },
       loadMore: () => {
         const nextPage = $scope.pages.length + 1
         $http
@@ -79,6 +75,7 @@ export class ForumController {
             .then((resp) => {
 
               let $ = cheerio.load(resp.data)
+              const topicName = $('#nav').text().split('»')[1]
 
               const posts = $('.threadlist table tbody').map(function (i, elem) {
                 let postSource = cheerio.load($(this).html())
@@ -106,6 +103,11 @@ export class ForumController {
                 posts: posts,
                 num: nextPage
               })
+
+              $scope.topic = {
+                id: topicId,
+                name: topicName
+              }
 
               $scope.$broadcast('scroll.infiniteScrollComplete');
               // For JSON responses, resp.data contains the result
