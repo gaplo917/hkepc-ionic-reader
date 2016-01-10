@@ -60,14 +60,14 @@ export class ForumController {
 
           $scope.debug = resp.data
 
-          let $ = cheerio.load(resp.data, {decodeEntities: true})
+          let $ = cheerio.load(resp.data)
 
           let posts = []
 
           $('.threadlist table tbody tr th a').not('.threadpages > a').each(function (i, elem) {
             posts.push({
               id: URLUtils.getQueryVariable($(this).attr('href'), 'tid'),
-              name: decodeURIComponent($(this).text())
+              name: $(this).text()
             })
           })
 
