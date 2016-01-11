@@ -7,6 +7,7 @@ export var message = {
   impl: ['$localstorage',function ($localstorage) {
     const MESSAGES_LIKE_KEY = 'messages.like'
     const MESSAGE_DRAFT = 'messages.draft'
+
     return {
       add: (message) =>{
         "use strict";

@@ -1,9 +1,9 @@
-<ion-view view-title="{{topic.name}}">
+<ion-view view-title="{{vm.topic.name}}">
   <ion-content>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="android" ng-show="pages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.pages.length == 0"></ion-spinner>
     </div>
-    <ion-list ng-repeat="page in pages">
+    <ion-list ng-repeat="page in vm.pages">
       <div class="item item-divider">
         第 {{page.num}} 頁
       </div>
@@ -33,7 +33,7 @@
     <ion-infinite-scroll
         class="ispinner"
         style="text-align: center;"
-        on-infinite="loadMore()"
+        on-infinite="vm.loadMore()"
         spinner="android"
         immediate-check="false"
         distance="1%">
