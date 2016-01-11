@@ -1,9 +1,11 @@
 
-import {ForumController} from './forum'
-
+import {PostController} from './PostController'
+import {PostListController} from './PostListController'
+import {TopicListController} from './TopicListController'
+import {ReplyPostController} from './ReplyPostController'
 
 export var topics = {
-  action: ForumController.getTopics,
+  action: TopicListController,
   state:'tab.topics',
   name : "TopicCtrl",
   config: {
@@ -18,7 +20,7 @@ export var topics = {
 }
 
 export var posts = {
-  action: ForumController.getPosts,
+  action: PostListController,
   state:'tab.topics-posts',
   name:"PostsCtrl",
   config: {
@@ -33,7 +35,7 @@ export var posts = {
 }
 
 export var post = {
-  action: ForumController.getPost,
+  action: PostController,
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
   config:{
@@ -48,7 +50,7 @@ export var post = {
 }
 
 export var replyPost = {
-  action: ForumController.replyPost(),
+  action: ReplyPostController,
   state: 'tab.topics-posts-reply',
   name: "ReplyPostCtrl",
   config:{

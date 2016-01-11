@@ -1,4 +1,4 @@
-<ion-view ng-init="post.title='下載中';messages=[]" view-title="">
+<ion-view ng-init="vm.post.title='下載中';vm.messages=[]" view-title="">
 
   <style>
     *{
@@ -15,14 +15,14 @@
   </style>
 
 
-  <ion-content class="padding" on-swipe-left="onSwipeLeft()" style="background-color:#f2f2f2">
+  <ion-content class="padding" on-swipe-left="vm.onSwipeLeft()" style="background-color:#f2f2f2">
     <div style="text-align:center">
-      <h4 class="title">{{post.title}}</h4>
+      <h4 class="title">{{vm.post.title}}</h4>
     </div>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="android" ng-show="messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
-    <div class="list card" ng-repeat="message in messages">
+    <div class="list card" ng-repeat="message in vm.messages">
 
       <div class="item item-avatar">
         <img src="{{message.author.image}}">
@@ -34,7 +34,7 @@
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item" ng-click="like(message)">
+        <a class="tab-item" ng-click="vm.like(message)">
           <i class="icon ion-thumbsup" ng-style="message.likedStyle"></i>
           Like
         </a>
