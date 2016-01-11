@@ -10,3 +10,7 @@ div.spinner {
     width: 19% !important;
     height: 85px !important;
 }
+
+ion-list .item.item-divider{
+    background-color: rgb(166, 209, 115) !important;
+}

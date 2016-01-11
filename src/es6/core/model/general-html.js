@@ -7,6 +7,9 @@ export class GeneralHtml{
 
   constructor(cheerioSource) {
     this.source = cheerioSource
+
+    // remove all the script tags
+    this.source('script').remove()
   }
 
   removeIframe(){
@@ -20,16 +23,20 @@ export class GeneralHtml{
       const lazyImg = this.source(e).attr('file')
 
       if(lazyImg){
-        console.log('lazy',lazyImg)
+        //console.log('lazy',lazyImg)
         this.source(e).attr('src',lazyImg)
       }
 
       const imgSrc = this.source(e).attr('src')
 
       if(URLUtils.isRelativeUrl(imgSrc)){
-        console.log('relative',imgSrc)
+        //console.log('relative',imgSrc)
         this.source(e).attr('src',`${imagePrefix}${imgSrc}`)
       }
+
+      // remove action attr on img
+      this.source(e).removeAttr('onload')
+      this.source(e).removeAttr('onclick')
 
     })
 

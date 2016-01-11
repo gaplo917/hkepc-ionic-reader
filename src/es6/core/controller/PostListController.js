@@ -1,10 +1,11 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as cheerio from "cheerio"
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {GeneralHtml} from "../model/general-html"
+var cheerio = require('cheerio')
+var async = require('async');
 
 export class PostListController {
 
@@ -35,7 +36,6 @@ export class PostListController {
           const posts = $('.threadlist table tbody').map(function (i, elem) {
             let postSource = cheerio.load($(this).html())
 
-            console.log(postSource('tr .subject a').text())
             return {
               id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
               tag: postSource('tr .subject em a').text(),
