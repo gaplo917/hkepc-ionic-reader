@@ -105,7 +105,7 @@ export class PostController{
 
                     // callback no error
                     cb(null)
-                  }, 800 + 300 * (i+1)); // improve UX for smoothing the UI
+                  }, 500 + 300 * (i+1)); // improve UX for smoothing the UI
                 }
 
               }).get()
