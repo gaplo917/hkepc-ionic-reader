@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as cheerio from "cheerio"
+var cheerio = require('cheerio')
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {GeneralHtml} from "../model/general-html"

@@ -81,6 +81,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     // true if ionic is run in ios/android to allow use of cookies
     $httpProvider.defaults.withCredentials = true;
   }
+  $httpProvider.useApplyAsync(true);
 }])
 
 ;
