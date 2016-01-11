@@ -5,7 +5,7 @@ node_modules/
 platforms/
 plugins/
 /www/js/*
-
+/.io-config.json
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 
@@ -20,9 +20,11 @@ plugins/
 # .idea/tasks.xml
 # .idea/dictionaries
 
+
 # Sensitive or high-churn files:
 # .idea/dataSources.ids
 # .idea/dataSources.xml
+
 # .idea/sqlDataSources.xml
 # .idea/dynamic.xml
 # .idea/uiDesigner.xml
