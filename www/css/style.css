@@ -4,8 +4,13 @@
 .item .bigger-title {
     font-size: 20px;
 }
+.odd .item-content{
 
+}
 
+.even .item-content{
+    background-color: #fafafa;
+}
 /* Spinner */
 div.spinner {
     margin: auto;

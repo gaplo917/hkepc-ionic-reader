@@ -12,6 +12,7 @@
         第 {{page.num}} 頁
       </div>
       <ion-item
+          ng-class-odd="'odd'" ng-class-even="'even'"
           class="item-remove-animate item-icon-right item-text-wrap"
           ng-repeat="post in page.posts"
           type="item-text-wrap"
