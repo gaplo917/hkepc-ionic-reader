@@ -10,7 +10,7 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory) {
     $scope.vm = this;
     this.scope = $scope
     this.http = $http
@@ -18,6 +18,7 @@ export class PostController{
     this.state = $state
     this.location = $location
     this.sce = $sce
+    this.ionicHistory = $ionicHistory
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
@@ -177,6 +178,10 @@ export class PostController{
       message.likedStyle = {color: '#0c60ee'}
     }
 
+  }
+
+  onSwipeRight(){
+    this.ionicHistory.goBack();
   }
 
   reset(){

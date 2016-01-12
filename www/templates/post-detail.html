@@ -1,6 +1,6 @@
 <ion-view ng-init="vm.post.title='下載中';vm.messages=[]" view-title="">
 
-  <ion-content class="padding" style="background-color:#f2f2f2">
+  <ion-content class="padding" on-swipe-right="vm.onSwipeRight()"  style="background-color:#f2f2f2">
     <ion-refresher
         pulling-text="拖下重新整理..."
         on-refresh="vm.doRefresh()">
