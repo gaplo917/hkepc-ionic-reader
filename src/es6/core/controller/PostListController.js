@@ -19,12 +19,29 @@ export class PostListController {
     this.page = $stateParams.page
     this.pages = []
 
+    // create a UI rendering queue
+    this.q = async.queue((task, callback) => {
+
+      // update the post list
+      const post = task()
+      if(post.id || post.id != ""){
+        this.pages[this.pages.length - 1].posts.push(task())
+      }
+
+      if(this.q.length() % 10 == 0){
+        // force update the view after 10 task
+        this.scope.$apply()
+      }
+
+      setTimeout(() => callback(), 20)
+    }, 1);
+
     this.scope.$on('$ionicView.loaded', (e) => {
       this.loadMore()
     })
   }
 
-  loadMore(){
+  loadMore(cb){
     const nextPage = this.pages.length + 1
     this.http
         .get(HKEPC.forum.topics(this.topicId, nextPage))
@@ -33,29 +50,37 @@ export class PostListController {
           let $ = cheerio.load(resp.data)
           const topicName = $('#nav').text().split('»')[1]
 
-          const posts = $('.threadlist table tbody').map(function (i, elem) {
-            let postSource = cheerio.load($(this).html())
+          const tasks = $('.threadlist table tbody').map( (i, elem) => {
+            return () => {
 
-            return {
-              id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
-              tag: postSource('tr .subject em a').text(),
-              name: postSource('tr .subject span a').text(),
-              author:{
-                name: postSource('tr .author a').text()
-              },
-              count:{
-                view: postSource('tr .nums em').text(),
-                reply: postSource('tr .nums strong').text()
-              },
-              publishDate: postSource('tr .author em').text()
+              let postSource = cheerio.load($(elem).html())
+
+              return {
+                id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
+                tag: postSource('tr .subject em a').text(),
+                name: postSource('tr .subject span a').text(),
+                author: {
+                  name: postSource('tr .author a').text()
+                },
+                count: {
+                  view: postSource('tr .nums em').text(),
+                  reply: postSource('tr .nums strong').text()
+                },
+                publishDate: postSource('tr .author em').text()
+              }
             }
           }).get()
-            .filter((post) => post.id != "")
 
+          this.q.push(tasks)
+
+          // when all task finished
+          this.q.drain = () => {
+            this.scope.$broadcast('scroll.infiniteScrollComplete')
+          }
 
           // push into the array
           this.pages.push({
-            posts: posts,
+            posts: [],
             num: nextPage
           })
 
@@ -64,12 +89,25 @@ export class PostListController {
             name: topicName
           }
 
-          this.scope.$broadcast('scroll.infiniteScrollComplete');
+          if(cb) cb(null)
           // For JSON responses, resp.data contains the result
         }, (err) => {
           console.error('ERR', JSON.stringify(err))
+          cb(err)
           // err.status will contain the status code
         })
+  }
+
+  reset(){
+    this.q.kill()
+    this.pages = []
+  }
+
+  doRefresh(){
+    this.reset()
+    this.loadMore(() => {
+      this.scope.$broadcast('scroll.refreshComplete');
+    })
   }
 
 }

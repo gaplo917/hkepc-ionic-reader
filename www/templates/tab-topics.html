@@ -1,10 +1,14 @@
-<ion-view ng-init="topics=[]" view-title="論壇版塊">
+<ion-view ng-init="vm.topics=[]" view-title="論壇版塊">
   <ion-content>
+    <ion-refresher
+        pulling-text="拖下重新整理..."
+        on-refresh="vm.doRefresh()">
+    </ion-refresher>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="android" ng-show="topics.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.topics.length == 0"></ion-spinner>
     </div>
     <ion-list >
-      <span ng-repeat="topic in topics">
+      <span ng-repeat="topic in vm.topics">
         <div ng-show="topic.groupName" class="item item-divider" >
           {{topic.groupName}}
         </div>
@@ -14,7 +18,7 @@
             type="item-text-wrap"
             href="#/tab/topics/{{topic.id}}/page/1">
 
-          <h2>{{topic.name}}</h2>
+          <h2 class="bigger-title">{{topic.name}}</h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
           <small style="color:#aaaaaa">{{topic.description}}</small>
         </ion-item>

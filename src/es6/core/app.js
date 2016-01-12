@@ -83,5 +83,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   }
   $httpProvider.useApplyAsync(true);
 }])
+.config(['$ionicConfigProvider',function($ionicConfigProvider){
+  "use strict";
+  $ionicConfigProvider.scrolling.jsScrolling(false)
+}])
 
 ;

@@ -1,16 +1,44 @@
 /* Empty. Add your own CSS if you like */
+
+/* Font Size */
+.item .bigger-title {
+    font-size: 20px;
+}
+
+
+/* Spinner */
 div.spinner {
     margin: auto;
     position: absolute;
     top: 0; left: 0; bottom: 0; right: 0;
-    height: 85px;
+    height: 20px;
     text-align: center;
 }
 .spinner svg {
     width: 19% !important;
-    height: 85px !important;
+    height: 43px !important;
+}
+.ispinner .spinner {
+     stroke: #8fc320;
+     fill: #8fc320;
 }
 
 ion-list .item.item-divider{
-    background-color: rgb(166, 209, 115) !important;
+    color:#fff;
+    background-color: #8fc320 !important;
+}
+*{
+    word-break: break-all;
+}
+.card .item-body img{
+    height:auto;
+    width:100% !important;
+}
+.card .item-body img[src$=".gif"]{
+    height:auto;
+    width:auto!important;
+}
+
+blockquote {
+    border-left: 5px solid #8fc320;
 }
