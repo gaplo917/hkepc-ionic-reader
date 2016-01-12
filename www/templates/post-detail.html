@@ -1,21 +1,10 @@
 <ion-view ng-init="vm.post.title='下載中';vm.messages=[]" view-title="">
 
-  <style>
-    *{
-      word-break: break-all;
-    }
-    img{
-      height:auto;
-      width:100% !important;
-    }
-    img[src$=".gif"]{
-      height:auto;
-      width:auto!important;
-    }
-  </style>
-
-
-  <ion-content class="padding" on-swipe-left="vm.onSwipeLeft()" style="background-color:#f2f2f2">
+  <ion-content class="padding" style="background-color:#f2f2f2">
+    <ion-refresher
+        pulling-text="拖下重新整理..."
+        on-refresh="vm.doRefresh()">
+    </ion-refresher>
     <div style="text-align:center">
       <h4 class="title">{{vm.post.title}}</h4>
     </div>
@@ -27,7 +16,7 @@
       <div class="item item-avatar">
         <img src="{{message.author.image}}">
         <h2>{{message.author.name}}</h2>
-        <p>{{message.createdAt}}</p>
+        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
       </div>
 
       <div class="item item-body" ng-bind-html="message.content">
@@ -48,6 +37,18 @@
         </a>
       </div>
 
+    </div>
+    <ion-infinite-scroll
+        class="ispinner"
+        ng-if="vm.hasMoreData()"
+        style="text-align: center;"
+        on-infinite="vm.loadMore()"
+        spinner="android"
+        immediate-check="false"
+        distance="1%">
+    </ion-infinite-scroll>
+    <div style="text-align:center" ng-show="vm.end">
+      <h4 class="title">完</h4>
     </div>
   </ion-content>
 </ion-view>

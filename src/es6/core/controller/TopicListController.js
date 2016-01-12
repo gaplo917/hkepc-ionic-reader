@@ -1,35 +1,62 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-var cheerio = require('cheerio')
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {GeneralHtml} from "../model/general-html"
+var cheerio = require('cheerio')
+var async = require('async');
 
 export class TopicListController {
 
   constructor($scope,$http) {
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //
-    //$scope.$on('$ionicView.enter', function(e) {
-    //})
 
-    $scope.$on('$ionicView.loaded', function(e) {
+    $scope.vm = this
+    this.scope = $scope
+    this.http = $http
 
-      $http
-          .get(HKEPC.forum.index)
-          .then((resp) => {
-            let $ = cheerio.load(resp.data, {decodeEntities: true})
+    // create a UI rendering queue
+    this.q = async.queue((task, callback) => {
 
-            let topics = []
+      // update the topics list
+      this.topics.push(task())
 
-            $('#mainIndex > div').each(function (i, elem) {
-              let source = cheerio.load($(this).html())
+      if(this.q.length() % 10 == 0){
+        // force update the view after 10 task
+        this.scope.$apply()
+      }
 
-              const groupName = $(this).hasClass('group')
+      setTimeout(() => callback(), 20)
+    }, 1);
+
+    $scope.$on('$ionicView.loaded', (e) => {
+      this.loadList()
+    })
+  }
+
+  reset(){
+    // clear the queue
+    this.q.kill()
+
+    // reset the model
+    this.topics = []
+  }
+
+  loadList(cb) {
+
+    this.http
+        .get(HKEPC.forum.index)
+        .then((resp) => {
+
+          let $ = cheerio.load(resp.data)
+
+          const tasks = $('#mainIndex > div').map((i, elem) => {
+
+            return () => {
+
+              const source = cheerio.load($(elem).html())
+
+              const groupName = $(elem).hasClass('group')
                   ? source('a').text()
                   : undefined
 
@@ -37,25 +64,37 @@ export class TopicListController {
               const topicName = source('.forumInfo .caption').text()
               const description = source('.forumInfo p').next().text()
 
-              topics.push({
+              return {
                 id: topicId,
                 name: topicName,
                 groupName: groupName,
                 description: description
-              })
+              }
 
-            })
+            }
 
-            angular.extend($scope,{
-              topics:topics
-            })
+          }).get()
 
-            // For JSON responses, resp.data contains the result
-          }, (err) => {
-            alert("error")
-            console.error('ERR', JSON.stringify(err))
-            // err.status will contain the status code
+          this.q.push(tasks, (err) => {
+            console.log("finished!")
           })
+
+          // callback
+          if(cb) cb(null)
+
+        }, (err) => {
+          alert("error")
+          console.error('ERR', JSON.stringify(err))
+          cb(err)
+        })
+  }
+
+  doRefresh(){
+
+    this.reset()
+
+    this.loadList(() => {
+      this.scope.$broadcast('scroll.refreshComplete');
     })
   }
 }

@@ -1,5 +1,9 @@
 <ion-view view-title="{{vm.topic.name}}">
   <ion-content>
+    <ion-refresher
+        pulling-text="拖下重新整理..."
+        on-refresh="vm.doRefresh()">
+    </ion-refresher>
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.pages.length == 0"></ion-spinner>
     </div>
@@ -12,7 +16,7 @@
           ng-repeat="post in page.posts"
           type="item-text-wrap"
           href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
-        <h2>{{post.name}}</h2>
+        <h2 class="bigger-title">{{post.name}}</h2>
         <div>
           <small style="color:#aaa">{{post.publishDate}} @ {{post.author.name}}</small>
           <small style="float:right;color:#aaa">{{post.count.reply}} / {{post.count.view}}</small>
@@ -24,12 +28,6 @@
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
-    <style>
-      .ispinner .spinner {
-        stroke: #32c453;
-        fill: #32c453;
-      }
-    </style>
     <ion-infinite-scroll
         class="ispinner"
         style="text-align: center;"
