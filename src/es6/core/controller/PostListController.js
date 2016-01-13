@@ -134,7 +134,7 @@ export class PostListController {
 
     if(diff == 1 || diff == -2){
       // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
-      const smallestPageNum = Math.max.apply(Math, pagesNums)
+      const smallestPageNum = Math.min.apply(Math, pagesNums)
 
       if(this.currentPageNum > smallestPageNum){
         console.log("default previous page")
