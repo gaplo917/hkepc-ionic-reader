@@ -9,6 +9,7 @@ export var topics = {
   state:'tab.topics',
   name : "TopicCtrl",
   config: {
+    cache: false,
     url: '/topics',
     views: {
       'tab-topics': {
@@ -39,6 +40,7 @@ export var post = {
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
   config:{
+    cache: false,
     url: '/topics/:topicId/posts/:postId/page/:page',
     views: {
       'tab-topics': {

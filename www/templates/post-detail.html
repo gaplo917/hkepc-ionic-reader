@@ -6,7 +6,7 @@
         on-refresh="vm.doRefresh()">
     </ion-refresher>
     <div style="text-align:center">
-      <h4 class="title">{{vm.post.title}}</h4>
+      <h4 class="title">{{::vm.post.title}}</h4>
     </div>
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
@@ -14,12 +14,12 @@
     <div class="list card" ng-repeat="message in vm.messages">
 
       <div class="item item-avatar">
-        <img src="{{message.author.image}}">
-        <h2>{{message.author.name}}</h2>
-        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
+        <img src="{{::message.author.image}}">
+        <h2>{{::message.author.name}}</h2>
+        <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
       </div>
 
-      <div class="item item-body" ng-bind-html="message.content">
+      <div class="item item-body" ng-bind-html="::message.content">
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">

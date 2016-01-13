@@ -9,19 +9,19 @@
     </div>
     <ion-list >
       <span ng-repeat="topic in vm.topics">
-        <div ng-show="topic.groupName" class="item item-divider" >
-          {{topic.groupName}}
+        <div ng-show="::topic.groupName" class="item item-divider" >
+          {{::topic.groupName}}
         </div>
         <ion-item
-            ng-show="!topic.groupName"
+            ng-show="::!topic.groupName"
             ng-class-odd="'odd'" ng-class-even="'even'"
-            class="item-remove-animate item-icon-right"
+            class="item-remove-animate item-icon-right "
             type="item-text-wrap"
-            href="#/tab/topics/{{topic.id}}/page/1">
+            href="#/tab/topics/{{::topic.id}}/page/1">
 
-          <h2 class="bigger-title">{{topic.name}}</h2>
+          <h2 class="bigger-title ">{{::topic.name}}</h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
-          <small style="color:#aaaaaa">{{topic.description}}</small>
+          <small style="color:#aaaaaa">{{::topic.description}}</small>
         </ion-item>
       </span>
 
