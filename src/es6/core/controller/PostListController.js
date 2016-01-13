@@ -9,16 +9,21 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     $scope.vm = this;
     this.scope = $scope
     this.http = $http
+    this.location = $location
+    this.anchorScroll = $anchorScroll
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
     this.pages = []
+    this.slidePages = []
+    this.currentIndex = 0
+    this.currentPageNum = 0
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -26,7 +31,7 @@ export class PostListController {
       // update the post list
       const post = task()
       if(post.id || post.id != ""){
-        this.pages[this.pages.length - 1].posts.push(task())
+        this.pages.find(p => p.num == post.pageNum).posts.push(post)
       }
 
       if(this.q.length() % 3 == 0){
@@ -43,7 +48,7 @@ export class PostListController {
   }
 
   loadMore(cb){
-    const nextPage = this.pages.length + 1
+    const nextPage = this.currentPageNum + 1
     this.http
         .get(HKEPC.forum.topics(this.topicId, nextPage))
         .then((resp) => {
@@ -67,7 +72,8 @@ export class PostListController {
                   view: postSource('tr .nums em').text(),
                   reply: postSource('tr .nums strong').text()
                 },
-                publishDate: postSource('tr .author em').text()
+                publishDate: postSource('tr .author em').text(),
+                pageNum: this.pages.length
               }
             }
           }).get()
@@ -76,6 +82,7 @@ export class PostListController {
 
           // when all task finished
           this.q.drain = () => {
+
             this.scope.$apply()
             this.scope.$broadcast('scroll.infiniteScrollComplete')
           }
@@ -85,6 +92,10 @@ export class PostListController {
             posts: [],
             num: nextPage
           })
+
+          if(this.currentIndex == 0){
+            this.slidePages[0] = this.pages[0]
+          }
 
           this.topic = {
             id: this.topicId,
@@ -110,6 +121,71 @@ export class PostListController {
     this.loadMore(() => {
       this.scope.$broadcast('scroll.refreshComplete');
     })
+  }
+
+  onSlideChanged(index){
+    //scroll to the hash tag
+    this.location.hash(`ionic-slide-${index}`);
+    this.anchorScroll();
+
+    const diff = this.currentIndex - index
+    const pagesNums = this.pages.map(p => p.num)
+    this.currentPageNum = this.slidePages[this.currentIndex].num
+
+    if(diff == 1 || diff == -2){
+      // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
+      const smallestPageNum = Math.max.apply(Math, pagesNums)
+
+      if(this.currentPageNum > smallestPageNum){
+        console.log("default previous page")
+        this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+      }
+      else{
+        console.log("loadMore Before()")
+        if(this.currentPageNum == 1){
+
+        }
+        //this.slidePages[index] = []
+        //this.loadMore(() => {
+        //  const len = this.pages.length -1
+        //  const nextPage = Math.floor(len / 3) * 3 + index
+        //  this.slidePages[index] = this.pages[nextPage]
+        //
+        //})
+        //this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+        //this.scope.$apply()
+      }
+
+      this.scope.$apply()
+
+    }
+    else{
+      // next page
+      const largestPageNum = Math.max.apply(Math, pagesNums)
+
+      if(this.currentPageNum >= largestPageNum){
+        console.log("loadMore After()")
+        this.slidePages[index] = []
+        this.loadMore(() => {
+          const len = this.pages.length -1
+          const nextPage = Math.floor(len / 3) * 3 + index
+          this.slidePages[index] = this.pages[nextPage]
+
+        })
+
+      }
+      else{
+        console.log("default next page")
+        this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+        this.scope.$apply()
+      }
+
+    }
+
+    this.currentIndex = index
+
+    console.log(this.pages)
+    console.log(`onSlideChanged${index}`)
   }
 
 }
