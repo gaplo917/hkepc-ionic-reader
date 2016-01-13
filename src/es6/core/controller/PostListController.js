@@ -11,6 +11,7 @@ export class PostListController {
 
   constructor($scope,$http,$stateParams) {
     "use strict";
+    console.log("called POST LIST CONTROLLER")
     $scope.vm = this;
     this.scope = $scope
     this.http = $http
@@ -28,12 +29,12 @@ export class PostListController {
         this.pages[this.pages.length - 1].posts.push(task())
       }
 
-      if(this.q.length() % 10 == 0){
+      if(this.q.length() % 3 == 0){
         // force update the view after 10 task
         this.scope.$apply()
       }
 
-      setTimeout(() => callback(), 20)
+      setTimeout(() => callback(), 50)
     }, 1);
 
     this.scope.$on('$ionicView.loaded', (e) => {
@@ -75,6 +76,7 @@ export class PostListController {
 
           // when all task finished
           this.q.drain = () => {
+            this.scope.$apply()
             this.scope.$broadcast('scroll.infiniteScrollComplete')
           }
 

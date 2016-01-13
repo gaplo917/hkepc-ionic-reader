@@ -41,12 +41,12 @@ export class PostController{
         this.messages.push(message)
       }
 
-      if(this.q.length() % 10 == 0){
-        // force update the view after 10 task
+      if(this.q.length() % 1 == 0){
+         //force update the view after 10 task
         this.scope.$apply()
       }
 
-      setTimeout(() => callback(), 20)
+      setTimeout(() => callback(), 100)
     }, 1);
 
 
@@ -146,6 +146,7 @@ export class PostController{
               this.q.push(tasks)
 
               this.q.drain = () => {
+                this.scope.$apply()
                 this.scope.$broadcast('scroll.infiniteScrollComplete')
                 console.log("Done All UI rendering")
                 callback()

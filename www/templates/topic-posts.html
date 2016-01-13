@@ -9,21 +9,21 @@
     </div>
     <ion-list ng-repeat="page in vm.pages">
       <div class="item item-divider">
-        第 {{page.num}} 頁
+        第 {{::page.num}} 頁
       </div>
       <ion-item
           ng-class-odd="'odd'" ng-class-even="'even'"
           class="item-remove-animate item-icon-right item-text-wrap"
           ng-repeat="post in page.posts"
           type="item-text-wrap"
-          href="#/tab/topics/{{topic.id}}/posts/{{post.id}}/page/1">
-        <h2 class="bigger-title">{{post.name}}</h2>
+          href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
+        <h2 class="bigger-title">{{::post.name}}</h2>
         <div>
-          <small style="color:#aaa">{{post.publishDate}} @ {{post.author.name}}</small>
-          <small style="float:right;color:#aaa">{{post.count.reply}} / {{post.count.view}}</small>
+          <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
+          <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
         </div>
         <div>
-          <a ng-show="post.tag"><small>#{{post.tag}}</small></a>
+          <a ng-show="::post.tag"><small>#{{::post.tag}}</small></a>
         </div>
 
         <i class="icon ion-chevron-right icon-accessory"></i>

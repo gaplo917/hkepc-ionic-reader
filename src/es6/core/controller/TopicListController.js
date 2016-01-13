@@ -79,6 +79,10 @@ export class TopicListController {
             console.log("finished!")
           })
 
+          this.q.drain = () => {
+            this.scope.$apply()
+          }
+
           // callback
           if(cb) cb(null)
 
