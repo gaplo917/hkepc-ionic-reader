@@ -5,7 +5,11 @@
         on-refresh="vm.doRefresh()">
     </ion-refresher>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="ripple"></ion-spinner>
+      <ion-spinner
+          class="spinner-balanced"
+          icon="ripple"
+          ng-show="vm.showSpinner">
+      </ion-spinner>
     </div>
     <ion-slide-box on-slide-changed="vm.onSlideChanged($index)" does-continue="true" show-pager="false">
       <ion-slide id="ionic-slide-0">
