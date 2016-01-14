@@ -1,4 +1,4 @@
-<ion-view ng-init="vm.slidePages[0] = []" view-title="{{::vm.topic.name}}">
+<ion-view view-title="{{::vm.topic.name}}">
   <ion-content>
     <ion-refresher
         pulling-text="拖下重新整理..."
@@ -85,13 +85,5 @@
         </ion-list>
       </ion-slide>
     </ion-slide-box>
-    <!--<ion-infinite-scroll-->
-        <!--class="ispinner"-->
-        <!--style="text-align: center;"-->
-        <!--on-infinite="vm.loadMore()"-->
-        <!--spinner="android"-->
-        <!--immediate-check="false"-->
-        <!--distance="1%">-->
-    <!--</ion-infinite-scroll>-->
   </ion-content>
 </ion-view>
