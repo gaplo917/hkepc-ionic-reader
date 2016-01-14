@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     $scope.vm = this;
@@ -17,6 +17,7 @@ export class PostListController {
     this.http = $http
     this.location = $location
     this.anchorScroll = $anchorScroll
+    this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
@@ -31,7 +32,11 @@ export class PostListController {
       // update the post list
       const post = task()
       if(post.id || post.id != ""){
-        this.pages.find(p => p.num == post.pageNum).posts.push(post)
+        const page = this.pages.find(p => p.num == post.pageNum)
+
+        if(page){
+          page.posts.push(post)
+        }
       }
 
       if(this.q.length() % 3 == 0){
@@ -82,9 +87,7 @@ export class PostListController {
 
           // when all task finished
           this.q.drain = () => {
-
             this.scope.$apply()
-            this.scope.$broadcast('scroll.infiniteScrollComplete')
           }
 
           // push into the array
@@ -115,6 +118,9 @@ export class PostListController {
     this.q.kill()
     this.pages = []
     this.slidePages = []
+    this.ionicSlideBoxDelegate.slide(0,10)
+    this.currentIndex = 0
+    this.currentPageNum = 0
   }
 
   doRefresh(){
@@ -125,6 +131,7 @@ export class PostListController {
   }
 
   onSlideChanged(index){
+    if(this.slidePages.length == 0) return 0
     //scroll to the hash tag
     this.location.hash(`ionic-slide-${index}`)
     this.anchorScroll()
@@ -144,21 +151,16 @@ export class PostListController {
         if(this.currentPageNum > smallestPageNum){
           console.log("default previous page")
           this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+
+          // prefetch for better UX
+          const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
+          this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
         }
         else{
           console.log("loadMore Before()")
           if(this.currentPageNum == 1){
-
+            this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum)
           }
-          //this.slidePages[index] = []
-          //this.loadMore(() => {
-          //  const len = this.pages.length -1
-          //  const nextPage = Math.floor(len / 3) * 3 + index
-          //  this.slidePages[index] = this.pages[nextPage]
-          //
-          //})
-          //this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
-          //this.scope.$apply()
         }
 
         this.scope.$apply()
@@ -174,6 +176,7 @@ export class PostListController {
           this.loadMore(() => {
             const len = this.pages.length -1
             const nextPage = Math.floor(len / 3) * 3 + index
+            this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
             this.slidePages[index] = this.pages[nextPage]
 
           })
@@ -182,6 +185,10 @@ export class PostListController {
         else{
           console.log("default next page")
           this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+
+          // prefetch for better UX
+          const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
+          this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
           this.scope.$apply()
         }
 
