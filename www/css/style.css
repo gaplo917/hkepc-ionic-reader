@@ -44,6 +44,11 @@ ion-list .item.item-divider{
     width:auto!important;
 }
 
+.card .item-body *{
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+}
 blockquote {
     border-left: 5px solid #8fc320;
 }

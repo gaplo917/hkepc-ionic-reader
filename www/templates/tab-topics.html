@@ -5,7 +5,7 @@
         on-refresh="vm.doRefresh()">
     </ion-refresher>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="android" ng-show="vm.topics.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" ng-show="vm.topics.length == 0"></ion-spinner>
     </div>
     <ion-list >
       <span ng-repeat="topic in vm.topics">
