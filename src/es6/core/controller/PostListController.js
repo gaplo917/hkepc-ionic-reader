@@ -25,6 +25,7 @@ export class PostListController {
     this.slidePages = []
     this.currentIndex = 0
     this.currentPageNum = 0
+    this.showSpinner = true
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -57,6 +58,8 @@ export class PostListController {
     this.http
         .get(HKEPC.forum.topics(this.topicId, nextPage))
         .then((resp) => {
+          // hide the spinner
+          this.showSpinner = false
 
           let $ = cheerio.load(resp.data)
           const topicName = $('#nav').text().split('»')[1]
@@ -121,6 +124,8 @@ export class PostListController {
     this.ionicSlideBoxDelegate.slide(0,10)
     this.currentIndex = 0
     this.currentPageNum = 0
+    this.showSpinner = true
+
   }
 
   doRefresh(){
@@ -132,6 +137,9 @@ export class PostListController {
 
   onSlideChanged(index){
     if(this.slidePages.length == 0) return 0
+
+    this.showSpinner = true
+
     //scroll to the hash tag
     this.location.hash(`ionic-slide-${index}`)
     this.anchorScroll()

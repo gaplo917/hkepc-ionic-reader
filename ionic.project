@@ -1,4 +1,11 @@
 {
   "name": "myApp",
-  "app_id": "7064836f"
+  "app_id": "7064836f",
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
 }
