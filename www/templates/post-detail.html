@@ -9,7 +9,7 @@
       <h4 class="title">{{vm.post.title}}</h4>
     </div>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" ng-show="vm.messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
     <div class="list card" ng-repeat="message in vm.messages">
 
@@ -43,9 +43,9 @@
         ng-if="vm.hasMoreData()"
         style="text-align: center;"
         on-infinite="vm.loadMore()"
-        spinner="android"
+        spinner="ripple"
         immediate-check="false"
-        distance="1%">
+        distance="7%">
     </ion-infinite-scroll>
     <div style="text-align:center" ng-show="vm.end">
       <h4 class="title">完</h4>
