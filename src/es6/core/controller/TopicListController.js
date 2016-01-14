@@ -89,7 +89,7 @@ export class TopicListController {
         }, (err) => {
           alert("error")
           console.error('ERR', JSON.stringify(err))
-          cb(err)
+          if(cb) cb(err)
         })
   }
 
