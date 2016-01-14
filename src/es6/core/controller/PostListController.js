@@ -179,6 +179,9 @@ export class PostListController {
             this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
             this.slidePages[index] = this.pages[nextPage]
 
+            // prefetch for better UX
+            const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
+            this.slidePages[prefetchSlideIndex] = []
           })
 
         }

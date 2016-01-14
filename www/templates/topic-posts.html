@@ -1,16 +1,15 @@
-<ion-view view-title="{{::vm.topic.name}}">
+<ion-view ng-init="vm.slidePages[0] = []" view-title="{{::vm.topic.name}}">
   <ion-content>
     <ion-refresher
         pulling-text="拖下重新整理..."
         on-refresh="vm.doRefresh()">
     </ion-refresher>
+    <div class="spinner">
+      <ion-spinner class="spinner"></ion-spinner>
+    </div>
     <ion-slide-box on-slide-changed="vm.onSlideChanged($index)" does-continue="true" show-pager="false">
       <ion-slide id="ionic-slide-0">
-
         <ion-list >
-          <div style="height:40px; text-align:center" ng-show="vm.slidePages[0].length == 0">
-            <ion-spinner class="spinner" icon="android"></ion-spinner>
-          </div>
           <div class="item item-divider" ng-if="vm.slidePages[0].num">
             第 {{vm.slidePages[0].num}} 頁
           </div>
@@ -35,9 +34,6 @@
       </ion-slide>
       <ion-slide id="ionic-slide-1">
         <ion-list>
-          <div style="height:40px; text-align:center" ng-show="vm.slidePages[1].length == 0">
-            <ion-spinner class="spinner" icon="android"></ion-spinner>
-          </div>
           <div class="item item-divider" ng-if="vm.slidePages[1].num">
             第 {{vm.slidePages[1].num || '?'}} 頁
           </div>
@@ -62,9 +58,6 @@
       </ion-slide>
       <ion-slide id="ionic-slide-2">
         <ion-list>
-          <div style="height:40px; text-align:center" ng-show="vm.slidePages[2].length == 0">
-            <ion-spinner class="spinner" icon="android"></ion-spinner>
-          </div>
           <div class="item item-divider" ng-if="vm.slidePages[2].num">
             第 {{vm.slidePages[2].num}} 頁
           </div>

@@ -53,7 +53,7 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMore()
+      setTimeout(()=> this.loadMore(),200)
     })
 
   }
