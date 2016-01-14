@@ -41,7 +41,7 @@ export class PostListController {
       }
 
       if(this.q.length() % 3 == 0){
-        // force update the view after 10 task
+        // force update the view after 3 task
         this.scope.$apply()
       }
 
@@ -67,7 +67,7 @@ export class PostListController {
           const tasks = $('.threadlist table tbody').map( (i, elem) => {
             return () => {
 
-              let postSource = cheerio.load($(elem).html())
+              const postSource = cheerio.load($(elem).html())
 
               return {
                 id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
@@ -81,12 +81,14 @@ export class PostListController {
                   reply: postSource('tr .nums strong').text()
                 },
                 publishDate: postSource('tr .author em').text(),
-                pageNum: this.pages.length
+                pageNum: nextPage
               }
             }
           }).get()
 
-          this.q.push(tasks)
+          this.q.push(tasks, (err) => {
+            console.log("finished one task!")
+          })
 
           // when all task finished
           this.q.drain = () => {
