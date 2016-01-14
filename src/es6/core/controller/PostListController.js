@@ -43,7 +43,7 @@ export class PostListController {
     }, 1);
 
     this.scope.$on('$ionicView.loaded', (e) => {
-      this.loadMore()
+      setTimeout(() => { this.loadMore() } ,400)
     })
   }
 
@@ -106,7 +106,7 @@ export class PostListController {
           // For JSON responses, resp.data contains the result
         }, (err) => {
           console.error('ERR', JSON.stringify(err))
-          cb(err)
+          if(cb) cb(err)
           // err.status will contain the status code
         })
   }
@@ -114,6 +114,7 @@ export class PostListController {
   reset(){
     this.q.kill()
     this.pages = []
+    this.slidePages = []
   }
 
   doRefresh(){
@@ -125,64 +126,69 @@ export class PostListController {
 
   onSlideChanged(index){
     //scroll to the hash tag
-    this.location.hash(`ionic-slide-${index}`);
-    this.anchorScroll();
+    this.location.hash(`ionic-slide-${index}`)
+    this.anchorScroll()
 
-    const diff = this.currentIndex - index
-    const pagesNums = this.pages.map(p => p.num)
-    this.currentPageNum = this.slidePages[this.currentIndex].num
+    // clear the model first
+    //this.slidePages[index] = []
 
-    if(diff == 1 || diff == -2){
-      // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
-      const smallestPageNum = Math.min.apply(Math, pagesNums)
+    setTimeout(() => {
+      const diff = this.currentIndex - index
+      const pagesNums = this.pages.map(p => p.num)
+      this.currentPageNum = this.slidePages[this.currentIndex].num
 
-      if(this.currentPageNum > smallestPageNum){
-        console.log("default previous page")
-        this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+      if(diff == 1 || diff == -2){
+        // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
+        const smallestPageNum = Math.min.apply(Math, pagesNums)
+
+        if(this.currentPageNum > smallestPageNum){
+          console.log("default previous page")
+          this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+        }
+        else{
+          console.log("loadMore Before()")
+          if(this.currentPageNum == 1){
+
+          }
+          //this.slidePages[index] = []
+          //this.loadMore(() => {
+          //  const len = this.pages.length -1
+          //  const nextPage = Math.floor(len / 3) * 3 + index
+          //  this.slidePages[index] = this.pages[nextPage]
+          //
+          //})
+          //this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+          //this.scope.$apply()
+        }
+
+        this.scope.$apply()
+
       }
       else{
-        console.log("loadMore Before()")
-        if(this.currentPageNum == 1){
+        // next page
+        const largestPageNum = Math.max.apply(Math, pagesNums)
+
+        if(this.currentPageNum >= largestPageNum){
+          console.log("loadMore After()")
+          this.slidePages[index] = []
+          this.loadMore(() => {
+            const len = this.pages.length -1
+            const nextPage = Math.floor(len / 3) * 3 + index
+            this.slidePages[index] = this.pages[nextPage]
+
+          })
 
         }
-        //this.slidePages[index] = []
-        //this.loadMore(() => {
-        //  const len = this.pages.length -1
-        //  const nextPage = Math.floor(len / 3) * 3 + index
-        //  this.slidePages[index] = this.pages[nextPage]
-        //
-        //})
-        //this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
-        //this.scope.$apply()
-      }
-
-      this.scope.$apply()
-
-    }
-    else{
-      // next page
-      const largestPageNum = Math.max.apply(Math, pagesNums)
-
-      if(this.currentPageNum >= largestPageNum){
-        console.log("loadMore After()")
-        this.slidePages[index] = []
-        this.loadMore(() => {
-          const len = this.pages.length -1
-          const nextPage = Math.floor(len / 3) * 3 + index
-          this.slidePages[index] = this.pages[nextPage]
-
-        })
+        else{
+          console.log("default next page")
+          this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+          this.scope.$apply()
+        }
 
       }
-      else{
-        console.log("default next page")
-        this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
-        this.scope.$apply()
-      }
 
-    }
-
-    this.currentIndex = index
+      this.currentIndex = index
+    },100)
 
     console.log(this.pages)
     console.log(`onSlideChanged${index}`)
