@@ -64,7 +64,8 @@ export class GeneralHtml{
       if(url){
         //console.log('lazy',lazyImg)
         this.source(e).attr('href','#')
-        this.source(e).attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
+        this.source(e).attr('target',`_blank`)
+        this.source(e).attr('onclick',`window.open('${url}', '_blank', 'location=no'); return false;`)
       }
 
 

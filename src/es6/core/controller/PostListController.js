@@ -88,7 +88,7 @@ export class PostListController {
           }).get()
 
           this.q.push(tasks, (err) => {
-            console.log("finished one task!")
+            // callback of each task if any
           })
 
           // when all task finished
@@ -212,7 +212,6 @@ export class PostListController {
       this.currentIndex = index
     },100)
 
-    console.log(this.pages)
     console.log(`onSlideChanged${index}`)
   }
 
