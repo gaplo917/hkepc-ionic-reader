@@ -1,13 +1,12 @@
 <ion-view view-title="論壇版塊">
+  <ion-nav-buttons side="right" style="float:right">
+    <a class="button button-icon icon ion-loop" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
   <ion-content on-touch="vm.onTouch()" on-release="vm.onRelease()">
-    <ion-refresher
-        pulling-text="拖下重新整理..."
-        on-refresh="vm.doRefresh()">
-    </ion-refresher>
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.topics.length == 0"></ion-spinner>
     </div>
-    <ion-list >
+    <ion-list>
       <span ng-repeat="topic in vm.topics track by $index">
         <div ng-if="::topic.groupName" class="item item-divider" ng-bind="::topic.groupName">
         </div>
