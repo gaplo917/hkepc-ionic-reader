@@ -9,12 +9,23 @@ export class GeneralHtml{
     this.source = cheerioSource
 
     // remove all the script tags
+    this.removeScripts()
+
+    // replace all external url
+    this.processExternalUrl()
+
+  }
+
+  removeScripts(){
     this.source('script').remove()
+
+    return this
   }
 
   removeIframe(){
     this.source('iframe').remove()
-    return this;
+
+    return this
   }
 
   processImgUrl(imagePrefix){
@@ -40,7 +51,30 @@ export class GeneralHtml{
 
     })
 
-    return this;
+    return this
+  }
+
+  processExternalUrl(){
+
+    this.source('a').each((i,e) => {
+
+      // remove action attr on img
+      this.source(e).removeAttr('onload')
+      this.source(e).removeAttr('onclick')
+
+      const url = this.source(e).attr('href')
+
+      if(url){
+        //console.log('lazy',lazyImg)
+        this.source(e).attr('href','#')
+        this.source(e).attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
+      }
+
+
+    })
+
+    return this
+
   }
 
   getTitle(){
