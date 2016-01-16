@@ -86,6 +86,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
   "use strict";
   $ionicConfigProvider.scrolling.jsScrolling(false)
+  $ionicConfigProvider.spinner.icon('ripple')
+  $ionicConfigProvider.tabs.style('standard')
+  $ionicConfigProvider.tabs.position('bottom')
+
 }])
 
 ;
