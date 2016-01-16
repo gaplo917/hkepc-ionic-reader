@@ -81,6 +81,7 @@ export class PostController{
               let $ = html
                   .removeIframe()
                   .processImgUrl(HKEPC.forum.image)
+                  .processExternalUrl()
                   .getCheerio()
 
               // remove the hkepc forum text

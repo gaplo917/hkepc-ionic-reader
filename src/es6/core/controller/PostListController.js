@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     $scope.vm = this;
@@ -18,13 +18,14 @@ export class PostListController {
     this.location = $location
     this.anchorScroll = $anchorScroll
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
+    this.ionicHistory = $ionicHistory
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
     this.pages = []
     this.slidePages = []
     this.currentIndex = 0
-    this.currentPageNum = 0
+    this.currentPageNum = this.page - 1
     this.showSpinner = true
 
     // create a UI rendering queue
@@ -53,7 +54,7 @@ export class PostListController {
     })
   }
 
-  loadMore(cb){
+  loadMore(cb = () => {}){
     const nextPage = this.currentPageNum + 1
     this.http
         .get(HKEPC.forum.topics(this.topicId, nextPage))
@@ -110,11 +111,11 @@ export class PostListController {
             name: topicName
           }
 
-          if(cb) cb(null)
+          cb(null)
           // For JSON responses, resp.data contains the result
         }, (err) => {
           console.error('ERR', JSON.stringify(err))
-          if(cb) cb(err)
+          cb(err)
           // err.status will contain the status code
         })
   }
@@ -169,7 +170,8 @@ export class PostListController {
         else{
           console.log("loadMore Before()")
           if(this.currentPageNum == 1){
-            this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum)
+            console.log("go back")
+            this.ionicHistory.goBack()
           }
         }
 
