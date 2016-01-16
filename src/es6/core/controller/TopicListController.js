@@ -14,6 +14,7 @@ export class TopicListController {
     this.scope = $scope
     this.http = $http
     this.localstorage = $localstorage
+    this.topics = []
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -21,8 +22,8 @@ export class TopicListController {
       // update the topics list
       this.topics.push(task())
 
-      if(this.q.length() % 10 == 0){
-        // force update the view
+      if(this.q.length() % 3 == 0){
+        // force update the view after 3 task
         this.scope.$apply()
       }
 
