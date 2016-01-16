@@ -1,4 +1,4 @@
-<ion-view ng-init="vm.post.title='下載中';vm.messages=[]" view-title="">
+<ion-view ng-init="vm.messages=[]" view-title="">
 
   <ion-content class="padding" on-swipe-right="vm.onSwipeRight()"  style="background-color:#f2f2f2">
     <ion-refresher
@@ -6,16 +6,16 @@
         on-refresh="vm.doRefresh()">
     </ion-refresher>
     <div style="text-align:center">
-      <h4 class="title">{{vm.post.title}}</h4>
+      <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
     </div>
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
-    <div class="list card" ng-repeat="message in vm.messages">
+    <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
         <img src="{{::message.author.image}}">
-        <h2>{{::message.author.name}}</h2>
+        <h2 ng-bind="::message.author.name"></h2>
         <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
       </div>
 

@@ -20,7 +20,7 @@
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[0].posts"
+              ng-repeat="post in vm.slidePages[0].posts track by $index"
               type="item-text-wrap"
               href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}}</h2>
@@ -44,10 +44,10 @@
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[1].posts"
+              ng-repeat="post in vm.slidePages[1].posts track by $index"
               type="item-text-wrap"
               href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title">{{::post.name}}</h2>
+            <h2 class="bigger-title" ng-bind="::post.name"></h2>
             <div>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
               <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
@@ -68,10 +68,10 @@
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[2].posts"
+              ng-repeat="post in vm.slidePages[2].posts track by $index"
               type="item-text-wrap"
               href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title">{{::post.name}}</h2>
+            <h2 class="bigger-title" ng-bind="::post.name"></h2>
             <div>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
               <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>

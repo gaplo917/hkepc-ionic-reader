@@ -11,9 +11,6 @@ export class GeneralHtml{
     // remove all the script tags
     this.removeScripts()
 
-    // replace all external url
-    this.processExternalUrl()
-
   }
 
   removeScripts(){

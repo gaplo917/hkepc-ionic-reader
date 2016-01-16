@@ -45,7 +45,7 @@ export class PostListController {
         this.scope.$apply()
       }
 
-      setTimeout(() => callback(), 50)
+      setTimeout(() => callback(), 40)
     }, 1);
 
     this.scope.$on('$ionicView.loaded', (e) => {
