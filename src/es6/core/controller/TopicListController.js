@@ -9,11 +9,11 @@ var async = require('async');
 
 export class TopicListController {
 
-  constructor($scope,$http) {
-
+  constructor($scope,$http,$localstorage) {
     $scope.vm = this
     this.scope = $scope
     this.http = $http
+    this.localstorage = $localstorage
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -22,16 +22,25 @@ export class TopicListController {
       this.topics.push(task())
 
       if(this.q.length() % 10 == 0){
-        // force update the view after 10 task
+        // force update the view
         this.scope.$apply()
       }
 
       setTimeout(() => callback(), 20)
     }, 1);
 
-    $scope.$on('$ionicView.loaded', (e) => {
-      this.loadList()
+    $scope.$on('$ionicView.enter', (e) => {
+      const topics = this.localstorage.getObject('topics')
+      if(Object.keys(topics).length == 0){
+        this.loadList()
+      }
+      else{
+        console.log("using cache")
+        this.topics = topics
+      }
+
     })
+
   }
 
   reset(){
@@ -48,7 +57,12 @@ export class TopicListController {
         .get(HKEPC.forum.index)
         .then((resp) => {
 
-          let $ = cheerio.load(resp.data)
+          const html = new GeneralHtml(cheerio.load(resp.data))
+
+          let $ = html
+              .removeIframe()
+              .processImgUrl(HKEPC.forum.image)
+              .getCheerio()
 
           const tasks = $('#mainIndex > div').map((i, elem) => {
 
@@ -63,10 +77,12 @@ export class TopicListController {
               const topicId = URLUtils.getQueryVariable(source('.forumInfo .caption').attr('href'), 'fid')
               const topicName = source('.forumInfo .caption').text()
               const description = source('.forumInfo p').next().text()
+              const image = source('.icon img').attr('src')
 
               return {
                 id: topicId,
                 name: topicName,
+                image: image,
                 groupName: groupName,
                 description: description
               }
@@ -80,6 +96,7 @@ export class TopicListController {
           })
 
           this.q.drain = () => {
+            this.localstorage.setObject('topics',this.topics)
             this.scope.$apply()
           }
 
@@ -100,5 +117,17 @@ export class TopicListController {
     this.loadList(() => {
       this.scope.$broadcast('scroll.refreshComplete');
     })
+  }
+
+  onTouch(){
+    console.log("ontouch")
+    this.q.pause()
+  }
+
+  onRelease(){
+    console.log("onRelease")
+    setTimeout(() => {
+      this.q.resume()
+    },250)
   }
 }

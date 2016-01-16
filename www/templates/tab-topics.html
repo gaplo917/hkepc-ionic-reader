@@ -1,5 +1,5 @@
 <ion-view ng-init="vm.topics=[]" view-title="論壇版塊">
-  <ion-content>
+  <ion-content on-touch="vm.onTouch()" on-release="vm.onRelease()">
     <ion-refresher
         pulling-text="拖下重新整理..."
         on-refresh="vm.doRefresh()">
@@ -15,11 +15,11 @@
         <ion-item
             ng-show="::!topic.groupName"
             ng-class-odd="'odd'" ng-class-even="'even'"
-            class="item-remove-animate item-icon-right "
+            class="item-remove-animate item-avatar item-icon-right "
             type="item-text-wrap"
             href="#/tab/topics/{{::topic.id}}/page/1">
-
-          <h2 class="bigger-title ">{{::topic.name}}</h2>
+          <img ng-src="{{::topic.image}}">
+          <h2>{{::topic.name}}</h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
           <small style="color:#aaaaaa">{{::topic.description}}</small>
         </ion-item>
