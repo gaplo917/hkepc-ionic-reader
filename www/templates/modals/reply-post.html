@@ -1,0 +1,45 @@
+
+<ion-modal-view class="product edit create" >
+  <form name="itemEdit" novalidate ng-submit="submitForm(itemEdit.$valid)">
+    <ion-header-bar class="bar-positive fix-buttons">
+      <button class="button" ng-click="cancel()">Cancel {{vm.test}}</button>
+      <h1 class="title">{{ vm.message.post.title }}</h1>
+      <button class="button" ng-click="vm.doReply(vm.message,vm.reply)">Post</button>
+    </ion-header-bar>
+    <ion-content has-bouncing="true">
+      <div class="list card">
+
+        <div class="item item-avatar">
+          <img src="{{::vm.message.author.image}}">
+          <h2 ng-bind="::vm.message.author.name"></h2>
+          <p>{{::vm.message.createdAt}} <span style="float:right">#{{::vm.message.pos}}</span></p>
+        </div>
+
+        <div class="item item-body" ng-bind-html="::vm.message.content">
+        </div>
+
+      </div>
+      <ion-list>
+        <div class="item item-divider" style="text-align: center">
+          回覆類別
+        </div>
+        <div class="row">
+        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="1"><i class="icon ion-compose"></i> 無</ion-radio>
+        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="2"><i class="icon ion-reply"></i> 回覆</ion-radio>
+        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="3"><i class="icon ion-quote"></i> 引用</ion-radio>
+        </div>
+      </ion-list>
+
+      <div class="row">
+        <div class="col">
+          <label class="item item-input text">
+            <textarea placeholder="請輪入文字" rows="15" ng-model="vm.reply.content" ng-Required="true" name="description"></textarea>
+          </label>
+        </div>
+      </div>
+
+      <button class="button button-balanced button-full" >草稿</button>
+
+    </ion-content>
+  </form>
+</ion-modal-view>

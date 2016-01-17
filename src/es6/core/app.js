@@ -19,11 +19,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
+      StatusBar.overlaysWebView(true);
       StatusBar.styleDefault();
     }
   });
 })
-
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -86,6 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
   "use strict";
   $ionicConfigProvider.scrolling.jsScrolling(false)
+  $ionicConfigProvider.views.maxCache(5)
   $ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')
