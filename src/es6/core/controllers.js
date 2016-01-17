@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
 
     $http({
       method: "POST",
-      url : HKEPC.forum.login,
+      url : HKEPC.forum.login(),
       data:`username=${username}&password=${password}&cookietime=2592000`,
       headers : {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then((resp) => {
