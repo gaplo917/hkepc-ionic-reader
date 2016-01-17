@@ -37,7 +37,7 @@ export class PostListController {
       if(post.id || post.id != ""){
         const page = this.pages.find(p => p.num == post.pageNum)
 
-        if(page){
+        if(page && !post.isSticky){
           page.posts.push(post)
         }
       }
@@ -52,11 +52,6 @@ export class PostListController {
 
     this.scope.$on('$ionicView.loaded', (e) => {
       setTimeout(() => { this.loadMore() } ,400)
-    })
-
-    this.scope.$on('$ionicView.afterLeave', (e) =>{
-      reset()
-      this.q = undefined
     })
   }
 
@@ -79,8 +74,11 @@ export class PostListController {
 
           const tasks = $('.threadlist table tbody').map( (i, elem) => {
             return () => {
+              const htmlId = $(elem).attr('id')
 
               const postSource = cheerio.load($(elem).html())
+              const postTitleImgUrl = postSource('tr .folder img').attr('src')
+
 
               return {
                 id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
@@ -95,7 +93,9 @@ export class PostListController {
                   reply: postSource('tr .nums strong').text()
                 },
                 publishDate: postSource('tr .author em').text(),
-                pageNum: nextPage
+                pageNum: nextPage,
+                isSticky: htmlId ? htmlId.startsWith("stickthread") : false,
+                isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false
               }
             }
           }).get()
@@ -123,9 +123,6 @@ export class PostListController {
             id: this.topicId,
             name: topicName
           }
-
-          // update the topic name
-          this.scope.$apply()
 
           cb(null)
           // For JSON responses, resp.data contains the result
