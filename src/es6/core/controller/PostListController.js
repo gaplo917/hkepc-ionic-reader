@@ -37,7 +37,7 @@ export class PostListController {
       if(post.id || post.id != ""){
         const page = this.pages.find(p => p.num == post.pageNum)
 
-        if(page && !post.isSticky){
+        if(page){
           page.posts.push(post)
         }
       }
@@ -46,7 +46,6 @@ export class PostListController {
         // force update the view after 3 task
         this.scope.$apply()
       }
-
       setTimeout(() => callback(), 40)
     }, 1);
 

@@ -93,7 +93,7 @@ export class TopicListController {
           }).get()
 
           this.q.push(tasks, (err) => {
-            console.log("finished!")
+            // call back of each task
           })
 
           this.q.drain = () => {
