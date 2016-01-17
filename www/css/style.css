@@ -52,3 +52,18 @@ ion-list .item.item-divider{
 blockquote {
     border-left: 5px solid #8fc320;
 }
+
+.sticky-header{
+    height:40px;
+    width:100%;
+    position:fixed;
+    z-index:100;
+    margin-top:40px;
+    color: #fff;
+    background-color: #8fc320 !important;
+    font-weight: 500;
+    display: block;
+    font-size: 16px;
+    line-height: 40px;
+    text-align: center;
+}
