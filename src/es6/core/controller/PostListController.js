@@ -64,6 +64,12 @@ export class PostListController {
 
           let $ = cheerio.load(resp.data)
           const topicName = $('#nav').text().split('»')[1]
+          const totalPageNumText = $('.pages_btns .pages .last').first().text()
+
+          // only extract the number
+          this.totalPageNum = totalPageNumText
+                              ? totalPageNumText.match(/\d/g).join("")
+                              : 1
 
           const tasks = $('.threadlist table tbody').map( (i, elem) => {
             return () => {
@@ -171,17 +177,26 @@ export class PostListController {
           console.log("loadMore Before()")
           if(this.currentPageNum == 1){
             console.log("go back")
+            this.ionicHistory.nextViewOptions({
+              disableAnimate: true
+            });
             this.ionicHistory.goBack()
           }
         }
-
-        this.scope.$apply()
-
       }
       else{
         // next page
         const largestPageNum = Math.max.apply(Math, pagesNums)
 
+        if(this.currentPageNum == this.totalPageNum){
+
+          // TODO: should have a better UX instead of alert box
+          alert("完")
+          this.ionicHistory.nextViewOptions({
+            disableAnimate: true
+          });
+          this.ionicHistory.goBack()
+        }
         if(this.currentPageNum >= largestPageNum){
           console.log("loadMore After()")
           this.slidePages[index] = []
@@ -204,12 +219,13 @@ export class PostListController {
           // prefetch for better UX
           const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
           this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
-          this.scope.$apply()
         }
 
       }
 
       this.currentIndex = index
+      this.scope.$apply()
+
     },100)
 
     console.log(`onSlideChanged${index}`)
