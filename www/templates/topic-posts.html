@@ -1,4 +1,4 @@
-<ion-view view-title="{{vm.topic.name}}">
+<ion-view ng-init="vm.slidePages=[{},{},{}]" view-title="{{vm.topic.name}}">
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-refresh" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
@@ -16,16 +16,17 @@
 
     <ion-slide-box on-slide-changed="vm.onSlideChanged($index)" does-continue="true" show-pager="false" >
 
-      <ion-slide id="ionic-slide-0" style="padding-top:36px">
+      <ion-slide id="ionic-slide-0" style="padding-top:36px" ng-repeat="page in vm.slidePages track by $index">
         <ion-list >
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[0].posts track by $index"
+              ng-repeat="post in page.posts"
               type="item-text-wrap"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}}</h2>
             <div>
+              <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
               <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
             </div>
@@ -38,54 +39,6 @@
         </ion-list>
       </ion-slide>
 
-      <ion-slide id="ionic-slide-1">
-        <ion-list>
-          <div class="item item-divider" ng-if="vm.slidePages[1].num">
-            第 {{vm.slidePages[1].num || '?'}} 頁
-          </div>
-          <ion-item
-              ng-class-odd="'odd'" ng-class-even="'even'"
-              class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[1].posts track by $index"
-              type="item-text-wrap"
-              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title" ng-bind="::post.name"></h2>
-            <div>
-              <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
-              <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
-            </div>
-            <div>
-              <a ng-show="::post.tag"><small>#{{::post.tag}}</small></a>
-            </div>
-
-            <i class="icon ion-chevron-right icon-accessory"></i>
-          </ion-item>
-        </ion-list>
-      </ion-slide>
-      <ion-slide id="ionic-slide-2">
-        <ion-list>
-          <div class="item item-divider" ng-if="vm.slidePages[2].num">
-            第 {{vm.slidePages[2].num}} 頁
-          </div>
-          <ion-item
-              ng-class-odd="'odd'" ng-class-even="'even'"
-              class="item-remove-animate item-icon-right item-text-wrap"
-              ng-repeat="post in vm.slidePages[2].posts track by $index"
-              type="item-text-wrap"
-              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title" ng-bind="::post.name"></h2>
-            <div>
-              <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
-              <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
-            </div>
-            <div>
-              <a ng-show="::post.tag"><small>#{{::post.tag}}</small></a>
-            </div>
-
-            <i class="icon ion-chevron-right icon-accessory"></i>
-          </ion-item>
-        </ion-list>
-      </ion-slide>
     </ion-slide-box>
 
   </ion-content>

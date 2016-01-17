@@ -112,8 +112,8 @@ export class PostController{
 
               // PostHtml map to the model
               const tasks = $('#postlist > div').map( (i,elem) => {
+                // remember this is a function object (lazy function)
                 return () => {
-                  console.log("lazy function!!!")
                   let postSource = cheerio.load($(elem).html())
 
                   const message = {
