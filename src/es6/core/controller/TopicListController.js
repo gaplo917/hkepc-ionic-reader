@@ -55,7 +55,7 @@ export class TopicListController {
   loadList(cb) {
 
     this.http
-        .get(HKEPC.forum.index)
+        .get(HKEPC.forum.index())
         .then((resp) => {
 
           const html = new GeneralHtml(cheerio.load(resp.data))
