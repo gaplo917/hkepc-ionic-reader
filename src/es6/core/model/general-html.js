@@ -39,7 +39,7 @@ export class GeneralHtml{
 
       if(URLUtils.isRelativeUrl(imgSrc)){
         //console.log('relative',imgSrc)
-        this.source(e).attr('src',`${imagePrefix}${imgSrc}`)
+        this.source(e).attr('src',`${imagePrefix}/${imgSrc}`)
       }
 
       // remove action attr on img

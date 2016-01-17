@@ -4,7 +4,6 @@
 module.exports = {
   baseUrl: 'http://www.hkepc.com/forum',
   forum: {
-    image:'http://www.hkepc.com/forum/',
     index: 'http://www.hkepc.com/forum/index.php',
     topics: (topicId,page) => `http://www.hkepc.com/forum/forumdisplay.php?fid=${topicId}&page=${page}`,
     posts: (topicId,postId,page) => `http://www.hkepc.com/forum/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
@@ -16,7 +15,7 @@ module.exports = {
        *    id: Int,
        *    postId: Int,
        *    topicId: Int,
-       *    type: Int
+       *    type: Int ,  1 = None, 2 = Reply , 3 = Quote
        * }
        */
 
@@ -33,8 +32,7 @@ module.exports = {
           return url
       }
 
-    },
-    reply: (topicId,postId) => `http://www.hkepc.com/forum/post.php?action=reply&fid=${topicId}&tid=${postId}&extra=&replysubmit=yes`
+    }
   },
 
   data:{

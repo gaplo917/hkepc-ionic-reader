@@ -62,7 +62,7 @@ export class TopicListController {
 
           let $ = html
               .removeIframe()
-              .processImgUrl(HKEPC.forum.image)
+              .processImgUrl(HKEPC.baseUrl)
               .getCheerio()
 
           const tasks = $('#mainIndex > div').map((i, elem) => {
