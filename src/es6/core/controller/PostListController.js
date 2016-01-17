@@ -33,6 +33,7 @@ export class PostListController {
 
       // update the post list
       const post = task()
+
       if(post.id || post.id != ""){
         const page = this.pages.find(p => p.num == post.pageNum)
 
@@ -51,6 +52,11 @@ export class PostListController {
 
     this.scope.$on('$ionicView.loaded', (e) => {
       setTimeout(() => { this.loadMore() } ,400)
+    })
+
+    this.scope.$on('$ionicView.afterLeave', (e) =>{
+      reset()
+      this.q = undefined
     })
   }
 
@@ -78,6 +84,7 @@ export class PostListController {
 
               return {
                 id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
+                topicId: this.topicId,
                 tag: postSource('tr .subject em a').text(),
                 name: postSource('tr .subject span a').text(),
                 author: {
@@ -116,6 +123,9 @@ export class PostListController {
             id: this.topicId,
             name: topicName
           }
+
+          // update the topic name
+          this.scope.$apply()
 
           cb(null)
           // For JSON responses, resp.data contains the result

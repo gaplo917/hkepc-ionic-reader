@@ -1,9 +1,9 @@
-<ion-view view-title="{{::vm.topic.name}}">
+<ion-view view-title="{{vm.topic.name}}">
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-loop" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <div class="sticky-header">
-    第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁
+  <div class="bar bar-subheader" style="background-color: #8fc320">
+    <h2 class="title" style="color: #fff">第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
   </div>
   <ion-content>
     <div class="spinner">
@@ -23,7 +23,7 @@
               class="item-remove-animate item-icon-right item-text-wrap"
               ng-repeat="post in vm.slidePages[0].posts track by $index"
               type="item-text-wrap"
-              href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
+              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}}</h2>
             <div>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
@@ -48,7 +48,7 @@
               class="item-remove-animate item-icon-right item-text-wrap"
               ng-repeat="post in vm.slidePages[1].posts track by $index"
               type="item-text-wrap"
-              href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
+              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title" ng-bind="::post.name"></h2>
             <div>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
@@ -72,7 +72,7 @@
               class="item-remove-animate item-icon-right item-text-wrap"
               ng-repeat="post in vm.slidePages[2].posts track by $index"
               type="item-text-wrap"
-              href="#/tab/topics/{{::topic.id}}/posts/{{::post.id}}/page/1">
+              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title" ng-bind="::post.name"></h2>
             <div>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>

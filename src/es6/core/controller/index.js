@@ -50,18 +50,3 @@ export var post = {
     }
   }
 }
-
-export var replyPost = {
-  action: ReplyPostController,
-  state: 'tab.topics-posts-reply',
-  name: "ReplyPostCtrl",
-  config:{
-    url: '/topics/:topicId/posts/:postId/reply',
-    views: {
-      'tab-topics': {
-        templateUrl: 'templates/reply-post.html',
-        controller: 'ReplyPostCtrl'
-      }
-    }
-  }
-}

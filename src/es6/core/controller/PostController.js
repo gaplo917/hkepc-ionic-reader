@@ -10,7 +10,7 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal) {
     $scope.vm = this;
     this.scope = $scope
     this.http = $http
@@ -19,6 +19,7 @@ export class PostController{
     this.location = $location
     this.sce = $sce
     this.ionicHistory = $ionicHistory
+    this.ionicModal = $ionicModal
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
@@ -116,7 +117,7 @@ export class PostController{
                   let postSource = cheerio.load($(elem).html())
 
                   const message = {
-                    id: postSource('table').attr('id'),
+                    id: postSource('table').attr('id').replace('pid',''),
                     pos: postSource('.postinfo strong a em').text(),
                     inAppUrl: this.postUrl,
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
@@ -199,6 +200,83 @@ export class PostController{
       this.refreshing = false
       this.scope.$broadcast('scroll.refreshComplete');
     })
+  }
+
+  onReply(message){
+    this.message = message
+
+    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
+      scope: this.scope
+    }).then((modal) =>{
+      this.scope.modal = modal
+      this.scope.modal.show()
+      this.reply = {
+        id : message.id,
+        postId: message.post.id,
+        topicId: message.post.topicId,
+        type: 3 // default to use quote
+      }
+    })
+
+    this.scope.cancel = () => {
+      this.scope.modal.hide()
+    }
+
+  }
+
+  doReply(message,reply){
+
+    console.log(JSON.stringify(reply))
+
+    // get the form hash first
+    this.http
+      .get(HKEPC.forum.replyPage(reply))
+      .then((resp) => {
+        let $ = cheerio.load(resp.data)
+        const relativeUrl = $('#postform').attr('action')
+        const postUrl = `${HKEPC.baseUrl}/${relativeUrl}`
+
+        console.log(postUrl)
+
+        let formSource = cheerio.load($('#postform').html())
+
+        // the text showing the effects of reply / quote
+        const preText = formSource('#e_textarea').text()
+
+
+        const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+          const k = formSource(elem).attr('name')
+          const v = formSource(elem).attr('value')
+
+          return `${k}=${encodeURIComponent(v)}`
+        }).get()
+
+
+        // build the reply message
+        const replyMessage = `${preText}\n${reply.content}`
+
+        // Post to the server
+        this.http({
+          method: "POST",
+          url : postUrl,
+          data :`message=${encodeURIComponent(replyMessage)}&${hiddenFormInputs.join('&')}`,
+          headers : {'Content-Type':'application/x-www-form-urlencoded'}
+        }).then((resp) => {
+          //console.log(JSON.stringify(resp))
+
+          this.scope.modal.hide()
+
+        },(err) => {
+          alert("Error: Network timeout")
+          console.log(JSON.stringify(err))
+        })
+
+      }, (err) => {
+        alert("Error: Network timeout")
+        console.log(JSON.stringify(err))
+      })
+
+
   }
 
 }

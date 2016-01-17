@@ -3,6 +3,9 @@
  */
 export class ReplyPostController{
 
-  constructor() {
+  constructor($scope,$ionicModal) {
+
+    $scope.vm = this
+
   }
 }
