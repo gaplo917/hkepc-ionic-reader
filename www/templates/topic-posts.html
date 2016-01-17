@@ -26,6 +26,7 @@
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}}</h2>
             <div>
+              <i class="ion-bonfire" ng-show="::post.isSticky" style="color:#FF6D00"></i>
               <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
               <small style="color:#aaa">{{::post.publishDate}} @ {{::post.author.name}}</small>
               <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
