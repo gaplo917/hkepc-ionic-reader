@@ -81,7 +81,7 @@ export class PostController{
 
               let $ = html
                   .removeIframe()
-                  .processImgUrl(HKEPC.forum.image)
+                  .processImgUrl(HKEPC.baseUrl)
                   .processExternalUrl()
                   .getCheerio()
 
