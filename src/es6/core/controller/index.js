@@ -2,14 +2,14 @@
 import {PostController} from './PostController'
 import {PostListController} from './PostListController'
 import {TopicListController} from './TopicListController'
-import {ReplyPostController} from './ReplyPostController'
+import {ChatController} from './ChatController'
+import {ChatDetailController} from './ChatDetailController'
 
 export var topics = {
   action: TopicListController,
   state:'tab.topics',
   name : "TopicCtrl",
   config: {
-    cache: false,
     url: '/topics',
     views: {
       'tab-topics': {
@@ -46,6 +46,38 @@ export var post = {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
         controller: 'PostDetailCtrl'
+      }
+    }
+  }
+}
+
+export var chats = {
+  action: ChatController,
+  state: 'tab.chats',
+  name: "ChatCtrl",
+  config:{
+    cache: false,
+    url: '/chats',
+    views: {
+      'tab-chats': {
+        templateUrl: 'templates/tab-chats.html',
+        controller: 'ChatCtrl'
+      }
+    }
+  }
+}
+
+export var chat = {
+  action: ChatDetailController,
+  state: 'tab.chat-detail',
+  name: "ChatDetailCtrl",
+  config:{
+    cache: false,
+    url: '/chats/:id',
+    views: {
+      'tab-chats': {
+        templateUrl: 'templates/chat-detail.html',
+        controller: 'ChatDetailCtrl'
       }
     }
   }
