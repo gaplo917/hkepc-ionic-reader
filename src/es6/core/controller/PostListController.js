@@ -24,7 +24,7 @@ export class PostListController {
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
     this.pages = []
-    this.slidePages = []
+    this.slidePages = [{},{},{}]
     this.currentIndex = 0
     this.currentPageNum = this.page - 1
     this.showSpinner = true
@@ -136,7 +136,7 @@ export class PostListController {
   reset(){
     this.q.kill()
     this.pages = []
-    this.slidePages = []
+    this.slidePages = [{},{},{}]
     this.ionicSlideBoxDelegate.slide(0,10)
     this.currentIndex = 0
     this.currentPageNum = 0
