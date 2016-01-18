@@ -35,7 +35,8 @@ module.exports = {
       }
 
     },
-    pm: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`
+    pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
+    pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`
   },
 
   data:{

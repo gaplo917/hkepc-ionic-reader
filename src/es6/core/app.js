@@ -42,25 +42,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   .state(Controllers.topics.state, Controllers.topics.config)
   .state(Controllers.posts.state, Controllers.posts.config)
   .state(Controllers.post.state, Controllers.post.config)
+  .state(Controllers.chats.state,Controllers.chats.config)
+  .state(Controllers.chat.state,Controllers.chat.config)
 
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
 
   .state('tab.account', {
     url: '/account',

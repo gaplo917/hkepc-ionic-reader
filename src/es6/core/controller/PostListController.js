@@ -19,6 +19,7 @@ export class PostListController {
     this.anchorScroll = $anchorScroll
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.ionicHistory = $ionicHistory
+    this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
@@ -198,10 +199,8 @@ export class PostListController {
 
           // TODO: should have a better UX instead of alert box
           alert("完")
-          this.ionicHistory.nextViewOptions({
-            disableAnimate: true
-          });
-          this.ionicHistory.goBack()
+          // scroll back the previous slides
+          this.ionicSlideBoxDelegate.previous()
         }
         if(this.currentPageNum >= largestPageNum){
           console.log("loadMore After()")
