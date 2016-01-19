@@ -79,12 +79,11 @@ export class PostListController {
               const postSource = cheerio.load($(elem).html())
               const postTitleImgUrl = postSource('tr .folder img').attr('src')
 
-
               return {
                 id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
                 topicId: this.topicId,
                 tag: postSource('tr .subject em a').text(),
-                name: postSource('tr .subject span a').text(),
+                name: postSource('tr .subject span[id^=thread_] a ').text(),
                 author: {
                   name: postSource('tr .author a').text()
                 },
