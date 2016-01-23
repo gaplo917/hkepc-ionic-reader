@@ -172,8 +172,16 @@ export class PostListController {
       const diff = this.currentIndex - index
       const pagesNums = this.pages.map(p => p.num)
       this.currentPageNum = this.slidePages[this.currentIndex].num
+      this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(true)
+
 
       if(diff == 1 || diff == -2){
+
+        if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
+          // disable the does-continue if the it is the initial page
+          this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(false)
+        }
+
         // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
         const smallestPageNum = Math.min.apply(Math, pagesNums)
 
@@ -184,16 +192,12 @@ export class PostListController {
           // prefetch for better UX
           const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
           this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
+
+
         }
         else{
           console.log("loadMore Before()")
-          if(this.currentPageNum == 1){
-            console.log("go back")
-            this.ionicHistory.nextViewOptions({
-              disableAnimate: true
-            });
-            this.ionicHistory.goBack()
-          }
+          // TODO: loadMoare beofre
         }
       }
       else{
@@ -234,6 +238,7 @@ export class PostListController {
       }
 
       this.currentIndex = index
+      this.ionicSlideBoxDelegate.update()
       this.scope.$apply()
 
     },100)
