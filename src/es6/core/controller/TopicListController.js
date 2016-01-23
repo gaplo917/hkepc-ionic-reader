@@ -65,6 +65,11 @@ export class TopicListController {
               .processImgUrl(HKEPC.baseUrl)
               .getCheerio()
 
+          const currentUsername = $('#umenu > cite').text()
+
+          // send the login name to parent controller
+          this.scope.$emit("accountTabUpdate",currentUsername)
+
           const tasks = $('#mainIndex > div').map((i, elem) => {
 
             return () => {

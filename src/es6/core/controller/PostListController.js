@@ -67,6 +67,12 @@ export class PostListController {
           const topicName = $('#nav').text().split('»')[1]
           const totalPageNumText = $('.pages_btns .pages .last').first().text()
 
+          // select the current login user
+          const currentUsername = $('#umenu > cite').text()
+
+          // send the login name to parent controller
+          this.scope.$emit("accountTabUpdate",currentUsername)
+
           // only extract the number
           this.totalPageNum = totalPageNumText
                               ? totalPageNumText.match(/\d/g).join("")

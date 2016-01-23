@@ -7,6 +7,8 @@ import * as Controllers from './controller/index'
  * Register the controllers
  */
 angular.module('starter.controllers', [])
+.controller(Controllers.tab.name, Controllers.tab.action)
+
 
 .controller(Controllers.topics.name, Controllers.topics.action)
 

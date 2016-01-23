@@ -4,6 +4,19 @@ import {PostListController} from './PostListController'
 import {TopicListController} from './TopicListController'
 import {ChatController} from './ChatController'
 import {ChatDetailController} from './ChatDetailController'
+import {TabController} from './TabController'
+
+export var tab = {
+  action: TabController,
+  state:'tab',
+  name : "TabCtrl",
+  config: {
+    url: '/tab',
+    abstract: true,
+    templateUrl: 'templates/tabs.html',
+    controller: 'TabCtrl'
+  }
+}
 
 export var topics = {
   action: TopicListController,
