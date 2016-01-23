@@ -3,31 +3,6 @@
     <p>
       <button class="button button-icon icon ion-navicon" ng-click="openPopover($event)"> 第 {{vm.page}} 頁</button>
     </p>
-    <script id="my-popover.html" type="text/ng-template">
-      <ion-popover-view>
-        <ion-header-bar>
-          <h1 class="title">第 {{vm.inputPage}} 頁</h1>
-        </ion-header-bar>
-        <ion-content >
-          <div class="list">
-            <div class="item range range-positive">
-              <input type="range"  min="1" max="{{vm.totalPageNum}}" value="{{vm.page}}"  step="1" ng-init="vm.inputPage = 1" ng-model="vm.inputPage" ng-change="vm.onPageSliderDrag(vm.inputPage)">
-            </div>
-          </div>
-          <div class="padding">
-            <a class="button button-full button-balanced"
-               ng-click="closePopover()"
-               href="#/tab/topics/{{vm.topicId}}/posts/{{vm.postId}}/page/{{vm.inputPage}}">
-              前住
-            </a>
-            <button class="button button-full button-assertive" ng-click="closePopover()">
-              取消
-            </button>
-          </div>
-
-        </ion-content>
-      </ion-popover-view>
-    </script>
   </ion-nav-title>
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-refresh" ng-click="vm.doRefresh()"></a>

@@ -28,7 +28,7 @@ export class PostController{
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
 
     // .fromTemplateUrl() method
-    $ionicPopover.fromTemplateUrl('my-popover.html', {
+    $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
       scope: $scope
     }).then(function(popover) {
       $scope.popover = popover;
