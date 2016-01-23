@@ -111,7 +111,7 @@ export class PostListController {
 
           // when all task finished
           this.q.drain = () => {
-            this.scope.$apply()
+            this.updateUI()
           }
 
           // push into the array
@@ -138,6 +138,11 @@ export class PostListController {
         })
   }
 
+  updateUI(){
+    this.ionicSlideBoxDelegate.update()
+    this.scope.apply()
+  }
+
   reset(){
     this.q.kill()
     this.pages = []
@@ -162,7 +167,7 @@ export class PostListController {
     this.showSpinner = true
 
     //scroll to the hash tag
-    this.location.hash(`ionic-slide-${index}`)
+    this.location.hash(`ionic-slide-box`)
     this.anchorScroll()
 
     // clear the model first
@@ -238,8 +243,7 @@ export class PostListController {
       }
 
       this.currentIndex = index
-      this.ionicSlideBoxDelegate.update()
-      this.scope.$apply()
+      this.updateUI()
 
     },100)
 

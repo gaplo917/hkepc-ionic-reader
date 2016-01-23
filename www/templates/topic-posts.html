@@ -14,9 +14,9 @@
       </ion-spinner>
     </div>
 
-    <ion-slide-box on-slide-changed="vm.onSlideChanged($index)" does-continue="true" show-pager="false" >
+    <ion-slide-box id="ionic-slide-box" on-slide-changed="vm.onSlideChanged($index)" does-continue="true" show-pager="false" >
 
-      <ion-slide id="ionic-slide-0" style="padding-top:36px" ng-repeat="page in vm.slidePages track by $index">
+      <ion-slide style="padding-top:36px" ng-repeat="page in vm.slidePages track by $index">
         <ion-list >
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
