@@ -91,7 +91,10 @@ export class PostController{
                   .split('-')[0]
 
               // select the current login user
-              const currentUsername = $('#umenu > cite').html()
+              const currentUsername = $('#umenu > cite').text()
+
+              // send the login name to parent controller
+              this.scope.$emit("accountTabUpdate",currentUsername)
 
               // the first post
               const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
