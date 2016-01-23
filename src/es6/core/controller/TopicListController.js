@@ -30,13 +30,14 @@ export class TopicListController {
       setTimeout(() => callback(), 20)
     }, 1);
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
       const topics = this.localstorage.getObject('topics')
       if(Object.keys(topics).length == 0){
         this.loadList()
       }
       else{
         console.log("using cache")
+        this.cached = `<i class="ion-speedometer" style="color:#1560ff"></i>`
         this.topics = topics
       }
 
@@ -53,6 +54,8 @@ export class TopicListController {
   }
 
   loadList(cb) {
+    //remove the cached badge
+    this.cached = ''
 
     this.http
         .get(HKEPC.forum.index())
