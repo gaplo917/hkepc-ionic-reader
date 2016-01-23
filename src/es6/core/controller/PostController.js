@@ -39,6 +39,13 @@ export class PostController{
       this.inputPage = this.page
       $scope.popover.show($event);
     };
+    $scope.doJumpPage = () =>{
+      $scope.popover.hide();
+      this.reset()
+      this.page = this.inputPage
+      this.loadMessages()
+    }
+
     $scope.closePopover = () => {
       $scope.popover.hide();
     };
