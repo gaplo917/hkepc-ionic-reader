@@ -1,6 +1,9 @@
-<ion-view id="userMessagesView"
-          cache-view="false"
-          view-title="<i class='icon ion-chatbubble user-messages-top-icon'></i> <div class='msg-header-username'>{{vm.sender.username}}</div>">
+<ion-view id="userMessagesView" cache-view="false">
+  <ion-nav-title>
+    <i class='icon ion-chatbubble user-messages-top-icon'></i>
+    <div class='msg-header-username'>{{vm.sender.username}}</div>
+  </ion-nav-title>
+
   <div class="spinner">
     <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
   </div>

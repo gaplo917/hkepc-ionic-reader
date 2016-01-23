@@ -37,7 +37,7 @@ export class TopicListController {
       }
       else{
         console.log("using cache")
-        this.cached = `<i class="ion-speedometer" style="color:#1560ff"></i>`
+        this.cached = true
         this.topics = topics
       }
 
@@ -55,7 +55,7 @@ export class TopicListController {
 
   loadList(cb) {
     //remove the cached badge
-    this.cached = ''
+    this.cached = false
 
     this.http
         .get(HKEPC.forum.index())
