@@ -140,7 +140,7 @@ export class PostListController {
 
   updateUI(){
     this.ionicSlideBoxDelegate.update()
-    this.scope.apply()
+    this.scope.$apply()
   }
 
   reset(){
