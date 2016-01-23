@@ -10,7 +10,7 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover) {
     $scope.vm = this;
     this.scope = $scope
     this.http = $http
@@ -26,6 +26,34 @@ export class PostController{
     this.page = $stateParams.page
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
+
+    // .fromTemplateUrl() method
+    $ionicPopover.fromTemplateUrl('my-popover.html', {
+      scope: $scope
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+
+    $scope.openPopover = ($event) => {
+      this.inputPage = this.page
+      $scope.popover.show($event);
+    };
+    $scope.closePopover = () => {
+      $scope.popover.hide();
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.popover.remove();
+    });
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+      // Execute action
+    });
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+      // Execute action
+    });
 
     // to control the post is end
     this.end = false;
@@ -54,13 +82,16 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(()=> this.loadMore(),200)
+      setTimeout(()=> this.loadMessages(),200)
     })
 
   }
 
   loadMore(cb){
     if(this.hasMoreData()){
+      //update the page count
+      this.page = parseInt(this.page) + 1
+
       this.loadMessages(cb)
     }
 
@@ -89,6 +120,15 @@ export class PostController{
               const postTitle = html
                   .getTitle()
                   .split('-')[0]
+
+              this.totalPageNum = $('.forumcontrol .pages a').map((i,elem) => {
+                return $(elem).text()
+              }).get()
+                  .map(e => e.match(/\d/g)) // array of string with digit
+                  .filter(e => e != null) // filter null value
+                  .map(e => parseInt(e.join(''))) // join the array and parseInt
+                  .reduce((e1, e2) => Math.max(e1, e2))
+
 
               // select the current login user
               const currentUsername = $('#umenu > cite').text()
@@ -168,8 +208,6 @@ export class PostController{
           console.error('ERR', JSON.stringify(err))
         })
 
-    //update the page count
-    this.page = parseInt(this.page) + 1
   }
 
   like(message){
@@ -280,6 +318,10 @@ export class PostController{
       })
 
 
+  }
+
+  onPageSliderDrag(value) {
+    console.log(value)
   }
 
 }

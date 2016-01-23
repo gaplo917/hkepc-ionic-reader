@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$rootScope) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     $scope.vm = this;
