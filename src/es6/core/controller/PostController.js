@@ -128,14 +128,17 @@ export class PostController{
                   .getTitle()
                   .split('-')[0]
 
-              this.totalPageNum = $('.forumcontrol .pages a').map((i,elem) => {
+              const pageNumArr = $('.forumcontrol .pages a').map((i,elem) => {
+                console.log($(elem).text())
                 return $(elem).text()
               }).get()
                   .map(e => e.match(/\d/g)) // array of string with digit
                   .filter(e => e != null) // filter null value
                   .map(e => parseInt(e.join(''))) // join the array and parseInt
-                  .reduce((e1, e2) => Math.max(e1, e2))
 
+              this.totalPageNum = pageNumArr.length == 0
+                                    ? 1
+                                    : Math.max(...pageNumArr)
 
               // select the current login user
               const currentUsername = $('#umenu > cite').text()
