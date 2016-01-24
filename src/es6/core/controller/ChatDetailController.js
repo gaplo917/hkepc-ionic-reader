@@ -26,7 +26,10 @@ export class ChatDetailController{
     this.messages = []
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.loadMessages()
+      setTimeout(()=> {
+        this.loadMessages()
+      },400)
+
     })
 
   }
@@ -92,10 +95,11 @@ export class ChatDetailController{
   }
 
   sendMessage(sender,message){
-    alert(JSON.stringify({
-      to: sender,
-      message: message
+    //alert(JSON.stringify({
+    //  to: sender,
+    //  message: message
+    //}))
 
-    }))
+    alert("此功能開發中")
   }
 }
