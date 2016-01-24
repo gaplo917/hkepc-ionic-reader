@@ -12,7 +12,8 @@
     "gulp-minify-css": "^0.3.0",
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.0",
-    "gulp-sass": "^2.0.4"
+    "gulp-sass": "^2.0.4",
+    "ionic-native-transitions": "^1.0.0-rc9"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",

@@ -7,7 +7,7 @@
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-refresh" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <ion-content class="padding" on-swipe-right="vm.onSwipeRight()"  style="background-color:#f5f5f5">
+  <ion-content class="padding" on-swipe-right="$ionicGoBack()"  style="background-color:#f5f5f5">
     <div style="text-align:center">
       <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
     </div>
