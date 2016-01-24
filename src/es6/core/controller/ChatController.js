@@ -59,7 +59,6 @@ export class ChatController{
 
 
           this.chats = chats
-          console.log(chats)
 
           this.scope.apply()
 

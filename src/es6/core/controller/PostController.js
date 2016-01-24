@@ -70,12 +70,8 @@ export class PostController{
 
       // update the messages list
       const message = task()
-      if(this.messages.filter((m) => m.id == message.id).length > 0){
-        this.end = true
-      }
-      else{
-        this.messages.push(message)
-      }
+
+      this.messages.push(message)
 
       if(this.q.length() % 1 == 0){
          //force update the view after 10 task
@@ -96,10 +92,18 @@ export class PostController{
 
   loadMore(cb){
     if(this.hasMoreData()){
-      //update the page count
-      this.page = parseInt(this.page) + 1
+      const nextPage = parseInt(this.page) + 1
+      if(nextPage <= this.totalPageNum){
+        //update the page count
+        this.page = parseInt(this.page) + 1
 
-      this.loadMessages(cb)
+        this.loadMessages(cb)
+      }
+      else{
+        // set a flag for end
+        this.end = true
+      }
+
     }
 
   }
@@ -328,10 +332,6 @@ export class PostController{
       })
 
 
-  }
-
-  onPageSliderDrag(value) {
-    console.log(value)
   }
 
 }
