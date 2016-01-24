@@ -1,5 +1,5 @@
 import * as Controllers from './controller/index'
-
+import 'ionic-native-transitions';
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -7,7 +7,7 @@ import * as Controllers from './controller/index'
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCookies'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCookies','ionic-native-transitions'])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -71,7 +71,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   $ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')
+  $ionicConfigProvider.views.swipeBackEnabled(false);
 
+}])
+.config(['$ionicNativeTransitionsProvider',function($ionicNativeTransitionsProvider){
+  $ionicNativeTransitionsProvider.setDefaultOptions({
+    duration: 350, // in milliseconds (ms), default 400,
+    slowdownfactor: 1, // overlap views (higher number is more) or no overlap (1), default 4
+    iosdelay: -1, // ms to wait for the iOS webview to update before animation kicks in, default -1
+    androiddelay: -1, // same as above but for Android, default -1
+    winphonedelay: -1, // same as above but for Windows Phone, default -1,
+    fixedPixelsTop: 0, // the number of pixels of your fixed header, default 0 (iOS and Android)
+    fixedPixelsBottom: 49, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
+    triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
+    backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
+  });
 }])
 
 ;
