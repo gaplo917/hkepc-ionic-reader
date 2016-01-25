@@ -4,7 +4,6 @@
 export class TabController{
 
   constructor($scope) {
-    $scope.vm = this
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
       if(arg){

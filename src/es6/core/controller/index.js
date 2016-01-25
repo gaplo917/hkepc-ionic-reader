@@ -14,7 +14,8 @@ export var tab = {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html',
-    controller: 'TabCtrl'
+    controller: 'TabCtrl',
+    controllerAs: 'vm'
   }
 }
 
@@ -27,7 +28,8 @@ export var topics = {
     views: {
       'tab-topics': {
         templateUrl: 'templates/tab-topics.html',
-        controller: "TopicCtrl"
+        controller: "TopicCtrl",
+        controllerAs: 'vm'
       }
     }
   }
@@ -42,7 +44,8 @@ export var posts = {
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',
-        controller: 'PostsCtrl'
+        controller: 'PostsCtrl',
+        controllerAs: 'vm'
       }
     }
   }
@@ -58,7 +61,8 @@ export var post = {
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
-        controller: 'PostDetailCtrl'
+        controller: 'PostDetailCtrl',
+        controllerAs: 'vm'
       }
     }
   }
@@ -74,7 +78,8 @@ export var chats = {
     views: {
       'tab-chats': {
         templateUrl: 'templates/tab-chats.html',
-        controller: 'ChatCtrl'
+        controller: 'ChatCtrl',
+        controllerAs: 'vm'
       }
     }
   }
@@ -90,7 +95,8 @@ export var chat = {
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',
-        controller: 'ChatDetailCtrl'
+        controller: 'ChatDetailCtrl',
+        controllerAs: 'vm'
       }
     }
   }

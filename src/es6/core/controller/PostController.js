@@ -11,7 +11,6 @@ var async = require('async');
 export class PostController{
 
   constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover) {
-    $scope.vm = this;
     this.scope = $scope
     this.http = $http
     this.messageService = $message
@@ -85,9 +84,13 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(()=> this.loadMessages(),200)
+      this.loadMessages()
+
     })
 
+    $scope.$on('$ionicView.beforeLeave', (e) => {
+      this.q.kill()
+    })
   }
 
   loadMore(cb){
@@ -132,10 +135,9 @@ export class PostController{
                   .getTitle()
                   .split('-')[0]
 
-              const pageNumArr = $('.forumcontrol .pages a').map((i,elem) => {
-                console.log($(elem).text())
-                return $(elem).text()
-              }).get()
+              const pageNumArr = $('.forumcontrol .pages a')
+                  .map((i,elem) => $(elem).text())
+                  .get()
                   .map(e => e.match(/\d/g)) // array of string with digit
                   .filter(e => e != null) // filter null value
                   .map(e => parseInt(e.join(''))) // join the array and parseInt
