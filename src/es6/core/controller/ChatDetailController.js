@@ -16,7 +16,6 @@ export class ChatDetailController{
     // listen for the $ionicView.enter event:
     //
 
-    $scope.vm = this
     this.scope = $scope
     this.http = $http
     this.sce = $sce
@@ -25,7 +24,7 @@ export class ChatDetailController{
     this.senderId = $stateParams.id
     this.messages = []
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
       setTimeout(()=> {
         this.loadMessages()
       },400)

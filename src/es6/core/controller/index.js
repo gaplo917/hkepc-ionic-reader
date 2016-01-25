@@ -12,6 +12,7 @@ export var tab = {
   name : "TabCtrl",
   config: {
     url: '/tab',
+    nativeTransitions: null,
     abstract: true,
     templateUrl: 'templates/tabs.html',
     controller: 'TabCtrl',
@@ -25,6 +26,7 @@ export var topics = {
   name : "TopicCtrl",
   config: {
     url: '/topics',
+    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/tab-topics.html',
@@ -73,8 +75,9 @@ export var chats = {
   state: 'tab.chats',
   name: "ChatCtrl",
   config:{
-    cache: false,
+    cache: true,
     url: '/chats',
+    nativeTransitions: null,
     views: {
       'tab-chats': {
         templateUrl: 'templates/tab-chats.html',
