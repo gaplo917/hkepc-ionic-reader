@@ -11,7 +11,6 @@ export class ChatController{
 
   constructor($scope, $http){
 
-    $scope.vm = this
     this.http = $http
     this.scope = $scope
     this.chats = []

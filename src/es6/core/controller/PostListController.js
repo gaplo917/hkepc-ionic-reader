@@ -12,7 +12,6 @@ export class PostListController {
   constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$rootScope) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
-    $scope.vm = this;
     this.scope = $scope
     this.http = $http
     this.location = $location
@@ -50,8 +49,12 @@ export class PostListController {
       setTimeout(() => callback(), 40)
     }, 1);
 
-    this.scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(() => { this.loadMore() } ,400)
+    $scope.$on('$ionicView.loaded', (e) => {
+      this.loadMore()
+    })
+
+    $scope.$on('$ionicView.beforeLeave', (e) => {
+      this.q.kill()
     })
   }
 

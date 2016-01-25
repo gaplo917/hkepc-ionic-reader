@@ -10,7 +10,6 @@ var async = require('async');
 export class TopicListController {
 
   constructor($scope,$http,$localstorage) {
-    $scope.vm = this
     this.scope = $scope
     this.http = $http
     this.localstorage = $localstorage
@@ -41,6 +40,10 @@ export class TopicListController {
         this.topics = topics
       }
 
+    })
+
+    $scope.$on('$ionicView.beforeLeave', (e) => {
+      this.q.kill()
     })
 
   }
