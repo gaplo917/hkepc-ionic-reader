@@ -15,7 +15,7 @@ export class ChatController{
     this.scope = $scope
     this.chats = []
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
       setTimeout(()=> {
         this.loadChats()
       },400)

@@ -84,12 +84,16 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMessages()
+      setTimeout(() => this.loadMessages(), 200)
 
     })
 
+    $scope.$on('$ionicView.enter', (e) => {
+      this.q.resume()
+    })
+
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.q.kill()
+      this.q.pause()
     })
   }
 

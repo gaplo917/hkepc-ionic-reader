@@ -42,8 +42,12 @@ export class TopicListController {
 
     })
 
+    $scope.$on('$ionicView.enter', (e) => {
+      this.q.resume()
+    })
+
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.q.kill()
+      this.q.pause()
     })
 
   }
