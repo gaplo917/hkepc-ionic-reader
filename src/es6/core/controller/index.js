@@ -5,6 +5,7 @@ import {TopicListController} from './TopicListController'
 import {ChatController} from './ChatController'
 import {ChatDetailController} from './ChatDetailController'
 import {TabController} from './TabController'
+import {AuthController} from './AuthController'
 
 export var tab = {
   action: TabController,
@@ -99,6 +100,23 @@ export var chat = {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',
         controller: 'ChatDetailCtrl',
+        controllerAs: 'vm'
+      }
+    }
+  }
+}
+
+export var auth = {
+  action: AuthController,
+  state: 'tab.account',
+  name: 'AuthCtrl',
+  config: {
+    url: '/account',
+    nativeTransitions: null,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/tab-account.html',
+        controller: 'AuthCtrl',
         controllerAs: 'vm'
       }
     }

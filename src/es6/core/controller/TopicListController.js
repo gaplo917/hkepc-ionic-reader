@@ -9,7 +9,7 @@ var async = require('async');
 
 export class TopicListController {
 
-  constructor($scope,$http,$localstorage) {
+  constructor($scope,$http,$localstorage,authService) {
     this.scope = $scope
     this.http = $http
     this.localstorage = $localstorage
@@ -21,7 +21,7 @@ export class TopicListController {
       // update the topics list
       this.topics.push(task())
 
-      if(this.q.length() % 3 == 0){
+      if(this.q.length() % 5 == 0){
         // force update the view after 3 task
         this.scope.$apply()
       }
@@ -35,7 +35,7 @@ export class TopicListController {
         this.loadList()
       }
       else{
-        console.log("using cache")
+        console.log('[TopicListController]','using cache')
         this.cached = true
         this.topics = topics
       }
@@ -50,6 +50,12 @@ export class TopicListController {
       this.q.pause()
     })
 
+    // send the login from db
+    authService.loginFromDb((err,username) => {
+
+      // update account tab view
+      this.scope.$emit("accountTabUpdate",username)
+    })
   }
 
   reset(){
