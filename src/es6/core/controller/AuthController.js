@@ -32,6 +32,9 @@ export class AuthController {
 
     this.authService.login(authority,(err,username) => {
       this.scope.$emit("accountTabUpdate",username)
+
+      // alert the user login success
+      alert(`登入成功 ${username}`)
     })
 
   }

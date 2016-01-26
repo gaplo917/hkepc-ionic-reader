@@ -43,7 +43,6 @@ export var AuthService = {
             data: `username=${authority.username}&password=${authority.password}&cookietime=2592000`,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then((resp) => {
-            console.log(resp)
             const html = new GeneralHtml(cheerio.load(resp.data))
 
             let $ = html
@@ -61,7 +60,9 @@ export var AuthService = {
             } else {
               console.log('[AuthService]','Login fail')
 
+              // if login fail, remove the authority
               this.removeAuthority()
+
               alert($('.alert_info').text())
             }
           }, (err) => {
