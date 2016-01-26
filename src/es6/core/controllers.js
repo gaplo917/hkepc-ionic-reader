@@ -9,7 +9,6 @@ import * as Controllers from './controller/index'
 angular.module('starter.controllers', [])
 .controller(Controllers.tab.name, Controllers.tab.action)
 
-
 .controller(Controllers.topics.name, Controllers.topics.action)
 
 .controller(Controllers.posts.name, Controllers.posts.action)
@@ -20,27 +19,4 @@ angular.module('starter.controllers', [])
 
 .controller(Controllers.chat.name, Controllers.chat.action)
 
-.controller('AccountCtrl', ($scope,$http,$localstorage) => {
-
-  $scope.user = $localstorage.getObject("user")
-
-  $scope.login = (username,password) => {
-    "use strict";
-
-    $localstorage.setObject("user",{
-      username: username,
-      password: password
-    })
-
-    $http({
-      method: "POST",
-      url : HKEPC.forum.login(),
-      data:`username=${username}&password=${password}&cookietime=2592000`,
-      headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then((resp) => {
-      alert(resp.data)
-    },(err) => {
-      alert(err)
-    })
-  }
-})
+.controller(Controllers.auth.name,Controllers.auth.action)

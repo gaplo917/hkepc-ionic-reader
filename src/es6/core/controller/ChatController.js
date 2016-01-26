@@ -9,16 +9,24 @@ var async = require('async');
 
 export class ChatController{
 
-  constructor($scope, $http){
+  constructor($scope, $http, authService,$state){
 
     this.http = $http
     this.scope = $scope
     this.chats = []
 
-    $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(()=> {
-        this.loadChats()
-      },400)
+    $scope.$on('$ionicView.enter', (e) => {
+      authService.loginFromDb((err) => {
+        if(err){
+          alert("請先登入！")
+          $state.go("tab.account")
+        } else {
+          setTimeout(()=> {
+            this.loadChats()
+          },400)
+        }
+      })
+
     })
   }
 

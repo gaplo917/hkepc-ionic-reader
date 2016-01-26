@@ -9,7 +9,7 @@ module.exports = {
     index: () => `${BASE_URL}/index.php`,
     topics: (topicId,page) => `${BASE_URL}/forumdisplay.php?fid=${topicId}&page=${page}`,
     posts: (topicId,postId,page) => `${BASE_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
-    login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1`,
+    login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
     replyPage:(reply) => {
 
       /**
