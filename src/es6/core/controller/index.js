@@ -44,6 +44,7 @@ export var posts = {
   name:"PostsCtrl",
   config: {
     url: '/topics/:topicId/page/:page',
+    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',
@@ -61,6 +62,7 @@ export var post = {
   config:{
     cache: false,
     url: '/topics/:topicId/posts/:postId/page/:page',
+    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
@@ -96,6 +98,7 @@ export var chat = {
   config:{
     cache: false,
     url: '/chats/:id',
+    nativeTransitions: null,
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',

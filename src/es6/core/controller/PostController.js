@@ -251,7 +251,6 @@ export class PostController{
   reset(){
     this.messages = []
     this.q.kill()
-    this.page = 1
   }
 
   doRefresh(){
