@@ -1,8 +1,8 @@
 
 <ion-modal-view class="product edit create" >
-  <form name="itemEdit" novalidate ng-submit="submitForm(itemEdit.$valid)">
+  <form name="itemEdit" novalidate>
     <ion-header-bar class="bar-positive fix-buttons">
-      <button class="button" ng-click="cancel()">Cancel {{vm.test}}</button>
+      <button class="button" ng-click="vm.replyModal.hide()">Cancel {{vm.test}}</button>
       <h1 class="title">{{ vm.message.post.title }}</h1>
       <button class="button" ng-click="vm.doReply(vm.message,vm.reply)">Post</button>
     </ion-header-bar>
@@ -30,6 +30,9 @@
         </div>
       </ion-list>
 
+      <button class="button button-full" ng-click="vm.openGifPopover($event)">
+        <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif" alt=""/> Gif
+      </button>
       <div class="row">
         <div class="col">
           <label class="item item-input text">
