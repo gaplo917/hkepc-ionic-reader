@@ -42,7 +42,7 @@ export class PostListController {
     }
 
     //Cleanup the popover when we're done with it!
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', () => {
       this.subTopicListPopover.remove()
     })
 
@@ -65,7 +65,7 @@ export class PostListController {
         this.scope.$apply()
       }
       setTimeout(() => callback(), 40)
-    }, 1);
+    }, 1)
 
     $scope.$on('$ionicView.loaded', (e) => {
       setTimeout(() => this.loadMore(), 200)
