@@ -8,8 +8,8 @@
       Gap撈Tech
     </author>
     <content src="index.html" />
-    <access origin="*" />
-    <allow-navigation href="*" />
+    <access origin="*.hkepc.com" />
+    <allow-navigation href="*.hkepc.com" />
     <allow-intent href="*" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />

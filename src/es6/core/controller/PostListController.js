@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$rootScope) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     this.scope = $scope
@@ -27,6 +27,54 @@ export class PostListController {
     this.currentIndex = 0
     this.currentPageNum = this.page - 1
     this.showSpinner = true
+
+    // .fromTemplateUrl() method
+    $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
+      scope: $scope
+    }).then(function(popover) {
+      $scope.popover = popover
+    })
+
+    $scope.openPopover = ($event) => {
+      if(this.subTopicList.length > 0){
+        $scope.popover.show($event)
+      }
+    }
+    $scope.doJumpPage = () =>{
+      $scope.popover.hide();
+      this.reset()
+      this.page = this.inputPage
+      this.loadMessages()
+    }
+
+    $scope.closePopover = () => {
+      $scope.popover.hide()
+    }
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.popover.remove()
+    })
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+      // Execute action
+    })
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+      // Execute action
+    })
+
+    $scope.goToSubTopic = (index,subTopic) => {
+      $scope.popover.hide();
+
+      // swap the item in the list
+      this.subTopicList[index] = this.topic
+      this.topic = subTopic
+
+      // override the topic id
+      this.topicId = subTopic.id
+
+      this.doRefresh()
+    }
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -71,8 +119,20 @@ export class PostListController {
           this.showSpinner = false
 
           let $ = cheerio.load(resp.data)
-          const topicName = $('#nav').text().split('»')[1]
+          const titles = $('#nav').text().split('»')
+          const topicName = titles[titles.length - 1]
           const totalPageNumText = $('.pages_btns .pages .last').first().text()
+          const subTopicList = $('#subforum table h2 a').map((i,elem) => {
+            const obj = $(elem)
+            const name = obj.text()
+            const id = URLUtils.getQueryVariable(obj.attr('href'), 'fid')
+            return {
+              id: id,
+              name: name
+            }
+          }).get()
+
+          console.log("subTopicList",subTopicList)
 
           // select the current login user
           const currentUsername = $('#umenu > cite').text()
@@ -84,6 +144,10 @@ export class PostListController {
           this.totalPageNum = totalPageNumText
                               ? totalPageNumText.match(/\d/g).join("")
                               : 1
+
+          this.subTopicList = subTopicList.length > 0
+                              ? subTopicList
+                              : this.subTopicList
 
           const tasks = $('.threadlist table tbody').map( (i, elem) => {
             return () => {
@@ -97,6 +161,10 @@ export class PostListController {
                 topicId: this.topicId,
                 tag: postSource('tr .subject em a').text(),
                 name: postSource('tr .subject span[id^=thread_] a ').text(),
+                lastPost:{
+                  name: postSource('tr .lastpost cite a').text(),
+                  timestamp: postSource('tr .lastpost em a').text()
+                },
                 author: {
                   name: postSource('tr .author a').text()
                 },

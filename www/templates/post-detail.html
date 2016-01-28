@@ -1,8 +1,6 @@
 <ion-view ng-init="vm.messages=[]" >
-  <ion-nav-title>
-    <p>
-      <button class="button button-icon icon-right ion-android-arrow-dropdown" ng-click="openPopover($event)"> 第 {{vm.page}} 頁</button>
-    </p>
+  <ion-nav-title ng-click="openPopover($event)">
+      第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-refresh" ng-click="vm.doRefresh()"></a>
