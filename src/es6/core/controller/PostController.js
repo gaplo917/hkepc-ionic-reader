@@ -29,37 +29,36 @@ export class PostController{
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
       scope: $scope
-    }).then(function(popover) {
-      $scope.popover = popover;
-    });
+    }).then((popover) => {
+      this.pageSliderPopover = popover
+    })
 
+    $ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
+      scope: $scope
+    }).then((popover) => {
+      this.gifPopover = popover;
+    })
 
-    $scope.openPopover = ($event) => {
-      this.inputPage = this.page
-      $scope.popover.show($event);
-    };
-    $scope.doJumpPage = () =>{
-      $scope.popover.hide();
-      this.reset()
-      this.page = this.inputPage
-      this.loadMessages()
-    }
+    $ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
+      scope: $scope
+    }).then((modal) => {
+      this.replyModal = modal
+    })
 
-    $scope.closePopover = () => {
-      $scope.popover.hide();
-    };
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', function() {
-      $scope.popover.remove();
-    });
+      this.pageSliderPopover.remove()
+      this.gifPopover.remove()
+      this.replyModal.remove()
+    })
     // Execute action on hide popover
     $scope.$on('popover.hidden', function() {
       // Execute action
-    });
+    })
     // Execute action on remove popover
     $scope.$on('popover.removed', function() {
       // Execute action
-    });
+    })
 
     // to control the post is end
     this.end = false;
@@ -263,23 +262,19 @@ export class PostController{
   }
 
   onReply(message){
+
+    // load gifs into controller
+    this.gifs = HKEPC.data.gifs
+
     this.message = message
 
-    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
-      scope: this.scope
-    }).then((modal) =>{
-      this.scope.modal = modal
-      this.scope.modal.show()
-      this.reply = {
-        id : message.id,
-        postId: message.post.id,
-        topicId: message.post.topicId,
-        type: 3 // default to use quote
-      }
-    })
+    this.replyModal.show()
 
-    this.scope.cancel = () => {
-      this.scope.modal.hide()
+    this.reply = {
+      id : message.id,
+      postId: message.post.id,
+      topicId: message.post.topicId,
+      type: 3 // default to use quote
     }
 
   }
@@ -324,7 +319,7 @@ export class PostController{
         }).then((resp) => {
           //console.log(JSON.stringify(resp))
 
-          this.scope.modal.hide()
+          this.replyModal.hide()
 
         },(err) => {
           alert("Error: Network timeout")
@@ -336,7 +331,31 @@ export class PostController{
         console.log(JSON.stringify(err))
       })
 
-
   }
 
+  openGifPopover($event){
+    this.gifPopover.show($event)
+    console.log("open gifPopover")
+  }
+
+  addGifCodeToText(code){
+    this.gifPopover.hide()
+    this.reply.content = this.reply.content
+                          ? `${this.reply.content} ${code} `
+                          : `${code}`
+    console.log(`add gif ${code}`)
+  }
+
+
+  openPageSliderPopover($event) {
+    this.inputPage = this.page
+    this.pageSliderPopover.show($event)
+  }
+
+  doJumpPage(){
+    this.pageSliderPopover.hide()
+    this.reset()
+    this.page = this.inputPage
+    this.loadMessages()
+  }
 }

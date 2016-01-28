@@ -31,50 +31,20 @@ export class PostListController {
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
       scope: $scope
-    }).then(function(popover) {
-      $scope.popover = popover
+    }).then((popover) => {
+      this.subTopicListPopover = popover
     })
 
     $scope.openPopover = ($event) => {
-      if(this.subTopicList.length > 0){
-        $scope.popover.show($event)
+      if(this.subTopicList && this.subTopicList.length > 0){
+        this.subTopicListPopover.show($event)
       }
     }
-    $scope.doJumpPage = () =>{
-      $scope.popover.hide();
-      this.reset()
-      this.page = this.inputPage
-      this.loadMessages()
-    }
 
-    $scope.closePopover = () => {
-      $scope.popover.hide()
-    }
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', function() {
-      $scope.popover.remove()
+      this.subTopicListPopover.remove()
     })
-    // Execute action on hide popover
-    $scope.$on('popover.hidden', function() {
-      // Execute action
-    })
-    // Execute action on remove popover
-    $scope.$on('popover.removed', function() {
-      // Execute action
-    })
-
-    $scope.goToSubTopic = (index,subTopic) => {
-      $scope.popover.hide();
-
-      // swap the item in the list
-      this.subTopicList[index] = this.topic
-      this.topic = subTopic
-
-      // override the topic id
-      this.topicId = subTopic.id
-
-      this.doRefresh()
-    }
 
     // create a UI rendering queue
     this.q = async.queue((task, callback) => {
@@ -132,7 +102,6 @@ export class PostListController {
             }
           }).get()
 
-          console.log("subTopicList",subTopicList)
 
           // select the current login user
           const currentUsername = $('#umenu > cite').text()
@@ -148,6 +117,8 @@ export class PostListController {
           this.subTopicList = subTopicList.length > 0
                               ? subTopicList
                               : this.subTopicList
+
+          console.log("subTopicList",this.subTopicList)
 
           const tasks = $('.threadlist table tbody').map( (i, elem) => {
             return () => {
@@ -325,4 +296,17 @@ export class PostListController {
     console.log(`onSlideChanged${index}`)
   }
 
+
+  goToSubTopic(index,subTopic){
+    this.subTopicListPopover.hide();
+
+    // swap the item in the list
+    this.subTopicList[index] = this.topic
+    this.topic = subTopic
+
+    // override the topic id
+    this.topicId = subTopic.id
+
+    this.doRefresh()
+  }
 }

@@ -40,5 +40,191 @@ module.exports = {
   },
 
   data:{
+    gifs:[
+      {
+        "code": ":loveliness:",
+        "url": "loveliness.png"
+      },
+      {
+        "code": ":happybday:",
+        "url": "icon_happybday.png"
+      },
+      {
+        "code": ":redface:",
+        "url": "icon22.png"
+      },
+      {
+        "code": ":discuss:",
+        "url": "icon_discuss.png"
+      },
+      {
+        "code": ":hitwall:",
+        "url": "icon_hitwall.png"
+      },
+      {
+        "code": ":goodjob:",
+        "url": "icon_goodjob.png"
+      },
+      {
+        "code": ":kicking:",
+        "url": "icon_kicking.png"
+      },
+      {
+        "code": ":giveup:",
+        "url": "icon_giveup.png"
+      },
+      {
+        "code": ":shutup:",
+        "url": "shutup.png"
+      },
+      {
+        "code": ":titter:",
+        "url": "titter.png"
+      },
+      {
+        "code": ":cheers:",
+        "url": "icon_cheers2.png"
+      },
+      {
+        "code": ":shifty:",
+        "url": "VsX4_shifty_P31Twc0M1TeT.png"
+      },
+      {
+        "code": ":crybye:",
+        "url": "icon_crybye.png"
+      },
+      {
+        "code": ":silent:",
+        "url": "smile_44.png"
+      },
+      {
+        "code": ":crutch:",
+        "url": "icon_crutch.png"
+      },
+      {
+        "code": ":wahaha:",
+        "url": "icon_clap.png"
+      },
+      {
+        "code": ":faint:",
+        "url": "smile_27.png"
+      },
+      {
+        "code": ":drool:",
+        "url": "icon_drool.png"
+      },
+      {
+        "code": ":chair:",
+        "url": "icon_chair.png"
+      },
+      {
+        "code": ":angry:",
+        "url": "icon_angry2.png"
+      },
+      {
+        "code": ":sleep:",
+        "url": "icon_sleep.png"
+      },
+      {
+        "code": ":noway:",
+        "url": "noway.png"
+      },
+      {
+        "code": ":fight:",
+        "url": "icon_fight.png"
+      },
+      {
+        "code": ":dizzy:",
+        "url": "dizzy.png"
+      },
+      {
+        "code": ":smoke:",
+        "url": "icon_smoke.png"
+      },
+      {
+        "code": ":photo:",
+        "url": "icon_photo.png"
+      },
+      {
+        "code": ":agree:",
+        "url": "icon_agree.png"
+      },
+      {
+        "code": ":adore:",
+        "url": "icon_adore.png"
+      },
+      {
+        "code": ":haha:",
+        "url": "icon_haha.png"
+      },
+      {
+        "code": ":baby:",
+        "url": "icon_baby.png"
+      },
+      {
+        "code": ":band:",
+        "url": "icon_band.png"
+      },
+      {
+        "code": ":help:",
+        "url": "icon_help.png"
+      },
+      {
+        "code": ":naug:",
+        "url": "icon_naughty.png"
+      },
+      {
+        "code": ":good:",
+        "url": "icon_good.png"
+      },
+      {
+        "code": ":kiss:",
+        "url": "icon_kiss.png"
+      },
+      {
+        "code": ":nono:",
+        "url": "icon_nono.png"
+      },
+      {
+        "code": ":mad:",
+        "url": "icon_mad.png"
+      },
+      {
+        "code": ":dev:",
+        "url": "icon_dev.png"
+      },
+      {
+        "code": ":eek:",
+        "url": "icon_eek.png"
+      },
+      {
+        "code": ":cry:",
+        "url": "icon_cry.png"
+      },
+      {
+        "code": ":gun:",
+        "url": "icon_gun2.png"
+      },
+      {
+        "code": ":ar:",
+        "url": "smile_38.png"
+      },
+      {
+        "code": ":xd:",
+        "url": "icon77.png"
+      },
+      {
+        "code": ":?:",
+        "url": "icon_confused.png"
+      },
+      {
+        "code": ":d:",
+        "url": "icon_biggrin.png"
+      },
+      {
+        "code": ":p:",
+        "url": "icon_tongue.png"
+      }
+    ]
   }
 }

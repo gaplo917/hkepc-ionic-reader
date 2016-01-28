@@ -1,0 +1,9 @@
+<ion-popover-view>
+  <ion-content >
+    <div class="list">
+        <img ng-repeat="gif in vm.gifs track by $index"
+             style="padding:12px;margin:5px;background-color:#f5f5f5;border-radius: 100px;" ng-click="vm.addGifCodeToText(gif.code)"
+             src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
+    </div>
+  </ion-content>
+</ion-popover-view>
