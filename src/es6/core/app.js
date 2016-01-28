@@ -1,5 +1,6 @@
 import * as Controllers from './controller/index'
-import 'ionic-native-transitions';
+import 'ionic-native-transitions'
+import 'angular-loading-bar'
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -7,7 +8,14 @@ import 'ionic-native-transitions';
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCookies','ionic-native-transitions'])
+angular.module('starter', [
+  'ionic',
+  'starter.controllers',
+  'starter.services',
+  'ngCookies',
+  'ionic-native-transitions',
+  'angular-loading-bar'
+])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

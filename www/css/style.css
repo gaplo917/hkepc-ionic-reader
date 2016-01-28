@@ -8,7 +8,14 @@
     text-align: center;
 }
 
-
+/*angular-loading-bar*/
+#loading-bar .bar {
+    height: 1px;
+    border: none;
+    padding: 2px;
+    color:#8fc320;
+    background-color:#8fc320;
+}
 /* Font Size */
 .item .bigger-title {
     font-size: 18px;
