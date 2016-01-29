@@ -65,8 +65,8 @@ export var AuthService = {
                 if(cb) cb(null,authority.username)
               }
             } else{
+              alert("登入失敗!")
               cb("Fail!")
-              alert("登入失敗! 請於十五分鐘後再嘗試！")
             }
 
           }, (err) => {
