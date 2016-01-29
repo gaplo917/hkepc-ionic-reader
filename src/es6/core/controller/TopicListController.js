@@ -51,11 +51,9 @@ export class TopicListController {
     })
 
     // send the login from db
-    authService.loginFromDb((err,username) => {
-
-      // update account tab view
-      this.scope.$emit("accountTabUpdate",username)
-    })
+    if(authService.isLoggedIn()){
+      this.scope.$emit("accountTabUpdate",authService.getUsername())
+    }
   }
 
   reset(){
@@ -74,11 +72,12 @@ export class TopicListController {
         .get(HKEPC.forum.index())
         .then((resp) => {
 
+          console.log(resp.config)
           const html = new GeneralHtml(cheerio.load(resp.data))
 
           let $ = html
               .removeIframe()
-              .processImgUrl(HKEPC.baseUrl)
+              .processImgUrl(HKEPC.imageUrl)
               .getCheerio()
 
           const currentUsername = $('#umenu > cite').text()

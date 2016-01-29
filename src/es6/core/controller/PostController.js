@@ -46,17 +46,17 @@ export class PostController{
     })
 
     //Cleanup the popover when we're done with it!
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', () => {
       this.pageSliderPopover.remove()
       this.gifPopover.remove()
       this.replyModal.remove()
     })
     // Execute action on hide popover
-    $scope.$on('popover.hidden', function() {
+    $scope.$on('popover.hidden', () => {
       // Execute action
     })
     // Execute action on remove popover
-    $scope.$on('popover.removed', function() {
+    $scope.$on('popover.removed', () => {
       // Execute action
     })
 
@@ -129,7 +129,7 @@ export class PostController{
 
               let $ = html
                   .removeIframe()
-                  .processImgUrl(HKEPC.baseUrl)
+                  .processImgUrl(HKEPC.imageUrl)
                   .processExternalUrl()
                   .getCheerio()
 

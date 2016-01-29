@@ -1,6 +1,7 @@
 import * as Controllers from './controller/index'
 import 'ionic-native-transitions'
 import 'angular-loading-bar'
+import * as HKEPC from '../data/config/hkepc'
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -21,16 +22,16 @@ angular.module('starter', [
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
+      cordova.plugins.Keyboard.disableScroll(true)
 
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.overlaysWebView(true);
-      StatusBar.styleDefault();
+      StatusBar.overlaysWebView(true)
+      StatusBar.styleDefault()
     }
-  });
+  })
 })
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -49,18 +50,18 @@ angular.module('starter', [
   .state(Controllers.post.state, Controllers.post.config)
   .state(Controllers.chats.state,Controllers.chats.config)
   .state(Controllers.chat.state,Controllers.chat.config)
-  .state(Controllers.auth.state,Controllers.auth.config);
+  .state(Controllers.auth.state,Controllers.auth.config)
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
 
 })
 .config(['$httpProvider', function($httpProvider) {
-  if(window.location.href.startsWith("file://")) {
-    // true if ionic is run in ios/android to allow use of cookies
-    $httpProvider.defaults.withCredentials = true;
-  }
-  $httpProvider.useApplyAsync(true);
+  // true if ionic is run in ios/android to allow use of cookies
+  $httpProvider.defaults.withCredentials = true
+
+  // always use async is a good practice
+  $httpProvider.useApplyAsync(true)
 }])
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
   "use strict";
@@ -69,13 +70,13 @@ angular.module('starter', [
   $ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')
-  $ionicConfigProvider.views.swipeBackEnabled(false);
+  $ionicConfigProvider.views.swipeBackEnabled(false)
   $ionicConfigProvider.navBar.alignTitle('center')
 
 }])
 .config(['$ionicNativeTransitionsProvider',function($ionicNativeTransitionsProvider){
   $ionicNativeTransitionsProvider.setDefaultOptions({
-    duration: 400, // in milliseconds (ms), default 400,
+    duration: 0, // in milliseconds (ms), default 400,
     slowdownfactor: 1, // overlap views (higher number is more) or no overlap (1), default 4
     iosdelay: -1, // ms to wait for the iOS webview to update before animation kicks in, default -1
     androiddelay: -1, // same as above but for Android, default -1
@@ -84,13 +85,27 @@ angular.module('starter', [
     fixedPixelsBottom: 49, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
     triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
     backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
-  });
+  })
 
   $ionicNativeTransitionsProvider.setDefaultBackTransition({
     type: 'slide',
     direction: 'right',
     duration: 0
-  });
+  })
 }])
+.provider('HKEPC_CORS',[function(){
 
-;
+  this.$get = ['$cookies', function($cookies){
+    return {
+      'request': function(config) {
+        config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$cookies.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$cookies.get(HKEPC.auth.token)}`
+
+        return config;
+      }
+    }
+  }]
+}])
+.config(function($httpProvider) {
+  $httpProvider.interceptors.push('HKEPC_CORS')
+});
+

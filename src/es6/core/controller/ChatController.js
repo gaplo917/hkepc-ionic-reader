@@ -16,16 +16,15 @@ export class ChatController{
     this.chats = []
 
     $scope.$on('$ionicView.enter', (e) => {
-      authService.loginFromDb((err) => {
-        if(err){
-          alert("請先登入！")
-          $state.go("tab.account")
-        } else {
-          setTimeout(()=> {
-            this.loadChats()
-          },400)
-        }
-      })
+      if(authService.isLoggedIn()){
+        this.scope.$emit("accountTabUpdate",authService.getUsername())
+        setTimeout(()=> {
+          this.loadChats()
+        },400)
+      } else {
+        alert("請先登入！")
+        $state.go("tab.account")
+      }
 
     })
   }
@@ -66,9 +65,6 @@ export class ChatController{
 
 
           this.chats = chats
-
-          this.scope.apply()
-
 
         },(err) => {
           console.log(err)

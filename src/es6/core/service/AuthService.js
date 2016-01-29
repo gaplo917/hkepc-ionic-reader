@@ -10,31 +10,32 @@ var async = require('async');
 export var AuthService = {
   name: 'authService',
 
-  impl: ['$localstorage','$http',function ($localstorage,$http) {
+  impl: ['$localstorage','$http','$cookies',function ($localstorage,$http,$cookies) {
 
     return {
-      saveAuthority: function(authority){
+      saveAuthority: (authority) =>{
         "use strict";
+        // remove the password before save
+        delete authority['password']
+
         $localstorage.setObject('authority',authority)
       },
-      removeAuthority: function () {
+      removeAuthority: () => {
         $localstorage.setObject('authority',{})
       },
-      loginFromDb: function(cb) {
+      getUsername: () =>{
         "use strict";
-
-        const authority = $localstorage.getObject('authority')
-
-        if(Object.keys(authority).length > 0){
-          console.log('[AuthService]','Login from DB')
-          this.login(authority, cb)
-        } else {
-          if(cb) cb('fail')
-        }
+        return $localstorage.getObject('authority').username
       },
-      login: function(authority,cb){
+      isLoggedIn: function() {
         "use strict";
-        if(authority){
+        return $cookies.get(HKEPC.auth.id) &&
+            $cookies.get(HKEPC.auth.token) &&
+            new Date().getTime() < $cookies.get(HKEPC.auth.expire)
+      },
+      login: (authority,cb) => {
+        "use strict";
+        if(authority && authority.username && authority.password){
           console.log('[AuthService]','Request login')
 
           $http({
@@ -43,34 +44,43 @@ export var AuthService = {
             data: `username=${authority.username}&password=${authority.password}&cookietime=2592000`,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then((resp) => {
-            const html = new GeneralHtml(cheerio.load(resp.data))
 
-            let $ = html
-                .removeIframe()
-                .processImgUrl(HKEPC.baseUrl)
-                .getCheerio()
+            console.log(resp.data)
 
-            const currentUsername = $('#umenu > cite').text()
+            const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
+            const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
 
-            if(currentUsername){
-              console.log('[AuthService]','Login success')
+            if(sidKV && authKV){
+              const sidValue = sidKV.split(';')[0].split('=')[1]
+              const authValue = authKV.split(';')[0].split('=')[1]
+              const authExpireValue = authKV.split(';')[1].split('=')[1]
 
-              if(cb) cb(null,currentUsername)
+              if(sidValue && authValue) {
+                $cookies.put(HKEPC.auth.id,sidValue,{expires: authExpireValue})
+                $cookies.put(HKEPC.auth.token,authValue,{expires: authExpireValue})
+                $cookies.put(HKEPC.auth.expire,new Date(authExpireValue).getTime(),{expires: authExpireValue})
 
-            } else {
-              console.log('[AuthService]','Login fail')
+                alert(`${authority.username} 登入成功!`)
 
-              // if login fail, remove the authority
-              this.removeAuthority()
-
-              alert($('.alert_info').text())
+                if(cb) cb(null,authority.username)
+              }
+            } else{
+              cb("Fail!")
+              alert("登入失敗! 請於十五分鐘後再嘗試！")
             }
+
           }, (err) => {
             alert(err)
           })
         }
+      },
+      logout: () => {
+        "use strict";
+        $cookies.remove(HKEPC.auth.id)
+        $cookies.remove(HKEPC.auth.token)
+        $cookies.remove(HKEPC.auth.expire)
       }
     }
-  }],
+  }]
 
 }
