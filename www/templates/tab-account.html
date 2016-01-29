@@ -2,17 +2,22 @@
   <ion-content>
     <ion-list>
     </ion-list>
-    <div class="list">
-      <label class="item item-input">
-        <span class="input-label">Username</span>
-        <input type="text" placeholder="Username" ng-model="user.username">
-      </label>
-      <label class="item item-input">
-        <span class="input-label">Password</span>
-        <input type="password" placeholder="Password" ng-model="user.password">
-      </label>
+    <div class="list" ng-show="!vm.isLoggedIn()">
+    <label class="item item-input">
+      <span class="input-label">Username</span>
+      <input type="text" placeholder="Username" ng-model="user.username">
+    </label>
+    <label class="item item-input">
+      <span class="input-label">Password</span>
+      <input type="password" placeholder="Password" ng-model="user.password">
+    </label>
+    <div class="padding">
+      <button class="button button-block button-positive activated" ng-click="vm.login(user.username,user.password)">Login</button>
+    </div>
+  </div>
+    <div class="list" ng-show="vm.isLoggedIn()">
       <div class="padding">
-        <button class="button button-block button-positive activated" ng-click="login(user.username,user.password)">Login</button>
+        <button class="button button-block button-assertive activated" ng-click="vm.logout()">Logout</button>
       </div>
     </div>
   </ion-content>

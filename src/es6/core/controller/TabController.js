@@ -8,7 +8,6 @@ export class TabController{
     $scope.$on('accountTabUpdate', (event,arg) =>{
       if(arg){
         this.login = arg
-        $scope.$apply()
       }
     })
   }

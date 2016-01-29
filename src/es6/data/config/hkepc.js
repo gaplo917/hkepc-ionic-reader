@@ -1,10 +1,13 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
- */
-const BASE_URL = 'http://www.hkepc.com/forum'
+*/
+const PROXY_URL = 'http://hkepc.ionic-reader.xyz'
+const BASE_URL = `${PROXY_URL}/www.hkepc.com/forum`
+const IMAGE_URL = 'http://www.hkepc.com/forum'
 
 module.exports = {
   baseUrl: BASE_URL,
+  imageUrl:IMAGE_URL,
   forum: {
     index: () => `${BASE_URL}/index.php`,
     topics: (topicId,page) => `${BASE_URL}/forumdisplay.php?fid=${topicId}&page=${page}`,
@@ -38,7 +41,11 @@ module.exports = {
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`
   },
-
+  auth:{
+    id: 'cdb_sid',
+    token: 'cdb_auth',
+    expire: 'expires'
+  },
   data:{
     gifs:[
       {

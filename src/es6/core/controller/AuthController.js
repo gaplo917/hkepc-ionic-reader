@@ -14,11 +14,6 @@ export class AuthController {
 
     $scope.user = $localstorage.getObject('authority')
 
-    $scope.login = (username, password) => {
-      "use strict";
-      this.login(username,password)
-    }
-
   }
 
   login(username,password){
@@ -28,14 +23,19 @@ export class AuthController {
       password: password
     }
 
-    this.authService.saveAuthority(authority)
-
     this.authService.login(authority,(err,username) => {
-      this.scope.$emit("accountTabUpdate",username)
+      this.authService.saveAuthority(authority)
 
-      // alert the user login success
-      alert(`登入成功 ${username}`)
+      this.scope.$emit("accountTabUpdate",username)
     })
 
+  }
+
+  isLoggedIn(){
+    return this.authService.isLoggedIn()
+  }
+
+  logout(){
+    this.authService.logout()
   }
 }
