@@ -20,3 +20,5 @@ angular.module('starter.controllers', [])
 .controller(Controllers.chat.name, Controllers.chat.action)
 
 .controller(Controllers.auth.name,Controllers.auth.action)
+
+.controller(Controllers.notification.name,Controllers.notification.action)

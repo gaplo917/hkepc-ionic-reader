@@ -36,7 +36,8 @@ module.exports = {
 
     },
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
-    pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`
+    pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
+    notifications: () => `${BASE_URL}/notice.php`
   },
 
   data:{

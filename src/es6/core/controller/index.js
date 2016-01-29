@@ -6,6 +6,7 @@ import {ChatController} from './ChatController'
 import {ChatDetailController} from './ChatDetailController'
 import {TabController} from './TabController'
 import {AuthController} from './AuthController'
+import {NotificationController} from './NotificationController'
 
 export var tab = {
   action: TabController,
@@ -120,6 +121,23 @@ export var auth = {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
         controller: 'AuthCtrl',
+        controllerAs: 'vm'
+      }
+    }
+  }
+}
+
+export var notification = {
+  action: NotificationController,
+  state: 'tab.notifications',
+  name: 'NotificationCtrl',
+  config: {
+    url: '/notifications',
+    nativeTransitions: null,
+    views: {
+      'tab-notifications': {
+        templateUrl: 'templates/tab-notifications.html',
+        controller: 'NotificationCtrl',
         controllerAs: 'vm'
       }
     }
