@@ -1,5 +1,5 @@
 import * as Controllers from './controller/index'
-import 'ionic-native-transitions'
+//import 'ionic-native-transitions'
 import 'angular-loading-bar'
 // Ionic Starter App
 
@@ -13,7 +13,7 @@ angular.module('starter', [
   'starter.controllers',
   'starter.services',
   'ngCookies',
-  'ionic-native-transitions',
+  //'ionic-native-transitions',
   'angular-loading-bar'
 ])
 .run(function($ionicPlatform) {
@@ -21,8 +21,8 @@ angular.module('starter', [
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+      cordova.plugins.Keyboard.disableScroll(false);
 
     }
     if (window.StatusBar) {
@@ -49,7 +49,8 @@ angular.module('starter', [
   .state(Controllers.post.state, Controllers.post.config)
   .state(Controllers.chats.state,Controllers.chats.config)
   .state(Controllers.chat.state,Controllers.chat.config)
-  .state(Controllers.auth.state,Controllers.auth.config);
+  .state(Controllers.auth.state,Controllers.auth.config)
+  .state(Controllers.notification.state,Controllers.notification.config);
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
@@ -73,24 +74,24 @@ angular.module('starter', [
   $ionicConfigProvider.navBar.alignTitle('center')
 
 }])
-.config(['$ionicNativeTransitionsProvider',function($ionicNativeTransitionsProvider){
-  $ionicNativeTransitionsProvider.setDefaultOptions({
-    duration: 400, // in milliseconds (ms), default 400,
-    slowdownfactor: 1, // overlap views (higher number is more) or no overlap (1), default 4
-    iosdelay: -1, // ms to wait for the iOS webview to update before animation kicks in, default -1
-    androiddelay: -1, // same as above but for Android, default -1
-    winphonedelay: -1, // same as above but for Windows Phone, default -1,
-    fixedPixelsTop: 0, // the number of pixels of your fixed header, default 0 (iOS and Android)
-    fixedPixelsBottom: 49, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
-    triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
-    backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
-  });
-
-  $ionicNativeTransitionsProvider.setDefaultBackTransition({
-    type: 'slide',
-    direction: 'right',
-    duration: 0
-  });
-}])
+//.config(['$ionicNativeTransitionsProvider',function($ionicNativeTransitionsProvider){
+//  $ionicNativeTransitionsProvider.setDefaultOptions({
+//    duration: 400, // in milliseconds (ms), default 400,
+//    slowdownfactor: 1, // overlap views (higher number is more) or no overlap (1), default 4
+//    iosdelay: -1, // ms to wait for the iOS webview to update before animation kicks in, default -1
+//    androiddelay: -1, // same as above but for Android, default -1
+//    winphonedelay: -1, // same as above but for Windows Phone, default -1,
+//    fixedPixelsTop: 0, // the number of pixels of your fixed header, default 0 (iOS and Android)
+//    fixedPixelsBottom: 49, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
+//    triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
+//    backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
+//  });
+//
+//  $ionicNativeTransitionsProvider.setDefaultBackTransition({
+//    type: 'slide',
+//    direction: 'right',
+//    duration: 0
+//  });
+//}])
 
 ;

@@ -1,0 +1,17 @@
+<ion-view >
+  <ion-nav-title>
+    Notification
+  </ion-nav-title>
+  <div class="spinner">
+    <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
+  </div>
+  <ion-content>
+    <ion-list>
+      <ion-item class="item"
+                ng-repeat="notification in vm.notifications"
+                type="item-text-wrap">
+        <div class="item item-body" ng-bind-html="::notification">
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
