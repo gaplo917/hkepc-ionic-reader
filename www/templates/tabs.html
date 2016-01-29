@@ -15,8 +15,13 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 
+  <!-- Notification Tab -->
+  <ion-tab title="Notification" icon-off="ion-ios-bell-outline" icon-on="ion-ios-bell" href="#/tab/notifications">
+    <ion-nav-view name="tab-notifications"></ion-nav-view>
+  </ion-tab>
+
   <!-- Account Tab -->
-  <ion-tab title="{{vm.login || 'Login'}}" icon-off="ion-person" icon-on="ion-person" href="#/tab/account">
+  <ion-tab title="{{vm.login || 'Login'}}" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 

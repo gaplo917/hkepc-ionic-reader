@@ -51,6 +51,7 @@ angular.module('starter', [
   .state(Controllers.chats.state,Controllers.chats.config)
   .state(Controllers.chat.state,Controllers.chat.config)
   .state(Controllers.auth.state,Controllers.auth.config)
+  .state(Controllers.notification.state,Controllers.notification.config);
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
