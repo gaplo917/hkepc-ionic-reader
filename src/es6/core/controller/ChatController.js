@@ -18,9 +18,7 @@ export class ChatController{
     $scope.$on('$ionicView.enter', (e) => {
       if(authService.isLoggedIn()){
         this.scope.$emit("accountTabUpdate",authService.getUsername())
-        setTimeout(()=> {
-          this.loadChats()
-        },400)
+        setTimeout(()=> this.loadChats() ,400)
       } else {
         alert("請先登入！")
         $state.go("tab.account")
