@@ -36,7 +36,6 @@ export class NotificationController{
     this.http
       .get(HKEPC.forum.notifications())
       .then((resp) => {
-        resp.data = testData
         const html = new GeneralHtml(cheerio.load(resp.data))
 
         let $ = html

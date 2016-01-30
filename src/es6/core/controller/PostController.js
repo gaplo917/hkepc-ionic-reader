@@ -274,7 +274,6 @@ export class PostController{
     this.reset()
     this.loadMessages(() => {
       this.refreshing = false
-      this.scope.$broadcast('scroll.refreshComplete');
     })
   }
 
@@ -306,7 +305,7 @@ export class PostController{
       .then((resp) => {
         let $ = cheerio.load(resp.data)
         const relativeUrl = $('#postform').attr('action')
-        const postUrl = `${HKEPC.baseUrl}/${relativeUrl}`
+        const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
         console.log(postUrl)
 
@@ -334,17 +333,16 @@ export class PostController{
           data :`message=${encodeURIComponent(replyMessage)}&${hiddenFormInputs.join('&')}`,
           headers : {'Content-Type':'application/x-www-form-urlencoded'}
         }).then((resp) => {
-          //console.log(JSON.stringify(resp))
 
           this.replyModal.hide()
 
         },(err) => {
-          alert("Error: Network timeout")
+          alert("Network error or Server is down")
           console.log(JSON.stringify(err))
         })
 
       }, (err) => {
-        alert("Error: Network timeout")
+        alert(" Network error or Server is down")
         console.log(JSON.stringify(err))
       })
 
