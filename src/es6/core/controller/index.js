@@ -59,7 +59,6 @@ export var post = {
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
   config:{
-    cache: false,
     url: '/topics/:topicId/posts/:postId/page/:page',
     views: {
       'tab-topics': {
@@ -76,7 +75,6 @@ export var chats = {
   state: 'tab.chats',
   name: "ChatCtrl",
   config:{
-    cache: true,
     url: '/chats',
     views: {
       'tab-chats': {
@@ -93,7 +91,6 @@ export var chat = {
   state: 'tab.chat-detail',
   name: "ChatDetailCtrl",
   config:{
-    cache: false,
     url: '/chats/:id',
     views: {
       'tab-chats': {
