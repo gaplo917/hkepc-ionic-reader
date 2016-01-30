@@ -34,7 +34,7 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
         this.source(e).removeAttr('target')
       }
-      else if(url && url.indexOf('space.php?') >= 0){
+      else if(url && url.indexOf('space.php?from=notice') >= 0){
         const urlText = this.source(e).text()
         const spanText = cheerio(`<span class="username">${urlText}</span>`)
         this.source(e).replaceWith(spanText)
