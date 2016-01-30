@@ -51,8 +51,15 @@ ion-list .item.item-divider{
 *{
     word-break: break-all;
 }
-.card .item-body img,iframe, .card .ads iframe{
-    width:100% !important;
+.card .item-body table{
+    width: 100%;
+}
+.card .item-body img:not([src$=".gif"]), .card .ads iframe{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:100%;
+    max-width: 500px;
     margin-top:5px;
 }
 
