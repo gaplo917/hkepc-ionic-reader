@@ -10,12 +10,12 @@
       <div class="list card">
 
         <div class="item item-avatar">
-          <img src="{{::vm.message.author.image}}">
-          <h2 ng-bind="::vm.message.author.name"></h2>
-          <p>{{::vm.message.createdAt}} <span style="float:right">#{{::vm.message.pos}}</span></p>
+          <img src="{{vm.message.author.image}}">
+          <h2 ng-bind="vm.message.author.name"></h2>
+          <p>{{vm.message.createdAt}} <span style="float:right">#{{vm.message.pos}}</span></p>
         </div>
 
-        <div class="item item-body" ng-bind-html="::vm.message.content">
+        <div class="item item-body" ng-bind-html="vm.message.content">
         </div>
 
       </div>
