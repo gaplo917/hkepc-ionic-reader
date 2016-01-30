@@ -181,8 +181,14 @@ export class PostController{
                 return () => {
                   let postSource = cheerio.load($(elem).html())
 
-                  const ads = postSource('.adv').html()
-                  postSource('.adv').remove()
+                  const adsSource = postSource('.adv')
+
+                  // extract the ads before remove from the parent
+                  const hasAds = adsSource.has('iframe')
+                  const ads = hasAds? adsSource.html() : undefined
+
+                  // really remove the ads
+                  adsSource.remove()
 
                   const message = {
                     id: postSource('table').attr('id').replace('pid',''),
