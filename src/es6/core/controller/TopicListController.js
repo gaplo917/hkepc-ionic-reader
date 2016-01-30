@@ -9,7 +9,8 @@ var async = require('async');
 
 export class TopicListController {
 
-  constructor($scope,$http,$localstorage,authService) {
+  constructor($scope,$http,$localstorage,authService,ngToast) {
+
     this.scope = $scope
     this.http = $http
     this.localstorage = $localstorage
@@ -35,6 +36,8 @@ export class TopicListController {
         this.loadList()
       }
       else{
+        ngToast.success('正在使用快取..')
+
         console.log('[TopicListController]','using cache')
         this.cached = true
         this.topics = topics

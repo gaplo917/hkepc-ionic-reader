@@ -3,7 +3,7 @@
  */
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
-import {GeneralHtml} from "../model/general-html"
+import {HKEPCHtml} from "../model/hkepc-html"
 var cheerio = require('cheerio')
 var async = require('async');
 
@@ -36,10 +36,12 @@ export class NotificationController{
     this.http
       .get(HKEPC.forum.notifications())
       .then((resp) => {
-        const html = new GeneralHtml(cheerio.load(resp.data))
+        const html = new HKEPCHtml(cheerio.load(resp.data))
 
         let $ = html
             .removeIframe()
+            .processEpcUrl()
+            .processExternalUrl()
             .processImgUrl(HKEPC.baseUrl)
             .getCheerio()
 

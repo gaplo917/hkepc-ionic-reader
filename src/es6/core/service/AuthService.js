@@ -10,7 +10,7 @@ var async = require('async');
 export var AuthService = {
   name: 'authService',
 
-  impl: ['$localstorage','$http','$cookies',function ($localstorage,$http,$cookies) {
+  impl: ['$localstorage','$http','$cookies','ngToast',function ($localstorage,$http,$cookies,ngToast) {
 
     return {
       saveAuthority: (authority) =>{
@@ -60,17 +60,17 @@ export var AuthService = {
                 $cookies.put(HKEPC.auth.token,authValue,{expires: authExpireValue})
                 $cookies.put(HKEPC.auth.expire,new Date(authExpireValue).getTime(),{expires: authExpireValue})
 
-                alert(`${authority.username} 登入成功!`)
+                ngToast.success(`${authority.username} 登入成功!`)
 
                 if(cb) cb(null,authority.username)
               }
             } else{
-              alert("登入失敗!")
+              ngToast.danger({
+                content: '登入失敗!'
+              })
               cb("Fail!")
             }
 
-          }, (err) => {
-            alert(err)
           })
         }
       },

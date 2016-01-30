@@ -10,7 +10,7 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover,ngToast) {
     this.scope = $scope
     this.http = $http
     this.messageService = $message
@@ -19,6 +19,7 @@ export class PostController{
     this.sce = $sce
     this.ionicHistory = $ionicHistory
     this.ionicModal = $ionicModal
+    this.ngToast = ngToast
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
@@ -139,7 +140,7 @@ export class PostController{
                   .getTitle()
                   .split('-')[0]
 
-              const pageNumArr = $('.forumcontrol .pages a')
+              const pageNumArr = $('.forumcontrol .pages a, .forumcontrol .pages strong')
                   .map((i,elem) => $(elem).text())
                   .get()
                   .map(e => e.match(/\d/g)) // array of string with digit
@@ -238,8 +239,6 @@ export class PostController{
             console.log("ALL TASK DONE!!!",err)
           });
 
-        }, (err) => {
-          console.error('ERR', JSON.stringify(err))
         })
 
   }
@@ -334,16 +333,14 @@ export class PostController{
           headers : {'Content-Type':'application/x-www-form-urlencoded'}
         }).then((resp) => {
 
+          this.ngToast.success("成功發佈回覆！")
+
           this.replyModal.hide()
 
-        },(err) => {
-          alert("Network error or Server is down")
-          console.log(JSON.stringify(err))
+          this.end = false;
+
         })
 
-      }, (err) => {
-        alert(" Network error or Server is down")
-        console.log(JSON.stringify(err))
       })
 
   }
