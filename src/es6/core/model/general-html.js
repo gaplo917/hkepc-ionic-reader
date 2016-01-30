@@ -61,7 +61,7 @@ export class GeneralHtml{
 
       const url = this.source(e).attr('href')
 
-      if(url){
+      if(url && !url.startsWith('#')){
         //console.log('lazy',lazyImg)
         this.source(e).attr('href','#')
         this.source(e).attr('target',`_system`)

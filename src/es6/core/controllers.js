@@ -22,3 +22,5 @@ angular.module('starter.controllers', [])
 .controller(Controllers.auth.name,Controllers.auth.action)
 
 .controller(Controllers.notification.name,Controllers.notification.action)
+
+.controller(Controllers.findMesssage.name,Controllers.findMesssage.action)

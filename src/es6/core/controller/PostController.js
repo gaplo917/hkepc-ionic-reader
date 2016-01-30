@@ -4,7 +4,7 @@
 //import * as cheerio from 'cheerio';
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
-import {GeneralHtml} from "../model/general-html"
+import {HKEPCHtml} from "../model/hkepc-html"
 var cheerio = require('cheerio')
 var async = require('async');
 
@@ -125,11 +125,12 @@ export class PostController{
 
           async.waterfall([
             (callback) => {
-              const html = new GeneralHtml(cheerio.load(resp.data))
+              const html = new HKEPCHtml(cheerio.load(resp.data))
 
               let $ = html
-                  .removeIframe()
+                  //.removeIframe()  // iframe ads
                   .processImgUrl(HKEPC.imageUrl)
+                  .processEpcUrl()
                   .processExternalUrl()
                   .getCheerio()
 
@@ -172,11 +173,16 @@ export class PostController{
             },
             ($,postTitle, callback) => {
 
+
+
               // PostHtml map to the model
               const tasks = $('#postlist > div').map( (i,elem) => {
                 // remember this is a function object (lazy function)
                 return () => {
                   let postSource = cheerio.load($(elem).html())
+
+                  const ads = postSource('.adv').html()
+                  postSource('.adv').remove()
 
                   const message = {
                     id: postSource('table').attr('id').replace('pid',''),
@@ -184,8 +190,11 @@ export class PostController{
                     inAppUrl: this.postUrl,
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
                     content : this.sce.trustAsHtml(
-                        postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html()
+                        // main content
+                        postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
+                        postSource('.postcontent > .defaultpost > .postmessage').html() // for banned message
                     ),
+                    ads: this.sce.trustAsHtml(ads),
                     post:{
                       id: this.postId,
                       topicId: this.topicId,
@@ -250,6 +259,8 @@ export class PostController{
   reset(){
     this.messages = []
     this.q.kill()
+    this.end = false;
+
   }
 
   doRefresh(){

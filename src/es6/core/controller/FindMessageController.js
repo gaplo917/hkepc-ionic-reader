@@ -5,37 +5,21 @@ import * as HKEPC from "../../data/config/hkepc"
 
 export class FindMessageController {
 
-  constructor($scope, $http, $localstorage, authService) {
+  constructor($scope, $http, messageResolver, $stateParams) {
 
-    this.localstorage = $localstorage
     this.http = $http
     this.scope = $scope
-    this.authService = authService
 
-    $scope.user = $localstorage.getObject('authority')
+    messageResolver.resolve(`http://proxy.ionic-reader.xyz/www.hkepc.com/forum/redirect.php?goto=findpost&pid=${$stateParams.messageId}&ptid=${$stateParams.postId}`)
+    .then((data) => {
+      const message = data.message
 
-  }
+      this.post = message.post
 
-  login(username,password){
-
-    const authority = {
-      username: username,
-      password: password
-    }
-
-    this.authService.login(authority,(err,username) => {
-      this.authService.saveAuthority(authority)
-
-      this.scope.$emit("accountTabUpdate",username)
+      this.messages.push(message)
     })
 
+
   }
 
-  isLoggedIn(){
-    return this.authService.isLoggedIn()
-  }
-
-  logout(){
-    this.authService.logout()
-  }
 }

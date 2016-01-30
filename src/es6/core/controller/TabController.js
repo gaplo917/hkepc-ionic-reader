@@ -6,9 +6,9 @@ export class TabController{
   constructor($scope) {
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
-      if(arg){
-        this.login = arg
-      }
+      if(arg){ this.login = arg }
     })
+
+
   }
 }

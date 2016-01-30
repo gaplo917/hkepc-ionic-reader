@@ -1,5 +1,5 @@
 <ion-view ng-init="vm.messages=[]" >
-  <ion-nav-title ng-click="vm.openPageSliderPopover($event)">
+  <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
       第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
   <ion-nav-buttons side="right" style="float:right">
@@ -21,6 +21,10 @@
       </div>
 
       <div class="item item-body" ng-bind-html="::message.content">
+      </div>
+      <div class="item ads" ng-show="::message.ads">
+        <div style="width: 100%;text-align: center; color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
+        <span ng-bind-html="::message.ads"></span>
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">

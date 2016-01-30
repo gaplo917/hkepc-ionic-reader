@@ -7,6 +7,7 @@ import {ChatDetailController} from './ChatDetailController'
 import {TabController} from './TabController'
 import {AuthController} from './AuthController'
 import {NotificationController} from './NotificationController'
+import {FindMessageController} from './FindMessageController'
 
 export var tab = {
   action: TabController,
@@ -14,7 +15,6 @@ export var tab = {
   name : "TabCtrl",
   config: {
     url: '/tab',
-    nativeTransitions: null,
     abstract: true,
     templateUrl: 'templates/tabs.html',
     controller: 'TabCtrl',
@@ -28,7 +28,6 @@ export var topics = {
   name : "TopicCtrl",
   config: {
     url: '/topics',
-    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/tab-topics.html',
@@ -45,7 +44,6 @@ export var posts = {
   name:"PostsCtrl",
   config: {
     url: '/topics/:topicId/page/:page',
-    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',
@@ -63,7 +61,6 @@ export var post = {
   config:{
     cache: false,
     url: '/topics/:topicId/posts/:postId/page/:page',
-    nativeTransitions: null,
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
@@ -81,7 +78,6 @@ export var chats = {
   config:{
     cache: true,
     url: '/chats',
-    nativeTransitions: null,
     views: {
       'tab-chats': {
         templateUrl: 'templates/tab-chats.html',
@@ -99,7 +95,6 @@ export var chat = {
   config:{
     cache: false,
     url: '/chats/:id',
-    nativeTransitions: null,
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',
@@ -116,7 +111,6 @@ export var auth = {
   name: 'AuthCtrl',
   config: {
     url: '/account',
-    nativeTransitions: null,
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
@@ -133,11 +127,26 @@ export var notification = {
   name: 'NotificationCtrl',
   config: {
     url: '/notifications',
-    nativeTransitions: null,
     views: {
       'tab-notifications': {
         templateUrl: 'templates/tab-notifications.html',
         controller: 'NotificationCtrl',
+        controllerAs: 'vm'
+      }
+    }
+  }
+}
+
+export var findMesssage = {
+  action: FindMessageController,
+  state: 'tab.findMesssage',
+  name: 'FindMessageCtrl',
+  config: {
+    url: '/topics/findMessage/:postId/:messageId',
+    views: {
+      'tab-topics': {
+        templateUrl: 'templates/post-detail.html',
+        controller: 'FindMessageCtrl',
         controllerAs: 'vm'
       }
     }
