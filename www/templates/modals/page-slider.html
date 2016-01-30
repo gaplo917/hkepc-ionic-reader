@@ -4,7 +4,7 @@
   </ion-header-bar>
   <ion-content >
     <div class="list">
-      <div class="item range range-positive">
+      <div class="item range range-positive" ng-show="vm.totalPageNum > 1">
         <input type="range"
                min="1"
                max="{{vm.totalPageNum}}"
