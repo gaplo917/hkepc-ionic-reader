@@ -13,7 +13,8 @@ angular.module('starter', [
   'starter.controllers',
   'starter.services',
   'ngCookies',
-  'angular-loading-bar'
+  'angular-loading-bar',
+  'ngToast'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -78,12 +79,17 @@ angular.module('starter', [
 }])
 .provider('HKEPC_CORS',[function(){
 
-  this.$get = ['$cookies', function($cookies){
+  this.$get = ['$cookies','ngToast', function($cookies,ngToast){
     return {
       'request': function(config) {
         config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$cookies.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$cookies.get(HKEPC.auth.token)}`
 
         return config;
+      },
+      responseError: function(err){
+        "use strict";
+        ngToast.danger("連線出現問題！")
+        console.log('$http Error',JSON.stringify(err))
       }
     }
   }]

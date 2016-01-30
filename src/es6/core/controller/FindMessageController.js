@@ -10,7 +10,7 @@ export class FindMessageController {
     this.http = $http
     this.scope = $scope
 
-    messageResolver.resolve(`http://proxy.ionic-reader.xyz/www.hkepc.com/forum/redirect.php?goto=findpost&pid=${$stateParams.messageId}&ptid=${$stateParams.postId}`)
+    messageResolver.resolve(HKEPC.forum.findMessage($stateParams.postId,$stateParams.messageId))
     .then((data) => {
       const message = data.message
 

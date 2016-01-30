@@ -40,7 +40,8 @@ module.exports = {
     },
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
-    notifications: () => `${BASE_URL}/notice.php`
+    notifications: () => `${BASE_URL}/notice.php`,
+    findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`
   },
   auth:{
     id: 'cdb_sid',

@@ -22,8 +22,9 @@ export var MessageResolver = {
 
           let $ = html
               .removeIframe()
-              .processEpcUrl()
               .processImgUrl(HKEPC.baseUrl)
+              .processEpcUrl()
+              .processExternalUrl()
               .getCheerio()
 
           const postTitle = html
@@ -44,8 +45,14 @@ export var MessageResolver = {
 
           let postSource = cheerio.load($(`#pid${messageId}`).parent().html())
 
-          const ads = postSource('.adv').html()
-          postSource('.adv').remove()
+          const adsSource = postSource('.adv')
+
+          // extract the ads before remove from the parent
+          const hasAds = adsSource.has('iframe')
+          const ads = hasAds? adsSource.html() : undefined
+
+          // really remove the ads
+          adsSource.remove()
 
           const message = {
             id: postSource('table').attr('id').replace('pid',''),
