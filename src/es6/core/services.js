@@ -11,3 +11,4 @@ angular.module('starter.services', [])
 
 .factory(Services.AuthService.name,Services.AuthService.impl)
 
+.factory(Services.MessageResolver.name,Services.MessageResolver.impl)

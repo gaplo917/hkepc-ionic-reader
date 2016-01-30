@@ -1,5 +1,4 @@
 import * as Controllers from './controller/index'
-import 'ionic-native-transitions'
 import 'angular-loading-bar'
 import * as HKEPC from '../data/config/hkepc'
 // Ionic Starter App
@@ -14,7 +13,6 @@ angular.module('starter', [
   'starter.controllers',
   'starter.services',
   'ngCookies',
-  'ionic-native-transitions',
   'angular-loading-bar'
 ])
 .run(function($ionicPlatform) {
@@ -51,7 +49,8 @@ angular.module('starter', [
   .state(Controllers.chats.state,Controllers.chats.config)
   .state(Controllers.chat.state,Controllers.chat.config)
   .state(Controllers.auth.state,Controllers.auth.config)
-  .state(Controllers.notification.state,Controllers.notification.config);
+  .state(Controllers.notification.state,Controllers.notification.config)
+  .state(Controllers.findMesssage.state,Controllers.findMesssage.config)
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
@@ -74,25 +73,8 @@ angular.module('starter', [
   $ionicConfigProvider.views.swipeBackEnabled(false)
   $ionicConfigProvider.navBar.alignTitle('center')
 
-}])
-.config(['$ionicNativeTransitionsProvider',function($ionicNativeTransitionsProvider){
-  $ionicNativeTransitionsProvider.setDefaultOptions({
-    duration: 0, // in milliseconds (ms), default 400,
-    slowdownfactor: 1, // overlap views (higher number is more) or no overlap (1), default 4
-    iosdelay: -1, // ms to wait for the iOS webview to update before animation kicks in, default -1
-    androiddelay: -1, // same as above but for Android, default -1
-    winphonedelay: -1, // same as above but for Windows Phone, default -1,
-    fixedPixelsTop: 0, // the number of pixels of your fixed header, default 0 (iOS and Android)
-    fixedPixelsBottom: 49, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
-    triggerTransitionEvent: '$ionicView.afterEnter', // internal ionic-native-transitions option
-    backInOppositeDirection: false // Takes over default back transition and state back transition to use the opposite direction transition to go back
-  })
-
-  $ionicNativeTransitionsProvider.setDefaultBackTransition({
-    type: 'slide',
-    direction: 'right',
-    duration: 0
-  })
+  // focus on content, should not have fancy transition
+  $ionicConfigProvider.views.transition('none')
 }])
 .provider('HKEPC_CORS',[function(){
 

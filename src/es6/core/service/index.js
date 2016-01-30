@@ -4,3 +4,4 @@
 export * from './localstorage'
 export * from './message'
 export * from './AuthService'
+export * from './MessageResolver'
