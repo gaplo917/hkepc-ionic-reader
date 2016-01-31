@@ -12,6 +12,8 @@
     text-align: center;
 }
 
+.item-radio .item-content { padding-right:49px;}
+
 /*angular-loading-bar*/
 #loading-bar .bar {
     height: 1px;
