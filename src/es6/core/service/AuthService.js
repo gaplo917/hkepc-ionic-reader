@@ -45,8 +45,6 @@ export var AuthService = {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then((resp) => {
 
-            console.log(resp.data)
-
             const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
             const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
 
