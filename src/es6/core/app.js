@@ -12,8 +12,9 @@ angular.module('starter', [
   'ionic',
   'starter.controllers',
   'starter.services',
-  'ngCookies',
+  'starter.directives',
   'angular-loading-bar',
+  'ngCookies',
   'ngToast'
 ])
 .run(function($ionicPlatform) {
@@ -51,7 +52,6 @@ angular.module('starter', [
   .state(Controllers.chat.state,Controllers.chat.config)
   .state(Controllers.auth.state,Controllers.auth.config)
   .state(Controllers.notification.state,Controllers.notification.config)
-  .state(Controllers.findMesssage.state,Controllers.findMesssage.config)
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/topics');
@@ -88,7 +88,7 @@ angular.module('starter', [
       },
       responseError: function(err){
         "use strict";
-        ngToast.danger("連線出現問題！")
+        ngToast.danger(`<i class="ion-network"> 連線出現問題！</i>`)
         console.log('$http Error',JSON.stringify(err))
       }
     }
@@ -96,5 +96,5 @@ angular.module('starter', [
 }])
 .config(function($httpProvider) {
   $httpProvider.interceptors.push('HKEPC_CORS')
-});
+})
 

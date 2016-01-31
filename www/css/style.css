@@ -2,9 +2,6 @@
     word-break: break-all;
 }
 
-blockquote {
-    border-left: 5px solid #8fc320;
-}
 /* Empty. Add your own CSS if you like */
 .center {
     margin-left: auto;
@@ -26,7 +23,7 @@ blockquote {
 /* Font Size */
 .item .bigger-title {  font-size: 18px;  }
 
-.odd .item-content{}
+.odd .item-content {}
 
 .even .item-content{  background-color: #fafafa;  }
 /* Spinner */
@@ -66,14 +63,6 @@ ion-list .item.item-divider{
 .card .item-body img[src$=".gif"]{
     height:auto;
     width:auto!important;
-}
-
-.card .item-body .locked {
-    margin: 10px 0;
-    width: 100%;
-    padding: 8px 8px 8px 24px;
-    border: 1px dashed #FF9A9A;
-    font-size: 12px;
 }
 
 .card .item-body *, .chat-bubble *{

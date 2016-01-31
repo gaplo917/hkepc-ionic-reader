@@ -1,0 +1,31 @@
+<ion-modal-view >
+  <ion-header-bar class="bar-dark fix-buttons">
+    <h1 class="title">回覆</h1>
+    <button class="button" ng-click="hide()">Close</button>
+  </ion-header-bar>
+  <ion-content class="padding"  style="background-color:#f5f5f5">
+    <div style="text-align:center">
+      <h4 class="title" >{{message.post.title || '下載中'}}</h4>
+    </div>
+    <div class="spinner">
+      <ion-spinner class="spinner-balanced" icon="ripple" ng-show="!message"></ion-spinner>
+    </div>
+    <div class="list card" ng-show="message">
+
+      <div class="item item-avatar">
+        <img src="{{message.author.image}}">
+        <h2 ng-bind="message.author.name"></h2>
+        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
+      </div>
+
+      <div class="item item-body" ng-bind-html="message.content">
+      </div>
+      <div class="item ads" ng-show="message.ads">
+        <div style="width: 100%;text-align: center; color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
+        <span ng-bind-html="message.ads"></span>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-modal-view>
+

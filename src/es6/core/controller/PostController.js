@@ -5,6 +5,8 @@
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {HKEPCHtml} from "../model/hkepc-html"
+import {FindMessageRequest} from "../model/find-message-request"
+
 var cheerio = require('cheerio')
 var async = require('async');
 
@@ -322,8 +324,10 @@ export class PostController{
         }).get()
 
 
+        const ionicReaderSign = HKEPC.signature()
+
         // build the reply message
-        const replyMessage = `${preText}\n${reply.content}`
+        const replyMessage = `${preText}\n${reply.content}\n${ionicReaderSign}`
 
         // Post to the server
         this.http({
@@ -333,7 +337,7 @@ export class PostController{
           headers : {'Content-Type':'application/x-www-form-urlencoded'}
         }).then((resp) => {
 
-          this.ngToast.success("成功發佈回覆！")
+          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
 
           this.replyModal.hide()
 
@@ -369,5 +373,9 @@ export class PostController{
     this.reset()
     this.page = this.inputPage
     this.loadMessages()
+  }
+
+  findMessage(postId,messageId){
+    this.scope.$emit('find',new FindMessageRequest(postId,messageId))
   }
 }

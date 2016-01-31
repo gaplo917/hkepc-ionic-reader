@@ -60,14 +60,12 @@ export var AuthService = {
                 $cookies.put(HKEPC.auth.token,authValue,{expires: authExpireValue})
                 $cookies.put(HKEPC.auth.expire,new Date(authExpireValue).getTime(),{expires: authExpireValue})
 
-                ngToast.success(`${authority.username} 登入成功!`)
+                ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
 
                 if(cb) cb(null,authority.username)
               }
             } else{
-              ngToast.danger({
-                content: '登入失敗!'
-              })
+              ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
               cb("Fail!")
             }
 

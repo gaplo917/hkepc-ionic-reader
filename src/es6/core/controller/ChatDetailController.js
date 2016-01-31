@@ -9,7 +9,7 @@ var async = require('async');
 
 export class ChatDetailController{
 
-  constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate){
+  constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate,ngToast){
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
@@ -20,7 +20,7 @@ export class ChatDetailController{
     this.http = $http
     this.sce = $sce
     this.ionicScrollDelegate = $ionicScrollDelegate
-
+    this.ngToast = ngToast
     this.senderId = $stateParams.id
     this.messages = []
 
@@ -99,6 +99,6 @@ export class ChatDetailController{
     //  message: message
     //}))
 
-    alert("此功能開發中")
+    this.ngToast.warning("此功能開發中")
   }
 }
