@@ -54,7 +54,7 @@ angular.module('starter', [
   .state(Controllers.notification.state,Controllers.notification.config)
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/topics');
+  $urlRouterProvider.otherwise('/tab/account');
 
 })
 .config(['$httpProvider', function($httpProvider) {
