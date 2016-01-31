@@ -2,29 +2,47 @@
   <ion-content>
     <ion-list>
     </ion-list>
+    <a class="item" href="">
+      <style>
+        .ion-alert-circled{
+          color:darkred;
+        }
+      </style>
+      <i class="icon ion-alert-circled"></i> <i class="icon ion-alert-circled"></i> <i class="icon ion-alert-circled"></i> <i class="icon ion-alert-circled"></i>
+      <div class="item-body">
+        <p>HKEPC IR 是非官方、第三方的瀏覧器。本程式不會記錄任何登入名稱或密碼，
+          作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！</p>
+
+        <p> 作者利用 Web 的技術開發跨平台的程式，由於沒有得到 HKEPC 的 API 使用權限，所以只能直接讀取 hkepc.com 提供的 HTML;
+          但因 iOS 的 WKWebView 不允許 CORS，所以本程式必需連接 Proxy 伺服器去提取 hkepc.com 的 HTML。</p>
+
+        <p> Proxy 伺服器絕對不會記錄任何登入名稱或密碼。作者亦已經將 Proxy 伺服器的代碼 Open Source，如果不放心的用家可以自行架設 Proxy 伺服器！</p>
+        <p> <i class="ion-social-github"></i> https://github.com/gaplo917/CORS-Proxy/tree/feature/hkepc</p>
+      </div>
+    </a>
     <div class="list" ng-show="!vm.isLoggedIn()">
-    <label class="item item-input">
-      <span class="input-label">Username</span>
-      <input type="text" placeholder="Username" ng-model="user.username">
-    </label>
-    <label class="item item-input">
-      <span class="input-label">Password</span>
-      <input type="password" placeholder="Password" ng-model="user.password">
-    </label>
-    <div class="padding">
-      <button class="button button-block button-positive activated" ng-click="vm.login(user.username,user.password)">Login</button>
-    </div>
-  </div>
-    <div class="list" ng-show="vm.isLoggedIn()">
+      <label class="item item-input">
+        <span class="input-label">Username</span>
+        <input type="text" placeholder="Username" ng-model="user.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input type="password" placeholder="Password" ng-model="user.password">
+      </label>
       <div class="padding">
-        <button class="button button-block button-assertive activated" ng-click="vm.logout()">Logout</button>
+        <button class="button button-block button-positive activated" ng-click="vm.login(user.username,user.password)">我同意透過 Proxy 傳送資料並登入</button>
       </div>
     </div>
-    <a class="item item-icon-left" href="">
+    <div class="list" ng-show="vm.isLoggedIn()">
+      <div class="padding">
+        <button class="button button-block button-assertive activated" ng-click="vm.logout()">登出</button>
+      </div>
+    </div>
+    <a class="item item-icon-left" ng-click="vm.showProxyPopup()">
       <i class="icon ion-link"></i>
       Proxy 伺服器
           <span class="item-note">
-            {{::vm.proxy}}
+            {{vm.proxy}}
           </span>
     </a>
     <a class="item item-icon-left" href="">
@@ -55,5 +73,6 @@
             Gap
           </span>
     </a>
+
   </ion-content>
 </ion-view>

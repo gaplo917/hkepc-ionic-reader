@@ -79,9 +79,15 @@ angular.module('starter', [
 }])
 .provider('HKEPC_CORS',[function(){
 
-  this.$get = ['$cookies','ngToast', function($cookies,ngToast){
+  this.$get = ['$cookies','ngToast','$localstorage', function($cookies,ngToast, $localstorage){
     return {
       'request': function(config) {
+        if(config.url.indexOf(HKEPC.baseUrl) >= 0){
+
+          const proxy = $localstorage.get('proxy') || HKEPC.proxy
+          // rewrite the url with proxy
+          config.url = config.url.replace('http://',`${proxy}/`)
+        }
         config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$cookies.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$cookies.get(HKEPC.auth.token)}`
 
         return config;
