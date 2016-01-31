@@ -23,6 +23,7 @@ function getMobileOperatingSystem(){
   }
 }
 module.exports = {
+  proxy: PROXY_URL,
   baseUrl: BASE_URL,
   imageUrl:IMAGE_URL,
   version: VERSION,
