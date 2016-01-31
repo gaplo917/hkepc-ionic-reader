@@ -20,7 +20,13 @@
         <button class="button button-block button-assertive activated" ng-click="vm.logout()">Logout</button>
       </div>
     </div>
-
+    <a class="item item-icon-left" href="">
+      <i class="icon ion-link"></i>
+      Proxy 伺服器
+          <span class="item-note">
+            {{::vm.proxy}}
+          </span>
+    </a>
     <a class="item item-icon-left" href="">
       <i class="icon ion-ios-cog-outline"></i>
       版本
@@ -33,6 +39,13 @@
       Telegram Channel (集合更新、教學)
           <span class="item-note">
             https://telegram.me/HKEPCIR
+          </span>
+    </a>
+    <a class="item item-icon-left" href="tg://resolve?domain=gaplotech">
+      <i class="icon ion-ios-paperplane-outline"></i>
+      作者 Telegram Channel
+          <span class="item-note">
+            https://telegram.me/gaplotech
           </span>
     </a>
     <a class="item item-icon-left" href="http://blog.gaplotech.com">
