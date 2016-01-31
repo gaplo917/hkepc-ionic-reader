@@ -67,7 +67,7 @@ export class TopicListController {
     this.topics = []
   }
 
-  loadList(cb) {
+  loadList() {
     //remove the cached badge
     this.cached = false
 
@@ -124,13 +124,6 @@ export class TopicListController {
             this.scope.$apply()
           }
 
-          // callback
-          if(cb) cb(null)
-
-        }, (err) => {
-          alert("error")
-          console.error('ERR', JSON.stringify(err))
-          if(cb) cb(err)
         })
   }
 
@@ -138,9 +131,7 @@ export class TopicListController {
 
     this.reset()
 
-    this.loadList(() => {
-      this.scope.$broadcast('scroll.refreshComplete');
-    })
+    this.loadList()
   }
 
   onTouch(){

@@ -55,13 +55,12 @@ export class GeneralHtml{
 
     this.source('a').each((i,e) => {
 
-      // remove action attr on img
-      this.source(e).removeAttr('onload')
-      this.source(e).removeAttr('onclick')
-
       const url = this.source(e).attr('href')
 
       if(url && !url.startsWith('#')){
+        // remove action attr on img
+        this.source(e).removeAttr('onload')
+        this.source(e).removeAttr('onclick')
         //console.log('lazy',lazyImg)
         this.source(e).attr('href','#')
         this.source(e).attr('target',`_system`)

@@ -9,18 +9,19 @@ var async = require('async');
 
 export class ChatController{
 
-  constructor($scope, $http, authService,$state){
+  constructor($scope, $http, authService,$state,ngToast){
 
     this.http = $http
     this.scope = $scope
     this.chats = []
+    this.ngToast = ngToast
 
     $scope.$on('$ionicView.enter', (e) => {
       if(authService.isLoggedIn()){
         this.scope.$emit("accountTabUpdate",authService.getUsername())
         setTimeout(()=> this.loadChats() ,400)
       } else {
-        alert("請先登入！")
+        this.ngToast.danger(`<i class="ion-alert-circled"> PM 需要會員權限，請先登入！</i>`)
         $state.go("tab.account")
       }
 

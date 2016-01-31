@@ -42,7 +42,6 @@ export var MessageResolver = {
           //  postId: postId,
           //  page: page
           //})
-
           let postSource = cheerio.load($(`#pid${messageId}`).parent().html())
 
           const adsSource = postSource('.adv')

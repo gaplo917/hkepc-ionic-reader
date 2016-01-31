@@ -7,7 +7,6 @@ import {ChatDetailController} from './ChatDetailController'
 import {TabController} from './TabController'
 import {AuthController} from './AuthController'
 import {NotificationController} from './NotificationController'
-import {FindMessageController} from './FindMessageController'
 
 export var tab = {
   action: TabController,
@@ -128,22 +127,6 @@ export var notification = {
       'tab-notifications': {
         templateUrl: 'templates/tab-notifications.html',
         controller: 'NotificationCtrl',
-        controllerAs: 'vm'
-      }
-    }
-  }
-}
-
-export var findMesssage = {
-  action: FindMessageController,
-  state: 'tab.findMesssage',
-  name: 'FindMessageCtrl',
-  config: {
-    url: '/topics/findMessage/:postId/:messageId',
-    views: {
-      'tab-topics': {
-        templateUrl: 'templates/post-detail.html',
-        controller: 'FindMessageCtrl',
         controllerAs: 'vm'
       }
     }
