@@ -25,6 +25,7 @@ function getMobileOperatingSystem(){
 module.exports = {
   baseUrl: BASE_URL,
   imageUrl:IMAGE_URL,
+  version: VERSION,
   forum: {
     index: () => `${BASE_URL}/index.php`,
     topics: (topicId,page) => `${BASE_URL}/forumdisplay.php?fid=${topicId}&page=${page}`,

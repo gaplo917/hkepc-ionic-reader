@@ -378,4 +378,8 @@ export class PostController{
   findMessage(postId,messageId){
     this.scope.$emit('find',new FindMessageRequest(postId,messageId))
   }
+
+  futureFeature(){
+    this.ngToast.warning("此功能尚未開發！")
+  }
 }
