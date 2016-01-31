@@ -12,7 +12,7 @@
     text-align: center;
 }
 
-.item-radio .item-content { padding-right:49px;}
+.item-radio .item-content { padding-right:0;}
 
 /*angular-loading-bar*/
 #loading-bar .bar {
