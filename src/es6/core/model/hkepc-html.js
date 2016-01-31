@@ -42,6 +42,11 @@ export class HKEPCHtml extends GeneralHtml{
         const spanText = cheerio(`<span class="username">${urlText}</span>`)
         this.source(e).replaceWith(spanText)
       }
+      else if(url && url.indexOf('logging.php') >= 0){
+        this.source(e).attr('href',`#/tab/accounts`)
+
+        this.source(e).removeAttr('target')
+      }
       else if(url && url.indexOf('attachment.php?') >= 0){
         // remove action attr on img
         this.source(e).removeAttr('onload')

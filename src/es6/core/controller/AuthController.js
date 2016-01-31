@@ -12,6 +12,8 @@ export class AuthController {
     this.scope = $scope
     this.authService = authService
 
+    this.version = HKEPC.version
+
     $scope.user = $localstorage.getObject('authority')
 
   }
