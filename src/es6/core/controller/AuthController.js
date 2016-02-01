@@ -70,7 +70,9 @@ export class AuthController {
     })
 
     proxyPopup.then((res) => {
-      this.localstorage.set('proxy',res)
+      if(res){
+        this.localstorage.set('proxy',res)
+      }
     })
   };
 }
