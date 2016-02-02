@@ -51,6 +51,16 @@ export class GeneralHtml{
     return this
   }
 
+  processImageToLazy(){
+    this.source('img').each((i,e) => {
+      const imgSrc = this.source(e).attr('src')
+      this.source(e).attr('image-lazy-src',imgSrc)
+      this.source(e).removeAttr('src')
+    })
+
+    return this
+  }
+
   processExternalUrl(){
 
     this.source('a').each((i,e) => {

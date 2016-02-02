@@ -15,7 +15,8 @@ angular.module('starter', [
   'starter.directives',
   'angular-loading-bar',
   'ngCookies',
-  'ngToast'
+  'ngToast',
+  'ionicLazyLoad'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
