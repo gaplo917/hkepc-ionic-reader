@@ -31,9 +31,6 @@
 		// run in Web (please ensure you disable CORS checking in browser)
 		sh es6-transpile.sh  
 		
-		// [Optional] if you have err ,please try 
-		mkdir www/js
-		
 		// run in web
 		ionic serve
 		
