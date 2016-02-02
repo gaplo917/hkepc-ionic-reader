@@ -193,16 +193,18 @@ export class PostController{
                   // really remove the ads
                   adsSource.remove()
 
+                  const content = new HKEPCHtml(
+                      cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
+                      postSource('.postcontent > .defaultpost > .postmessage').html())
+                  ).processImageToLazy()
+                  .getCheerio()
+
                   const message = {
                     id: postSource('table').attr('id').replace('pid',''),
                     pos: postSource('.postinfo strong a em').text(),
                     inAppUrl: this.postUrl,
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
-                    content : this.sce.trustAsHtml(
-                        // main content
-                        postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
-                        postSource('.postcontent > .defaultpost > .postmessage').html() // for banned message
-                    ),
+                    content : this.sce.trustAsHtml(content.html()),
                     ads: this.sce.trustAsHtml(ads),
                     post:{
                       id: this.postId,
