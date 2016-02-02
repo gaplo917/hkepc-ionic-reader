@@ -5,7 +5,7 @@
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-refresh" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <ion-content class="padding" on-swipe-right="$ionicGoBack()"  style="background-color:#f5f5f5">
+  <ion-content lazy-scroll class="padding" on-swipe-right="$ionicGoBack()"  style="background-color:#f5f5f5">
     <div style="text-align:center">
       <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
     </div>
@@ -15,7 +15,7 @@
     <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
-        <img src="{{::message.author.image}}">
+        <img image-lazy-src="{{::message.author.image}}">
         <h2 ng-bind="::message.author.name"></h2>
         <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
       </div>
