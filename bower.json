@@ -5,6 +5,7 @@
     "ionic": "driftyco/ionic-bower#1.2.1"
   },
   "dependencies": {
-    "babel-polyfill": "~0.0.1"
+    "babel-polyfill": "~0.0.1",
+    "ionic-image-lazy-load": "ion-image-lazy-load#*"
   }
 }

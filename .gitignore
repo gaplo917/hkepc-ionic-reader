@@ -5,6 +5,7 @@ node_modules/
 platforms/
 plugins/
 /www/js/*
+/www/lib/*
 /.io-config.json
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
