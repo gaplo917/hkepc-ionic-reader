@@ -4,7 +4,7 @@
 node_modules/
 platforms/
 plugins/
-/www/js/*
+/www/js/bundle.js
 /www/lib/*
 /.io-config.json
 ### JetBrains template
