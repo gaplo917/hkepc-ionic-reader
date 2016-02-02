@@ -1,5 +1,20 @@
 # Dependencies
 
+		// Clone Repo
+		git clone https://github.com/gaplo917/hkepc-ionic-reader
+		
+		cd hkepc-ionic-reader
+		
+		npm install
+		
+		bower install
+		
+		// install ionic
+		npm install ionic -g
+		
+		// install cordova
+		npm install cordova -g
+
 		// Use node modules
 		npm install browserify -g
 		
@@ -10,18 +25,21 @@
 		npm install --save-dev babelify
 		npm install --save-dev babel-preset-es2015 babel-preset-react
 
-		// In App browser plugin
-		cordova plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git --save
-
 
 
 # Run
 		// run in Web (please ensure you disable CORS checking in browser)
-		sh es6-transpile.sh
+		sh es6-transpile.sh  
+		
+		// [Optional] if you have err ,please try 
+		mkdir www/js
+		
+		// run in web
 		ionic serve
 		
 		// run in ios
 		sh build-ios.sh
+        
 
 # Splash & icon generation
 
