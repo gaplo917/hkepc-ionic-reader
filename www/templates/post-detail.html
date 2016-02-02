@@ -15,7 +15,7 @@
     <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
-        <img image-lazy-src="{{::message.author.image}}">
+        <img image-lazy-src="{{::message.author.image}}" image-lazy-distance-from-bottom-to-load="400">
         <h2 ng-bind="::message.author.name"></h2>
         <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
       </div>
