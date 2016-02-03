@@ -12,10 +12,13 @@ export class TabController{
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
       if(arg){ this.login = arg }
-      else if(authService.isLoggedIn()){
-        ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+      else {
         this.login = undefined
-        authService.logout()
+
+        if (authService.isLoggedIn()){
+          ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+          authService.logout()
+        }
       }
     })
 

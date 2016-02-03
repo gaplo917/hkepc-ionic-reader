@@ -23,14 +23,14 @@
     <div class="list" ng-show="!vm.isLoggedIn()">
       <label class="item item-input">
         <span class="input-label">Username</span>
-        <input type="text" placeholder="Username" ng-model="user.username">
+        <input type="text" placeholder="Username" ng-model="vm.user.username">
       </label>
       <label class="item item-input">
         <span class="input-label">Password</span>
-        <input type="password" placeholder="Password" ng-model="user.password">
+        <input type="password" placeholder="Password" ng-model="vm.user.password">
       </label>
       <div class="padding">
-        <button class="button button-block button-positive activated" ng-click="vm.login(user.username,user.password)">我同意透過 Proxy 傳送資料並登入</button>
+        <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">我同意透過 Proxy 傳送資料並登入</button>
       </div>
     </div>
     <div class="list" ng-show="vm.isLoggedIn()">
