@@ -6,12 +6,17 @@ import {FindMessageRequest} from "../model/find-message-request"
 
 export class TabController{
 
-  constructor($scope,$ionicModal,messageResolver,$stateParams) {
+  constructor($scope,$ionicModal,messageResolver,$stateParams,authService,ngToast) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
       if(arg){ this.login = arg }
+      else if(authService.isLoggedIn()){
+        ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+        this.login = undefined
+        authService.logout()
+      }
     })
 
     $scope.$on('find', (event,arg) =>{

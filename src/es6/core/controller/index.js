@@ -75,6 +75,7 @@ export var chats = {
   name: "ChatCtrl",
   config:{
     url: '/chats',
+    cache: false,
     views: {
       'tab-chats': {
         templateUrl: 'templates/tab-chats.html',
@@ -91,6 +92,7 @@ export var chat = {
   name: "ChatDetailCtrl",
   config:{
     url: '/chats/:id',
+    cache: false,
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',
@@ -123,6 +125,7 @@ export var notification = {
   name: 'NotificationCtrl',
   config: {
     url: '/notifications',
+    cache: false,
     views: {
       'tab-notifications': {
         templateUrl: 'templates/tab-notifications.html',

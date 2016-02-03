@@ -6,7 +6,7 @@
       <h1 class="title">{{ vm.message.post.title }}</h1>
       <button class="button" ng-click="vm.doReply(vm.message,vm.reply)">Post</button>
     </ion-header-bar>
-    <ion-content has-bouncing="true">
+    <ion-content lazy-scroll>
       <div class="list card">
 
         <div class="item item-avatar">
@@ -15,7 +15,7 @@
           <p>{{vm.message.createdAt}} <span style="float:right">#{{vm.message.pos}}</span></p>
         </div>
 
-        <div class="item item-body" ng-bind-html="vm.message.content">
+        <div class="item item-body" compile="vm.message.content">
         </div>
 
       </div>
@@ -36,14 +36,12 @@
       <div class="row">
         <div class="col">
           <label class="item item-input text">
-            <textarea resetKeyboard placeholder="請輪入文字" rows="5" ng-model="vm.reply.content" ng-Required="true" name="description"></textarea>
+            <textarea placeholder="請輪入文字" rows="5" ng-model="vm.reply.content" ng-Required="true" name="description"></textarea>
           </label>
         </div>
       </div>
 
-      <button class="button button-balanced button-full" >草稿(開發中)</button>
-
-      <div style="height:1000px"></div>
+      <!--<button class="button button-balanced button-full" >草稿(開發中)</button>-->
 
     </ion-content>
   </form>

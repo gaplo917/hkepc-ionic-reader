@@ -12,7 +12,7 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover,ngToast) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover,ngToast,authService) {
     this.scope = $scope
     this.http = $http
     this.messageService = $message
@@ -22,6 +22,7 @@ export class PostController{
     this.ionicHistory = $ionicHistory
     this.ionicModal = $ionicModal
     this.ngToast = ngToast
+    this.authService = authService
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
@@ -282,19 +283,24 @@ export class PostController{
 
   onReply(message){
 
-    // load gifs into controller
-    this.gifs = HKEPC.data.gifs
+    if(this.authService.isLoggedIn()){
+      // load gifs into controller
+      this.gifs = HKEPC.data.gifs
 
-    this.message = message
+      this.message = message
 
-    this.replyModal.show()
+      this.replyModal.show()
 
-    this.reply = {
-      id : message.id,
-      postId: message.post.id,
-      topicId: message.post.topicId,
-      type: 3 // default to use quote
+      this.reply = {
+        id : message.id,
+        postId: message.post.id,
+        topicId: message.post.topicId,
+        type: 3 // default to use quote
+      }
+    } else {
+      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
     }
+
 
   }
 

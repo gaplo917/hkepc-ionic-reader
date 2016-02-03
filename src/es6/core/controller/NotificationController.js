@@ -20,7 +20,7 @@ export class NotificationController{
     this.state = $state
     this.ngToast = ngToast
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
 
       if(authService.isLoggedIn()){
 
@@ -47,6 +47,12 @@ export class NotificationController{
             .processExternalUrl()
             .processImgUrl(HKEPC.baseUrl)
             .getCheerio()
+
+        // select the current login user
+        const currentUsername = $('#umenu > cite').text()
+
+        // send the login name to parent controller
+        this.scope.$emit("accountTabUpdate",currentUsername)
 
         const notifications = $('.feed li .f_quote').map((i, elem) => {
           return this.sce.trustAsHtml($(elem).html())
