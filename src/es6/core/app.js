@@ -104,4 +104,12 @@ angular.module('starter', [
 .config(function($httpProvider) {
   $httpProvider.interceptors.push('HKEPC_CORS')
 })
+.config(['ngToastProvider', function(ngToast) {
+  ngToast.configure({
+    timeout:'3000',
+    verticalPosition: 'top',
+    horizontalPosition: 'center',
+    animation: "slide"
+  });
+}]);
 
