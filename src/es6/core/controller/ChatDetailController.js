@@ -46,6 +46,12 @@ export class ChatDetailController{
               .processExternalUrl()
               .getCheerio()
 
+          // select the current login user
+          const currentUsername = $('#umenu > cite').text()
+
+          // send the login name to parent controller
+          this.scope.$emit("accountTabUpdate",currentUsername)
+
           const messages = $('.pm_list li.s_clear').map((i, elem) => {
             const isSelf = $(elem).attr('class').indexOf('self') > 0
 

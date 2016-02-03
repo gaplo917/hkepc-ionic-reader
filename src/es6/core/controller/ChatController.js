@@ -16,7 +16,7 @@ export class ChatController{
     this.chats = []
     this.ngToast = ngToast
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
       if(authService.isLoggedIn()){
         this.scope.$emit("accountTabUpdate",authService.getUsername())
         setTimeout(()=> this.loadChats() ,400)
@@ -39,6 +39,12 @@ export class ChatController{
               .removeIframe()
               .processImgUrl(HKEPC.baseUrl)
               .getCheerio()
+
+          // select the current login user
+          const currentUsername = $('#umenu > cite').text()
+
+          // send the login name to parent controller
+          this.scope.$emit("accountTabUpdate",currentUsername)
 
           const chats = $('.pm_list li').map((i, elem) => {
             let chatSource = cheerio.load($(elem).html())
