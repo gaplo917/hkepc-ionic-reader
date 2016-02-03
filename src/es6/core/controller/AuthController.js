@@ -17,7 +17,7 @@ export class AuthController {
     this.version = HKEPC.version
     this.proxy = $localstorage.get('proxy') || HKEPC.proxy
 
-    $scope.user = $localstorage.getObject('authority')
+    this.user = $localstorage.getObject('authority')
 
   }
 
@@ -30,8 +30,10 @@ export class AuthController {
 
     this.authService.login(authority,(err,username) => {
       this.authService.saveAuthority(authority)
-
       this.scope.$emit("accountTabUpdate",username)
+
+      // unset the password field
+      this.user.password = undefined
     })
 
   }
@@ -42,6 +44,9 @@ export class AuthController {
 
   logout(){
     this.authService.logout()
+
+    // send the login name to parent controller
+    this.scope.$emit("accountTabUpdate")
   }
 
   showProxyPopup(){
