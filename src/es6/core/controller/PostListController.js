@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     this.scope = $scope
@@ -19,6 +19,7 @@ export class PostListController {
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.ionicHistory = $ionicHistory
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
+    this.localstorage = $localstorage
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
@@ -27,6 +28,7 @@ export class PostListController {
     this.currentIndex = 0
     this.currentPageNum = this.page - 1
     this.showSpinner = true
+    this.showSticky = this.localstorage.get('showSticky') === 'true'
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
@@ -308,5 +310,9 @@ export class PostListController {
     this.topicId = subTopic.id
 
     this.doRefresh()
+  }
+
+  saveShowSticky(bool) {
+    this.localstorage.set('showSticky',bool)
   }
 }
