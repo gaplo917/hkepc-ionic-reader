@@ -6,7 +6,7 @@
   <div class="bar bar-subheader" style="background-color: #8fc320">
     <h2 class="title" style="color: #fff">
       <i class="icon ion-bonfire"
-         ng-click="vm.showSticky = !vm.showSticky;vm.saveShowSticky(vm.showSticky)"
+         ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
          style="float:left;font-size:34px;color:#FF6D00;"
          ng-style="vm.showSticky ?{color:'#FF6D00'} : {color:'#444'}">
       </i>
@@ -27,9 +27,8 @@
         <ion-list >
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
-              class="item-remove-animate item-icon-right item-text-wrap"
+              class="item-icon-right item-text-wrap"
               ng-repeat="post in page.posts"
-              type="item-text-wrap"
               ng-show="vm.showSticky && post.isSticky || !post.isSticky"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small style="font-size:14px">#{{::post.tag}}</small></a></h2>

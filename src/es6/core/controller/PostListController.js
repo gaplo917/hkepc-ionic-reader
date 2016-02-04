@@ -28,7 +28,6 @@ export class PostListController {
     this.currentIndex = 0
     this.currentPageNum = this.page - 1
     this.showSpinner = true
-    this.showSticky = this.localstorage.get('showSticky') === 'true'
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
@@ -75,6 +74,9 @@ export class PostListController {
 
     $scope.$on('$ionicView.enter', (e) => {
       this.q.resume()
+
+      // stringify and compare to string value
+      this.showSticky = String(this.localstorage.get('showSticky')) === 'true'
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
