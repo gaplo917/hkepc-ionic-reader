@@ -4,7 +4,7 @@
 const PROXY_URL = 'http://p.ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v0.2.0"
+const VERSION = "v0.3.0"
 function getMobileOperatingSystem(){
   "use strict";
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -60,7 +60,8 @@ module.exports = {
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
     notifications: () => `${BASE_URL}/notice.php`,
-    findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`
+    findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`,
+    newPost:(fid) => `${BASE_URL}/post.php?action=newthread&fid=${fid}`
   },
   auth:{
     id: 'cdb_sid',

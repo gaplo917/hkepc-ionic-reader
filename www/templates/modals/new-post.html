@@ -1,0 +1,36 @@
+<ion-modal-view ng-init="post.category={}">
+  <ion-header-bar class="bar-positive">
+    <button class="button" ng-click="hide()">Cancel</button>
+    <h1 class="title">{{ topic.name }}</h1>
+    <button class="button" ng-click="doPublishNewPost(post)">Post</button>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list>
+      <div ng-show="categories.length > 0" class="item item-divider" style="text-align: center" ng-click="openCategoryPopover($event)">
+        {{post.category.name || '新帖類別'}} <i class="ion-android-arrow-dropdown" ></i>
+      </div>
+    </ion-list>
+
+    <button class="button button-full" ng-click="openGifPopover($event)">
+      <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif" alt=""/> Gif
+    </button>
+    <div class="row">
+      <div class="col">
+        <label class="item item-input" style="width:100%">
+          <input placeholder="請輪入標題" type="text" ng-model="post.title">
+        </label>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col">
+        <label class="item item-input text">
+          <textarea id="new-content" placeholder="請輪入文字" rows="5" ng-model="post.content" ng-Required="true" name="description"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <!--<button class="button button-balanced button-full" >草稿(開發中)</button>-->
+
+  </ion-content>
+</ion-modal-view>
