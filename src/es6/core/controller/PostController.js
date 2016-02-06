@@ -335,7 +335,7 @@ export class PostController{
         const ionicReaderSign = HKEPC.signature()
 
         // build the reply message
-        const replyMessage = `${preText}\n${reply.content}\n${ionicReaderSign}`
+        const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
         // Post to the server
         this.http({
