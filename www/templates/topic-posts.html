@@ -1,9 +1,8 @@
 <ion-view ng-init="vm.slidePages=[{},{},{}];">
   <ion-nav-title ng-click="openPopover($event)">{{vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
-  <ion-nav-buttons side="right" style="float:right">
+  <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-    <a class="button button-icon icon ion-ios-more-outline" ng-click="vm.doNewPost(vm.topic)"></a>
   </ion-nav-buttons>
   <div class="bar bar-subheader" style="background-color: #8fc320">
     <h2 class="title" style="color: #fff">
@@ -13,6 +12,8 @@
          ng-style="vm.showSticky ?{color:'#FF6D00'} : {color:'#444'}">
       </i>
       第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
+    <a class="button button-icon icon ion-ios-more" style="color:#fff" ng-click="vm.doFilterOrder($event)"></a>
+
   </div>
   <ion-content>
     <div class="spinner">

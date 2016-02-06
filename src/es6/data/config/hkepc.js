@@ -4,7 +4,7 @@
 const PROXY_URL = 'http://p.ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v0.3.0"
+const VERSION = "v0.3.1"
 function getMobileOperatingSystem(){
   "use strict";
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -29,7 +29,14 @@ module.exports = {
   version: VERSION,
   forum: {
     index: () => `${BASE_URL}/index.php`,
-    topics: (topicId,page) => `${BASE_URL}/forumdisplay.php?fid=${topicId}&page=${page}`,
+    topics: (topicId,page,filter,orderby) => {
+      return [
+        `${BASE_URL}/forumdisplay.php?fid=${topicId}`,
+        `page=${page}`,
+        `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
+        `orderby=${orderby||''}`
+      ].join("&")
+    },
     posts: (topicId,postId,page) => `${BASE_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
     login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
     replyPage:(reply) => {
