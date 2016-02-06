@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage,$ionicModal,ngToast) {
+  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage,$ionicModal,ngToast,$q) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     this.scope = $scope
@@ -21,6 +21,7 @@ export class PostListController {
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.localstorage = $localstorage
     this.ngToast = ngToast
+    this.q = $q
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
@@ -173,7 +174,7 @@ export class PostListController {
     })
 
     // create a UI rendering queue
-    this.q = async.queue((task, callback) => {
+    this.queue = async.queue((task, callback) => {
 
       // update the post list
       const post = task()
@@ -186,7 +187,7 @@ export class PostListController {
         }
       }
 
-      if(this.q.length() % 3 == 0){
+      if(this.queue.length() % 3 == 0){
         // force update the view after 3 task
         this.scope.$apply()
       }
@@ -198,19 +199,21 @@ export class PostListController {
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.q.resume()
+      this.queue.resume()
 
       // stringify and compare to string value
       this.showSticky = String(this.localstorage.get('showSticky')) === 'true'
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.q.pause()
+      this.queue.pause()
     })
   }
 
-  loadMore(cb = () => {}){
+  loadMore(cb){
     const nextPage = this.currentPageNum + 1
+    const deferred = this.q.defer();
+
     this.http
         .get(HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order))
         .then((resp) => {
@@ -289,12 +292,12 @@ export class PostListController {
             }
           }).get()
 
-          this.q.push(tasks, (err) => {
+          this.queue.push(tasks, (err) => {
             // callback of each task if any
           })
 
           // when all task finished
-          this.q.drain = () => {
+          this.queue.drain = () => {
             this.updateUI()
           }
 
@@ -312,14 +315,10 @@ export class PostListController {
             id: this.topicId,
             name: topicName
           }
+          deferred.resolve({})
+        },(err) => deferred.reject(err))
 
-          cb(null)
-          // For JSON responses, resp.data contains the result
-        }, (err) => {
-          console.error('ERR', JSON.stringify(err))
-          cb(err)
-          // err.status will contain the status code
-        })
+    return deferred.promise
   }
 
   updateUI(){
@@ -328,7 +327,7 @@ export class PostListController {
   }
 
   reset(){
-    this.q.kill()
+    this.queue.kill()
     this.pages = []
     this.slidePages = [{},{},{}]
     this.ionicSlideBoxDelegate.slide(0,10)
@@ -340,9 +339,11 @@ export class PostListController {
 
   doRefresh(){
     this.reset()
-    this.loadMore(() => {
-      this.scope.$broadcast('scroll.refreshComplete');
-    })
+    if(this.filter) {
+      const category = this.categories.find(e => e.id == this.filter)
+      this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
+    }
+    this.loadMore()
   }
 
   onSlideChanged(index){
@@ -403,7 +404,7 @@ export class PostListController {
         if(this.currentPageNum >= largestPageNum){
           console.log("loadMore After()")
           this.slidePages[index] = []
-          this.loadMore(() => {
+          this.loadMore().then(() => {
             const len = this.pages.length -1
             const nextPage = Math.floor(len / 3) * 3 + index
             this.slidePages[this.currentIndex] = this.pages[nextPage - 1]

@@ -17,12 +17,12 @@ export class TopicListController {
     this.topics = []
 
     // create a UI rendering queue
-    this.q = async.queue((task, callback) => {
+    this.queue = async.queue((task, callback) => {
 
       // update the topics list
       this.topics.push(task())
 
-      if(this.q.length() % 5 == 0){
+      if(this.queue.length() % 5 == 0){
         // force update the view after 3 task
         this.scope.$apply()
       }
@@ -46,11 +46,11 @@ export class TopicListController {
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.q.resume()
+      this.queue.resume()
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.q.pause()
+      this.queue.pause()
     })
 
     // send the login from db
@@ -61,7 +61,7 @@ export class TopicListController {
 
   reset(){
     // clear the queue
-    this.q.kill()
+    this.queue.kill()
 
     // reset the model
     this.topics = []
@@ -115,11 +115,11 @@ export class TopicListController {
 
           }).get()
 
-          this.q.push(tasks, (err) => {
+          this.queue.push(tasks, (err) => {
             // call back of each task
           })
 
-          this.q.drain = () => {
+          this.queue.drain = () => {
             this.localstorage.setObject('topics',this.topics)
             this.scope.$apply()
           }
@@ -136,13 +136,13 @@ export class TopicListController {
 
   onTouch(){
     console.log("ontouch")
-    this.q.pause()
+    this.queue.pause()
   }
 
   onRelease(){
     console.log("onRelease")
     setTimeout(() => {
-      this.q.resume()
+      this.queue.resume()
     },250)
   }
 }

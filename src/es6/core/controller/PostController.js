@@ -59,14 +59,14 @@ export class PostController{
     this.end = false;
 
     // create a UI rendering queue
-    this.q = async.queue((task, callback) => {
+    this.queue = async.queue((task, callback) => {
 
       // update the messages list
       const message = task()
 
       this.messages.push(message)
 
-      if(this.q.length() % 1 == 0){
+      if(this.queue.length() % 1 == 0){
          //force update the view after 10 task
         this.scope.$apply()
       }
@@ -83,11 +83,11 @@ export class PostController{
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.q.resume()
+      this.queue.resume()
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.q.pause()
+      this.queue.pause()
     })
   }
 
@@ -221,9 +221,9 @@ export class PostController{
 
               }).get()
 
-              this.q.push(tasks)
+              this.queue.push(tasks)
 
-              this.q.drain = () => {
+              this.queue.drain = () => {
                 this.scope.$apply()
                 this.scope.$broadcast('scroll.infiniteScrollComplete')
                 console.log("Done All UI rendering")
@@ -261,7 +261,7 @@ export class PostController{
 
   reset(){
     this.messages = []
-    this.q.kill()
+    this.queue.kill()
     this.end = false;
 
   }
