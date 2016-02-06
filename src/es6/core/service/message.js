@@ -44,6 +44,11 @@ export var message = {
             : false;
       },
 
+      getAllLikedPost: () => {
+        "use strict";
+        return $localstorage.getObject(MESSAGES_LIKE_KEY)
+      },
+
       saveDraft: (postId,content) => {
         "use strict";
         console.log('save Draft',postId,content)

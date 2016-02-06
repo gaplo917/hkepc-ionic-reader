@@ -53,6 +53,7 @@ angular.module('starter', [
   .state(Controllers.chat.state,Controllers.chat.config)
   .state(Controllers.auth.state,Controllers.auth.config)
   .state(Controllers.notification.state,Controllers.notification.config)
+  .state(Controllers.likes.state,Controllers.likes.config)
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/account');

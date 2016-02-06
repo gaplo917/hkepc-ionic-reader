@@ -45,6 +45,7 @@ export class GeneralHtml{
       // remove action attr on img
       this.source(e).removeAttr('onload')
       this.source(e).removeAttr('onclick')
+      this.source(e).removeAttr('onmouseover')
 
     })
 
@@ -72,6 +73,8 @@ export class GeneralHtml{
         // remove action attr on img
         this.source(e).removeAttr('onload')
         this.source(e).removeAttr('onclick')
+        this.source(e).removeAttr('onmouseover')
+
         //console.log('lazy',lazyImg)
         this.source(e).attr('href','#')
         this.source(e).attr('target',`_system`)
