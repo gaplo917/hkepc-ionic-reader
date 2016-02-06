@@ -200,8 +200,8 @@ export class PostController{
                     pos: postSource('.postinfo strong a em').text(),
                     inAppUrl: this.postUrl,
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
-                    content : this.sce.trustAsHtml(content.html()),
-                    ads: this.sce.trustAsHtml(ads),
+                    content : content.html(),
+                    ads: ads,
                     post:{
                       id: this.postId,
                       topicId: this.topicId,

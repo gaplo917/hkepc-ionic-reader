@@ -7,6 +7,7 @@ import {ChatDetailController} from './ChatDetailController'
 import {TabController} from './TabController'
 import {AuthController} from './AuthController'
 import {NotificationController} from './NotificationController'
+import {LikesController} from './LikesController'
 
 export var tab = {
   action: TabController,
@@ -130,6 +131,23 @@ export var notification = {
       'tab-notifications': {
         templateUrl: 'templates/tab-notifications.html',
         controller: 'NotificationCtrl',
+        controllerAs: 'vm'
+      }
+    }
+  }
+}
+
+export var likes = {
+  action : LikesController,
+  state: 'tab.likes',
+  name: 'LikesCtrl',
+  config: {
+    url: '/likes',
+    cache: false,
+    views: {
+      'tab-likes': {
+        templateUrl: 'templates/tab-likes.html',
+        controller: 'LikesCtrl',
         controllerAs: 'vm'
       }
     }

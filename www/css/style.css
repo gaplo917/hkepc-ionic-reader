@@ -61,6 +61,10 @@ ion-list .item.item-divider, .list > .item.item-divider{
     max-width: 500px;
     margin-top:5px;
 }
+.card .ads img {
+    margin:auto;
+    display:block;
+}
 
 .card .item-body img[src$=".gif"]{
     height:auto;
