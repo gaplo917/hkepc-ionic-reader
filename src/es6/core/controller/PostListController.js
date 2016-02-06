@@ -154,6 +154,12 @@ export class PostListController {
       this.subTopicListPopover = popover
     })
 
+    $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html', {
+      scope: $scope
+    }).then((popover) => {
+      this.filterOrderPopover = popover
+    })
+
     $scope.openPopover = ($event) => {
       if(this.subTopicList && this.subTopicList.length > 0){
         this.subTopicListPopover.show($event)
@@ -206,7 +212,7 @@ export class PostListController {
   loadMore(cb = () => {}){
     const nextPage = this.currentPageNum + 1
     this.http
-        .get(HKEPC.forum.topics(this.topicId, nextPage))
+        .get(HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order))
         .then((resp) => {
           // hide the spinner
           this.showSpinner = false
@@ -225,13 +231,15 @@ export class PostListController {
             }
           }).get()
 
-          const postCategories = $('.threadtype a').map((i,elem) => {
-            const obj = $(elem)
-            return {
-              id: URLUtils.getQueryVariable(obj.attr('href'), 'typeid'),
-              name: obj.text()
-            }
-          }).get()
+          const postCategories = this.categories.length == 0
+              ? $('.threadtype a').map((i,elem) => {
+                  const obj = $(elem)
+                  return {
+                    id: URLUtils.getQueryVariable(obj.attr('href'), 'typeid'),
+                    name: obj.text()
+                  }
+                }).get()
+              : this.categories
 
           // select the current login user
           const currentUsername = $('#umenu > cite').text()
@@ -449,5 +457,8 @@ export class PostListController {
     newPostModal.topic = topic
     newPostModal.show()
 
+  }
+  doFilterOrder($event){
+    this.filterOrderPopover.show($event)
   }
 }
