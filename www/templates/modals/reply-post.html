@@ -1,48 +1,46 @@
 
-<ion-modal-view class="product edit create" >
-  <form name="itemEdit" novalidate>
-    <ion-header-bar class="bar-positive fix-buttons">
-      <button class="button" ng-click="vm.replyModal.hide()">Cancel {{vm.test}}</button>
-      <h1 class="title">{{ vm.message.post.title }}</h1>
-      <button class="button" ng-click="vm.doReply(vm.message,vm.reply)">Post</button>
-    </ion-header-bar>
-    <ion-content lazy-scroll>
-      <div class="list card">
+<ion-modal-view>
+  <ion-header-bar class="bar-positive">
+    <button class="button" ng-click="hide()">Cancel</button>
+    <h1 class="title">{{ message.post.title }}</h1>
+    <button class="button" ng-click="doReply(reply)">Post</button>
+  </ion-header-bar>
+  <ion-content lazy-scroll>
+    <div class="list card" ng-show="reply.id">
 
-        <div class="item item-avatar">
-          <img src="{{vm.message.author.image}}">
-          <h2 ng-bind="vm.message.author.name"></h2>
-          <p>{{vm.message.createdAt}} <span style="float:right">#{{vm.message.pos}}</span></p>
-        </div>
-
-        <div class="item item-body" compile="vm.message.content">
-        </div>
-
+      <div class="item item-avatar">
+        <img src="{{message.author.image}}">
+        <h2 ng-bind="message.author.name"></h2>
+        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
       </div>
-      <ion-list>
-        <div class="item item-divider" style="text-align: center">
-          回覆類別
-        </div>
-        <div class="row">
-        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="1"><i class="icon ion-compose"></i> 無</ion-radio>
-        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="2"><i class="icon ion-reply"></i> 回覆</ion-radio>
-        <ion-radio class="col-33" ng-model="vm.reply.type" ng-value="3"><i class="icon ion-quote"></i> 引用</ion-radio>
-        </div>
-      </ion-list>
 
-      <button class="button button-full" ng-click="vm.openGifPopover($event)">
-        <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif" alt=""/> Gif
-      </button>
+      <div class="item item-body" compile="message.content">
+      </div>
+
+    </div>
+    <ion-list ng-show="reply.id">
+      <div class="item item-divider" style="text-align: center">
+        回覆類別
+      </div>
       <div class="row">
-        <div class="col">
-          <label class="item item-input text">
-            <textarea placeholder="請輪入文字" rows="5" ng-model="vm.reply.content" ng-Required="true" name="description"></textarea>
-          </label>
-        </div>
+      <ion-radio class="col-33" ng-model="reply.type" ng-value="1"><i class="icon ion-compose"></i> 無</ion-radio>
+      <ion-radio class="col-33" ng-model="reply.type" ng-value="2"><i class="icon ion-reply"></i> 回覆</ion-radio>
+      <ion-radio class="col-33" ng-model="reply.type" ng-value="3"><i class="icon ion-quote"></i> 引用</ion-radio>
       </div>
+    </ion-list>
 
-      <!--<button class="button button-balanced button-full" >草稿(開發中)</button>-->
+    <button class="button button-full" ng-click="openGifPopover($event)">
+      <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif" alt=""/> Gif
+    </button>
+    <div class="row">
+      <div class="col">
+        <label class="item item-input text">
+          <textarea id="reply-content" placeholder="請輪入文字" rows="5" ng-model="reply.content" ng-Required="true" name="description"></textarea>
+        </label>
+      </div>
+    </div>
 
-    </ion-content>
-  </form>
+    <!--<button class="button button-balanced button-full" >草稿(開發中)</button>-->
+
+  </ion-content>
 </ion-modal-view>

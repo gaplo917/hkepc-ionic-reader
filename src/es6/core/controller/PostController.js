@@ -21,6 +21,7 @@ export class PostController{
     this.sce = $sce
     this.ionicHistory = $ionicHistory
     this.ionicModal = $ionicModal
+    this.ionicPopover = $ionicPopover
     this.ngToast = ngToast
     this.authService = authService
 
@@ -30,6 +31,9 @@ export class PostController{
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
 
+    // register reply modal
+    this.registerReplyModal()
+
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
       scope: $scope
@@ -37,23 +41,10 @@ export class PostController{
       this.pageSliderPopover = popover
     })
 
-    $ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.gifPopover = popover;
-    })
-
-    $ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
-      scope: $scope
-    }).then((modal) => {
-      this.replyModal = modal
-    })
-
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
       this.pageSliderPopover.remove()
-      this.gifPopover.remove()
-      this.replyModal.remove()
+      this.deregisterReplyModal()
     })
     // Execute action on hide popover
     $scope.$on('popover.hidden', () => {
@@ -165,7 +156,9 @@ export class PostController{
 
               angular.extend(this,{
                 post:{
-                  title: postTitle
+                  title: postTitle,
+                  id: this.postId,
+                  topicId: this.topicId
                 },
                 topic: {
                   id: this.topicId
@@ -281,22 +274,44 @@ export class PostController{
     })
   }
 
+  onQuickReply(post){
+    if(this.authService.isLoggedIn()){
+      const replyModal = this.scope.replyModal
+
+      replyModal.message = {
+        post: post
+      }
+
+      replyModal.reply = {
+        id : undefined,
+        postId: post.id,
+        topicId: post.topicId,
+        type: 1 // default to use quote
+      }
+
+      replyModal.show()
+
+    } else {
+      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+    }
+  }
+
   onReply(message){
 
     if(this.authService.isLoggedIn()){
-      // load gifs into controller
-      this.gifs = HKEPC.data.gifs
+      const replyModal = this.scope.replyModal
 
-      this.message = message
+      replyModal.message = message
 
-      this.replyModal.show()
-
-      this.reply = {
+      replyModal.reply = {
         id : message.id,
         postId: message.post.id,
         topicId: message.post.topicId,
         type: 3 // default to use quote
       }
+
+      replyModal.show()
+
     } else {
       this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
     }
@@ -304,72 +319,113 @@ export class PostController{
 
   }
 
-  doReply(message,reply){
+  registerReplyModal(){
 
-    console.log(JSON.stringify(reply))
+    const replyModal = this.scope.replyModal = this.scope.$new()
+    replyModal.show = () => this.replyModal.show()
+    replyModal.hide = () => this.replyModal.hide()
+    replyModal.doReply = (reply) => {
 
-    // get the form hash first
-    this.http
-      .get(HKEPC.forum.replyPage(reply))
-      .then((resp) => {
-        let $ = cheerio.load(resp.data)
-        const relativeUrl = $('#postform').attr('action')
-        const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
+      console.log(JSON.stringify(reply))
 
-        console.log(postUrl)
+      if(reply.content){
 
-        let formSource = cheerio.load($('#postform').html())
+        // get the form hash first
+        this.http
+            .get(HKEPC.forum.replyPage(reply))
+            .then((resp) => {
+              let $ = cheerio.load(resp.data)
+              const relativeUrl = $('#postform').attr('action')
+              const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
-        // the text showing the effects of reply / quote
-        const preText = formSource('#e_textarea').text()
+              console.log(postUrl)
 
+              let formSource = cheerio.load($('#postform').html())
 
-        const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
-          const k = formSource(elem).attr('name')
-          const v = formSource(elem).attr('value')
-
-          return `${k}=${encodeURIComponent(v)}`
-        }).get()
+              // the text showing the effects of reply / quote
+              const preText = formSource('#e_textarea').text()
 
 
-        const ionicReaderSign = HKEPC.signature()
+              const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+                const k = formSource(elem).attr('name')
+                const v = formSource(elem).attr('value')
 
-        // build the reply message
-        const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
+                return `${k}=${encodeURIComponent(v)}`
+              }).get()
 
-        // Post to the server
-        this.http({
-          method: "POST",
-          url : postUrl,
-          data :`message=${encodeURIComponent(replyMessage)}&${hiddenFormInputs.join('&')}`,
-          headers : {'Content-Type':'application/x-www-form-urlencoded'}
-        }).then((resp) => {
 
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
+              const ionicReaderSign = HKEPC.signature()
 
-          this.replyModal.hide()
+              // build the reply message
+              const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
-          this.end = false;
+              const postData = [
+                `message=${encodeURIComponent(replyMessage)}`,
+                hiddenFormInputs.join('&')
+              ].join('&')
 
-        })
+              // Post to the server
+              this.http({
+                method: "POST",
+                url : postUrl,
+                data : postData,
+                headers : {'Content-Type':'application/x-www-form-urlencoded'}
+              }).then((resp) => {
 
+                this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
+
+                this.replyModal.hide()
+
+                this.end = false;
+
+                this.doRefresh()
+
+              })
+
+            })
+      }
+      else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
+      }
+
+
+    }
+    replyModal.openGifPopover = ($event) => {
+
+      // load gifs into controller
+      replyModal.gifs = HKEPC.data.gifs
+
+      replyModal.gifPopover.show($event)
+    }
+
+    replyModal.addGifCodeToText = (code) => {
+      replyModal.gifPopover.hide()
+
+      const selectionStart = document.getElementById('reply-content').selectionStart
+
+      const content = replyModal.reply.content || ""
+
+      const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
+
+      replyModal.reply.content = `${splits[0]} ${code} ${splits[1]}`
+    }
+
+    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
+      scope: replyModal
+    }).then((modal) => {
+      this.replyModal = modal
+      // register gif popover
+      this.ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
+        scope: replyModal
+      }).then((popover) => {
+        replyModal.gifPopover = popover;
       })
-
+    })
   }
 
-  openGifPopover($event){
-    this.gifPopover.show($event)
-    console.log("open gifPopover")
+  deregisterReplyModal(){
+    this.replyModal.remove()
   }
-
-  addGifCodeToText(code){
-    this.gifPopover.hide()
-    this.reply.content = this.reply.content
-                          ? `${this.reply.content} ${code} `
-                          : `${code}`
-    console.log(`add gif ${code}`)
-  }
-
 
   openPageSliderPopover($event) {
     this.inputPage = this.page

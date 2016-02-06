@@ -25,6 +25,8 @@ export class TabController{
     $scope.$on('find', (event,arg) =>{
       if(arg instanceof FindMessageRequest){
         this.messageModal.show()
+        // reset the message first
+        this.scope.messageModal.message = {}
 
         messageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
             .then((data) => {
