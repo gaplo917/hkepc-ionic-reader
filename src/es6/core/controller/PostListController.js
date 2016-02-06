@@ -266,11 +266,12 @@ export class PostListController {
               const htmlId = $(elem).attr('id')
 
               const postSource = cheerio.load($(elem).html())
+              const postUrl = postSource('tr .subject span a').attr('href')
               const postTitleImgUrl = postSource('tr .folder img').attr('src')
 
               return {
-                id: URLUtils.getQueryVariable(postSource('tr .subject span a').attr('href'), 'tid'),
-                topicId: this.topicId,
+                id: URLUtils.getQueryVariable(postUrl, 'tid'),
+                topicId: URLUtils.getQueryVariable(postUrl, 'fid'),
                 tag: postSource('tr .subject em a').text(),
                 name: postSource('tr .subject span[id^=thread_] a ').text(),
                 lastPost:{
@@ -396,8 +397,7 @@ export class PostListController {
 
         if(this.currentPageNum == this.totalPageNum){
 
-          // TODO: should have a better UX instead of alert box
-          alert("完")
+          this.ngToast.warning("已到最後一頁！")
           // scroll back the previous slides
           this.ionicSlideBoxDelegate.previous()
         }

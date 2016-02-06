@@ -46,7 +46,7 @@ div.spinner {
 }
 
 /*item-divider*/
-ion-list .item.item-divider{
+ion-list .item.item-divider, .list > .item.item-divider{
     color:#fff;
     background-color: #8fc320 !important;
 }

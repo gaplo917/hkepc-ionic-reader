@@ -134,12 +134,14 @@ export class PostController{
                   .getTitle()
                   .split('-')[0]
 
-              const pageNumArr = $('.forumcontrol .pages a, .forumcontrol .pages strong')
-                  .map((i,elem) => $(elem).text())
-                  .get()
-                  .map(e => e.match(/\d/g)) // array of string with digit
-                  .filter(e => e != null) // filter null value
-                  .map(e => parseInt(e.join(''))) // join the array and parseInt
+              const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
+
+              const pageNumArr = pageNumSource
+                                  .map((i,elem) => $(elem).text())
+                                  .get()
+                                  .map(e => e.match(/\d/g)) // array of string with digit
+                                  .filter(e => e != null) // filter null value
+                                  .map(e => parseInt(e.join(''))) // join the array and parseInt
 
               this.totalPageNum = pageNumArr.length == 0
                                     ? 1
