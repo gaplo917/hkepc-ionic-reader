@@ -20,7 +20,7 @@
 
       <div class="item item-avatar">
         <img src="{{::message.author.image}}">
-        <i class="ion-ios-arrow-down fright"></i>
+        <i class="ion-ios-arrow-down fright" ng-click="vm.onMore(message)"></i>
 
         <h2 ng-bind="::message.author.name"></h2>
         <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
