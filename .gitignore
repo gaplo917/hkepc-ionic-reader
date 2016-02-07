@@ -4,9 +4,19 @@
 node_modules/
 platforms/
 plugins/
-/www/js/bundle.js
+npm-debug.log
+
+#ignore bower library dependency
 /www/lib/*
+
+# ignore compiled js
+/www/js/bundle.js
+
+# ignore compiled css
+/www/css/ionic.app.*
+
 /.io-config.json
+
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 

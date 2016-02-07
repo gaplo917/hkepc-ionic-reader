@@ -57,7 +57,7 @@ export class LikesController{
   }
 
   searchOnTextChange(){
-    function searchKeywordIndex(str,keyword,indexArr = []){
+    const searchKeywordIndex = (str,keyword,indexArr = []) => {
       const lastIndexPos = indexArr.length == 0 ? 0 : indexArr[indexArr.length - 1] + 1
       const index = str.indexOf(keyword,lastIndexPos)
       if(index == -1 || !str || !keyword){
@@ -67,11 +67,11 @@ export class LikesController{
       }
     }
 
-    function searchBraceIndex(str,indexArr = []) {
+    const searchBraceIndex = (str,indexArr = []) => {
       return (searchKeywordIndex(str,'<').concat(searchKeywordIndex(str,'>'))).sort((a,b) => a - b)
     }
 
-    function isIndexInBrace(content,bracePos,index){
+    const isIndexInBrace = (content,bracePos,index) => {
       switch (bracePos.length){
         case 0 :
           return false
@@ -87,7 +87,7 @@ export class LikesController{
       }
     }
 
-    function breakContent(content,len, validIndexs,prevPos = 0,splits = []) {
+    const breakContent = (content,len, validIndexs,prevPos = 0,splits = []) => {
       switch(validIndexs.length){
         case 0:
           // concat the rest of the content
@@ -105,7 +105,7 @@ export class LikesController{
       }
     }
 
-    function mergeAndInjectHightLightContent(splits,hlContent = ''){
+    const mergeAndInjectHightLightContent = (splits,hlContent = '') => {
       switch (splits.length) {
         case 0 :
           return hlContent

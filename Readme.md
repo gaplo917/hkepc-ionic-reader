@@ -29,7 +29,7 @@
 
 # Run
 		// run in Web (please ensure you disable CORS checking in browser)
-		sh es6-transpile.sh  
+		sh build.sh  
 		
 		// run in web
 		ionic serve
@@ -37,12 +37,3 @@
 		// run in ios
 		sh build-ios.sh
         
-
-# Splash & icon generation
-
-		brew install imagemagick && sudo npm i -g ticons
-		
-		// template command
-		ticons icons path/to/image.png --output-dir path/to/your/project --alloy --platforms iphone,ipad,android
-        
-        ticons splashes path/to/image.png --output-dir path/to/your/project --alloy --platforms iphone,ipad,android

@@ -1,0 +1,88 @@
+@import "variables";
+
+// only for cardholder
+.card-view {
+  background-color: $card-holder-bg-color;
+
+  .title {
+    padding: 0 20px;
+  }
+
+  .card {
+    margin: 15px 0;
+
+    .active-liked {
+      color: #dd0000;
+    }
+
+    .item {
+      border-color: $border-color;
+      .tabs {
+        background-image: linear-gradient(0deg, $border-color, $border-color 50%);
+      }
+    }
+
+    .list-inset {
+      margin: 15px 0;
+    }
+
+    // mainly for epc content
+    .item-body {
+
+      // the last edit timestamp
+      .pstatus {
+        display: block;
+        height: 32px;
+        text-align: center;
+        font-style: normal;
+        color: #999;
+        font-size: 12px;
+      }
+
+      // the lock status
+      .locked {
+        margin: 10px 0;
+        width: 100%;
+        padding: 8px 8px 8px 24px;
+        border: 1px dashed #FF9A9A;
+        font-size: 12px;
+      }
+
+
+      table {  width: 100%;  }
+
+      img:not([src$=".gif"]), .ads, iframe{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width:100%;
+        max-width: 500px;
+        margin-top:5px;
+      }
+
+      img[src$=".gif"]{
+        height:auto;
+        width:auto!important;
+      }
+
+      *{
+        -moz-user-select: text;
+        -webkit-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+
+      blockquote {
+        border-left: 5px solid #8fc320;
+      }
+    }
+
+    .ads {
+      img {
+        margin:auto;
+        display:block;
+      }
+    }
+
+  }
+}

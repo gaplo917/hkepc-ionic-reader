@@ -1,13 +1,13 @@
-<ion-view ng-init="vm.messages=[]" >
+<ion-view ng-init="vm.messages=[]" class="card-view">
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
       第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
-  <ion-nav-buttons side="right" style="float:right">
+  <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <ion-content lazy-scroll class="padding" on-swipe-right="$ionicGoBack()"  style="background-color:#f5f5f5">
-    <div style="text-align:center">
+  <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" >
+    <div class="text-center">
       <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
     </div>
     <div class="spinner">
@@ -16,21 +16,21 @@
     <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
-        <img image-lazy-src="{{::message.author.image}}" image-lazy-distance-from-bottom-to-load="400">
+        <img src="{{::message.author.image}}">
         <h2 ng-bind="::message.author.name"></h2>
-        <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
+        <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
       </div>
 
       <div class="item item-body" compile="::message.content">
       </div>
       <div class="item ads" ng-show="::message.ads">
-        <div style="width: 100%;text-align: center; color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
+        <div class="w100 text-center" style="color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
         <span ng-bind-html="::message.ads"></span>
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">
         <a class="tab-item" ng-click="vm.like(message)">
-          <i class="icon ion-ios-heart-outline" ng-style="message.likedStyle"></i>
+          <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
           Like
         </a>
         <a class="tab-item" ng-click="vm.onReply(message)" >
@@ -45,9 +45,8 @@
 
     </div>
     <ion-infinite-scroll
-        class="ispinner"
+        class="ispinner text-center"
         ng-if="vm.hasMoreData()"
-        style="text-align: center;"
         on-infinite="vm.loadMore()"
         spinner="ripple"
         immediate-check="false"

@@ -1,0 +1,59 @@
+// word break
+* {
+  word-break: break-all;
+}
+
+// shortcut for image center
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+//
+.text-center{
+  text-align: center;
+}
+
+.fright{
+  float:right;
+}
+.fleft{
+  float:left;
+}
+
+.username{
+  font-weight: 700;
+}
+
+.w100{
+  width: 100%;
+}
+
+// common ionic content
+ionic-content {
+  /* Font Size */
+  .item {
+    .bigger-title {  font-size: 16px;  }
+  }
+
+  .odd {
+    .item-content {}
+  }
+
+  .even {
+    .item-content{  background-color: #fafafa;  }
+  }
+}
+
+.item-radio .item-content { padding-right:0;}
+
+ion-list, .list {
+  // override
+  .item {
+    &.item-divider {
+      color: #fff;
+      background-color: #8fc320 !important;
+    }
+  }
+}
