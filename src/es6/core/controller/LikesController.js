@@ -5,7 +5,7 @@ import {FindMessageRequest} from "../model/find-message-request"
 
 export class LikesController{
 
-  constructor($scope, $http, authService,$state,ngToast,$message,$sanitize){
+  constructor($scope, $http, authService,$state,ngToast,$message,$sanitize,$ionicActionSheet){
 
     this.http = $http
     this.scope = $scope
@@ -15,6 +15,8 @@ export class LikesController{
     this.sanitize = $sanitize
     this.end = false
     this.page = 1
+    this.ionicActionSheet = $ionicActionSheet
+    this.messageService = $message
 
     $scope.$on('$ionicView.enter', (e) => {
       // get the whole list from db
@@ -152,5 +154,30 @@ export class LikesController{
 
   findMessage(postId,messageId){
     this.scope.$emit('find',new FindMessageRequest(postId,messageId))
+  }
+
+  onMore(message){
+    // Show the action sheet
+    var hideSheet = this.ionicActionSheet.show({
+      buttons: [
+        { text: 'Share(開發中)' }
+      ],
+      destructiveText: 'Unlike',
+      titleText: 'Options',
+      cancelText: 'Cancel',
+      cancel: function() {
+        // add cancel code..
+      },
+      buttonClicked: function(index) {
+        //
+        return true;
+      },
+      destructiveButtonClicked: (index) => {
+        this.messageService.remove(message)
+        this.messages = this.messages.filter(m => m.id != message.id)
+        return true
+      }
+    });
+
   }
 }
