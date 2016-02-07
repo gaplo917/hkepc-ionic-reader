@@ -1,2 +1,2 @@
-sh es6-transpile.sh
+sh build.sh
 ionic emulate ios

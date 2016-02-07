@@ -214,9 +214,7 @@ export class PostController{
                     }
                   }
 
-                  message.likedStyle = this.messageService.isLikedPost(message)
-                      ? {color: '#0c60ee'}
-                      : {}
+                  message.liked = this.messageService.isLikedPost(message)
 
                   return message
                 }
@@ -248,11 +246,11 @@ export class PostController{
 
     if(this.messageService.isLikedPost(message)){
       this.messageService.remove(message)
-      message.likedStyle = {}
+      message.liked = false
     }
     else {
       this.messageService.add(message)
-      message.likedStyle = {color: '#0c60ee'}
+      message.liked = true
     }
 
   }

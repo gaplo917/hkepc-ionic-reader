@@ -55,9 +55,12 @@ export class GeneralHtml{
   processImageToLazy(){
     this.source('img').each((i,e) => {
       const imgSrc = this.source(e).attr('src')
-      this.source(e).attr('image-lazy-src',imgSrc)
-      this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
-      this.source(e).removeAttr('src')
+      if(!imgSrc.endsWith('.gif')){
+        console.log(imgSrc)
+        this.source(e).attr('image-lazy-src',imgSrc)
+        this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
+        this.source(e).removeAttr('src')
+      }
     })
 
     return this

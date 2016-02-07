@@ -1,14 +1,14 @@
-<ion-view >
+<ion-view class="card-view">
   <ion-nav-title>
     <i class="ion-ios-star"> 我的最愛</i>
   </ion-nav-title>
-  <ion-nav-buttons side="right" style="float:right">
+  <ion-nav-buttons side="right" >
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <ion-content lazy-scroll class="padding" on-swipe-right="$ionicGoBack()"  style="background-color:#f5f5f5">
-    <div style="text-align:center">
-      <label class="item item-input" style="width:100%">
+  <ion-content lazy-scroll on-swipe-right="$ionicGoBack()">
+    <div class="text-center">
+      <label class="item item-input w100">
         <i class="icon ion-search placeholder-icon"></i>
         <input placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
       </label>
@@ -19,11 +19,11 @@
     <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
-        <img image-lazy-src="{{::message.author.image}}" image-lazy-distance-from-bottom-to-load="400">
-        <i class="ion-ios-arrow-down" style="float:right;"></i>
+        <img src="{{::message.author.image}}">
+        <i class="ion-ios-arrow-down fright"></i>
 
         <h2 ng-bind="::message.author.name"></h2>
-        <p>{{::message.createdAt}} <span style="float:right">#{{::message.pos}}</span></p>
+        <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
       </div>
 
       <div class="item item-body" compile="::message.content">
@@ -31,15 +31,14 @@
 
     </div>
     <ion-infinite-scroll
-        class="ispinner"
+        class="ispinner text-center"
         ng-if="vm.hasMoreData()"
-        style="text-align: center;"
         on-infinite="vm.loadMore()"
         spinner="ripple"
         immediate-check="false"
         distance="7%">
     </ion-infinite-scroll>
-    <div style="text-align:center" ng-show="vm.end">
+    <div class="text-center" ng-show="vm.end">
       <h4 class="title">完</h4>
     </div>
   </ion-content>
