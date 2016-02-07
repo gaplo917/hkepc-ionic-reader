@@ -198,7 +198,6 @@ export class PostController{
                   const message = {
                     id: postSource('table').attr('id').replace('pid',''),
                     pos: postSource('.postinfo strong a em').text(),
-                    inAppUrl: this.postUrl,
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
                     content : content.html(),
                     ads: ads,

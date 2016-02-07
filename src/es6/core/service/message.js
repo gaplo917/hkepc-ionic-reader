@@ -19,7 +19,7 @@ export var message = {
         }
         else{
           let filtered = liked
-              .filter((msg) => msg.id !== message.id || msg.inAppUrl !== message.inAppUrl)
+              .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
 
           filtered.push(message)
 
@@ -30,7 +30,7 @@ export var message = {
         "use strict";
         let liked = $localstorage.getObject(MESSAGES_LIKE_KEY)
         let filtered = liked
-                              .filter((msg) => msg.id !== message.id || msg.inAppUrl !== message.inAppUrl)
+                              .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
 
         $localstorage.setObject(MESSAGES_LIKE_KEY,filtered)
 
@@ -40,7 +40,7 @@ export var message = {
         "use strict";
         let likedPosts = $localstorage.getObject(MESSAGES_LIKE_KEY)
         return Object.keys(likedPosts).length > 0
-            ? likedPosts.filter((msg) => msg.id == message.id && msg.inAppUrl == message.inAppUrl).length == 1
+            ? likedPosts.filter((msg) => msg.id == message.id && msg.post.id == message.post.id).length == 1
             : false;
       },
 

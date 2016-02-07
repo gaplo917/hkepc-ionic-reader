@@ -56,7 +56,6 @@ export var MessageResolver = {
           const message = {
             id: postSource('table').attr('id').replace('pid',''),
             pos: postSource('.postinfo strong a em').text(),
-            inAppUrl: url,
             createdAt: postSource('.posterinfo .authorinfo em').text(),
             content : $sce.trustAsHtml(
                 // main content
