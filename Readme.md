@@ -21,11 +21,6 @@
 		// Build modules
 		npm install gulp -g
 
-		// ES6 -> ES5
-		npm install --save-dev babelify
-		npm install --save-dev babel-preset-es2015 babel-preset-react
-
-
 
 # Run
 		// run in Web (please ensure you disable CORS checking in browser)
