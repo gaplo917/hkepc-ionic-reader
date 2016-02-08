@@ -223,7 +223,7 @@ export class PostListController {
           let $ = cheerio.load(resp.data)
           const titles = $('#nav').text().split('»')
           const topicName = titles[titles.length - 1]
-          const totalPageNumText = $('.pages_btns .pages .last').first().text()
+          const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages a').not('.next').last().text()
           const subTopicList = $('#subforum table h2 a').map((i,elem) => {
             const obj = $(elem)
             const name = obj.text()
