@@ -114,36 +114,62 @@ export class LikesController{
         case 1 :
           return `${hlContent}${splits[0]}`
         default :
-          const merged = `${hlContent}${splits[0]}<span style="background-color: yellow">${splits[1]}</span>`
+          const merged = `${hlContent}${splits[0]}<span style="background-color: #FFEB3B;color: #000">${splits[1]}</span>`
           return mergeAndInjectHightLightContent(splits.slice(2),merged)
       }
     }
 
-    const result = this.wholeMessages.map( msg => {
-      const content = angular.element('<div/>').html(msg.content).html();
-      const keyword = this.searchText
-
+    const searchAndInjectHighlightBetweenKeyword = (content,keyword) => {
       // find all brace for identify the html tag
       const bracePos = searchBraceIndex(content)
 
       // search the keyword position
       const validIndex = searchKeywordIndex(content.toLowerCase(),keyword.toLowerCase())
-                          .filter(index => !isIndexInBrace(content,bracePos,index))
-
-      const splits = breakContent(content,keyword.length,validIndex)
-
-      // clone a new message object
-      const hlm = Object.assign({},msg)
-
-      // set the content
-      hlm.content = mergeAndInjectHightLightContent(splits)
+          .filter(index => !isIndexInBrace(content,bracePos,index))
 
       return {
-        hasMatch : validIndex.length > 0,
-        message: hlm
+        matches : validIndex.length,
+        hlContent : mergeAndInjectHightLightContent(breakContent(content,keyword.length,validIndex))
       }
-    }).filter(e => e.hasMatch)
-    .map(e => e.message)
+    }
+
+    const searchMultipleKeyword = (keywordArr, msg, result = { matches: 0 }) => {
+      switch (keywordArr.length) {
+        case 0 :
+          return result
+        default :
+          const hlm = Object.assign({},msg,{ post : Object.assign({},msg.post)})
+
+          const content = angular.element('<div/>').html(hlm.content).html();
+          const title = angular.element('<div/>').html(hlm.post.title).html()
+          const keyword = keywordArr[0]
+
+          const searchResult = {
+            content: searchAndInjectHighlightBetweenKeyword(content,keyword),
+            title: searchAndInjectHighlightBetweenKeyword(title,keyword)
+          }
+
+          // set the content
+          hlm.content = searchResult.content.hlContent
+
+          // set the title
+          hlm.post.title = searchResult.title.hlContent
+
+          result = {
+            matches : result.matches + searchResult.content.matches + searchResult.title.matches,
+            message: hlm
+          }
+
+          return searchMultipleKeyword(keywordArr.slice(1),hlm,result)
+      }
+    }
+
+    const result = this.wholeMessages.map( msg => {
+      // map to a search result
+      return searchMultipleKeyword(this.searchText.split(' '),msg)
+    }).filter(e => e.matches > 0)  // filter no matches
+      .sort((e1,e2) => e2.matches - e1.matches) // sort by matches
+      .map(e => e.message)
 
     if(!this.searchText) {
       this.messages = this.wholeMessages.slice(0,this.pageSize)

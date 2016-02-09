@@ -51,7 +51,7 @@
 
       table {  width: 100%;  }
 
-      img:not([src$=".gif"]), .ads, iframe{
+      img:not([src$=".gif"]){
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -78,7 +78,7 @@
     }
 
     .ads {
-      img {
+      img,iframe {
         margin:auto;
         display:block;
       }

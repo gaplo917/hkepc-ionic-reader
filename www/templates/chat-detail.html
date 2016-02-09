@@ -1,4 +1,9 @@
 <ion-view class="chats-view">
+  <ion-nav-buttons side="primary">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="$ionicGoBack()">
+    </button>
+  </ion-nav-buttons>
+
   <ion-nav-title>
     <span><i class='icon ion-chatbubble user-messages-top-icon'></i> {{::vm.sender.username}}</span>
   </ion-nav-title>
