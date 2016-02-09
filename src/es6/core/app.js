@@ -19,7 +19,6 @@ angular.module('starter', [
   'starter.services',
   'starter.directives',
   'angular-loading-bar',
-  'ngCookies',
   'ngToast',
   'ionicLazyLoad'
 ])
