@@ -1,4 +1,9 @@
 <ion-view ng-init="vm.slidePages=[{},{},{}];">
+  <ion-nav-buttons side="primary">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
+    </button>
+  </ion-nav-buttons>
+
   <ion-nav-title ng-click="openPopover($event)">{{vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>

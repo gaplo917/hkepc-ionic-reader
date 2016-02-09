@@ -9,11 +9,12 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage,$ionicModal,ngToast,$q) {
+  constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage,$ionicModal,ngToast,$q) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     this.scope = $scope
     this.http = $http
+    this.state = $state
     this.location = $location
     this.anchorScroll = $anchorScroll
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
@@ -461,5 +462,16 @@ export class PostListController {
   }
   doFilterOrder($event){
     this.filterOrderPopover.show($event)
+  }
+
+  onBack(){
+    const history = this.ionicHistory.viewHistory()
+    console.log(history)
+    if(history.backView && history.backView.stateName == 'tab.topics'){
+      this.ionicHistory.goBack()
+    } else {
+      this.state.go('tab.topics')
+    }
+    console.log("on back")
   }
 }

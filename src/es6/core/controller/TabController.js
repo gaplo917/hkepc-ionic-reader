@@ -45,5 +45,4 @@ export class TabController{
       this.messageModal = modal
     })
   }
-
 }

@@ -83,7 +83,7 @@ angular.module('starter', [
 
   this.$get = ['$cookies','ngToast','$localstorage', function($cookies,ngToast, $localstorage){
     return {
-      'request': function(config) {
+      request: function(config) {
         if(config.url.indexOf(HKEPC.baseUrl) >= 0){
 
           const proxy = $localstorage.get('proxy') || HKEPC.proxy
@@ -91,13 +91,17 @@ angular.module('starter', [
           config.url = config.url.replace('http://',`${proxy}/`)
         }
         config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$cookies.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$cookies.get(HKEPC.auth.token)}`
-
-        return config;
+        config.timeout = 10000 // 10 seconds should be enough to transfer plain HTML text
+        return config
       },
       responseError: function(err){
         "use strict";
-        ngToast.danger(`<i class="ion-network"> 連線出現問題！</i>`)
+        ngToast.danger({
+          dismissOnTimeout: false,
+          content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、Proxy 伺服器出現異常</i>`
+        })
         console.log('$http Error',JSON.stringify(err))
+        return err
       }
     }
   }]

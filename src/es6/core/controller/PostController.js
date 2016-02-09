@@ -121,6 +121,7 @@ export class PostController{
           async.waterfall([
             (callback) => {
               const html = new HKEPCHtml(cheerio.load(resp.data))
+              const pageBackLink = html.getCheerio()('.forumcontrol .pageback a').attr('href')
 
               let $ = html
                   //.removeIframe()  // iframe ads
@@ -160,13 +161,11 @@ export class PostController{
                 post:{
                   title: postTitle,
                   id: this.postId,
-                  topicId: this.topicId
-                },
-                topic: {
-                  id: this.topicId
+                  topicId: URLUtils.getQueryVariable(pageBackLink,'fid')
                 }
               })
 
+              console.log(this.post)
               // callback for next function
               callback(null, $,postTitle);
             },
@@ -200,7 +199,7 @@ export class PostController{
                     pos: postSource('.postinfo strong a em').text(),
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
                     content : content.html(),
-                    ads: ads,
+                    ads: this.sce.trustAsHtml(ads),
                     post:{
                       id: this.postId,
                       topicId: this.topicId,
@@ -444,5 +443,19 @@ export class PostController{
 
   futureFeature(){
     this.ngToast.warning("此功能尚未開發！")
+  }
+
+  onBack(){
+    const history = this.ionicHistory.viewHistory()
+    console.log(history)
+    if(history.backView && history.backView.stateName == 'tab.topics-posts'){
+      this.ionicHistory.goBack()
+    } else {
+      this.state.go('tab.topics-posts',{
+        topicId: this.post.topicId,
+        page: 1
+      })
+    }
+    console.log("on back")
   }
 }
