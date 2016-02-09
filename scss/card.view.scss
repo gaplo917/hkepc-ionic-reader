@@ -17,7 +17,7 @@
 
     .item {
       border-color: $border-color;
-      .tabs {
+      &.tabs {
         background-image: linear-gradient(0deg, $border-color, $border-color 50%);
       }
     }
