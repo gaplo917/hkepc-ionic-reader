@@ -31,14 +31,12 @@ export class GeneralHtml{
       const lazyImg = this.source(e).attr('file')
 
       if(lazyImg){
-        //console.log('lazy',lazyImg)
         this.source(e).attr('src',lazyImg)
       }
 
       const imgSrc = this.source(e).attr('src')
 
       if(URLUtils.isRelativeUrl(imgSrc)){
-        //console.log('relative',imgSrc)
         this.source(e).attr('src',`${imagePrefix}/${imgSrc}`)
       }
 
@@ -77,8 +75,7 @@ export class GeneralHtml{
         this.source(e).removeAttr('onclick')
         this.source(e).removeAttr('onmouseover')
 
-        //console.log('lazy',lazyImg)
-        this.source(e).attr('href','#')
+        this.source(e).attr('href','')
         this.source(e).attr('target',`_system`)
         this.source(e).attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
       }

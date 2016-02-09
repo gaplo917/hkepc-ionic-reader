@@ -1,6 +1,11 @@
 import * as Controllers from './controller/index'
 import 'angular-loading-bar'
 import * as HKEPC from '../data/config/hkepc'
+import * as URLUtils from "../utils/url"
+
+// identify weather is proxy client before loading the angular app
+const isProxied = URLUtils.isProxy()
+
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -79,19 +84,24 @@ angular.module('starter', [
   // focus on content, should not have fancy transition
   $ionicConfigProvider.views.transition('none')
 }])
-.provider('HKEPC_CORS',[function(){
+.provider('HKEPC_PROXY',[function(){
 
-  this.$get = ['$cookies','ngToast','$localstorage', function($cookies,ngToast, $localstorage){
+  this.$get = ['ngToast','$localstorage', function(ngToast, $localstorage){
     return {
       request: function(config) {
-        if(config.url.indexOf(HKEPC.baseUrl) >= 0){
+        if(isProxied) {
+          // we need to proxy all the request to prevent CORS
 
-          const proxy = $localstorage.get('proxy') || HKEPC.proxy
-          // rewrite the url with proxy
-          config.url = config.url.replace('http://',`${proxy}/`)
+          if(config.url.indexOf(HKEPC.baseUrl) >= 0){
+
+            const proxy = $localstorage.get('proxy') || HKEPC.proxy
+            // rewrite the url with proxy
+            config.url = config.url.replace('http://',`${proxy}/`)
+          }
+          config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$localstorage.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$localstorage.get(HKEPC.auth.token)}`
         }
-        config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$cookies.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$cookies.get(HKEPC.auth.token)}`
         config.timeout = 10000 // 10 seconds should be enough to transfer plain HTML text
+
         return config
       },
       responseError: function(err){
@@ -107,7 +117,7 @@ angular.module('starter', [
   }]
 }])
 .config(function($httpProvider) {
-  $httpProvider.interceptors.push('HKEPC_CORS')
+  $httpProvider.interceptors.push('HKEPC_PROXY')
 })
 .config(['ngToastProvider', function(ngToast) {
   ngToast.configure({

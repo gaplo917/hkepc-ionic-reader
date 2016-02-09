@@ -19,5 +19,9 @@ module.exports = {
   isRelativeUrl: (url) =>{
     if(!url) return false;
     else return ! (url.startsWith('http://') || url.startsWith('https://'))
-  }
+  },
+
+  isFileSys: () => window.location.href.startsWith("file://"),
+
+  isProxy: () => !window.location.href.startsWith("file://")
 }
