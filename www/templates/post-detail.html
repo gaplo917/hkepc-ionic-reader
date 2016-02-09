@@ -2,7 +2,7 @@
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
       第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
-  <ion-nav-buttons side="primary">
+  <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
     </button>
   </ion-nav-buttons>
@@ -29,7 +29,7 @@
       </div>
       <div class="item ads" ng-show="::message.ads">
         <div class="w100 text-center" style="color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
-        <span ng-bind-html="::message.ads"></span>
+        <span compile="::message.ads"></span>
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">

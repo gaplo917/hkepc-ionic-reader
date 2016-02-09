@@ -39,6 +39,7 @@ module.exports = {
     },
     posts: (topicId,postId,page) => `${BASE_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
     login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
+    logout: (formhash) => `${BASE_URL}/logging.php?action=logout&formhash=${formhash}`,
     replyPage:(reply) => {
 
       /**
@@ -73,7 +74,8 @@ module.exports = {
   auth:{
     id: 'cdb_sid',
     token: 'cdb_auth',
-    expire: 'expires'
+    expire: 'expires',
+    formhash: 'formhash'
   },
   signature: () => {
     "use strict";

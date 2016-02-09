@@ -171,18 +171,16 @@ export class PostController{
             },
             ($,postTitle, callback) => {
 
-
-
               // PostHtml map to the model
               const tasks = $('#postlist > div').map( (i,elem) => {
                 // remember this is a function object (lazy function)
                 return () => {
                   let postSource = cheerio.load($(elem).html())
 
-                  const adsSource = postSource('.adv')
+                  const adsSource = postSource('.adv iframe')
 
                   // extract the ads before remove from the parent
-                  const hasAds = adsSource.has('iframe')
+                  const hasAds = adsSource.has('img')
                   const ads = hasAds? adsSource.html() : undefined
 
                   // really remove the ads
@@ -199,7 +197,7 @@ export class PostController{
                     pos: postSource('.postinfo strong a em').text(),
                     createdAt: postSource('.posterinfo .authorinfo em').text(),
                     content : content.html(),
-                    ads: this.sce.trustAsHtml(ads),
+                    ads: ads,
                     post:{
                       id: this.postId,
                       topicId: this.topicId,

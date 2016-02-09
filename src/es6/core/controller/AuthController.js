@@ -2,6 +2,7 @@
  * Created by Gaplo917 on 27/1/2016.
  */
 import * as HKEPC from "../../data/config/hkepc"
+import * as URLUtils from "../../utils/url"
 
 export class AuthController {
 
@@ -13,7 +14,6 @@ export class AuthController {
     this.authService = authService
     this.ionicPopup = $ionicPopup
     this.localstorage = $localstorage
-
     this.version = HKEPC.version
     this.proxy = $localstorage.get('proxy') || HKEPC.proxy
 
@@ -80,4 +80,8 @@ export class AuthController {
       }
     })
   };
+
+  isProxy() {
+    return !URLUtils.isFileSys()
+  }
 }
