@@ -186,9 +186,9 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: 'Share(開發中)' }
+        { text: '<i class="icon ion-share balanced"></i> Share(開發中)' }
       ],
-      destructiveText: 'Unlike',
+      destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> Unlike',
       titleText: 'Options',
       cancelText: 'Cancel',
       cancel: function() {
