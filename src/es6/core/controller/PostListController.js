@@ -203,7 +203,7 @@ export class PostListController {
       this.queue.resume()
 
       // stringify and compare to string value
-      this.showSticky = String(this.localstorage.get('showSticky')) === 'true'
+      this.showSticky = String(this.localstorage.get('showSticky',true)) === 'true'
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {

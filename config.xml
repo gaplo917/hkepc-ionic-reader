@@ -22,6 +22,7 @@
     <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
     <preference name="xwalkMode" value="embedded" />
     <preference name="xwalkMultipleApk" value="true" />
+    <preference name="deployment-target" value="8.0" />
     <!--For native transition plugin -->
     <preference name="CrosswalkAnimatable" value="true" />
     <feature name="StatusBar">

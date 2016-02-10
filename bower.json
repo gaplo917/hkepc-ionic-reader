@@ -5,7 +5,6 @@
     "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "dependencies": {
-    "babel-polyfill": "~0.0.1",
     "ionic-image-lazy-load": "ion-image-lazy-load#*",
     "ngToast": "ngtoast#~1.5.6",
     "ionic": "driftyco/ionic-bower#1.2.4"

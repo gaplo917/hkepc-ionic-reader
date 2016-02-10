@@ -15,10 +15,11 @@ export var localStorage = {
       get: function(key, defaultValue) {
         const values = cache.get(key)
         if(!values){
-          console.log('initilize cache')
-          cache.set(key, $window.localStorage[key] || defaultValue)
+          console.log('get initilize cache',key)
+          cache.set(key, $window.localStorage[key] || defaultValue || 'undefined')
         }
-        return cache.get(key);
+        const cachedVal = cache.get(key)
+        return cachedVal === 'undefined' ? undefined : cachedVal
       },
       setObject: function(key, value) {
         cache.set(key,value)
@@ -27,7 +28,7 @@ export var localStorage = {
       getObject: function(key) {
         const values = cache.get(key)
         if(!values){
-          console.log('initilize cache')
+          console.log('getObject initilize cache')
           cache.set(key, JSON.parse($window.localStorage[key] || '{}'))
         }
         return cache.get(key);

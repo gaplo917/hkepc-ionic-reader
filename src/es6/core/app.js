@@ -2,6 +2,7 @@ import * as Controllers from './controller/index'
 import 'angular-loading-bar'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from "../utils/url"
+import "babel-polyfill";
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
