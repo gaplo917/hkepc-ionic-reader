@@ -9,10 +9,18 @@ export class TabController{
   constructor($scope,$ionicModal,messageResolver,$stateParams,authService,ngToast) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
+    this.authService = authService
+    // cache the value
+    this._isLoggedIn = authService.isLoggedIn()
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
-      if(arg){ this.login = arg }
+      if(arg){
+        this.login = arg
+        this._isLoggedIn = true
+      }
       else {
+        this._isLoggedIn = false
+
         this.login = undefined
 
         if (authService.isLoggedIn()){
@@ -44,5 +52,9 @@ export class TabController{
     }).then((modal) => {
       this.messageModal = modal
     })
+  }
+
+  isLoggedIn(){
+    return this._isLoggedIn
   }
 }
