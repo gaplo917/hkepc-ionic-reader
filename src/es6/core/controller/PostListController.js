@@ -192,7 +192,9 @@ export class PostListController {
         // force update the view after 3 task
         this.scope.$apply()
       }
-      setTimeout(() => callback(), 40)
+
+      const delayRenderTime = post.isSticky && !this.showSticky ? 0 : 40
+      setTimeout(() => callback(), delayRenderTime)
     }, 1)
 
     $scope.$on('$ionicView.loaded', (e) => {

@@ -5,7 +5,7 @@ export var localStorage = {
   name: '$localstorage',
 
   impl: ['$window',function ($window) {
-    let cache = new Map();
+    const cache = new Map();
 
     return {
       set: function(key, value) {
