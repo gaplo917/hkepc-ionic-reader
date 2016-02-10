@@ -37,7 +37,6 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-inappbrowser",
-    "com.telerik.plugins.wkwebview",
     "cordova-plugin-wkwebview"
   ],
   "cordovaPlatforms": [
