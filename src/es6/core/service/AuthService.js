@@ -100,7 +100,7 @@ export var AuthService = {
 
         // must be success
         $http.get(HKEPC.forum.logout($localstorage.get(HKEPC.auth.formhash))).then((resp) => {
-          ngToast.success(`<i class="ion-ios-checkmark"> 成功登出! </i>`)
+          // TODO: do some checking?
         })
 
       }
