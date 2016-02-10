@@ -36,13 +36,19 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
-    "cordova-plugin-inappbrowser"
+    "cordova-plugin-inappbrowser",
+    "com.telerik.plugins.wkwebview",
+    "cordova-plugin-wkwebview"
   ],
   "cordovaPlatforms": [
-    "ios",
     {
       "platform": "android",
       "locator": "browser"
+    },
+    {
+      "platform": "ios",
+      "version": "3.9.2",
+      "locator": "ios@3.9.2"
     }
   ]
 }
