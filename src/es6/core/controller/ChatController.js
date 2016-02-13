@@ -31,7 +31,7 @@ export class ChatController{
     $scope.$on('$ionicView.loaded', (e) => {
       if(AuthService.isLoggedIn()){
         this.scope.$emit("accountTabUpdate",AuthService.getUsername())
-        setTimeout(()=> this.loadChats() ,400)
+        setTimeout(()=> this.loadChats() ,200)
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> PM 需要會員權限，請先登入！</i>`)
         $state.go("tab.account")
