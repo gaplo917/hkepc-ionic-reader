@@ -23,7 +23,10 @@
 
 
 # Run
-		// run in Web (please ensure you disable CORS checking in browser)
+		// init ionic
+		ionic state reset
+
+		// build the .js .scss files
 		sh build.sh  
 		
 		// run in web
