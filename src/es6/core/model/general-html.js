@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-import * as URLUtils from "../../utils/url"
+import * as URLUtils from '../../utils/url'
 
 export class GeneralHtml{
 

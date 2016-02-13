@@ -1,8 +1,8 @@
 /**
  * Created by Gaplo917 on 27/1/2016.
  */
-import * as HKEPC from "../../data/config/hkepc"
-import * as URLUtils from "../../utils/url"
+import * as HKEPC from '../../data/config/hkepc'
+import * as URLUtils from '../../utils/url'
 
 export class AuthController {
 

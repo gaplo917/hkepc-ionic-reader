@@ -2,8 +2,8 @@
  * Created by Gaplo917 on 27/1/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from "../../utils/url"
-import {GeneralHtml} from "../model/general-html"
+import * as URLUtils from '../../utils/url'
+import {GeneralHtml} from '../model/general-html'
 const cheerio = require('cheerio')
 const async = require('async')
 
