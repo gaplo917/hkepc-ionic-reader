@@ -54,6 +54,16 @@
 
             <i class="icon ion-chevron-right icon-accessory"></i>
           </ion-item>
+
+          <ion-item
+              ng-show="page.posts.length > 0"
+          >
+            <button class="button col-50 fleft"
+                    ng-show="vm.slidePages[vm.currentIndex].num > 1"
+                    ng-click="vm.ionicSlideBoxDelegate.previous()" >
+              <i class="icon ion-ios-arrow-thin-left"></i>上一頁</button>
+            <button class="button col-50 fright" ng-click="vm.ionicSlideBoxDelegate.next()">下一頁 <i class="icon ion-ios-arrow-thin-right"></i></button>
+          </ion-item>
         </ion-list>
       </ion-slide>
 
