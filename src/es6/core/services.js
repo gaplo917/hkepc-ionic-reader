@@ -6,5 +6,6 @@ import * as Services from './service/index'
 const serviceModules = angular.module('starter.services', [])
 
 for(let key of Object.keys(Services)){
-  serviceModules.factory(Services[key].name,Services[key].impl)
+  const service = Services[key]
+  serviceModules.factory(service.NAME,service.DI)
 }

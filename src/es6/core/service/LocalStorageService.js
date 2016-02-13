@@ -4,6 +4,10 @@
 export class LocalStorageService {
   static get NAME() { return 'LocalStorageService'}
 
+  static get DI() {
+    return ($window) => new LocalStorageService($window)
+  }
+
   constructor($window) {
     this.window = $window
     this.cache = new Map();

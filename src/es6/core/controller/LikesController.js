@@ -4,7 +4,19 @@
 import {FindMessageRequest} from "../model/find-message-request"
 
 export class LikesController{
-
+  static get STATE() { return 'tab.likes'}
+  static get NAME() { return 'LikesController'}
+  static get CONFIG() { return {
+    url: '/likes',
+    cache: false,
+    views: {
+      'tab-likes': {
+        templateUrl: 'templates/tab-likes.html',
+        controller: LikesController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
   constructor($scope, $http, AuthService,$state,ngToast,MessageService,$sanitize,$ionicActionSheet){
 
     this.http = $http

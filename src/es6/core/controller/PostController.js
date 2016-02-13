@@ -11,6 +11,18 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class PostController{
+  static get STATE() { return 'tab.topics-posts-detail'}
+  static get NAME() { return 'PostController'}
+  static get CONFIG() { return {
+    url: '/topics/:topicId/posts/:postId/page/:page',
+    views: {
+      'tab-topics': {
+        templateUrl: 'templates/post-detail.html',
+        controller: PostController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
 
   constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService) {
     this.scope = $scope

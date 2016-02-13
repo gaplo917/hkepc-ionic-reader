@@ -44,7 +44,8 @@ angular.module('starter', [
  const stateProvider =  $stateProvider
 
   for(let key of Object.keys(Controllers)){
-    stateProvider.state(Controllers[key].state,Controllers[key].config)
+    const controller = Controllers[key]
+    stateProvider.state(controller.STATE,controller.CONFIG)
   }
 
   // if none of the above states are matched, use this as the fallback

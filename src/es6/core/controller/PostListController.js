@@ -8,7 +8,18 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class PostListController {
-
+  static get STATE() { return 'tab.topics-posts'}
+  static get NAME() { return 'PostListController'}
+  static get CONFIG() { return {
+    url: '/topics/:topicId/page/:page',
+    views: {
+      'tab-topics': {
+        templateUrl: 'templates/topic-posts.html',
+        controller: PostListController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
   constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
     "use strict";
     console.log("called POST LIST CONTROLLER")

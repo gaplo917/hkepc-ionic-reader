@@ -6,5 +6,6 @@ import * as Controllers from './controller/index'
 const controllerModules = angular.module('starter.controllers', [])
 
 for(let key of Object.keys(Controllers)){
-  controllerModules.controller(Controllers[key].name,Controllers[key].action)
+  const controller = Controllers[key]
+  controllerModules.controller(controller.NAME,controller)
 }

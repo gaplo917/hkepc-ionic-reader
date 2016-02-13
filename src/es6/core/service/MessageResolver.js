@@ -7,8 +7,11 @@ import {HKEPCHtml} from "../model/hkepc-html"
 const cheerio = require('cheerio')
 
 export class MessageResolver {
-
   static get NAME () {return 'MessageResolver'}
+
+  static get DI() {
+    return ($http,$q,$sce,MessageService) => new MessageResolver($http,$q,$sce,MessageService)
+  }
 
   constructor($http,$q,$sce,MessageService) {
     this.http = $http
