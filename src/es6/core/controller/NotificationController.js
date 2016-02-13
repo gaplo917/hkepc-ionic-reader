@@ -10,6 +10,19 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class NotificationController{
+  static get STATE() { return 'tab.notifications'}
+  static get NAME() { return 'NotificationController'}
+  static get CONFIG() { return {
+    url: '/notifications',
+    cache: false,
+    views: {
+      'tab-notifications': {
+        templateUrl: 'templates/tab-notifications.html',
+        controller: NotificationController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
 
   constructor($scope, $http, AuthService,$state,$sce,ngToast){
 

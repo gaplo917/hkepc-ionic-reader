@@ -8,6 +8,18 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class TopicListController {
+  static get STATE() { return 'tab.topics'}
+  static get NAME() { return 'TopicListController'}
+  static get CONFIG() { return {
+    url: '/topics',
+    views: {
+      'tab-topics': {
+        templateUrl: 'templates/tab-topics.html',
+        controller: TopicListController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
 
   constructor($scope,$http,LocalStorageService,AuthService,ngToast) {
 

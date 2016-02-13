@@ -5,6 +5,16 @@ import * as HKEPC from '../../data/config/hkepc'
 import {FindMessageRequest} from "../model/find-message-request"
 
 export class TabController{
+  static get STATE() { return 'tab'}
+  static get NAME() { return 'TabCtrl'}
+  static get CONFIG() { return {
+    url: '/tab',
+    abstract: true,
+    templateUrl: 'templates/tabs.html',
+    controller: 'TabCtrl',
+    controllerAs: 'vm'
+
+  }}
 
   constructor($scope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast) {
     this.scope = $scope

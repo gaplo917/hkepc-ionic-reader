@@ -4,6 +4,10 @@
 export class MessageService {
   static get NAME() { return 'MessageService'}
 
+  static get DI() {
+    return (LocalStorageService) => new MessageService(LocalStorageService)
+  }
+
   static get MESSAGES_LIKE_KEY() {  return 'messages.like' }
 
   static get MESSAGE_DRAFT() {  return 'messages.draft' }

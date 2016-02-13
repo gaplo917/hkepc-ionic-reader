@@ -10,6 +10,10 @@ const async = require('async')
 export class AuthService {
   static get NAME() { return 'AuthService' }
 
+  static get DI() {
+    return (LocalStorageService,$http,ngToast) => new AuthService(LocalStorageService,$http,ngToast)
+  }
+
   constructor(LocalStorageService,$http,ngToast) {
     this.localStorageService = LocalStorageService
     this.http = $http

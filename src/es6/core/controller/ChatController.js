@@ -8,7 +8,19 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class ChatController{
-
+  static get STATE() { return 'tab.chats'}
+  static get NAME() { return 'ChatController'}
+  static get CONFIG() { return {
+    url: '/chats',
+    cache: false,
+    views: {
+      'tab-chats': {
+        templateUrl: 'templates/tab-chats.html',
+        controller: ChatController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
   constructor($scope, $http, AuthService,$state,ngToast){
 
     this.http = $http

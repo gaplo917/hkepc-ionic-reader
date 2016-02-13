@@ -5,6 +5,18 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 
 export class AuthController {
+  static get STATE() { return 'tab.account'}
+  static get NAME() { return 'AuthController'}
+  static get CONFIG() { return {
+    url: '/account',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/tab-account.html',
+        controller: AuthController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
 
   constructor($scope, $http, LocalStorageService, AuthService,$ionicPopup) {
 

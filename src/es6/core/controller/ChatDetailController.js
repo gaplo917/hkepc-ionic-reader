@@ -8,7 +8,19 @@ const cheerio = require('cheerio')
 const async = require('async')
 
 export class ChatDetailController{
-
+  static get STATE() { return 'tab.chat-detail'}
+  static get NAME() { return 'ChatDetailController'}
+  static get CONFIG() { return {
+    url: '/chats/:id',
+    cache: false,
+    views: {
+      'tab-chats': {
+        templateUrl: 'templates/chat-detail.html',
+        controller: ChatDetailController.NAME,
+        controllerAs: 'vm'
+      }
+    }
+  }}
   constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate,ngToast){
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
