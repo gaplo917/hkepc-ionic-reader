@@ -4,9 +4,9 @@
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {HKEPCHtml} from "../model/hkepc-html"
-var cheerio = require('cheerio')
+const cheerio = require('cheerio')
 
-class MessageResolver {
+export class MessageResolver {
 
   static get NAME () {return 'MessageResolver'}
 
@@ -86,10 +86,4 @@ class MessageResolver {
 
     return deferred.promise;
   }
-}
-
-export const messageResolver = {
-  name: MessageResolver.NAME,
-
-  impl: ($http,$q,$sce,MessageService) => new MessageResolver($http,$q,$sce,MessageService)
 }

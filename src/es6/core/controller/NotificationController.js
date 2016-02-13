@@ -6,8 +6,8 @@ import * as URLUtils from "../../utils/url"
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/find-message-request"
 
-var cheerio = require('cheerio')
-var async = require('async');
+const cheerio = require('cheerio')
+const async = require('async')
 
 export class NotificationController{
 

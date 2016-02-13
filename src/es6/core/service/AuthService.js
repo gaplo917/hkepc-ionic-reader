@@ -4,10 +4,10 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from "../../utils/url"
 import {GeneralHtml} from "../model/general-html"
-var cheerio = require('cheerio')
-var async = require('async');
+const cheerio = require('cheerio')
+const async = require('async')
 
-class AuthService {
+export class AuthService {
   static get NAME() { return 'AuthService' }
 
   constructor(LocalStorageService,$http,ngToast) {
@@ -111,9 +111,3 @@ class AuthService {
 
 }
 
-export const auth = {
-  name: AuthService.NAME,
-
-  impl: (LocalStorageService,$http,ngToast) => new AuthService(LocalStorageService,$http,ngToast)
-
-}

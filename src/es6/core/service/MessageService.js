@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-class MessageService {
+export class MessageService {
   static get NAME() { return 'MessageService'}
 
   static get MESSAGES_LIKE_KEY() {  return 'messages.like' }
@@ -64,11 +64,4 @@ class MessageService {
     console.log('getAllDrafts')
     return this.localStorageService.getObject(MessageService.MESSAGE_DRAFT)
   }
-}
-    
-    
-export const message = {
-  name: MessageService.NAME,
-
-  impl: (LocalStorageService) => new MessageService(LocalStorageService)
 }

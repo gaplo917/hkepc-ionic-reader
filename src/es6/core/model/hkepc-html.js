@@ -4,7 +4,7 @@
 import {GeneralHtml} from './general-html'
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from "../../utils/url"
-var cheerio = require('cheerio')
+const cheerio = require('cheerio')
 
 export class HKEPCHtml extends GeneralHtml{
 
