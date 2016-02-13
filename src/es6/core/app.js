@@ -1,8 +1,8 @@
 import * as Controllers from './controller/index'
-import 'angular-loading-bar'
 import * as HKEPC from '../data/config/hkepc'
-import * as URLUtils from "../utils/url"
-import "babel-polyfill";
+import * as URLUtils from '../utils/url'
+import 'babel-polyfill'
+import 'angular-loading-bar'
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
@@ -41,24 +41,11 @@ angular.module('starter', [
 })
 .config(function($stateProvider, $urlRouterProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
+ const stateProvider =  $stateProvider
 
-  // setup an abstract state for the tabs directive
-  .state(Controllers.tab.state,Controllers.tab.config)
-
-  // Each tab has its own nav history stack:
-  .state(Controllers.topics.state, Controllers.topics.config)
-  .state(Controllers.posts.state, Controllers.posts.config)
-  .state(Controllers.post.state, Controllers.post.config)
-  .state(Controllers.chats.state,Controllers.chats.config)
-  .state(Controllers.chat.state,Controllers.chat.config)
-  .state(Controllers.auth.state,Controllers.auth.config)
-  .state(Controllers.notification.state,Controllers.notification.config)
-  .state(Controllers.likes.state,Controllers.likes.config)
+  for(let key of Object.keys(Controllers)){
+    stateProvider.state(Controllers[key].state,Controllers[key].config)
+  }
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/account');
