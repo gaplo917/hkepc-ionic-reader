@@ -21,8 +21,6 @@ export class PostListController {
     }
   }}
   constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
-    "use strict";
-    console.log("called POST LIST CONTROLLER")
     this.scope = $scope
     this.http = $http
     this.state = $state
@@ -216,7 +214,7 @@ export class PostListController {
       this.queue.resume()
 
       // stringify and compare to string value
-      this.showSticky = String(this.localStorageService.get('showSticky',true)) === 'true'
+      this.showSticky = String(this.getShowSticky()) === 'true'
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -467,6 +465,10 @@ export class PostListController {
     this.localStorageService.set('showSticky',bool)
   }
 
+  getShowSticky(){
+    return this.localStorageService.get('showSticky',true)
+  }
+
   doNewPost(topic){
     const newPostModal = this.scope.newPostModal
     newPostModal.topic = topic
@@ -485,5 +487,9 @@ export class PostListController {
       this.state.go('tab.topics')
     }
     console.log("on back")
+  }
+
+  hasStickyPost(posts) {
+    return posts && posts.filter(post => post.isSticky).length > 0
   }
 }
