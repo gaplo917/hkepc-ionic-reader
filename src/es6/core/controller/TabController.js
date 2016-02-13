@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 23/1/2016.
  */
-import * as HKEPC from "../../data/config/hkepc"
+import * as HKEPC from '../../data/config/hkepc'
 import {FindMessageRequest} from "../model/find-message-request"
 
 export class TabController{
