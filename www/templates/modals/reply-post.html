@@ -9,7 +9,7 @@
     <div class="list card" ng-show="reply.id">
 
       <div class="item item-avatar">
-        <img src="{{message.author.image}}">
+        <img ng-src="{{message.author.image}}">
         <h2 ng-bind="message.author.name"></h2>
         <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
       </div>
