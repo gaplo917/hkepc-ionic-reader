@@ -12,10 +12,10 @@ var async = require('async');
 
 export class PostController{
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,$message,$ionicHistory,$ionicModal,$ionicPopover,ngToast,authService) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService) {
     this.scope = $scope
     this.http = $http
-    this.messageService = $message
+    this.messageService = MessageService
     this.state = $state
     this.location = $location
     this.sce = $sce
@@ -23,7 +23,7 @@ export class PostController{
     this.ionicModal = $ionicModal
     this.ionicPopover = $ionicPopover
     this.ngToast = ngToast
-    this.authService = authService
+    this.authService = AuthService
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId

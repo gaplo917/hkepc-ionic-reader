@@ -1,38 +1,47 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
-export var localStorage = {
-  name: '$localstorage',
+class LocalStorageService {
+  static get NAME() { return 'LocalStorageService'}
 
-  impl: ['$window',function ($window) {
-    const cache = new Map();
+  constructor($window) {
+    this.window = $window
+    this.cache = new Map();
 
-    return {
-      set: function(key, value) {
-        cache.set(key,value)
-        $window.localStorage[key] = value;
-      },
-      get: function(key, defaultValue) {
-        const values = cache.get(key)
-        if(!values){
-          console.log('get initilize cache',key)
-          cache.set(key, $window.localStorage[key] || defaultValue || 'undefined')
-        }
-        const cachedVal = cache.get(key)
-        return cachedVal === 'undefined' ? undefined : cachedVal
-      },
-      setObject: function(key, value) {
-        cache.set(key,value)
-        $window.localStorage[key] = JSON.stringify(value);
-      },
-      getObject: function(key) {
-        const values = cache.get(key)
-        if(!values){
-          console.log('getObject initilize cache')
-          cache.set(key, JSON.parse($window.localStorage[key] || '{}'))
-        }
-        return cache.get(key);
-      }
+  }
+  set(key, value) {
+    this.cache.set(key,value)
+    this.window.localStorage[key] = value;
+  }
+  
+  get(key, defaultValue) {
+    const values = this.cache.get(key)
+    if(!values){
+      console.log('get initilize this.cache',key)
+      this.cache.set(key, this.window.localStorage[key] || defaultValue || 'undefined')
     }
-  }]
+    const cachedVal = this.cache.get(key)
+    return cachedVal === 'undefined' ? undefined : cachedVal
+  }
+  
+  setObject(key, value) {
+    this.cache.set(key,value)
+    this.window.localStorage[key] = JSON.stringify(value);
+  }
+  
+  getObject(key) {
+    const values = this.cache.get(key)
+    if(!values){
+      console.log('getObject initilize this.cache')
+      this.cache.set(key, JSON.parse(this.window.localStorage[key] || '{}'))
+    }
+    return this.cache.get(key);
+  }
+}
+    
+    
+export const localStorage = {
+  name: LocalStorageService.NAME,
+
+  impl: ($window) => new LocalStorageService($window)
 }

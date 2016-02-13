@@ -9,7 +9,7 @@ var async = require('async');
 
 export class PostListController {
 
-  constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,$localstorage,$ionicModal,ngToast,$q) {
+  constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
     "use strict";
     console.log("called POST LIST CONTROLLER")
     this.scope = $scope
@@ -20,7 +20,7 @@ export class PostListController {
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.ionicHistory = $ionicHistory
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
-    this.localstorage = $localstorage
+    this.localStorageService = LocalStorageService
     this.ngToast = ngToast
     this.q = $q
 
@@ -205,7 +205,7 @@ export class PostListController {
       this.queue.resume()
 
       // stringify and compare to string value
-      this.showSticky = String(this.localstorage.get('showSticky',true)) === 'true'
+      this.showSticky = String(this.localStorageService.get('showSticky',true)) === 'true'
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -453,7 +453,7 @@ export class PostListController {
   }
 
   saveShowSticky(bool) {
-    this.localstorage.set('showSticky',bool)
+    this.localStorageService.set('showSticky',bool)
   }
 
   doNewPost(topic){

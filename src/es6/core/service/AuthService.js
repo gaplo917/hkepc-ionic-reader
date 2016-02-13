@@ -7,106 +7,113 @@ import {GeneralHtml} from "../model/general-html"
 var cheerio = require('cheerio')
 var async = require('async');
 
+class AuthService {
+  static get NAME() { return 'AuthService' }
 
+  constructor(LocalStorageService,$http,ngToast) {
+    this.localStorageService = LocalStorageService
+    this.http = $http
+    this.ngToast = ngToast
+  }
 
-export var AuthService = {
-  name: 'authService',
+  saveAuthority(authority) {
+    // remove the password before save
+    delete authority['password']
 
-  impl: ['$localstorage','$http','ngToast',function ($localstorage,$http,ngToast) {
+    this.localStorageService.setObject('authority',authority)
+  }
 
-    return {
-      saveAuthority: (authority) =>{
-        "use strict";
-        // remove the password before save
-        delete authority['password']
+  removeAuthority(){
+   this.localStorageService.setObject('authority',{})
+  }
 
-        $localstorage.setObject('authority',authority)
-      },
-      removeAuthority: () => {
-        $localstorage.setObject('authority',{})
-      },
-      getUsername: () =>{
-        "use strict";
-        return $localstorage.getObject('authority').username
-      },
-      isLoggedIn: function() {
-        "use strict";
-        return $localstorage.get(HKEPC.auth.id) &&
-            $localstorage.get(HKEPC.auth.token) &&
-            new Date().getTime() < parseInt($localstorage.get(HKEPC.auth.expire))
-      },
-      login: (authority,cb) => {
-        "use strict";
-        if(authority && authority.username && authority.password){
-          console.log('[AuthService]','Request login')
+  getUsername () {
+    return this.localStorageService.getObject('authority').username
+  }
 
-          $http({
-            method: "POST",
-            url: HKEPC.forum.login(),
-            data: `username=${authority.username}&password=${authority.password}&cookietime=2592000`,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-          }).then((resp) => {
+  isLoggedIn() {
 
-            if(URLUtils.isProxy()){
-              const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
-              const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
+  return this.localStorageService.get(HKEPC.auth.id) &&
+      this.localStorageService.get(HKEPC.auth.token) &&
+      new Date().getTime() < parseInt(this.localStorageService.get(HKEPC.auth.expire))
+  }
 
-              if(sidKV && authKV){
-                const sidValue = sidKV.split(';')[0].split('=')[1]
-                const authValue = authKV.split(';')[0].split('=')[1]
-                const authExpireValue = authKV.split(';')[1].split('=')[1]
+  login (authority,cb) {
+    if(authority && authority.username && authority.password){
+      console.log('[AuthService]','Request login')
 
-                if(sidValue && authValue) {
-                  $localstorage.set(HKEPC.auth.id,sidValue)
-                  $localstorage.set(HKEPC.auth.token,authValue)
-                  $localstorage.set(HKEPC.auth.expire,new Date(authExpireValue).getTime())
+      this.http({
+        method: "POST",
+        url: HKEPC.forum.login(),
+        data: `username=${authority.username}&password=${authority.password}&cookietime=2592000`,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then((resp) => {
 
-                  ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
+        if(URLUtils.isProxy()){
+          const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
+          const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
 
-                  if(cb) cb(null,authority.username)
-                }
-              } else{
-                ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
-                cb("Fail!")
-              }
-            } else {
-              const $ = cheerio.load(resp.data)
-              const currentUsername = $('#umenu > cite').text()
-              const formhash = $(`input[name='formhash']`).attr('value')
+          if(sidKV && authKV){
+            const sidValue = sidKV.split(';')[0].split('=')[1]
+            const authValue = authKV.split(';')[0].split('=')[1]
+            const authExpireValue = authKV.split(';')[1].split('=')[1]
 
-              if(currentUsername){
-                const expire = new Date().getTime() + 2592000
-                const expireDate = new Date(expire)
-                $localstorage.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
-                $localstorage.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
-                $localstorage.set(HKEPC.auth.expire,expire)
-                $localstorage.set(HKEPC.auth.formhash,formhash)
+            if(sidValue && authValue) {
+              this.localStorageService.set(HKEPC.auth.id,sidValue)
+              this.localStorageService.set(HKEPC.auth.token,authValue)
+              this.localStorageService.set(HKEPC.auth.expire,new Date(authExpireValue).getTime())
 
-                ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
+              this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
 
-                if(cb) cb(null,currentUsername)
-              } else {
-                ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
-                cb("Fail!")
-              }
+              if(cb) cb(null,authority.username)
             }
+          } else{
+            this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+            cb("Fail!")
+          }
+        } else {
+          const $ = cheerio.load(resp.data)
+          const currentUsername = $('#umenu > cite').text()
+          const formhash = $(`input[name='formhash']`).attr('value')
 
-          })
+          if(currentUsername){
+            const expire = new Date().getTime() + 2592000
+            const expireDate = new Date(expire)
+            this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
+            this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
+            this.localStorageService.set(HKEPC.auth.expire,expire)
+            this.localStorageService.set(HKEPC.auth.formhash,formhash)
+
+            this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
+
+            if(cb) cb(null,currentUsername)
+          } else {
+            this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+            cb("Fail!")
+          }
         }
-      },
-      logout: () => {
-        "use strict";
-        $localstorage.set(HKEPC.auth.id,undefined)
-        $localstorage.set(HKEPC.auth.token,undefined)
-        $localstorage.set(HKEPC.auth.expire,undefined)
 
-        // must be success
-        $http.get(HKEPC.forum.logout($localstorage.get(HKEPC.auth.formhash))).then((resp) => {
-          // TODO: do some checking?
-        })
-
-      }
+      })
     }
-  }]
+  }
+
+  logout () {
+    this.localStorageService.set(HKEPC.auth.id,undefined)
+    this.localStorageService.set(HKEPC.auth.token,undefined)
+    this.localStorageService.set(HKEPC.auth.expire,undefined)
+
+    // must be success
+    this.http.get(HKEPC.forum.logout(this.localStorageService.get(HKEPC.auth.formhash))).then((resp) => {
+      // TODO: do some checking?
+    })
+
+  }
+
+}
+
+export const auth = {
+  name: AuthService.NAME,
+
+  impl: (LocalStorageService,$http,ngToast) => new AuthService(LocalStorageService,$http,ngToast)
 
 }

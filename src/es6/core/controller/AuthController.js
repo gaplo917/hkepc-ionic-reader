@@ -6,18 +6,17 @@ import * as URLUtils from "../../utils/url"
 
 export class AuthController {
 
-  constructor($scope, $http, $localstorage, authService,$ionicPopup) {
+  constructor($scope, $http, LocalStorageService, AuthService,$ionicPopup) {
 
-    this.localstorage = $localstorage
+    this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
-    this.authService = authService
+    this.authService = AuthService
     this.ionicPopup = $ionicPopup
-    this.localstorage = $localstorage
     this.version = HKEPC.version
-    this.proxy = $localstorage.get('proxy') || HKEPC.proxy
+    this.proxy = LocalStorageService.get('proxy') || HKEPC.proxy
 
-    this.user = $localstorage.getObject('authority')
+    this.user = LocalStorageService.getObject('authority')
 
   }
 
@@ -76,7 +75,7 @@ export class AuthController {
 
     proxyPopup.then((res) => {
       if(res){
-        this.localstorage.set('proxy',res)
+        this.localStorageService.set('proxy',res)
       }
     })
   };

@@ -1,69 +1,74 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
-export var message = {
-  name: '$message',
+class MessageService {
+  static get NAME() { return 'MessageService'}
 
-  impl: ['$localstorage',function ($localstorage) {
-    const MESSAGES_LIKE_KEY = 'messages.like'
-    const MESSAGE_DRAFT = 'messages.draft'
+  static get MESSAGES_LIKE_KEY() {  return 'messages.like' }
 
-    return {
-      add: (message) =>{
-        "use strict";
-        let liked = $localstorage.getObject(MESSAGES_LIKE_KEY)
-        console.log('likedPosts',liked)
+  static get MESSAGE_DRAFT() {  return 'messages.draft' }
 
-        if(Object.keys(liked).length == 0){
-          $localstorage.setObject(MESSAGES_LIKE_KEY,[message])
-        }
-        else{
-          let filtered = liked
-              .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
+  constructor(LocalStorageService) {
+    this.localStorageService = LocalStorageService
+  }
 
-          filtered.push(message)
+  save (liked) {
+    this.localStorageService.setObject(MessageService.MESSAGES_LIKE_KEY,liked)
+  }
 
-          $localstorage.setObject(MESSAGES_LIKE_KEY,filtered)
-        }
-      },
-      remove: (message) =>{
-        "use strict";
-        let liked = $localstorage.getObject(MESSAGES_LIKE_KEY)
-        let filtered = liked
-                              .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
+  add (message) {
+    const liked = this.getAllLikedPost()
+    console.log('likedPosts',liked)
 
-        $localstorage.setObject(MESSAGES_LIKE_KEY,filtered)
-
-      },
-
-      isLikedPost: (message) => {
-        "use strict";
-        let likedPosts = $localstorage.getObject(MESSAGES_LIKE_KEY)
-        return Object.keys(likedPosts).length > 0
-            ? likedPosts.filter((msg) => msg.id == message.id && msg.post.id == message.post.id).length == 1
-            : false;
-      },
-
-      getAllLikedPost: () => {
-        "use strict";
-        return $localstorage.getObject(MESSAGES_LIKE_KEY)
-      },
-
-      saveDraft: (postId,content) => {
-        "use strict";
-        console.log('save Draft',postId,content)
-      },
-
-      getDraft:(postId) => {
-        "use strict";
-        console.log('get Draft',postId)
-      },
-
-      getAllDrafts: () => {
-        "use strict";
-        console.log('getAllDrafts')
-        return $localstorage.getObject(MESSAGE_DRAFT)
-      }
+    if(Object.keys(liked).length == 0){
+      this.save([message])
     }
-  }]
+    else{
+      let filtered = liked
+          .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
+
+      filtered.push(message)
+
+      this.save(filtered)
+    }
+  }
+  remove (message) {
+    const liked = this.getAllLikedPost()
+    let filtered = liked
+        .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
+
+    this.save(filtered)
+
+  }
+
+  isLikedPost (message)  {
+    const liked = this.getAllLikedPost()
+    return Object.keys(liked).length > 0
+        ? liked.filter((msg) => msg.id == message.id && msg.post.id == message.post.id).length == 1
+        : false;
+  }
+
+  getAllLikedPost ()  {
+    return this.localStorageService.getObject(MessageService.MESSAGES_LIKE_KEY)
+  }
+
+  saveDraft (postId,content)  {
+    console.log('save Draft',postId,content)
+  }
+
+  getDraft(postId)  {
+    console.log('get Draft',postId)
+  }
+
+  getAllDrafts ()  {
+    console.log('getAllDrafts')
+    return this.localStorageService.getObject(MessageService.MESSAGE_DRAFT)
+  }
+}
+    
+    
+export const message = {
+  name: MessageService.NAME,
+
+  impl: (LocalStorageService) => new MessageService(LocalStorageService)
 }

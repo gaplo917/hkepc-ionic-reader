@@ -11,7 +11,7 @@ var async = require('async');
 
 export class NotificationController{
 
-  constructor($scope, $http, authService,$state,$sce,ngToast){
+  constructor($scope, $http, AuthService,$state,$sce,ngToast){
 
     this.http = $http
     this.scope = $scope
@@ -22,7 +22,7 @@ export class NotificationController{
 
     $scope.$on('$ionicView.loaded', (e) => {
 
-      if(authService.isLoggedIn()){
+      if(AuthService.isLoggedIn()){
 
         setTimeout(()=> this.loadNotifications() ,400)
 
