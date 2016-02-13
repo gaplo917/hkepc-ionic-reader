@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
-class LocalStorageService {
+export class LocalStorageService {
   static get NAME() { return 'LocalStorageService'}
 
   constructor($window) {
@@ -39,9 +39,3 @@ class LocalStorageService {
   }
 }
     
-    
-export const localStorage = {
-  name: LocalStorageService.NAME,
-
-  impl: ($window) => new LocalStorageService($window)
-}

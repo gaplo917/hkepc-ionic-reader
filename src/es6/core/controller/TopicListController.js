@@ -4,8 +4,8 @@
 import * as HKEPC from "../../data/config/hkepc"
 import * as URLUtils from "../../utils/url"
 import {GeneralHtml} from "../model/general-html"
-var cheerio = require('cheerio')
-var async = require('async');
+const cheerio = require('cheerio')
+const async = require('async')
 
 export class TopicListController {
 

@@ -6,13 +6,13 @@
  */
 angular.module('starter.directives', [])
 
-.directive('compile', ['$compile', function ($compile) {
-  return function(scope, element, attrs) {
+.directive('compile', ['$compile', ($compile) => {
+  return (scope, element, attrs) => {
     scope.$watch(
-        function(scope) {
+        (scope) => {
           return scope.$eval(attrs.compile);
         },
-        function(value) {
+        (value) => {
           element.html(value);
           $compile(element.contents())(scope);
         }

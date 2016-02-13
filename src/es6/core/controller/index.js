@@ -9,7 +9,7 @@ import {AuthController} from './AuthController'
 import {NotificationController} from './NotificationController'
 import {LikesController} from './LikesController'
 
-export var tab = {
+export const tab = {
   action: TabController,
   state:'tab',
   name : "TabCtrl",
@@ -22,7 +22,7 @@ export var tab = {
   }
 }
 
-export var topics = {
+export const topics = {
   action: TopicListController,
   state:'tab.topics',
   name : "TopicCtrl",
@@ -38,7 +38,7 @@ export var topics = {
   }
 }
 
-export var posts = {
+export const posts = {
   action: PostListController,
   state:'tab.topics-posts',
   name:"PostsCtrl",
@@ -54,7 +54,7 @@ export var posts = {
   }
 }
 
-export var post = {
+export const post = {
   action: PostController,
   state: 'tab.topics-posts-detail',
   name: "PostDetailCtrl",
@@ -70,7 +70,7 @@ export var post = {
   }
 }
 
-export var chats = {
+export const chats = {
   action: ChatController,
   state: 'tab.chats',
   name: "ChatCtrl",
@@ -87,7 +87,7 @@ export var chats = {
   }
 }
 
-export var chat = {
+export const chat = {
   action: ChatDetailController,
   state: 'tab.chat-detail',
   name: "ChatDetailCtrl",
@@ -104,7 +104,7 @@ export var chat = {
   }
 }
 
-export var auth = {
+export const auth = {
   action: AuthController,
   state: 'tab.account',
   name: 'AuthCtrl',
@@ -120,7 +120,7 @@ export var auth = {
   }
 }
 
-export var notification = {
+export const notification = {
   action: NotificationController,
   state: 'tab.notifications',
   name: 'NotificationCtrl',
@@ -137,7 +137,7 @@ export var notification = {
   }
 }
 
-export var likes = {
+export const likes = {
   action : LikesController,
   state: 'tab.likes',
   name: 'LikesCtrl',
