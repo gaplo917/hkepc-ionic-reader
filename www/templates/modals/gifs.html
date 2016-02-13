@@ -3,7 +3,7 @@
     <div class="list">
         <img ng-repeat="gif in gifs track by $index"
              style="padding:12px;margin:5px;background-color:#f5f5f5;border-radius: 100px;" ng-click="addGifCodeToText(gif.code)"
-             src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
+             ng-src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
     </div>
   </ion-content>
 </ion-popover-view>

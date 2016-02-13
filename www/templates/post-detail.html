@@ -20,7 +20,7 @@
     <div class="list card" ng-repeat="message in vm.messages track by $index">
 
       <div class="item item-avatar">
-        <img src="{{::message.author.image}}">
+        <img ng-src="{{::message.author.image}}">
         <h2 ng-bind="::message.author.name"></h2>
         <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
       </div>

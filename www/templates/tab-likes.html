@@ -21,7 +21,7 @@
       </div>
 
       <div class="item item-avatar">
-        <img src="{{::message.author.image}}">
+        <img ng-src="{{::message.author.image}}">
         <button class="button button-icon ion-ios-arrow-down fright" ng-click="vm.onMore(message)"></button>
 
         <h2 ng-bind="::message.author.name"></h2>
