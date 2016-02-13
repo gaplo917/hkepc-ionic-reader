@@ -5,7 +5,7 @@ import {FindMessageRequest} from "../model/find-message-request"
 
 export class LikesController{
 
-  constructor($scope, $http, authService,$state,ngToast,$message,$sanitize,$ionicActionSheet){
+  constructor($scope, $http, AuthService,$state,ngToast,MessageService,$sanitize,$ionicActionSheet){
 
     this.http = $http
     this.scope = $scope
@@ -16,11 +16,11 @@ export class LikesController{
     this.end = false
     this.page = 1
     this.ionicActionSheet = $ionicActionSheet
-    this.messageService = $message
+    this.messageService = MessageService
 
     $scope.$on('$ionicView.enter', (e) => {
       // get the whole list from db
-      this.wholeMessages = Object.assign([],$message.getAllLikedPost()).reverse()
+      this.wholeMessages = Object.assign([],MessageService.getAllLikedPost()).reverse()
 
       this.messages = this.wholeMessages.slice(0,this.pageSize)
 

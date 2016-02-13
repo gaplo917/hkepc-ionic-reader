@@ -6,17 +6,21 @@ import * as URLUtils from "../../utils/url"
 import {HKEPCHtml} from "../model/hkepc-html"
 var cheerio = require('cheerio')
 
-export var MessageResolver = {
-  name: 'messageResolver',
+class MessageResolver {
 
-  impl: ['$http','$q','$sce','$message',function ($http,$q,$sce,$message) {
+  static get NAME () {return 'MessageResolver'}
 
-    return {
-      resolve: (url) => {
-        "use strict";
-        var deferred = $q.defer();
+  constructor($http,$q,$sce,MessageService) {
+    this.http = $http
+    this.q = $q
+    this.sce = $sce
+    this.messageService = MessageService
+  }
 
-        $http.get(url)
+  resolve (url) {
+    const deferred = this.q.defer();
+
+    this.http.get(url)
         .then((resp) => {
           const html = new HKEPCHtml(cheerio.load(resp.data))
 
@@ -57,12 +61,12 @@ export var MessageResolver = {
             id: postSource('table').attr('id').replace('pid',''),
             pos: postSource('.postinfo strong a em').text(),
             createdAt: postSource('.posterinfo .authorinfo em').text(),
-            content : $sce.trustAsHtml(
+            content : this.sce.trustAsHtml(
                 // main content
                 postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
                 postSource('.postcontent > .defaultpost > .postmessage').html() // for banned message
             ),
-            ads: $sce.trustAsHtml(ads),
+            ads: this.sce.trustAsHtml(ads),
             post:{
               id: postId,
               topicId: topicId,
@@ -75,17 +79,17 @@ export var MessageResolver = {
             }
           }
 
-          message.likedStyle = $message.isLikedPost(message)
-              ? {color: '#0c60ee'}
-              : {}
-
           deferred.resolve({
             message: message
           })
         },(err) => deferred.reject(err))
 
-        return deferred.promise;
-      }
-    }
-  }]
+    return deferred.promise;
+  }
+}
+
+export const messageResolver = {
+  name: MessageResolver.NAME,
+
+  impl: ($http,$q,$sce,MessageService) => new MessageResolver($http,$q,$sce,MessageService)
 }

@@ -9,11 +9,11 @@ var async = require('async');
 
 export class TopicListController {
 
-  constructor($scope,$http,$localstorage,authService,ngToast) {
+  constructor($scope,$http,LocalStorageService,AuthService,ngToast) {
 
     this.scope = $scope
     this.http = $http
-    this.localstorage = $localstorage
+    this.localStorageService = LocalStorageService
     this.topics = []
 
     // create a UI rendering queue
@@ -31,7 +31,7 @@ export class TopicListController {
     }, 1);
 
     $scope.$on('$ionicView.loaded', (e) => {
-      const topics = this.localstorage.getObject('topics')
+      const topics = this.localStorageService.getObject('topics')
       if(Object.keys(topics).length == 0){
         this.loadList()
       }
@@ -54,8 +54,8 @@ export class TopicListController {
     })
 
     // send the login from db
-    if(authService.isLoggedIn()){
-      this.scope.$emit("accountTabUpdate",authService.getUsername())
+    if(AuthService.isLoggedIn()){
+      this.scope.$emit("accountTabUpdate",AuthService.getUsername())
     }
   }
 
@@ -120,7 +120,7 @@ export class TopicListController {
           })
 
           this.queue.drain = () => {
-            this.localstorage.setObject('topics',this.topics)
+            this.localStorageService.setObject('topics',this.topics)
             this.scope.$apply()
           }
 

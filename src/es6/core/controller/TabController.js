@@ -6,12 +6,12 @@ import {FindMessageRequest} from "../model/find-message-request"
 
 export class TabController{
 
-  constructor($scope,$ionicModal,messageResolver,$stateParams,authService,ngToast) {
+  constructor($scope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
-    this.authService = authService
+    this.authService = AuthService
     // cache the value
-    this._isLoggedIn = authService.isLoggedIn()
+    this._isLoggedIn = AuthService.isLoggedIn()
 
     $scope.$on('accountTabUpdate', (event,arg) =>{
       if(arg){
@@ -23,9 +23,9 @@ export class TabController{
 
         this.login = undefined
 
-        if (authService.isLoggedIn()){
+        if (AuthService.isLoggedIn()){
           ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-          authService.logout()
+          AuthService.logout()
         }
       }
     })
@@ -36,7 +36,7 @@ export class TabController{
         // reset the message first
         this.scope.messageModal.message = {}
 
-        messageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
+        MessageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
             .then((data) => {
 
               this.scope.messageModal.message = data.message

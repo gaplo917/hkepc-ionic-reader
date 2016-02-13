@@ -73,7 +73,7 @@ angular.module('starter', [
 }])
 .provider('HKEPC_PROXY',[function(){
 
-  this.$get = ['ngToast','$localstorage', function(ngToast, $localstorage){
+  this.$get = ['ngToast','LocalStorageService', function(ngToast, LocalStorageService){
     return {
       request: function(config) {
         if(isProxied) {
@@ -81,11 +81,11 @@ angular.module('starter', [
 
           if(config.url.indexOf(HKEPC.baseUrl) >= 0){
 
-            const proxy = $localstorage.get('proxy') || HKEPC.proxy
+            const proxy = LocalStorageService.get('proxy') || HKEPC.proxy
             // rewrite the url with proxy
             config.url = config.url.replace('http://',`${proxy}/`)
           }
-          config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${$localstorage.get(HKEPC.auth.id)};${HKEPC.auth.token}=${$localstorage.get(HKEPC.auth.token)}`
+          config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${LocalStorageService.get(HKEPC.auth.id)};${HKEPC.auth.token}=${LocalStorageService.get(HKEPC.auth.token)}`
         }
         config.timeout = 10000 // 10 seconds should be enough to transfer plain HTML text
 
