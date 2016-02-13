@@ -5,15 +5,13 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
-                collection-repeat="chat in vm.chats"
-                item-width="100%"
-                item-height="77px"
+                ng-repeat="chat in vm.chats"
                 type="item-text-wrap"
-                href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.avatarUrl}}">
-        <span style="float:right"><small>{{chat.date}}</small></span>
-        <h2>{{chat.username}}</h2>
-        <p>{{chat.summary}}</p>
+                href="#/tab/chats/{{::chat.id}}">
+        <img ng-src="{{::chat.avatarUrl}}">
+        <span style="float:right"><small>{{::chat.date}}</small></span>
+        <h2>{{::chat.username}}</h2>
+        <p>{{::chat.summary}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
