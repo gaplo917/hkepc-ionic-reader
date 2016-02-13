@@ -63,9 +63,11 @@ export class AuthService {
             const authExpireValue = authKV.split(';')[1].split('=')[1]
 
             if(sidValue && authValue) {
+              const expire = new Date().getTime() + 2592000
+
               this.localStorageService.set(HKEPC.auth.id,sidValue)
               this.localStorageService.set(HKEPC.auth.token,authValue)
-              this.localStorageService.set(HKEPC.auth.expire,new Date(authExpireValue).getTime())
+              this.localStorageService.set(HKEPC.auth.expire,expire)
 
               this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
 
