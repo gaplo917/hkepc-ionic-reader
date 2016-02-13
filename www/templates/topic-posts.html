@@ -13,6 +13,7 @@
     <h2 class="title" style="color: #fff">
       <i class="icon ion-bonfire"
          ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
+         ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
          style="float:left;font-size:34px;color:#FF6D00;"
          ng-style="vm.showSticky ?{color:'#FF6D00'} : {color:'#444'}">
       </i>
