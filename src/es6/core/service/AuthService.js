@@ -63,7 +63,7 @@ export class AuthService {
             const authExpireValue = authKV.split(';')[1].split('=')[1]
 
             if(sidValue && authValue) {
-              const expire = new Date().getTime() + 2592000
+              const expire = new Date().getTime() + 2592000000
 
               this.localStorageService.set(HKEPC.auth.id,sidValue)
               this.localStorageService.set(HKEPC.auth.token,authValue)
@@ -83,7 +83,7 @@ export class AuthService {
           const formhash = $(`input[name='formhash']`).attr('value')
 
           if(currentUsername){
-            const expire = new Date().getTime() + 2592000
+            const expire = new Date().getTime() + 2592000000
             const expireDate = new Date(expire)
             this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
             this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
