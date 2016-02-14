@@ -5,22 +5,16 @@ const PROXY_URL = 'http://p.ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
 const VERSION = "v0.4.2"
-function getMobileOperatingSystem(){
-  "use strict";
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+function getMobileOperatingSystem(userAgent){
+  const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
-  if( userAgent.match( /iPad/i ) ) {
-    return 'iPad';
-  }
-  else if (userAgent.match( /iPhone/i ) || userAgent.match( /iPod/i )){
-    return 'iPhone'
-  }
-  else if( userAgent.match( /Android/i ) ) {
-    return 'Android';
-  }
-  else {
-    return 'Web';
-  }
+  return ua.match(/Windows Phone \d+/i)
+      || ua.match( /iPad/i )
+      || ua.match( /iPhone/i )
+      || ua.match( /iPod/i )
+      || ua.match( /Android/i )
+      || 'Web'
+
 }
 module.exports = {
   proxy: PROXY_URL,
