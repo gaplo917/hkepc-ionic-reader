@@ -4,7 +4,7 @@
 const PROXY_URL = 'http://p.ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v0.4.2"
+const VERSION = "v0.4.3"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
@@ -60,6 +60,7 @@ module.exports = {
       }
 
     },
+    reportPage:(topicId,postId,messageId) => `${BASE_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}`,
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
     notifications: () => `${BASE_URL}/notice.php`,
