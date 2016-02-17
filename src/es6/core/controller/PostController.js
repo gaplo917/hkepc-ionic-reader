@@ -46,6 +46,9 @@ export class PostController{
     // register reply modal
     this.registerReplyModal()
 
+    // register report modal
+    this.registerReportModal()
+
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
       scope: $scope
@@ -57,6 +60,7 @@ export class PostController{
     $scope.$on('$destroy', () => {
       this.pageSliderPopover.remove()
       this.deregisterReplyModal()
+      this.deregisterReportModal()
     })
     // Execute action on hide popover
     $scope.$on('popover.hidden', () => {
@@ -324,7 +328,92 @@ export class PostController{
       this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
     }
 
+  }
 
+  onReport(message){
+    if(this.authService.isLoggedIn()){
+      const reportModal = this.scope.reportModal
+
+      reportModal.message = message
+
+      reportModal.report = {}
+
+      reportModal.show()
+
+    } else {
+      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+    }
+  }
+
+  registerReportModal(){
+    const reportModal = this.scope.reportModal = this.scope.$new()
+    reportModal.show = () => this.reportModal.show()
+    reportModal.hide = () => this.reportModal.hide()
+    reportModal.doReport = (message,report) => {
+
+      console.log(JSON.stringify(report))
+
+      if(report.content){
+        console.log(HKEPC.forum.reportPage(message.post.topicId,message.post.id,message.id))
+        // get the form hash first
+        this.http
+            .get(HKEPC.forum.reportPage(message.post.topicId,message.post.id,message.id))
+            .then((resp) => {
+              let $ = cheerio.load(resp.data)
+              const relativeUrl = $('#postform').attr('action')
+              const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&inajax=1`
+
+              console.log(postUrl)
+
+              let formSource = cheerio.load($('#postform').html())
+
+              // the text showing the effects of reply / quote
+              const preText = formSource('#e_textarea').text()
+
+
+              const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+                const k = formSource(elem).attr('name')
+                const v = formSource(elem).attr('value')
+
+                return `${k}=${encodeURIComponent(v)}`
+              }).get()
+
+              // build the report message
+              const reportMessage = `${preText}\n${report.content}`
+
+              const postData = [
+                `message=${encodeURIComponent(reportMessage)}`,
+                hiddenFormInputs.join('&')
+              ].join('&')
+
+              // Post to the server
+              this.http({
+                method: "POST",
+                url : postUrl,
+                data : postData,
+                headers : {'Content-Type':'application/x-www-form-urlencoded'}
+              }).then((resp) => {
+
+                this.ngToast.success(`<i class="ion-ios-checkmark"> 你的舉報已發送到 HKEPC！</i>`)
+
+                this.reportModal.hide()
+
+              })
+
+            })
+      }
+      else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
+      }
+
+
+    }
+
+    this.ionicModal.fromTemplateUrl('templates/modals/report-post.html', {
+      scope: reportModal
+    }).then((modal) => {
+      this.reportModal = modal
+    })
   }
 
   registerReplyModal(){
@@ -435,6 +524,10 @@ export class PostController{
     this.replyModal.remove()
   }
 
+  deregisterReportModal(){
+    this.reportModal.remove()
+  }
+
   openPageSliderPopover($event) {
     this.inputPage = this.page
     this.pageSliderPopover.show($event)
@@ -451,9 +544,6 @@ export class PostController{
     this.scope.$emit('find',new FindMessageRequest(postId,messageId))
   }
 
-  futureFeature(){
-    this.ngToast.warning("此功能尚未開發！")
-  }
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
