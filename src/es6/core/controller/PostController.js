@@ -341,7 +341,7 @@ export class PostController{
       reportModal.show()
 
     } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+      this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
     }
   }
 
