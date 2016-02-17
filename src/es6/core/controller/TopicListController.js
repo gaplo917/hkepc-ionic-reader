@@ -158,17 +158,27 @@ export class TopicListController {
     },250)
   }
 
+  hiddenMode(){
+    const hiddenModeClicks = parseInt(this.localStorageService.get('hiddeMode')) || 0
+
+    if(hiddenModeClicks != 20){
+      this.localStorageService.set('hiddeMode', hiddenModeClicks + 1)
+    } else {
+      this.doRefresh()
+    }
+  }
+
   canShowGroupNameIniOSReview(groupName){
-    return !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
+    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
   }
 
   canShowIniOSReview(topicId){
     const blackList = [121,123,202]
-    return !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
   }
 
   canShowSectionInIOSReview(topicId){
     const blackList = [171,168,170,44,277]
-    return !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
   }
 }

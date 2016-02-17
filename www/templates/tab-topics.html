@@ -1,5 +1,5 @@
 <ion-view>
-  <ion-nav-title>論壇版塊 <i class="ion-speedometer" style="color:#1560ff" ng-show="vm.cached"></i></ion-nav-title>
+  <ion-nav-title ng-click="vm.hiddenMode()">論壇版塊 <i class="ion-speedometer" style="color:#1560ff" ng-show="vm.cached"></i></ion-nav-title>
   <ion-nav-buttons side="right" style="float:right">
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
