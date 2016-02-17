@@ -16,9 +16,12 @@ export class TabController{
 
   }}
 
-  constructor($scope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast) {
+  constructor($scope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
+    this.scope.eulaModal = $scope.$new()
+
+    this.localStorageService = LocalStorageService
     this.authService = AuthService
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
@@ -62,6 +65,26 @@ export class TabController{
     }).then((modal) => {
       this.messageModal = modal
     })
+
+    if(!this.localStorageService.get('agreeEULA',0)){
+
+      $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
+        scope: $scope.eulaModal
+      }).then((modal) => {
+        this.eulaModal = modal
+        this.eulaModal.show()
+
+        this.scope.eulaModal.disagree = () => {
+          alert("請自行離開！")
+        }
+
+        this.scope.eulaModal.agree = () => {
+          this.localStorageService.set('agreeEULA',1)
+          this.eulaModal.hide()
+        }
+      })
+    }
+
   }
 
   isLoggedIn(){
