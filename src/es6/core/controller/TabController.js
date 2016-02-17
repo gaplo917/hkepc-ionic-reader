@@ -69,7 +69,8 @@ export class TabController{
     if(!this.localStorageService.get('agreeEULA',0)){
 
       $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
-        scope: $scope.eulaModal
+        scope: $scope.eulaModal,
+        backdropClickToClose: false
       }).then((modal) => {
         this.eulaModal = modal
         this.eulaModal.show()
