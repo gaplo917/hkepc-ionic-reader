@@ -60,6 +60,10 @@ export class AuthController {
     this.scope.$emit("accountTabUpdate")
   }
 
+  isIOS(){
+    return ionic.Platform.isIOS()
+  }
+
   showProxyPopup(){
 
     // An elaborate, custom popup

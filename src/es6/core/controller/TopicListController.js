@@ -157,4 +157,18 @@ export class TopicListController {
       this.queue.resume()
     },250)
   }
+
+  canShowGroupNameIniOSReview(groupName){
+    return !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
+  }
+
+  canShowIniOSReview(topicId){
+    const blackList = [121,123,202]
+    return !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+  }
+
+  canShowSectionInIOSReview(topicId){
+    const blackList = [171,168,170,44,277]
+    return !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+  }
 }

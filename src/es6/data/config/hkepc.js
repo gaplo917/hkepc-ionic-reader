@@ -17,6 +17,7 @@ function getMobileOperatingSystem(userAgent){
 
 }
 module.exports = {
+  userAgent: () => getMobileOperatingSystem(),
   proxy: PROXY_URL,
   baseUrl: BASE_URL,
   imageUrl:IMAGE_URL,

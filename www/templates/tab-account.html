@@ -13,8 +13,7 @@
         <p>HKEPC IR 是非官方、第三方的瀏覧器。本程式不會記錄任何登入名稱或密碼，
           作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！</p>
 
-        <p> 作者利用 Web 的技術開發跨平台的程式，由於沒有得到 HKEPC 的 API 使用權限，所以只能直接讀取 hkepc.com 提供的 HTML;
-        <p ng-show="vm.isProxy()">但因 iOS 的 WKWebView 不允許 CORS，所以本程式必需連接 Proxy 伺服器去提取 hkepc.com 的 HTML。</p>
+        <p ng-show="vm.isProxy()">作者利用 Web 的技術開發跨平台，但因 WKWebView 不允許 CORS，所以本程式必需連接 Proxy 伺服器去提取 hkepc.com 的 HTML。</p>
 
         <p ng-show="vm.isProxy()"> Proxy 伺服器絕對不會記錄任何登入名稱或密碼。作者亦已經將 Proxy 伺服器的代碼 Open Source，如果不放心的用家可以自行架設 Proxy 伺服器！</p>
         <p ng-show="vm.isProxy()"> <i class="ion-social-github"></i> https://github.com/gaplo917/CORS-Proxy/tree/feature/hkepc</p>
@@ -22,11 +21,11 @@
     </a>
     <div class="list" ng-show="!vm.isLoggedIn()">
       <label class="item item-input">
-        <span class="input-label">Username</span>
+        <span class="input-label">登入名稱</span>
         <input type="text" placeholder="Username" ng-model="vm.user.username">
       </label>
       <label class="item item-input">
-        <span class="input-label">Password</span>
+        <span class="input-label">登入密碼</span>
         <input type="password" placeholder="Password" ng-model="vm.user.password">
       </label>
       <div class="padding" ng-show="vm.isProxy()">
@@ -48,7 +47,7 @@
             {{vm.proxy}}
           </span>
     </a>
-    <a class="item item-icon-left" href="">
+    <a class="item item-icon-left" href="" ng-show="!vm.isIOS()">
       <i class="icon ion-ios-cog-outline"></i>
       版本
           <span class="item-note">
