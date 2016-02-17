@@ -12,6 +12,7 @@ npm-debug.log
 
 # ignore compiled js
 /www/js/bundle.js
+build/bundle.js
 
 # ignore compiled css
 /www/css/ionic.app.*
