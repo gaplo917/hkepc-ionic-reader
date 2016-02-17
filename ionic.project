@@ -13,7 +13,8 @@
     "watch"
   ],
   "watchPatterns": [
-    "www/**/*",
+    "www/js/bundle.js",
+    "www/templates/**/*",
     "!www/lib/**/*"
   ]
 }
