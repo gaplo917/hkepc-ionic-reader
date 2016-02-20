@@ -178,7 +178,7 @@ export class TopicListController {
   }
 
   canShowSectionInIOSReview(topicId){
-    const blackList = [171,168,170,44,277]
+    const blackList = [171,168,170,44,277,202]
     return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
   }
 }
