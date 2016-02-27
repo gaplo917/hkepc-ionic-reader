@@ -92,9 +92,11 @@ export class ChatDetailController{
 
           // must exist in the list
           const senderMessage = messages.filter((m) => !m.isSelf)[0]
-          this.sender = {
-            id : senderMessage.id,
-            username : senderMessage.username
+          if(senderMessage){
+            this.sender = {
+              id : senderMessage.id,
+              username : senderMessage.username
+            }
           }
 
           this.messages = messages
