@@ -12,7 +12,6 @@ export class ChatController{
   static get NAME() { return 'ChatController'}
   static get CONFIG() { return {
     url: '/chats',
-    cache: false,
     views: {
       'tab-chats': {
         templateUrl: 'templates/tab-chats.html',
@@ -27,6 +26,7 @@ export class ChatController{
     this.scope = $scope
     this.chats = []
     this.ngToast = ngToast
+    this.page = 1
 
     $scope.$on('$ionicView.loaded', (e) => {
       if(AuthService.isLoggedIn()){
@@ -42,7 +42,7 @@ export class ChatController{
 
   loadChats(){
     this.http
-        .get(HKEPC.forum.pmList(1))
+        .get(HKEPC.forum.pmList(this.page))
         .then((resp) => {
 
           const html = new GeneralHtml(cheerio.load(resp.data))
@@ -57,6 +57,21 @@ export class ChatController{
 
           // send the login name to parent controller
           this.scope.$emit("accountTabUpdate",currentUsername)
+
+          const pageNumSource = $('.pages a, .pages strong')
+
+          const pageNumArr = pageNumSource
+              .map((i,elem) => $(elem).text())
+              .get()
+              .map(e => e.match(/\d/g)) // array of string with digit
+              .filter(e => e != null) // filter null value
+              .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+          this.totalPageNum = pageNumArr.length == 0
+              ? 1
+              : Math.max(...pageNumArr)
+
+          console.log("totalPageNum",this.totalPageNum)
 
           const chats = $('.pm_list li').map((i, elem) => {
             let chatSource = cheerio.load($(elem).html())
@@ -81,10 +96,36 @@ export class ChatController{
           }).get()
 
 
-          this.chats = chats
+          this.chats = this.chats.concat(chats)
+
+          this.scope.$broadcast('scroll.infiniteScrollComplete')
 
         },(err) => {
           console.log(err)
         })
+  }
+
+  loadMore(cb){
+    console.log("loadmore",this.page)
+    if(this.hasMoreData()){
+      const nextPage = parseInt(this.page) + 1
+      //update the page count
+      this.page = parseInt(this.page) + 1
+
+      this.loadChats(cb)
+    }
+
+  }
+
+  hasMoreData(){
+    console.log("hasMoreData",this.page)
+
+    return this.page < this.totalPageNum
+  }
+
+  doRefresh(){
+    this.chats = []
+    this.page = 1
+    this.loadChats()
   }
 }

@@ -14,7 +14,6 @@ export class NotificationController{
   static get NAME() { return 'NotificationController'}
   static get CONFIG() { return {
     url: '/notifications',
-    cache: false,
     views: {
       'tab-notifications': {
         templateUrl: 'templates/tab-notifications.html',
@@ -32,13 +31,13 @@ export class NotificationController{
     this.notifications = []
     this.state = $state
     this.ngToast = ngToast
+    this.page = 1
+    this.refreshing = false
 
     $scope.$on('$ionicView.loaded', (e) => {
 
       if(AuthService.isLoggedIn()){
-
-        setTimeout(()=> this.loadNotifications() ,400)
-
+        this.loadNotifications()
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> Notification 需要會員權限，請先登入！</i>`)
         $state.go("tab.account")
@@ -48,9 +47,10 @@ export class NotificationController{
   }
 
   loadNotifications(){
+    this.refreshing = true
 
     this.http
-      .get(HKEPC.forum.notifications())
+      .get(HKEPC.forum.notifications(this.page))
       .then((resp) => {
         const html = new HKEPCHtml(cheerio.load(resp.data))
 
@@ -67,11 +67,27 @@ export class NotificationController{
         // send the login name to parent controller
         this.scope.$emit("accountTabUpdate",currentUsername)
 
-        const notifications = $('.feed li .f_quote').map((i, elem) => {
+        const pageNumSource = $('.pages a, .pages strong')
+
+        const pageNumArr = pageNumSource
+            .map((i,elem) => $(elem).text())
+            .get()
+            .map(e => e.match(/\d/g)) // array of string with digit
+            .filter(e => e != null) // filter null value
+            .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+        this.totalPageNum = pageNumArr.length == 0
+            ? 1
+            : Math.max(...pageNumArr)
+
+        const notifications = $('.feed li .f_quote, .feed li .f_reply').map((i, elem) => {
           return this.sce.trustAsHtml($(elem).html())
         }).get()
 
-        this.notifications = notifications
+        this.notifications = this.notifications.concat(notifications)
+
+        this.refreshing = false
+        this.scope.$broadcast('scroll.infiniteScrollComplete')
 
       },(err) => {
         console.log(err)
@@ -80,5 +96,26 @@ export class NotificationController{
 
   findMessage(postId,messageId){
     this.scope.$emit('find',new FindMessageRequest(postId,messageId))
+  }
+
+  loadMore(cb){
+    if(this.hasMoreData()){
+      const nextPage = parseInt(this.page) + 1
+        //update the page count
+        this.page = parseInt(this.page) + 1
+
+        this.loadNotifications(cb)
+    }
+
+  }
+
+  hasMoreData(){
+    return this.page < this.totalPageNum && !this.refreshing
+  }
+
+  doRefresh(){
+    this.notifications = []
+    this.page = 1
+    this.loadNotifications()
   }
 }

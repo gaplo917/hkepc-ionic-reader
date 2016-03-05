@@ -2,10 +2,13 @@
   <div class="spinner">
     <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
   </div>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
-                ng-repeat="chat in vm.chats"
+                ng-repeat="chat in vm.chats track by $index"
                 type="item-text-wrap"
                 href="#/tab/chats/{{::chat.id}}">
         <img ng-src="{{::chat.avatarUrl}}">
@@ -14,6 +17,14 @@
         <p>{{::chat.summary}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
+      <ion-infinite-scroll
+          class="ispinner text-center"
+          ng-if="vm.hasMoreData()"
+          on-infinite="vm.loadMore()"
+          spinner="ripple"
+          immediate-check="false"
+          distance="7%">
+      </ion-infinite-scroll>
     </ion-list>
   </ion-content>
 </ion-view>
