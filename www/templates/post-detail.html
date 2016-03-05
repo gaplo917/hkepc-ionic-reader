@@ -42,9 +42,13 @@
           <i class="icon ion-ios-chatboxes-outline"></i>
           Comment
         </a>
-        <a class="tab-item" ng-click="vm.onReport(message)" >
+        <a class="tab-item" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
           <i class="icon ion-ios-flag-outline"></i>
           Report
+        </a>
+        <a class="tab-item" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
+          <i class="icon ion-ios-compose-outline"></i>
+          Edit
         </a>
       </div>
 

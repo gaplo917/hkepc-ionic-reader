@@ -61,6 +61,7 @@ module.exports = {
 
     },
     reportPage:(topicId,postId,messageId) => `${BASE_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}`,
+    editMessage:(topicId,postId,messageId) => `${BASE_URL}/post.php?action=edit&fid=${topicId}&tid=${postId}&pid=${messageId}`,
     pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
     notifications: (page) => `${BASE_URL}/notice.php?page=${page}`,

@@ -42,12 +42,16 @@ export class PostController{
     this.page = $stateParams.page
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
+    this.currentUsername = AuthService.getUsername()
 
     // register reply modal
     this.registerReplyModal()
 
     // register report modal
     this.registerReportModal()
+
+    //register edit message modal
+    this.registerEditMessageModal()
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
@@ -223,7 +227,8 @@ export class PostController{
                     author:{
                       rank: postSource('.postauthor > p > img').attr('alt').replace('Rank: ',''),
                       image: postSource('.postauthor .avatar img').attr('src'),
-                      name : postSource('.postauthor > .postinfo').text()
+                      name : postSource('.postauthor > .postinfo').text(),
+                      isSelf: postSource('.postauthor > .postinfo').text().indexOf(this.currentUsername) >= 0
                     }
                   }
 
@@ -346,6 +351,15 @@ export class PostController{
     } else {
       this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
     }
+  }
+
+  onEdit(message){
+    const editMessageModal = this.scope.editMessageModal
+
+    editMessageModal.getMessage(message)
+
+    editMessageModal.show()
+
   }
 
   registerReportModal(){
@@ -520,6 +534,76 @@ export class PostController{
       }).then((popover) => {
         replyModal.gifPopover = popover;
       })
+    })
+  }
+
+  registerEditMessageModal(){
+
+    const editMessageModal = this.scope.editMessageModal = this.scope.$new()
+    editMessageModal.show = () => this.editMessageModal.show()
+    editMessageModal.hide = () => this.editMessageModal.hide()
+    editMessageModal.getMessage = (message) => {
+      editMessageModal.message = message
+
+      this.http
+          .get(HKEPC.forum.editMessage(message.post.topicId,message.post.id,message.id))
+          .then((resp) => {
+            let $ = cheerio.load(resp.data)
+            const relativeUrl = $('#postform').attr('action')
+            const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&inajax=1`
+
+            console.log(postUrl)
+
+            let formSource = cheerio.load($('#postform').html())
+
+            // the text showing the effects of reply / quote
+            editMessageModal.edit = {
+              content :formSource('#e_textarea').text()
+            }
+
+            // register new function
+            editMessageModal.doEdit = (content) => {
+              console.log(content)
+              const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+                const k = formSource(elem).attr('name')
+                const v = formSource(elem).attr('value')
+
+                return `${k}=${encodeURIComponent(v)}`
+              }).get()
+
+              const postData = [
+                `editsubmit=true`,
+                `message=${encodeURIComponent(content)}`,
+                hiddenFormInputs.join('&')
+              ].join('&')
+
+              // Post to the server
+              this.http({
+                method: "POST",
+                url : postUrl,
+                data : postData,
+                headers : {'Content-Type':'application/x-www-form-urlencoded'}
+              }).then((resp) => {
+
+                this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
+
+                // set the page to the message page
+                this.page = message.post.page
+
+                this.doRefresh()
+
+                this.editMessageModal.hide()
+
+              })
+            }
+
+          })
+    }
+
+    this.ionicModal.fromTemplateUrl('templates/modals/edit-post.html', {
+      scope: editMessageModal
+    }).then((modal) => {
+      this.editMessageModal = modal
     })
   }
 
