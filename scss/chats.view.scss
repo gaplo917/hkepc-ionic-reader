@@ -103,6 +103,10 @@
         left: 10px;
         -webkit-transform: rotate(70deg) skew(5deg);
       }
+
+      font[color="Silver"]{
+        color:black;
+      }
     }
 
     &.right {
@@ -114,6 +118,9 @@
         background-color: $epc-color;
         right: 10px;
         -webkit-transform: rotate(118deg) skew(-5deg);
+      }
+      font[color="Silver"]{
+        color:white;
       }
     }
   }
@@ -129,9 +136,5 @@
 
   .cf {
     clear: both !important;
-  }
-
-  font[color="Silver"]{
-    color:white;
   }
 }
