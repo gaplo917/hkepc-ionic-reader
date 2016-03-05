@@ -2,6 +2,9 @@
 
 .chats-view {
 
+  ion-content {
+    background-color: #E0E0E0;
+  }
   /* allows the bar-footer to be elastic /*
   /* optionally set a max-height */
   /* maxlength on the textarea will prevent /*
@@ -94,33 +97,32 @@
     }
 
     &.left {
-      background-color: #e6e5eb;
+      background-color: #FAFAFA;
       float: left;
       margin-left: 55px;
 
       :before {
-        background-color: #e6e5eb;
+        background-color: #FAFAFA;
         left: 10px;
         -webkit-transform: rotate(70deg) skew(5deg);
       }
 
-      font[color="Silver"]{
-        color:black;
-      }
     }
 
     &.right {
-      background-color: $epc-color;
-      color: #fff;
+      background-color: #8BC34A;
+      color: #222;
       float: right;
       margin-right: 55px;
       :before {
-        background-color: $epc-color;
+        background-color: #8BC34A;
         right: 10px;
         -webkit-transform: rotate(118deg) skew(-5deg);
       }
+
+
       font[color="Silver"]{
-        color:white;
+        color:#444;
       }
     }
   }

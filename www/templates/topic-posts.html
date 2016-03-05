@@ -1,4 +1,4 @@
-<ion-view ng-init="vm.slidePages=[{},{},{}];">
+<ion-view class="post-list-view" ng-init="vm.slidePages=[{},{},{}];">
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>
@@ -8,16 +8,15 @@
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <div class="bar bar-subheader" style="background-color: #8fc320">
-    <h2 class="title" style="color: #fff">
+  <div class="bar bar-subheader">
+    <h2 class="title">
       <i class="icon ion-bonfire"
          ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
          ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
-         style="float:left;font-size:34px;color:#FF6D00;"
          ng-style="vm.showSticky ?{color:'#FF6D00'} : {color:'#444'}">
       </i>
       第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
-    <a class="button button-icon icon ion-ios-more" style="color:#fff" ng-click="vm.doFilterOrder($event)"></a>
+    <a class="button button-icon icon ion-ios-more" ng-click="vm.doFilterOrder($event)"></a>
 
   </div>
   <ion-content>
@@ -31,7 +30,7 @@
 
     <ion-slide-box id="ionic-slide-box" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
 
-      <ion-slide style="padding-top:36px" ng-repeat="page in vm.slidePages track by $index">
+      <ion-slide ng-repeat="page in vm.slidePages track by $index">
         <ion-list >
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
@@ -39,15 +38,15 @@
               ng-repeat="post in page.posts"
               ng-show="vm.showSticky && post.isSticky || !post.isSticky"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small style="font-size:14px">#{{::post.tag}}</small></a></h2>
+            <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
             <div>
-              <i class="ion-bonfire" ng-show="::post.isSticky" style="color:#FF6D00"></i>
+              <i class="ion-bonfire" ng-show="::post.isSticky"></i>
               <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-              <small style="color:#aaa" class="ion-person"> {{::post.author.name}}</small>
-              <small style="float:right;color:#aaa">{{::post.count.reply}} / {{::post.count.view}}</small>
+              <small class="less-important-info ion-person"> {{::post.author.name}}</small>
+              <small class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</small>
             </div>
             <div>
-              <small style="color:#aaa">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</small>
+              <small class="less-important-info">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</small>
 
             </div>
 

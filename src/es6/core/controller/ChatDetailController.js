@@ -18,7 +18,7 @@ export class ChatDetailController{
     cache: false,
     views: {
       'tab-features': {
-        templateUrl: 'templates/features/chats/details.html',
+        templateUrl: 'templates/features/chats/chats.details.html',
         controller: ChatDetailController.NAME,
         controllerAs: 'vm'
       }

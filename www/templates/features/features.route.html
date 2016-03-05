@@ -12,15 +12,20 @@
     <div class="list card">
 
       <a href="#/tab/features/chats" class="item item-icon-left">
-        <i class="icon ion-ios-email-outline"></i>
-        私人訊息
-        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive">{{vm.notification.pm}}</span>
+        <div class="icon">
+          <i class="ion-ios-email" style="font-size:28px;color:white;background-color: #2196F3;padding:4px 9px; border-radius:10px"></i>
+        </div>
+
+        <div style="margin-left:10px">私人訊息</div>
+        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
         <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
       </a>
 
       <a href="#/tab/features/notifications" class="item item-icon-left">
-        <i class="icon ion-ios-paper-outline"></i>
-        帖子消息
+        <div class="icon">
+          <i class="ion-ios-paper" style="font-size:28px;color:white;background-color: #43A047;padding:4px 9px; border-radius:10px"></i>
+        </div>
+        <div style="margin-left:10px">帖子消息</div>
         <span ng-show="vm.notification.post > 0" class="fright badge badge-assertive">{{vm.notification.post}}</span>
         <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
       </a>

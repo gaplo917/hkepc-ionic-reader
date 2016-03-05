@@ -1,4 +1,4 @@
-<ion-view view-title="Chats">
+<ion-view class="chats-list-view" view-title="短消息">
   <div class="spinner">
     <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
   </div>
@@ -11,6 +11,7 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
+                ng-class-odd="'odd'" ng-class-even="'even'"
                 ng-repeat="chat in vm.chats track by $index"
                 type="item-text-wrap"
                 href="#/tab/features/chats/{{::chat.id}}">

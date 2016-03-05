@@ -1,6 +1,6 @@
-<ion-view >
+<ion-view class="notification-view">
   <ion-nav-title>
-    Notification
+    提醒
   </ion-nav-title>
   <div class="spinner">
     <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
@@ -14,6 +14,7 @@
   <ion-content>
     <ion-list>
       <ion-item class="item"
+                ng-class-odd="'odd'" ng-class-even="'even'"
                 ng-repeat="notification in vm.notifications track by $index"
                 type="item-text-wrap">
         <div class="fright">#{{$index + 1}}</div>

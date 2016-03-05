@@ -1,0 +1,49 @@
+@import "variables";
+
+.post-list-view {
+
+  .last-description{
+    color:#a0a0a0
+  }
+
+  .odd a{
+    background-color: #FFFFFF
+  }
+
+  .even a{
+    background-color: #F5F5F5
+  }
+
+  .bar.bar-subheader{
+    background-color: $epc-color;
+
+    .title {
+      color: #fff;
+    }
+    .icon.ion-bonfire {
+      float:left;
+      font-size:34px;
+      color:#FF6D00;
+    }
+
+    .icon.ion-ios-more{
+      color:#fff;
+    }
+  }
+
+  ion-slide {
+    padding-top:36px
+  }
+
+  .tag {
+    font-size:14px
+  }
+
+  .less-important-info{
+    color:#aaa
+  }
+
+  .ion-bonfire{
+    color:#FF6D00
+  }
+}

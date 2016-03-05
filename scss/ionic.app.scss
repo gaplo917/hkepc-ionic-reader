@@ -25,8 +25,6 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 @import "card.view";
 
-@import "chats.view";
-
 @import "spinner";
 
 @import "global";
@@ -38,4 +36,15 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "eula";
 
 @import "feature.view";
+
+@import "topics/topics.view";
+
+@import "topics/post.list.view";
+
+@import "notification/notification.view";
+
+@import "chats/chats.view";
+
+@import "chats/chats.list.view";
+
 

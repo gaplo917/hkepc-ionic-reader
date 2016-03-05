@@ -16,7 +16,7 @@ export class FeatureRouteController{
     url: '/features',
     views: {
       'tab-features': {
-        templateUrl: 'templates/features/index.html',
+        templateUrl: 'templates/features/features.route.html',
         controller: FeatureRouteController.NAME,
         controllerAs: 'vm'
       }

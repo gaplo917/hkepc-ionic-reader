@@ -1,3 +1,5 @@
+@import "variables";
+
 // word break
 * {
   word-break: break-all;
@@ -53,7 +55,7 @@ ion-list, .list {
   .item {
     &.item-divider {
       color: #fff;
-      background-color: #8fc320 !important;
+      background-color: $epc-color !important;
     }
   }
 }
