@@ -73,8 +73,7 @@ module.exports = {
     expire: 'expires',
     formhash: 'formhash'
   },
-  signature: () => {
-    "use strict";
+  signature: (color) => {
     return `[size=1][color=Silver]via HKEPC Ionic Reader ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
   },
   data:{

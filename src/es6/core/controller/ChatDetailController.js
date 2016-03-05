@@ -62,26 +62,7 @@ export class ChatDetailController{
           const messages = $('.pm_list li.s_clear').map((i, elem) => {
             const isSelf = $(elem).attr('class').indexOf('self') > 0
 
-            let chatSource = cheerio.load($(elem).html())
-
-            const avatarUrl = chatSource('.avatar img').attr('src')
-            const text = chatSource('.summary').html()
-            const username = chatSource('.cite cite').text()
-
-            chatSource('cite').remove()
-
-            const date = chatSource('.cite').text()
-            const id = URLUtils.getQueryVariable(avatarUrl,'uid')
-            return {
-              id: id,
-              avatarUrl:avatarUrl,
-              content: this.sce.trustAsHtml(
-                  text
-              ),
-              username: username,
-              date : date,
-              isSelf: isSelf
-            }
+            return this.parseChat($(elem).html(),isSelf)
 
           }).get()
 
@@ -95,25 +76,84 @@ export class ChatDetailController{
           }
 
           this.messages = messages
-          console.log(messages)
-          this.scope.apply()
 
           // scroll to bottom
           setTimeout(() => {
             this.ionicScrollDelegate.scrollBottom()
           },500)
 
-        },(err) => {
-          console.log(err)
+          this.sendMessage = (message) => {
+            // prepare the chat message
+            const relativeUrl = $('#pmform').attr('action')
+            const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
+
+            let formSource = cheerio.load($('#pmform').html())
+
+            const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+              const k = formSource(elem).attr('name')
+              const v = formSource(elem).attr('value')
+
+              return `${k}=${encodeURIComponent(v)}`
+            }).get()
+
+            const ionicReaderSign = HKEPC.signature()
+
+            // build the reply message
+            const chatMessage = `${message}\n\n${ionicReaderSign}`
+
+            const postData = [
+              `message=${encodeURIComponent(chatMessage)}`,
+              hiddenFormInputs.join('&')
+            ].join('&')
+
+            // Post to the server
+            this.http({
+              method: "POST",
+              url : postUrl,
+              data : postData,
+              headers : {'Content-Type':'application/x-www-form-urlencoded'}
+            }).then((resp) => {
+
+              this.ngToast.success(`<i class="ion-ios-checkmark"> 已發送！</i>`)
+
+              this.doRefesh()
+            })
+          }
+
         })
   }
 
-  sendMessage(sender,message){
-    //alert(JSON.stringify({
-    //  to: sender,
-    //  message: message
-    //}))
+  parseChat(chatHtml,isSelf) {
+    let chatSource = cheerio.load(chatHtml)
 
-    this.ngToast.warning("此功能開發中")
+    const avatarUrl = chatSource('.avatar img').attr('src')
+    const text = chatSource('.summary').html()
+    const username = chatSource('.cite cite').text()
+
+    chatSource('cite').remove()
+
+    const date = chatSource('.cite').text()
+    const id = URLUtils.getQueryVariable(avatarUrl,'uid')
+    return {
+      id: id,
+      avatarUrl:avatarUrl,
+      content: this.sce.trustAsHtml(
+          text
+      ),
+      username: username,
+      date : date,
+      isSelf: isSelf
+    }
+  }
+
+  onSendMessage(sender,message){
+
+    this.sendMessage(message)
+
+  }
+
+  doRefesh(){
+    this.messages = []
+    this.loadMessages()
   }
 }
