@@ -4,26 +4,28 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
-import {FindMessageRequest} from "../model/find-message-request"
+import {FindMessageRequest} from "../model/FindMessageRequest"
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
 const async = require('async')
 
 export class NotificationController{
-  static get STATE() { return 'tab.notifications'}
+  static get STATE() { return 'tab.features-notifications'}
   static get NAME() { return 'NotificationController'}
   static get CONFIG() { return {
-    url: '/notifications',
+    url: '/features/notifications',
     views: {
-      'tab-notifications': {
-        templateUrl: 'templates/tab-notifications.html',
+      'tab-features': {
+        templateUrl: 'templates/features/notification/index.html',
         controller: NotificationController.NAME,
         controllerAs: 'vm'
       }
     }
   }}
 
-  constructor($scope, $http, AuthService,$state,$sce,ngToast){
+  constructor($scope, $http, AuthService,$state,$sce,ngToast,$ionicHistory){
 
     this.http = $http
     this.scope = $scope
@@ -31,6 +33,8 @@ export class NotificationController{
     this.notifications = []
     this.state = $state
     this.ngToast = ngToast
+    this.ionicHistory = $ionicHistory
+
     this.page = 1
     this.refreshing = false
 
@@ -61,11 +65,7 @@ export class NotificationController{
             .processImgUrl(HKEPC.baseUrl)
             .getCheerio()
 
-        // select the current login user
-        const currentUsername = $('#umenu > cite').text()
-
-        // send the login name to parent controller
-        this.scope.$emit("accountTabUpdate",currentUsername)
+        this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
         const pageNumSource = $('.pages a, .pages strong')
 
@@ -95,7 +95,7 @@ export class NotificationController{
   }
 
   findMessage(postId,messageId){
-    this.scope.$emit('find',new FindMessageRequest(postId,messageId))
+    this.scope.$emit(FindMessageRequest.NAME,new FindMessageRequest(postId,messageId))
   }
 
   loadMore(cb){
@@ -117,5 +117,15 @@ export class NotificationController{
     this.notifications = []
     this.page = 1
     this.loadNotifications()
+  }
+
+  onBack(){
+    const history = this.ionicHistory.viewHistory()
+    if(history.backView && history.backView.stateName == Controllers.FeatureRouteController.STATE){
+      this.ionicHistory.goBack()
+    } else {
+      this.state.go(Controllers.FeatureRouteController.STATE)
+    }
+    console.log("on back")
   }
 }

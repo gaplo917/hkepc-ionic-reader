@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 6/2/2016.
  */
-import {FindMessageRequest} from "../model/find-message-request"
+import {FindMessageRequest} from "../model/FindMessageRequest"
 
 export class LikesController{
   static get STATE() { return 'tab.likes'}
@@ -191,7 +191,7 @@ export class LikesController{
   }
 
   findMessage(postId,messageId){
-    this.scope.$emit('find',new FindMessageRequest(postId,messageId))
+    this.scope.$emit(FindMessageRequest.NAME,new FindMessageRequest(postId,messageId))
   }
 
   onMore(message){

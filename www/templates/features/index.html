@@ -1,0 +1,30 @@
+<ion-view >
+  <ion-nav-title>
+    會員功能
+  </ion-nav-title>
+  <div class="spinner">
+    <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
+  </div>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="list card">
+
+      <a href="#/tab/features/chats" class="item item-icon-left">
+        <i class="icon ion-ios-email-outline"></i>
+        私人訊息
+        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive">{{vm.notification.pm}}</span>
+        <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
+      </a>
+
+      <a href="#/tab/features/notifications" class="item item-icon-left">
+        <i class="icon ion-ios-paper-outline"></i>
+        帖子消息
+        <span ng-show="vm.notification.post > 0" class="fright badge badge-assertive">{{vm.notification.post}}</span>
+        <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
+      </a>
+
+    </div>
+  </ion-content>
+</ion-view>

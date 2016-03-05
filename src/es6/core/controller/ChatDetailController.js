@@ -4,30 +4,36 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import * as Controllers from "./index"
+
 const cheerio = require('cheerio')
 const async = require('async')
 
 export class ChatDetailController{
-  static get STATE() { return 'tab.chat-detail'}
+  static get STATE() { return 'tab.features-chat-detail'}
   static get NAME() { return 'ChatDetailController'}
   static get CONFIG() { return {
-    url: '/chats/:id',
+    url: '/features/chats/:id',
     cache: false,
     views: {
-      'tab-chats': {
-        templateUrl: 'templates/chat-detail.html',
+      'tab-features': {
+        templateUrl: 'templates/features/chats/details.html',
         controller: ChatDetailController.NAME,
         controllerAs: 'vm'
       }
     }
   }}
-  constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate,ngToast){
+  constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state){
 
     this.scope = $scope
     this.http = $http
     this.sce = $sce
     this.ionicScrollDelegate = $ionicScrollDelegate
     this.ngToast = ngToast
+    this.ionicHistory = $ionicHistory
+    this.state = $state
+
     this.senderId = $stateParams.id
     this.messages = []
 
@@ -53,11 +59,7 @@ export class ChatDetailController{
               .processExternalUrl()
               .getCheerio()
 
-          // select the current login user
-          const currentUsername = $('#umenu > cite').text()
-
-          // send the login name to parent controller
-          this.scope.$emit("accountTabUpdate",currentUsername)
+          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
           const messages = $('.pm_list li.s_clear').map((i, elem) => {
             const isSelf = $(elem).attr('class').indexOf('self') > 0
@@ -78,9 +80,8 @@ export class ChatDetailController{
           this.messages = messages
 
           // scroll to bottom
-          setTimeout(() => {
-            this.ionicScrollDelegate.scrollBottom()
-          },500)
+          this.ionicScrollDelegate.scrollBottom(true)
+
 
           this.sendMessage = (message) => {
             // prepare the chat message
@@ -155,5 +156,15 @@ export class ChatDetailController{
   doRefesh(){
     this.messages = []
     this.loadMessages()
+  }
+
+  onBack(){
+    const history = this.ionicHistory.viewHistory()
+    if(history.backView && history.backView.stateName == Controllers.ChatController.STATE){
+      this.ionicHistory.goBack()
+    } else {
+      this.state.go(Controllers.ChatController.STATE)
+    }
+    console.log("on back")
   }
 }

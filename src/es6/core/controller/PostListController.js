@@ -4,6 +4,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+
 const cheerio = require('cheerio')
 const async = require('async')
 
@@ -233,6 +235,10 @@ export class PostListController {
           this.showSpinner = false
 
           let $ = cheerio.load(resp.data)
+
+          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
+
+
           const titles = $('#nav').text().split('»')
           const topicName = titles[titles.length - 1]
           const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages a').not('.next').last().text()
@@ -255,12 +261,6 @@ export class PostListController {
                   }
                 }).get()
               : this.categories
-
-          // select the current login user
-          const currentUsername = $('#umenu > cite').text()
-
-          // send the login name to parent controller
-          this.scope.$emit("accountTabUpdate",currentUsername)
 
           // only extract the number
           this.totalPageNum = totalPageNumText

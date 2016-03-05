@@ -4,28 +4,34 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import * as Controllers from "./index"
+
 const cheerio = require('cheerio')
 const async = require('async')
 
 export class ChatController{
-  static get STATE() { return 'tab.chats'}
+  static get STATE() { return 'tab.features-chats'}
   static get NAME() { return 'ChatController'}
   static get CONFIG() { return {
-    url: '/chats',
+    url: '/features/chats',
     views: {
-      'tab-chats': {
-        templateUrl: 'templates/tab-chats.html',
+      'tab-features': {
+        templateUrl: 'templates/features/chats/index.html',
         controller: ChatController.NAME,
         controllerAs: 'vm'
       }
     }
   }}
-  constructor($scope, $http, AuthService,$state,ngToast){
+  constructor($scope, $http, AuthService,$state,ngToast,$ionicHistory){
 
     this.http = $http
     this.scope = $scope
     this.chats = []
+    this.state = $state
     this.ngToast = ngToast
+    this.ionicHistory = $ionicHistory
+
     this.page = 1
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -52,11 +58,7 @@ export class ChatController{
               .processImgUrl(HKEPC.baseUrl)
               .getCheerio()
 
-          // select the current login user
-          const currentUsername = $('#umenu > cite').text()
-
-          // send the login name to parent controller
-          this.scope.$emit("accountTabUpdate",currentUsername)
+          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
           const pageNumSource = $('.pages a, .pages strong')
 
@@ -106,7 +108,6 @@ export class ChatController{
   }
 
   loadMore(cb){
-    console.log("loadmore",this.page)
     if(this.hasMoreData()){
       const nextPage = parseInt(this.page) + 1
       //update the page count
@@ -118,8 +119,6 @@ export class ChatController{
   }
 
   hasMoreData(){
-    console.log("hasMoreData",this.page)
-
     return this.page < this.totalPageNum
   }
 
@@ -127,5 +126,15 @@ export class ChatController{
     this.chats = []
     this.page = 1
     this.loadChats()
+  }
+
+  onBack(){
+    const history = this.ionicHistory.viewHistory()
+    if(history.backView && history.backView.stateName == Controllers.FeatureRouteController.STATE){
+      this.ionicHistory.goBack()
+    } else {
+      this.state.go(Controllers.FeatureRouteController.STATE)
+    }
+    console.log("on back")
   }
 }

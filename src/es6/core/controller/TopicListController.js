@@ -4,6 +4,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+
 const cheerio = require('cheerio')
 const async = require('async')
 
@@ -95,10 +97,7 @@ export class TopicListController {
               .processImgUrl(HKEPC.imageUrl)
               .getCheerio()
 
-          const currentUsername = $('#umenu > cite').text()
-
-          // send the login name to parent controller
-          this.scope.$emit("accountTabUpdate",currentUsername)
+          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
           const tasks = $('#mainIndex > div').map((i, elem) => {
 

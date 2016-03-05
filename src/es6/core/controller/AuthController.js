@@ -3,6 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
+import {LoginTabUpdateRequest}  from '../model/LoginTabUpdateRequest'
 
 export class AuthController {
   static get STATE() { return 'tab.account'}
@@ -41,7 +42,8 @@ export class AuthController {
 
     this.authService.login(authority,(err,username) => {
       this.authService.saveAuthority(authority)
-      this.scope.$emit("accountTabUpdate",username)
+
+      this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username) )
 
       // unset the password field
       this.user.password = undefined
@@ -57,7 +59,7 @@ export class AuthController {
     this.authService.logout()
 
     // send the login name to parent controller
-    this.scope.$emit("accountTabUpdate")
+    this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest() )
   }
 
   isIOS(){

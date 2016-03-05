@@ -2,7 +2,10 @@
  * Created by Gaplo917 on 23/1/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import {FindMessageRequest} from "../model/find-message-request"
+import {FindMessageRequest} from "../model/FindMessageRequest"
+import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import {LoginTabUpdateRequest} from "../model/LoginTabUpdateRequest"
 
 export class TabController{
   static get STATE() { return 'tab'}
@@ -16,34 +19,74 @@ export class TabController{
 
   }}
 
-  constructor($scope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService) {
+  constructor($scope,$http,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
 
     this.localStorageService = LocalStorageService
+    this.http = $http
     this.authService = AuthService
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
 
-    $scope.$on('accountTabUpdate', (event,arg) =>{
-      if(arg){
-        this.login = arg
-        this._isLoggedIn = true
+    // schedule to check PM
+    setInterval(() => {
+      this.http.get("http://www.hkepc.com/forum/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check").then(resp => console.log(resp))
+    },1000 * 60 * 5)
+
+
+    $scope.$on(CommonInfoExtractRequest.NAME, (event,req) =>{
+      if(req instanceof CommonInfoExtractRequest){
+        const $ = req.cheerio
+
+        // select the current login user
+        const currentUsername = $('#umenu > cite').text()
+
+        const pmNotification = $('#prompt_pm').text().match(/\d/g)[0]
+
+        const postNotification = $('#prompt_threads').text().match(/\d/g)[0]
+
+        // send the login name to parent controller
+        this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
+
+        // send the notification badge update
+        this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
       }
-      else {
-        this._isLoggedIn = false
+    })
 
-        this.login = undefined
+    $scope.$on(NotificationBadgeUpdateRequest.NAME,(event,req) => {
+      if(req instanceof NotificationBadgeUpdateRequest){
+        const notification = {
+          pm: req.pmNotificationCount,
+          post: req.postNotificationCount
+        }
 
-        if (AuthService.isLoggedIn()){
-          ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-          AuthService.logout()
+        this.notification = notification
+
+        this.localStorageService.setObject('notification',notification)
+      }
+    })
+
+    $scope.$on(LoginTabUpdateRequest.NAME, (event,req) =>{
+      if(req instanceof LoginTabUpdateRequest){
+        this.login = req.username
+        if(this.login) {
+          this._isLoggedIn = true
+        } else {
+          this._isLoggedIn = false
+
+          this.login = undefined
+
+          if (AuthService.isLoggedIn()){
+            ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+            AuthService.logout()
+          }
         }
       }
     })
 
-    $scope.$on('find', (event,arg) =>{
+    $scope.$on(FindMessageRequest.NAME, (event,arg) =>{
       if(arg instanceof FindMessageRequest){
         this.messageModal.show()
         // reset the message first
@@ -86,9 +129,17 @@ export class TabController{
       })
     }
 
+    // use cache as initial value
+    const notification = this.localStorageService.getObject('notification') || {}
+    const pmNotification = notification.pm || 0
+    const postNotification = notification.post || 0
+    this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
+
+
   }
 
   isLoggedIn(){
     return this._isLoggedIn
   }
+
 }

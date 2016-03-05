@@ -16,14 +16,15 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-likes"></ion-nav-view>
   </ion-tab>
 
-  <!-- Chats Tab -->
-  <ion-tab hidden="{{!vm.isLoggedIn()}}" title="PM" icon-off="ion-ios-chatbubble-outline" icon-on="ion-ios-chatbubble" href="#/tab/chats">
+  <!-- History Tab -->
+  <ion-tab title="History" icon-off="ion-ios-clock-outline" icon-on="ion-ios-clock" href="#/tab/chats">
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 
-  <!-- Notification Tab -->
-  <ion-tab hidden="{{!vm.isLoggedIn()}}" title="Notification" icon-off="ion-ios-bell-outline" icon-on="ion-ios-bell" href="#/tab/notifications">
-    <ion-nav-view name="tab-notifications"></ion-nav-view>
+  <!-- Features Tab -->
+  <ion-tab hidden="{{!vm.isLoggedIn()}}" title="Features" icon-off="ion-ios-world-outline" icon-on="ion-ios-world" href="#/tab/features"
+           badge="vm.notification.pm + vm.notification.post" badge-style="badge-assertive">
+    <ion-nav-view name="tab-features"></ion-nav-view>
   </ion-tab>
 
   <!-- Account Tab -->

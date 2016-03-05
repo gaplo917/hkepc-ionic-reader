@@ -5,7 +5,9 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
-import {FindMessageRequest} from "../model/find-message-request"
+import {FindMessageRequest} from "../model/FindMessageRequest"
+import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
 const async = require('async')
@@ -150,6 +152,8 @@ export class PostController{
                   .processExternalUrl()
                   .getCheerio()
 
+              this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
+
               // remove the hkepc forum text
               const postTitle = html
                   .getTitle()
@@ -167,12 +171,6 @@ export class PostController{
               this.totalPageNum = pageNumArr.length == 0
                                     ? 1
                                     : Math.max(...pageNumArr)
-
-              // select the current login user
-              const currentUsername = $('#umenu > cite').text()
-
-              // send the login name to parent controller
-              this.scope.$emit("accountTabUpdate",currentUsername)
 
               // the first post
               const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
@@ -231,8 +229,6 @@ export class PostController{
                       isSelf: postSource('.postauthor > .postinfo').text().indexOf(this.currentUsername) >= 0
                     }
                   }
-
-                  console.log(message)
 
                   message.liked = this.messageService.isLikedPost(message)
 
@@ -628,16 +624,16 @@ export class PostController{
   }
 
   findMessage(postId,messageId){
-    this.scope.$emit('find',new FindMessageRequest(postId,messageId))
+    this.scope.$emit(FindMessageRequest.NAME,new FindMessageRequest(postId,messageId))
   }
 
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == 'tab.topics-posts'){
+    if(history.backView && history.backView.stateName == Controllers.PostListController.STATE){
       this.ionicHistory.goBack()
     } else {
-      this.state.go('tab.topics-posts',{
+      this.state.go(Controllers.PostListController.STATE,{
         topicId: this.post.topicId,
         page: 1
       })
