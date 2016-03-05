@@ -221,10 +221,13 @@ export class PostController{
                       page: this.page
                     },
                     author:{
+                      rank: postSource('.postauthor > p > img').attr('alt').replace('Rank: ',''),
                       image: postSource('.postauthor .avatar img').attr('src'),
                       name : postSource('.postauthor > .postinfo').text()
                     }
                   }
+
+                  console.log(message)
 
                   message.liked = this.messageService.isLikedPost(message)
 
@@ -556,5 +559,9 @@ export class PostController{
       })
     }
     console.log("on back")
+  }
+
+  getTimes(i){
+    return new Array(parseInt(i))
   }
 }

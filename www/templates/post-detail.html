@@ -22,6 +22,7 @@
       <div class="item item-avatar">
         <img ng-src="{{::message.author.image}}">
         <h2 ng-bind="::message.author.name"></h2>
+        <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index" class="ion-ios-star" style="color:#F9A825"></i>
         <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
       </div>
 
