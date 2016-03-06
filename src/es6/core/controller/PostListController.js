@@ -22,12 +22,12 @@ export class PostListController {
       }
     }
   }}
-  constructor($scope,$http,$state,$stateParams,$location,$anchorScroll,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
+  constructor($scope,$http,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
     this.scope = $scope
     this.http = $http
     this.state = $state
     this.location = $location
-    this.anchorScroll = $anchorScroll
+    this.ionicScrollDelegate = $ionicScrollDelegate
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.ionicHistory = $ionicHistory
     this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
@@ -366,7 +366,7 @@ export class PostListController {
 
     //scroll to the hash tag
     this.location.hash(`ionic-slide-box`)
-    this.anchorScroll()
+    this.ionicScrollDelegate.scrollTop(false)
 
     // clear the model first
     //this.slidePages[index] = []

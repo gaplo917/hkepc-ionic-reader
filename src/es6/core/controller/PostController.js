@@ -10,7 +10,7 @@ import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
-const async = require('async')
+const Rx = require('rx')
 
 export class PostController{
   static get STATE() { return 'tab.topics-posts-detail'}
@@ -80,23 +80,6 @@ export class PostController{
     // to control the post is end
     this.end = false;
 
-    // create a UI rendering queue
-    this.queue = async.queue((task, callback) => {
-
-      // update the messages list
-      const message = task()
-
-      this.messages.push(message)
-
-      if(this.queue.length() % 1 == 0){
-         //force update the view after 10 task
-        this.scope.$apply()
-      }
-
-      setTimeout(() => callback(), 100)
-    }, 1);
-
-
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -105,22 +88,22 @@ export class PostController{
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.queue.resume()
+      //this.queue.resume()
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.queue.pause()
+      this.postTaskSubscription.dispose()
     })
   }
 
-  loadMore(cb){
+  loadMore(){
     if(this.hasMoreData()){
       const nextPage = parseInt(this.page) + 1
       if(nextPage <= this.totalPageNum){
         //update the page count
         this.page = parseInt(this.page) + 1
 
-        this.loadMessages(cb)
+        this.loadMessages()
       }
       else{
         // set a flag for end
@@ -135,125 +118,130 @@ export class PostController{
     return !this.end && !this.refreshing
   }
 
-  loadMessages(cb){
-    this.http
-        .get(HKEPC.forum.posts(this.topicId,this.postId,this.page))
-        .then((resp) => {
+  loadMessages(){
 
-          async.waterfall([
-            (callback) => {
-              const html = new HKEPCHtml(cheerio.load(resp.data))
-              const pageBackLink = html.getCheerio()('.forumcontrol .pageback a').attr('href')
+    const source = Rx.Observable
+        .fromPromise(this.http.get(HKEPC.forum.posts(this.topicId,this.postId,this.page)))
+        .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
+        .map(
+          html => html.processImgUrl(HKEPC.imageUrl)
+            .processEpcUrl()
+            .processExternalUrl()
+        )
 
-              let $ = html
-                  //.removeIframe()  // iframe ads
-                  .processImgUrl(HKEPC.imageUrl)
-                  .processEpcUrl()
-                  .processExternalUrl()
-                  .getCheerio()
+    source.map(html => html.getCheerio())
+        .subscribe($ => this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($)))
 
-              this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
-              // remove the hkepc forum text
-              const postTitle = html
-                  .getTitle()
-                  .split('-')[0]
+    // render the basic information first
+    source.subscribe(
+        html => {
+          const pageBackLink = html.getCheerio()('.forumcontrol .pageback a').attr('href')
 
-              const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
+          // remove the hkepc forum text
+          const postTitle = html
+              .getTitle()
+              .split('-')[0]
 
-              const pageNumArr = pageNumSource
-                                  .map((i,elem) => $(elem).text())
-                                  .get()
-                                  .map(e => e.match(/\d/g)) // array of string with digit
-                                  .filter(e => e != null) // filter null value
-                                  .map(e => parseInt(e.join(''))) // join the array and parseInt
+          const $ = html.getCheerio()
 
-              this.totalPageNum = pageNumArr.length == 0
-                                    ? 1
-                                    : Math.max(...pageNumArr)
+          const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
 
-              // the first post
-              const firstPost = $('.postcontent > .defaultpost > .postmessage.firstpost > .t_msgfontfix')
+          const pageNumArr = pageNumSource
+                              .map((i,elem) => $(elem).text())
+                              .get()
+                              .map(e => e.match(/\d/g)) // array of string with digit
+                              .filter(e => e != null) // filter null value
+                              .map(e => parseInt(e.join(''))) // join the array and parseInt
 
-              angular.extend(this,{
-                post:{
-                  title: postTitle,
-                  id: this.postId,
-                  topicId: URLUtils.getQueryVariable(pageBackLink,'fid')
-                }
-              })
-
-              console.log(this.post)
-              // callback for next function
-              callback(null, $,postTitle);
-            },
-            ($,postTitle, callback) => {
-
-              // PostHtml map to the model
-              const tasks = $('#postlist > div').map( (i,elem) => {
-                // remember this is a function object (lazy function)
-                return () => {
-                  let postSource = cheerio.load($(elem).html())
-
-                  const adsSource = postSource('.adv iframe')
-
-                  // extract the ads before remove from the parent
-                  const hasAds = adsSource.has('img')
-                  const ads = hasAds && !ionic.Platform.isIOS()  ? adsSource.html() : undefined
-
-                  // really remove the ads
-                  adsSource.remove()
-
-                  const content = new HKEPCHtml(
-                      cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
-                      postSource('.postcontent > .defaultpost > .postmessage').html())
-                  ).processImageToLazy()
-                  .getCheerio()
-
-                  const message = {
-                    id: postSource('table').attr('id').replace('pid',''),
-                    pos: postSource('.postinfo strong a em').text(),
-                    createdAt: postSource('.posterinfo .authorinfo em').text(),
-                    content : content.html(),
-                    ads: ads,
-                    post:{
-                      id: this.postId,
-                      topicId: this.topicId,
-                      title: postTitle,
-                      page: this.page
-                    },
-                    author:{
-                      rank: postSource('.postauthor > p > img').attr('alt').replace('Rank: ',''),
-                      image: postSource('.postauthor .avatar img').attr('src'),
-                      name : postSource('.postauthor > .postinfo').text(),
-                      isSelf: postSource('.postauthor > .postinfo').text().indexOf(this.currentUsername) >= 0
-                    }
-                  }
-
-                  message.liked = this.messageService.isLikedPost(message)
-
-                  return message
-                }
-
-              }).get()
-
-              this.queue.push(tasks)
-
-              this.queue.drain = () => {
-                this.scope.$apply()
-                this.scope.$broadcast('scroll.infiniteScrollComplete')
-                console.log("Done All UI rendering")
-                callback()
-                if(cb) cb(null)
-              }
-
+          this.totalPageNum = pageNumArr.length == 0
+                                ? 1
+                                : Math.max(...pageNumArr)
+          this.post = {
+              title: postTitle,
+              id: this.postId,
+              topicId: URLUtils.getQueryVariable(pageBackLink,'fid')
             }
-          ], (err, result) => {
-            // result now equals 'done'
-            console.log("ALL TASK DONE!!!",err)
-          });
 
+        },
+        err => console.log(err)
+    )
+
+    const postTasks = source
+        .flatMap(html => {
+          const $ = html.getCheerio()
+          return $('#postlist > div').map((i, elem) => {
+            return {
+              $: $,
+              elem: elem,
+              postTitle: html.getTitle().split('-')[0]
+            }
+          }).get()
         })
+        .map(postObj => Rx.Observable.return(postObj).delay(100))
+        .concatAll()
+
+    // render the post
+    this.postTaskSubscription = postTasks
+      .subscribe(
+        postObj => {
+          const elem = postObj.elem,
+                $ = postObj.$,
+                postTitle = postObj.postTitle
+
+          let postSource = cheerio.load($(elem).html())
+
+          const adsSource = postSource('.adv iframe')
+
+          // extract the ads before remove from the parent
+          const hasAds = adsSource.has('img')
+          const ads = hasAds && !ionic.Platform.isIOS()  ? adsSource.html() : undefined
+
+          // really remove the ads
+          adsSource.remove()
+
+          const content = new HKEPCHtml(
+              cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
+                  postSource('.postcontent > .defaultpost > .postmessage').html())
+          ).processImageToLazy()
+              .getCheerio()
+
+          const rank = postSource('.postauthor > p > img').attr('alt')
+
+          const message = {
+            id: postSource('table').attr('id').replace('pid',''),
+            pos: postSource('.postinfo strong a em').text(),
+            createdAt: postSource('.posterinfo .authorinfo em').text(),
+            content : content.html(),
+            ads: ads,
+            post:{
+              id: this.postId,
+              topicId: this.topicId,
+              title: postTitle,
+              page: this.page
+            },
+            author:{
+              rank: rank ? rank.replace('Rank: ','') : 0,
+              image: postSource('.postauthor .avatar img').attr('src'),
+              name : postSource('.postauthor > .postinfo').text(),
+              isSelf: postSource('.postauthor > .postinfo').text().indexOf(this.currentUsername) >= 0
+            }
+          }
+
+          message.liked = this.messageService.isLikedPost(message)
+
+          this.messages.push(message)
+
+          this.scope.$apply()
+        },
+        err => console.trace(err),
+        () => {
+          console.log("on complete")
+          this.refreshing = false
+          this.scope.$apply()
+          this.scope.$broadcast('scroll.infiniteScrollComplete')
+        }
+    )
 
   }
 
@@ -277,7 +265,7 @@ export class PostController{
 
   reset(){
     this.messages = []
-    this.queue.kill()
+    this.postTaskSubscription.dispose()
     this.end = false;
 
   }
@@ -285,9 +273,7 @@ export class PostController{
   doRefresh(){
     this.refreshing = true
     this.reset()
-    this.loadMessages(() => {
-      this.refreshing = false
-    })
+    this.loadMessages()
   }
 
   onQuickReply(post){
@@ -634,7 +620,7 @@ export class PostController{
       this.ionicHistory.goBack()
     } else {
       this.state.go(Controllers.PostListController.STATE,{
-        topicId: this.post.topicId,
+        topicId: this.topicId,
         page: 1
       })
     }
