@@ -6,6 +6,10 @@ import {FindMessageRequest} from "../model/FindMessageRequest"
 import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import {LoginTabUpdateRequest} from "../model/LoginTabUpdateRequest"
+import {PushHistoryRequest} from "../model/PushHistoryRequest"
+
+const cheerio = require('cheerio')
+const Rx = require('rx')
 
 export class TabController{
   static get STATE() { return 'tab'}
@@ -19,7 +23,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService) {
+  constructor($scope,$http,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -27,12 +31,21 @@ export class TabController{
     this.localStorageService = LocalStorageService
     this.http = $http
     this.authService = AuthService
+    this.historyService = HistoryService
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
 
+    // Try the credential on start app
+    Rx.Observable
+        .fromPromise(this.http.get(HKEPC.forum.memberCenter()))
+        .map(resp => cheerio.load(resp.data))
+        .subscribe(
+            $ => this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
+        )
+
     // schedule to check PM
     setInterval(() => {
-      this.http.get("http://www.hkepc.com/forum/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check").then(resp => console.log(resp))
+      this.http.get(HKEPC.forum.checkPM()).then(resp => console.log(resp))
     },1000 * 60 * 5)
 
 
@@ -99,6 +112,13 @@ export class TabController{
               this.scope.messageModal.hide = () => this.messageModal.hide()
 
             })
+      }
+
+    })
+
+    $scope.$on(PushHistoryRequest.NAME, (event,arg) =>{
+      if(arg instanceof PushHistoryRequest){
+        this.historyService.add(arg.historyObj)
       }
 
     })

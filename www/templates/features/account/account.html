@@ -1,0 +1,29 @@
+<ion-view view-title="帳號管理">
+  <ion-nav-buttons side="left">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="list" ng-show="!vm.isLoggedIn()">
+      <label class="item item-input">
+        <span class="input-label">登入名稱</span>
+        <input type="text" placeholder="Username" ng-model="vm.user.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">登入密碼</span>
+        <input type="password" placeholder="Password" ng-model="vm.user.password">
+      </label>
+      <ion-checkbox ng-model="vm.agreeProxy">我同意使用 Proxy 傳送資料</ion-checkbox>
+      <div class="padding" ng-show="vm.isProxy()">
+        <button class="button button-block button-positive activated" ng-class="vm.user.username && vm.user.password && vm.agreeProxy ? '' : 'disabled'" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
+      </div>
+      <div class="padding" ng-show="!vm.isProxy()">
+        <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">我明白並登入</button>
+      </div>
+    </div>
+    <div class="list" ng-show="vm.isLoggedIn()">
+      <div class="padding">
+        <button class="button button-block button-assertive activated" ng-click="vm.logout()">登出</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

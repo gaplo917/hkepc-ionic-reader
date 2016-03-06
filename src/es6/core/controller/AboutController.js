@@ -5,61 +5,28 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {LoginTabUpdateRequest}  from '../model/LoginTabUpdateRequest'
 
-export class AuthController {
-  static get STATE() { return 'tab.account'}
-  static get NAME() { return 'AuthController'}
+export class AboutController {
+  static get STATE() { return 'tab.about'}
+  static get NAME() { return 'AboutController'}
   static get CONFIG() { return {
-    url: '/account',
+    url: '/about',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: AuthController.NAME,
+      'tab-about': {
+        templateUrl: 'templates/tab-about.html',
+        controller: AboutController.NAME,
         controllerAs: 'vm'
       }
     }
   }}
 
-  constructor($scope, $http, LocalStorageService, AuthService,$ionicPopup) {
+  constructor($scope, $http, LocalStorageService,$ionicPopup) {
 
     this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
-    this.authService = AuthService
     this.ionicPopup = $ionicPopup
     this.version = HKEPC.version
     this.proxy = LocalStorageService.get('proxy') || HKEPC.proxy
-
-    this.user = LocalStorageService.getObject('authority')
-
-  }
-
-  login(username,password){
-
-    const authority = {
-      username: username,
-      password: password
-    }
-
-    this.authService.login(authority,(err,username) => {
-      this.authService.saveAuthority(authority)
-
-      this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username) )
-
-      // unset the password field
-      this.user.password = undefined
-    })
-
-  }
-
-  isLoggedIn(){
-    return this.authService.isLoggedIn()
-  }
-
-  logout(){
-    this.authService.logout()
-
-    // send the login name to parent controller
-    this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest() )
   }
 
   isIOS(){

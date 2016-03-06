@@ -37,6 +37,7 @@
               class="item-icon-right item-text-wrap"
               ng-repeat="post in page.posts"
               ng-show="vm.showSticky && post.isSticky || !post.isSticky"
+              ng-click="::vm.onGoToPost(post)"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
             <div>

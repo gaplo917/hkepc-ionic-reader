@@ -5,6 +5,7 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import {PushHistoryRequest} from "../model/PushHistoryRequest"
 
 const cheerio = require('cheerio')
 const async = require('async')
@@ -487,6 +488,10 @@ export class PostListController {
       this.state.go('tab.topics')
     }
     console.log("on back")
+  }
+
+  onGoToPost(post){
+    this.scope.$emit(PushHistoryRequest.NAME, new PushHistoryRequest(post))
   }
 
   hasStickyPost(posts) {

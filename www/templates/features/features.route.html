@@ -1,6 +1,6 @@
 <ion-view class="feature-view">
   <ion-nav-title>
-    會員功能
+    功能
   </ion-nav-title>
   <div class="spinner">
     <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
@@ -9,25 +9,54 @@
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <ion-content>
+
+    <div class="list card">
+
+      <a href="#/tab/features/account" class="item item-icon-left">
+        <div class="icon">
+          <i class="ion-person-stalker inner-icon" style="background-color: #795548;"></i>
+        </div>
+
+        <div style="margin-left:10px">帳號管理</div>
+        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
+        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+      </a>
+
+    </div>
+
     <div class="list card">
 
       <a href="#/tab/features/chats" class="item item-icon-left">
         <div class="icon">
-          <i class="ion-ios-email" style="font-size:28px;color:white;background-color: #2196F3;padding:4px 9px; border-radius:10px"></i>
+          <i class="ion-ios-email inner-icon" style="background-color: #2196F3;"></i>
         </div>
 
         <div style="margin-left:10px">私人訊息</div>
         <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
-        <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
+        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
 
       <a href="#/tab/features/notifications" class="item item-icon-left">
         <div class="icon">
-          <i class="ion-ios-paper" style="font-size:28px;color:white;background-color: #43A047;padding:4px 9px; border-radius:10px"></i>
+          <i class="ion-ios-paper inner-icon" style="background-color: #43A047;"></i>
         </div>
         <div style="margin-left:10px">帖子消息</div>
         <span ng-show="vm.notification.post > 0" class="fright badge badge-assertive">{{vm.notification.post}}</span>
-        <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
+        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+      </a>
+
+    </div>
+
+    <div class="list card">
+
+      <a href="#/tab/features/history" class="item item-icon-left">
+        <div class="icon">
+          <i class="ion-ios-clock inner-icon" style="background-color: #FF5722;"></i>
+        </div>
+
+        <div style="margin-left:10px">瀏覧紀錄</div>
+        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
+        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
 
     </div>

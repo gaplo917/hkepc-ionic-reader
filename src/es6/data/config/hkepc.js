@@ -66,7 +66,9 @@ module.exports = {
     pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
     notifications: (page) => `${BASE_URL}/notice.php?page=${page}`,
     findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`,
-    newPost:(fid) => `${BASE_URL}/post.php?action=newthread&fid=${fid}`
+    newPost:(fid) => `${BASE_URL}/post.php?action=newthread&fid=${fid}`,
+    memberCenter: () => `${BASE_URL}/memcp.php`,
+    checkPM: () => `${BASE_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`
   },
   auth:{
     id: 'cdb_sid',

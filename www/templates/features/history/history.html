@@ -1,0 +1,27 @@
+<ion-view class="feature-view">
+  <ion-nav-title>
+    瀏覧紀錄
+  </ion-nav-title>
+  <div class="spinner">
+    <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
+  </div>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="list card">
+
+      <a href="#/tab/features/chats" class="item item-icon-left">
+        <div class="icon">
+          <i class="ion-ios-email" style="font-size:28px;color:white;background-color: #2196F3;padding:4px 9px; border-radius:10px"></i>
+        </div>
+
+        <div style="margin-left:10px">TODO History</div>
+        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
+        <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
+      </a>
+
+
+    </div>
+  </ion-content>
+</ion-view>

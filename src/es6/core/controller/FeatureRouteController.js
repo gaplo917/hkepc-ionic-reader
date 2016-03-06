@@ -35,12 +35,6 @@ export class FeatureRouteController{
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      if(AuthService.isLoggedIn()){
-        this.notification = this.localStorageService.getObject('notification')
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> Notification 需要會員權限，請先登入！</i>`)
-        $state.go("tab.account")
-      }
 
     })
 
