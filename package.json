@@ -18,6 +18,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.2.0",
     "ionic-native-transitions": "^1.0.0-rc9",
+    "moment": "^2.11.2",
     "rx": "^4.0.8"
   },
   "devDependencies": {
