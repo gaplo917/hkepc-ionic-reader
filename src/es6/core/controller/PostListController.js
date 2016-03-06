@@ -4,8 +4,9 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
-import {PushHistoryRequest} from "../model/PushHistoryRequest"
+import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
+import {PushHistoryRequest} from '../model/PushHistoryRequest'
+import * as Controllers from './index'
 
 const cheerio = require('cheerio')
 const async = require('async')
@@ -210,7 +211,7 @@ export class PostListController {
     }, 1)
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMore()
+      setTimeout(() => this.loadMore(), 200)
     })
 
     $scope.$on('$ionicView.enter', (e) => {
@@ -482,7 +483,7 @@ export class PostListController {
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == 'tab.topics'){
+    if(history.backView && history.backView.stateName == Controllers.TopicListController.STATE){
       this.ionicHistory.goBack()
     } else {
       this.state.go('tab.topics')

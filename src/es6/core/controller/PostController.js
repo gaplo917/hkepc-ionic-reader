@@ -84,7 +84,8 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMessages()
+      setTimeout(() => this.loadMessages(), 200)
+
     })
 
     $scope.$on('$ionicView.enter', (e) => {
@@ -616,7 +617,7 @@ export class PostController{
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView){
+    if(history.backView && history.backView.stateName == Controllers.PostListController.STATE){
       this.ionicHistory.goBack()
     } else {
       this.state.go(Controllers.PostListController.STATE,{

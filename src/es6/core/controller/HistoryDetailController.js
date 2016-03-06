@@ -24,24 +24,27 @@ export class HistoryDetailController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$stateParams) {
+  constructor(HistoryService,$ionicHistory,$state,$stateParams,$scope) {
     this.historyService = HistoryService
     this.state = $state
     this.ionicHistory = $ionicHistory
 
     this.dateStr = $stateParams.dateStr
 
-    const histories = this.historyService.getHistoryAt(this.dateStr)
-    this.histories = histories
+    $scope.$on('$ionicView.enter', (e) => {
+      const histories = this.historyService.getHistoryAt(this.dateStr)
+      this.histories = histories
+
+    })
 
   }
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == Controllers.FeatureRouteController.STATE){
+    if(history.backView && history.backView.stateName == Controllers.HistoryController.STATE){
       this.ionicHistory.goBack()
     } else {
-      this.state.go(Controllers.FeatureRouteController.STATE)
+      this.state.go(Controllers.HistoryController.STATE)
     }
   }
 
@@ -55,6 +58,10 @@ export class HistoryDetailController {
 
   relativeMomentizeTimestamp(timestamp){
     return moment(timestamp).fromNow()
+  }
+
+  clearAllHistory(){
+    this.historyService.clearAllHistory()
   }
 
 }

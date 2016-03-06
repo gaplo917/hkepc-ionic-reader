@@ -11,12 +11,11 @@
   <ion-content>
     <div class="list card">
 
-      <a ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat)" href="#/tab/features/history/{{dateStr}}" class="item item-icon-right">
+      <a ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat) track by $index" href="#/tab/features/history/{{dateStr}}" class="item item-icon-right">
 
         <div style="margin-left:10px">{{vm.relativeMomentize(dateStr)}}
           <span class="fright badge badge-royal" >{{vm.historyStat[dateStr].count}}</span>
           </div>
-        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
         <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
       </a>
 

@@ -24,21 +24,17 @@ export class HistoryController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state) {
+  constructor(HistoryService,$ionicHistory,$state,$scope) {
     this.historyService = HistoryService
     this.state = $state
     this.ionicHistory = $ionicHistory
 
-    const historyStat = this.historyService.getHistoryStat()
-    this.historyStat = historyStat
+    $scope.$on('$ionicView.enter', (e) => {
 
-    console.log(historyStat)
+      const historyStat = this.historyService.getHistoryStat()
+      this.historyStat = historyStat
 
-    for(let key of Object.keys(historyStat)){
-      const stat = historyStat[key]
-      console.log(stat)
-    }
-
+    })
   }
 
   onBack(){
@@ -59,6 +55,15 @@ export class HistoryController {
   }
 
   sortedDateStrKey(obj){
-    return Object.keys(obj).sort((e1,e2) => parseInt(e2) - parseInt(e1)).slice(0,5)
+    if(obj){
+      const keys = Object.keys(obj)
+
+      return keys.length > 1
+          ? keys.sort((e1,e2) => parseInt(e2) - parseInt(e1)).slice(0,5)
+          : keys
+    } else {
+      return []
+    }
+
   }
 }

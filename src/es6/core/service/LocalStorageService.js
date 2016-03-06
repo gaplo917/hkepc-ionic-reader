@@ -1,6 +1,7 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
+  
 export class LocalStorageService {
   static get NAME() { return 'LocalStorageService'}
 
@@ -10,12 +11,16 @@ export class LocalStorageService {
 
   constructor($window) {
     this.window = $window
-    this.cache = new Map();
-
+    this.cache = new Map()
   }
   set(key, value) {
     this.cache.set(key,value)
-    this.window.localStorage[key] = value;
+    if(value == undefined){
+      delete this.window.localStorage[key]
+    }
+    else {
+      this.window.localStorage[key] = value;
+    }
   }
   
   get(key, defaultValue) {
@@ -30,7 +35,12 @@ export class LocalStorageService {
   
   setObject(key, value) {
     this.cache.set(key,value)
-    this.window.localStorage[key] = JSON.stringify(value);
+    if(value == undefined){
+      delete this.window.localStorage[key]
+    }
+    else {
+      this.window.localStorage[key] = JSON.stringify(value);
+    }
   }
   
   getObject(key) {

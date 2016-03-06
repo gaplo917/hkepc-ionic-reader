@@ -80,4 +80,14 @@ export class HistoryService {
   getAllHistory ()  {
     return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY)
   }
+
+  clearAllHistory() {
+    const stat = this.getHistoryStat()
+
+    for(let key of Object.keys(stat)){
+      this.save(key,undefined)
+    }
+    this.saveStat(undefined)
+
+  }
 }
