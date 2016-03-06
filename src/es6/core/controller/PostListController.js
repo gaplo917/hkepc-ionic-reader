@@ -210,7 +210,7 @@ export class PostListController {
     }, 1)
 
     $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(() => this.loadMore(), 200)
+      this.loadMore()
     })
 
     $scope.$on('$ionicView.enter', (e) => {

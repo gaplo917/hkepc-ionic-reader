@@ -6,38 +6,33 @@ import * as Controllers from "./index"
 const moment = require('moment')
 require('moment/locale/zh-tw');
 
-export class HistoryController {
-  static get STATE() { return 'tab.features-history' }
+export class HistoryDetailController {
+  static get STATE() { return 'tab.features-history-details' }
 
-  static get NAME() { return 'HistoryController' }
+  static get NAME() { return 'HistoryDetailController' }
 
   static get CONFIG() {
     return {
-      url: '/features/history',
+      url: '/features/history/:dateStr',
       views: {
         'tab-features': {
-          templateUrl: 'templates/features/history/history.html',
-          controller: HistoryController.NAME,
+          templateUrl: 'templates/features/history/history.details.html',
+          controller: HistoryDetailController.NAME,
           controllerAs: 'vm'
         }
       }
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state) {
+  constructor(HistoryService,$ionicHistory,$state,$stateParams) {
     this.historyService = HistoryService
     this.state = $state
     this.ionicHistory = $ionicHistory
 
-    const historyStat = this.historyService.getHistoryStat()
-    this.historyStat = historyStat
+    this.dateStr = $stateParams.dateStr
 
-    console.log(historyStat)
-
-    for(let key of Object.keys(historyStat)){
-      const stat = historyStat[key]
-      console.log(stat)
-    }
+    const histories = this.historyService.getHistoryAt(this.dateStr)
+    this.histories = histories
 
   }
 
@@ -58,7 +53,8 @@ export class HistoryController {
     return moment(dateStr, 'YYYYMMDD').endOf('day').fromNow()
   }
 
-  sortedDateStrKey(obj){
-    return Object.keys(obj).sort((e1,e2) => parseInt(e2) - parseInt(e1)).slice(0,5)
+  relativeMomentizeTimestamp(timestamp){
+    return moment(timestamp).fromNow()
   }
+
 }

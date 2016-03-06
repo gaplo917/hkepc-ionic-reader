@@ -38,10 +38,7 @@ export class ChatDetailController{
     this.messages = []
 
     $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(()=> {
         this.loadMessages()
-      },400)
-
     })
 
   }

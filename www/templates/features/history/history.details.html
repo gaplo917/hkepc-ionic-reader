@@ -1,0 +1,35 @@
+<ion-view class="post-list-view">
+  <ion-nav-title>
+    瀏覧紀錄
+  </ion-nav-title>
+  <div class="spinner">
+    <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.chats.length == 0"></ion-spinner>
+  </div>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-list >
+      <ion-item
+          ng-class-odd="'odd'" ng-class-even="'even'"
+          class="item-icon-right item-text-wrap"
+          ng-repeat="post in vm.histories"
+          href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
+        <small class="fright less-important-info">{{::vm.relativeMomentizeTimestamp(post.createdAt)}}</small>
+        <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
+        <div>
+          <i class="ion-bonfire" ng-show="::post.isSticky"></i>
+          <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
+          <small class="less-important-info ion-person"> {{::post.author.name}}</small>
+          <small class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</small>
+        </div>
+        <div>
+          <small class="less-important-info">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</small>
+
+        </div>
+
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

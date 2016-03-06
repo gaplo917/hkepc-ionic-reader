@@ -11,12 +11,11 @@
   <ion-content>
     <div class="list card">
 
-      <a href="#/tab/features/chats" class="item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-email" style="font-size:28px;color:white;background-color: #2196F3;padding:4px 9px; border-radius:10px"></i>
-        </div>
+      <a ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat)" href="#/tab/features/history/{{dateStr}}" class="item item-icon-right">
 
-        <div style="margin-left:10px">TODO History</div>
+        <div style="margin-left:10px">{{vm.relativeMomentize(dateStr)}}
+          <span class="fright badge badge-royal" >{{vm.historyStat[dateStr].count}}</span>
+          </div>
         <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
         <i class="icon ion-chevron-right icon-accessory" style="left:90%"></i>
       </a>

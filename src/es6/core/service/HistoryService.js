@@ -1,6 +1,9 @@
 /**
  * Created by Gaplo917 on 10/1/2016.
  */
+
+const moment = require('moment')
+
 export class HistoryService {
   static get NAME() { return 'HistoryService'}
 
@@ -10,16 +13,26 @@ export class HistoryService {
 
   static get BROWSE_HISTORY() {  return 'browse.history' }
 
+  static get BROWSE_HISTORY_STAT() { return 'browse.history.stat'}
+
   constructor(LocalStorageService) {
     this.localStorageService = LocalStorageService
   }
 
-  save (historyList) {
-    this.localStorageService.setObject(HistoryService.BROWSE_HISTORY,historyList)
+  save (dateStr,historyList) {
+    this.localStorageService.setObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`,historyList)
+  }
+
+  saveStat(stat) {
+    this.localStorageService.setObject(HistoryService.BROWSE_HISTORY_STAT,stat)
   }
 
   add (historyObj) {
-    const histories = this.getAllHistory()
+    const stat = this.getHistoryStat()
+
+    const today = moment().format('YYYYMMDD')
+
+    const histories = this.getHistoryAt(today)
 
     const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
@@ -28,23 +41,40 @@ export class HistoryService {
 
     // add uuid for the history obj
     historyObj.uuid = uuid
+    historyObj.createdAt = new Date().getTime()
 
     if(Object.keys(histories).length == 0){
-      this.save([historyObj])
+      this.save(today,[historyObj])
+
+      stat[today] = {
+        count : 1
+      }
+      this.saveStat(stat)
     }
     else{
-      histories.push(historyObj)
+      histories.unshift(historyObj)
 
-      this.save(histories.slice(0, Math.min(histories.length,100)))
+      stat[today].count += 1
+
+      this.save(today,histories.slice(0, Math.min(histories.length,1000)))
+      this.saveStat(stat)
     }
   }
-  remove (historyObj) {
-    const histories = this.getAllHistory()
-    let filtered = histories
-        .filter((obj) => obj.uuid !== historyObj.uuid)
+  //remove (historyObj) {
+  //  const histories = this.getAllHistory()
+  //  let filtered = histories
+  //      .filter((obj) => obj.uuid !== historyObj.uuid)
+  //
+  //  this.save(filtered)
+  //
+  //}
 
-    this.save(filtered)
+  getHistoryStat(){
+    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY_STAT)
+  }
 
+  getHistoryAt(dateStr){
+    return this.localStorageService.getObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`)
   }
 
   getAllHistory ()  {
