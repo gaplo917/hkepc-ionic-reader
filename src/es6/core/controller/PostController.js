@@ -617,6 +617,7 @@ export class PostController{
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
+    console.log(history)
     if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostController.STATE)){
       this.ionicHistory.goBack()
     } else {

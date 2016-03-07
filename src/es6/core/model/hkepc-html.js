@@ -4,6 +4,7 @@
 import {GeneralHtml} from './general-html'
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
+import * as Controllers from '../controller/index'
 const cheerio = require('cheerio')
 
 export class HKEPCHtml extends GeneralHtml{
@@ -33,7 +34,13 @@ export class HKEPCHtml extends GeneralHtml{
       }
       else if(url && url.indexOf('viewthread.php?') >= 0){
         const postId = URLUtils.getQueryVariable(url,'tid')
-        this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
+
+        // detect the tab
+        if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
+          this.source(e).attr('href',`#/tab/features//posts/${postId}/page/1`)
+        } else {
+          this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
+        }
 
         this.source(e).removeAttr('target')
       }
@@ -43,7 +50,7 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).replaceWith(spanText)
       }
       else if(url && url.indexOf('logging.php') >= 0){
-        this.source(e).attr('href',`#/tab/accounts`)
+        this.source(e).attr('href',`#/tab/features/account`)
 
         this.source(e).removeAttr('target')
       }
