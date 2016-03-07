@@ -18,7 +18,7 @@ export class ViewPostController extends PostController {
   static get STATE() { return 'tab.features-view-post'}
   static get NAME() { return 'ViewPostController'}
   static get CONFIG() { return {
-    url: '/features/:topicId/posts/:postId/page/:page',
+    url: '/features/topics/:topicId/posts/:postId/page/:page',
     views: {
       'tab-features': {
         templateUrl: 'templates/post-detail.html',

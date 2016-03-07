@@ -29,15 +29,33 @@ export class HKEPCHtml extends GeneralHtml{
 
         this.source(e).attr('href',``)
         this.source(e).removeAttr('target')
+        this.source(e).attr('pid',messageId)
+        this.source(e).attr('ptid',postId)
+
+        if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
+          this.source(e).attr('in-app-url',`#/tab/features/topics//posts/${postId}/page/1`)
+        } else {
+          this.source(e).attr('in-app-url',`#/tab/topics//posts/${postId}/page/1`)
+        }
+
         this.source(e).attr('ng-click',`vm.findMessage(${postId},${messageId})`)
 
+      }
+      else if (url && url.indexOf('forumdisplay.php') >= 0){
+        const topicId = URLUtils.getQueryVariable(url,'fid')
+        if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0) {
+          this.source(e).attr('href',`#/tab/features/topics/${topicId}/page/1`)
+
+        } else {
+          this.source(e).attr('href',`#/tab/topics/${topicId}/page/1`)
+        }
       }
       else if(url && url.indexOf('viewthread.php?') >= 0){
         const postId = URLUtils.getQueryVariable(url,'tid')
 
         // detect the tab
         if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
-          this.source(e).attr('href',`#/tab/features//posts/${postId}/page/1`)
+          this.source(e).attr('href',`#/tab/features/topics//posts/${postId}/page/1`)
         } else {
           this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
         }

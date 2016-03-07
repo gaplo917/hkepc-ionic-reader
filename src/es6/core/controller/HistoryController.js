@@ -51,7 +51,7 @@ export class HistoryController {
   }
 
   relativeMomentize(dateStr){
-    return moment(dateStr, 'YYYYMMDD').endOf('day').fromNow()
+    return moment(dateStr, 'YYYYMMDD').fromNow()
   }
 
   sortedDateStrKey(obj){

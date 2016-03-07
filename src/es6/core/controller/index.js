@@ -12,4 +12,12 @@ export * from './FeatureRouteController'
 export * from './HistoryController'
 export * from './AccountController'
 export * from './HistoryDetailController'
+export * from './MyPostController'
+export * from './MyReplyController'
+
+
+// Just a clone
 export * from './ViewPostController'
+export * from './ViewPostListController'
+
+

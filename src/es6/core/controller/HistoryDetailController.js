@@ -60,8 +60,10 @@ export class HistoryDetailController {
     return moment(timestamp).fromNow()
   }
 
-  clearAllHistory(){
-    this.historyService.clearAllHistory()
+  onClearHistory(dateStr){
+    this.historyService.clearHistory(dateStr)
+
+    this.ionicHistory.goBack()
   }
 
 }
