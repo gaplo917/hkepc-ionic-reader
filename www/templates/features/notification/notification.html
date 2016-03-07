@@ -16,9 +16,10 @@
       <ion-item class="item"
                 ng-class-odd="'odd'" ng-class-even="'even'"
                 ng-repeat="notification in vm.notifications track by $index"
+                ng-class="notification.isRead? '' : 'new-notification' "
                 type="item-text-wrap">
         <div class="fright">#{{$index + 1}}</div>
-        <div class="item-body" compile="::notification">
+        <div class="item-body" compile="::notification.content"></div>
       </ion-item>
       <ion-infinite-scroll
           class="ispinner text-center"

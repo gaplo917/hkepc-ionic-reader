@@ -74,4 +74,7 @@ export class AccountController {
     }
   }
 
+  isProxy() {
+    return !URLUtils.isFileSys()
+  }
 }

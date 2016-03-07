@@ -617,7 +617,7 @@ export class PostController{
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == Controllers.PostListController.STATE){
+    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostController.STATE)){
       this.ionicHistory.goBack()
     } else {
       this.state.go(Controllers.PostListController.STATE,{
@@ -625,7 +625,6 @@ export class PostController{
         page: 1
       })
     }
-    console.log("on back")
   }
 
   getTimes(i){

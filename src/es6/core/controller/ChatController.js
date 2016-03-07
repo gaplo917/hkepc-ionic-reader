@@ -82,6 +82,7 @@ export class ChatController{
             const avatarUrl = chatSource('.avatar img').attr('src')
             const summary = chatSource('.summary').text()
             const username = chatSource('.cite cite a').text()
+            const isRead = chatSource('.cite img').attr('alt') != 'NEW'
 
             chatSource('cite').remove()
             const date = chatSource('.cite').text()
@@ -92,7 +93,8 @@ export class ChatController{
               avatarUrl:avatarUrl,
               summary:summary,
               username: username,
-              date : date
+              date : date,
+              isRead: isRead
             }
 
           }).get()
@@ -135,6 +137,5 @@ export class ChatController{
     } else {
       this.state.go(Controllers.FeatureRouteController.STATE)
     }
-    console.log("on back")
   }
 }

@@ -486,9 +486,8 @@ export class PostListController {
     if(history.backView && history.backView.stateName == Controllers.TopicListController.STATE){
       this.ionicHistory.goBack()
     } else {
-      this.state.go('tab.topics')
+      this.state.go(Controllers.TopicListController.STATE)
     }
-    console.log("on back")
   }
 
   onGoToPost(post){

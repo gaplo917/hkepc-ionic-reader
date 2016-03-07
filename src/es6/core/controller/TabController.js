@@ -13,12 +13,12 @@ const Rx = require('rx')
 
 export class TabController{
   static get STATE() { return 'tab'}
-  static get NAME() { return 'TabCtrl'}
+  static get NAME() { return 'TabController'}
   static get CONFIG() { return {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html',
-    controller: 'TabCtrl',
+    controller: 'TabController',
     controllerAs: 'vm'
 
   }}
@@ -28,6 +28,7 @@ export class TabController{
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
 
+    this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
     this.http = $http
     this.authService = AuthService
@@ -35,22 +36,32 @@ export class TabController{
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
 
+    const getMemberCenterPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
+    const checkPMPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))
+
     // Try the credential on start app
     Rx.Observable
-        .fromPromise(this.http.get(HKEPC.forum.memberCenter()))
+        .concat(checkPMPromise,getMemberCenterPromise)
         .map(resp => cheerio.load(resp.data))
+        .filter($ => $('body').html() != null)
         .subscribe(
             $ => this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
         )
 
     // schedule to check PM
-    setInterval(() => {
-      this.http.get(HKEPC.forum.checkPM()).then(resp => console.log(resp))
-    },1000 * 60 * 5)
-
+    Rx.Scheduler.default.schedulePeriodic(
+        HKEPC.forum.checkPM(),
+        1000 * 60 , /* 1 minutes */
+        (url) =>  {
+          this.http.get(url)
+          return url
+        }
+    )
 
     $scope.$on(CommonInfoExtractRequest.NAME, (event,req) =>{
       if(req instanceof CommonInfoExtractRequest){
+        console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
+
         const $ = req.cheerio
 
         // select the current login user
@@ -63,17 +74,19 @@ export class TabController{
         // send the login name to parent controller
         this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
 
-        // send the notification badge update
+        // send the notification badge update in rootscope
+        this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
         this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
+
       }
     })
 
     $scope.$on(NotificationBadgeUpdateRequest.NAME,(event,req) => {
       if(req instanceof NotificationBadgeUpdateRequest){
-        const notification = {
-          pm: req.pmNotificationCount,
-          post: req.postNotificationCount
-        }
+        console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
+
+        console.log(req.notification)
+        const notification = req.notification
 
         this.notification = notification
 
@@ -83,6 +96,8 @@ export class TabController{
 
     $scope.$on(LoginTabUpdateRequest.NAME, (event,req) =>{
       if(req instanceof LoginTabUpdateRequest){
+        console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`)
+
         this.login = req.username
         if(this.login) {
           this._isLoggedIn = true
@@ -101,6 +116,8 @@ export class TabController{
 
     $scope.$on(FindMessageRequest.NAME, (event,arg) =>{
       if(arg instanceof FindMessageRequest){
+        console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
+
         this.messageModal.show()
         // reset the message first
         this.scope.messageModal.message = {}
@@ -118,6 +135,8 @@ export class TabController{
 
     $scope.$on(PushHistoryRequest.NAME, (event,arg) =>{
       if(arg instanceof PushHistoryRequest){
+        console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
+
         this.historyService.add(arg.historyObj)
       }
 
@@ -148,13 +167,6 @@ export class TabController{
         }
       })
     }
-
-    // use cache as initial value
-    const notification = this.localStorageService.getObject('notification') || {}
-    const pmNotification = notification.pm || 0
-    const postNotification = notification.post || 0
-    this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
-
 
   }
 

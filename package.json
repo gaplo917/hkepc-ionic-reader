@@ -19,7 +19,8 @@
     "gulp-sass": "^2.2.0",
     "ionic-native-transitions": "^1.0.0-rc9",
     "moment": "^2.11.2",
-    "rx": "^4.0.8"
+    "rx": "^4.0.8",
+    "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",

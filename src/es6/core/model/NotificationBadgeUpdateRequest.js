@@ -6,7 +6,9 @@ export class NotificationBadgeUpdateRequest {
   static get NAME() { return 'NotificationBadgeUpdateRequest'}
 
   constructor(pmNotificationCount, postNotificationCount) {
-    this.pmNotificationCount = parseInt(pmNotificationCount)
-    this.postNotificationCount = parseInt(postNotificationCount)
+    this.notification = {
+      pm : parseInt(pmNotificationCount),
+      post: parseInt(postNotificationCount)
+    }
   }
 }

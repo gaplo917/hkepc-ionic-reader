@@ -3,12 +3,16 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
+import {XMLUtils} from '../../utils/xml'
+
 import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
 const async = require('async')
+const moment = require('moment')
+const uuid = require('uuid-v4');
 
 export class ChatDetailController{
   static get STATE() { return 'tab.features-chat-detail'}
@@ -112,9 +116,16 @@ export class ChatDetailController{
               headers : {'Content-Type':'application/x-www-form-urlencoded'}
             }).then((resp) => {
 
-              this.ngToast.success(`<i class="ion-ios-checkmark"> 已發送！</i>`)
+              const $ = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true})
 
-              this.doRefesh()
+              const newMessage = this.parseChat($('li').html(),true)
+
+              this.messages.push(newMessage)
+
+              this.ionicScrollDelegate.scrollBottom(true)
+
+              delete this.input.message
+
             })
           }
 
@@ -139,7 +150,7 @@ export class ChatDetailController{
           text
       ),
       username: username,
-      date : date,
+      date : moment(date,'YYYY-M-D hh:mm').fromNow(),
       isSelf: isSelf
     }
   }
@@ -150,7 +161,7 @@ export class ChatDetailController{
 
   }
 
-  doRefesh(){
+  doRefresh(){
     this.messages = []
     this.loadMessages()
   }
@@ -162,6 +173,5 @@ export class ChatDetailController{
     } else {
       this.state.go(Controllers.ChatController.STATE)
     }
-    console.log("on back")
   }
 }

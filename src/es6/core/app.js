@@ -87,6 +87,9 @@ angular.module('starter', [
             config.url = config.url.replace('http://',`${proxy}/`)
           }
           config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${LocalStorageService.get(HKEPC.auth.id)};${HKEPC.auth.token}=${LocalStorageService.get(HKEPC.auth.token)}`
+
+        } else if(config.url.indexOf('//') == 0){
+          config.url = config.url.replace('//','http://')
         }
         config.timeout = 10000 // 10 seconds should be enough to transfer plain HTML text
 

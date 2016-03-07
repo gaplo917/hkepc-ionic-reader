@@ -3,7 +3,7 @@
  */
 
 const moment = require('moment')
-
+const uuid = require('uuid-v4');
 export class HistoryService {
   static get NAME() { return 'HistoryService'}
 
@@ -34,13 +34,8 @@ export class HistoryService {
 
     const histories = this.getHistoryAt(today)
 
-    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
-      return v.toString(16)
-    })
-
     // add uuid for the history obj
-    historyObj.uuid = uuid
+    historyObj.uuid = uuid()
     historyObj.createdAt = new Date().getTime()
 
     if(Object.keys(histories).length == 0){

@@ -16,6 +16,7 @@ export class NotificationController{
   static get NAME() { return 'NotificationController'}
   static get CONFIG() { return {
     url: '/features/notifications',
+    cache: false,
     views: {
       'tab-features': {
         templateUrl: 'templates/features/notification/notification.html',
@@ -81,9 +82,13 @@ export class NotificationController{
             : Math.max(...pageNumArr)
 
         const notifications = $('.feed li .f_quote, .feed li .f_reply').map((i, elem) => {
-          return this.sce.trustAsHtml($(elem).html())
+          return {
+            isRead: $(elem).find('img').attr('alt') != 'NEW',
+            content: this.sce.trustAsHtml($(elem).html())
+          }
         }).get()
 
+        console.log(notifications)
         this.notifications = this.notifications.concat(notifications)
 
         this.refreshing = false
@@ -126,6 +131,5 @@ export class NotificationController{
     } else {
       this.state.go(Controllers.FeatureRouteController.STATE)
     }
-    console.log("on back")
   }
 }
