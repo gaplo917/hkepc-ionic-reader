@@ -28,12 +28,13 @@ export class MyPostController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http) {
+  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http,AuthService,ngToast) {
     this.historyService = HistoryService
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.http = $http
+    this.ngToast = ngToast
 
     this.page = 1
     this.myposts = []
@@ -49,7 +50,12 @@ export class MyPostController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMyPosts()
+      if(AuthService.isLoggedIn()){
+        this.loadMyPosts()
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
+        $state.go(Controllers.AccountController.STATE)
+      }
     })
 
 

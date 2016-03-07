@@ -4,7 +4,7 @@
 const PROXY_URL = 'http://p.ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v1.0.0-Beta"
+const VERSION = "v1.0.0-Beta-1"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 

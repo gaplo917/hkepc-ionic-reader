@@ -29,13 +29,14 @@ export class MyReplyController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http,$sce) {
+  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http,$sce,AuthService,ngToast) {
     this.historyService = HistoryService
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.http = $http
     this.sce = $sce
+    this.ngToast = ngToast
 
     this.page = 1
     this.myreplies = []
@@ -51,7 +52,12 @@ export class MyReplyController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.loadMyReplies()
+      if(AuthService.isLoggedIn()){
+        this.loadMyReplies()
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
+        $state.go(Controllers.AccountController.STATE)
+      }
     })
 
 
