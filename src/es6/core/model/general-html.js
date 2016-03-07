@@ -38,6 +38,8 @@ export class GeneralHtml{
 
       if(URLUtils.isRelativeUrl(imgSrc)){
         this.source(e).attr('src',`${imagePrefix}/${imgSrc}`)
+      } else if(imgSrc.indexOf('//') == 0) {
+        this.source(e).attr('src',`http:${imgSrc}`)
       }
 
       // remove action attr on img
