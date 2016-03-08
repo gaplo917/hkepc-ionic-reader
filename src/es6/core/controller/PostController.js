@@ -12,6 +12,8 @@ import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
 const Rx = require('rx')
+const moment = require('moment')
+require('moment/locale/zh-tw');
 
 export class PostController{
   static get STATE() { return 'tab.topics-posts-detail'}
@@ -212,7 +214,7 @@ export class PostController{
           const message = {
             id: postSource('table').attr('id').replace('pid',''),
             pos: postSource('.postinfo strong a em').text(),
-            createdAt: postSource('.posterinfo .authorinfo em').text(),
+            createdAt: postSource('.posterinfo .authorinfo em span').attr('title') || postSource('.posterinfo .authorinfo em').text().replace('發表於 ',''),
             content : content.html(),
             ads: ads,
             post:{
@@ -435,8 +437,6 @@ export class PostController{
               const relativeUrl = $('#postform').attr('action')
               const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
-              console.log(postUrl)
-
               let formSource = cheerio.load($('#postform').html())
 
               // the text showing the effects of reply / quote
@@ -630,5 +630,13 @@ export class PostController{
 
   getTimes(i){
     return new Array(parseInt(i))
+  }
+
+  relativeMomentize(dateStr){
+    if(moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(),'days') >= -3 ){
+      return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
+    } else {
+      return dateStr
+    }
   }
 }

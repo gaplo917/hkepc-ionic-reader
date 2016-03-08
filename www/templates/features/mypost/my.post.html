@@ -1,4 +1,4 @@
-<ion-view class="card-view">
+<ion-view class="mypost-view">
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
     第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
@@ -10,17 +10,16 @@
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.myposts.length == 0"></ion-spinner>
     </div>
-    <div class="list card" ng-repeat="mypost in vm.myposts track by $index">
-      <a class="item" href="{{::mypost.topic.url}}">
-        <span><small style="color:#999">#{{$index}}</small> <i class="ion-ios-locked" ng-show="::mypost.status == '關閉'"></i> {{::mypost.topic.title}}</span>
-        <small class="fright" style="color:#999">{{::mypost.lastpost.timestamp}} @ {{::mypost.lastpost.by}}</small>
-      </a>
+    <div ng-repeat="mypost in vm.myposts track by $index" ng-class-odd="'odd'" ng-class-even="'even'">
       <a class="item item-icon-right"  href="{{::mypost.post.url}}">
-        <div class="title item-text-wrap" style="color: #222;font-size: 18px;line-height: 25px;font-weight: bold">{{::mypost.post.title}}</div>
-
+        <div class="item-text-wrap" style="color: #222;font-size: 18px;line-height: 25px;">        <i class="ion-ios-locked" ng-show="::mypost.status == '關閉'"></i> {{::mypost.post.title}}</div>
+        <div>
+          <small style="color:#999">#{{$index + 1}} {{::mypost.topic.title}}</small>
+          <small class="fright" style="color:#999">{{::mypost.lastpost.timestamp}} @ {{::mypost.lastpost.by}}</small>
+        </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
-
       </a>
+
     </div>
     <ion-infinite-scroll
         class="ispinner text-center"

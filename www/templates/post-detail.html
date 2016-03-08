@@ -24,7 +24,7 @@
         <h2 ng-bind="::message.author.name"></h2>
         <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>
         <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index" class="ion-ios-star" style="color:#F9A825;"></i>
-        <p>{{::message.createdAt}} <span class="fright">#{{::message.pos}}</span></p>
+        <p>發表於 {{::vm.relativeMomentize(message.createdAt)}} <span class="fright">#{{::message.pos}}</span></p>
       </div>
 
       <div class="item item-body" compile="::message.content">

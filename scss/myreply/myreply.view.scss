@@ -1,0 +1,16 @@
+@import "variables";
+
+.myreply-view {
+  .odd > a{
+    background-color: #FFFFFF
+  }
+
+  .even > a{
+    background-color: #F5F5F5
+  }
+
+  .less-important-info {
+    color:#999;
+    font-size: 12px;
+  }
+}

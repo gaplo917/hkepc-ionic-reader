@@ -47,7 +47,7 @@
               <small class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</small>
             </div>
             <div>
-              <small class="less-important-info">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</small>
+              <small class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</small>
 
             </div>
 

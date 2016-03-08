@@ -10,6 +10,8 @@ import * as Controllers from './index'
 
 const cheerio = require('cheerio')
 const async = require('async')
+const moment = require('moment')
+require('moment/locale/zh-tw');
 
 export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
@@ -290,7 +292,7 @@ export class PostListController {
                 name: postSource('tr .subject span[id^=thread_] a ').text(),
                 lastPost:{
                   name: postSource('tr .lastpost cite a').text(),
-                  timestamp: postSource('tr .lastpost em a').text()
+                  timestamp: postSource('tr .lastpost em a span').attr('title') || postSource('tr .lastpost em a').text()
                 },
                 author: {
                   name: postSource('tr .author a').text()
@@ -496,5 +498,13 @@ export class PostListController {
 
   hasStickyPost(posts) {
     return posts && posts.filter(post => post.isSticky).length > 0
+  }
+
+  relativeMomentize(dateStr){
+    if(moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(),'days') >= -3 ){
+      return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
+    } else {
+      return dateStr
+    }
   }
 }
