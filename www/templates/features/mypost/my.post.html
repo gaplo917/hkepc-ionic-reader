@@ -10,17 +10,19 @@
     <div class="spinner">
       <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.myposts.length == 0"></ion-spinner>
     </div>
-    <div ng-repeat="mypost in vm.myposts track by $index" ng-class-odd="'odd'" ng-class-even="'even'">
-      <a class="item item-icon-right"  href="{{::mypost.post.url}}">
+    <ion-list>
+      <ion-item class="item item-icon-right"  href="{{::mypost.post.url}}"
+                ng-repeat="mypost in vm.myposts track by $index"
+                ng-class-odd="'odd'" ng-class-even="'even'">
         <div class="item-text-wrap" style="color: #222;font-size: 18px;line-height: 25px;">        <i class="ion-ios-locked" ng-show="::mypost.status == '關閉'"></i> {{::mypost.post.title}}</div>
         <div>
           <small style="color:#999">#{{$index + 1}} {{::mypost.topic.title}}</small>
           <small class="fright" style="color:#999">{{::mypost.lastpost.timestamp}} @ {{::mypost.lastpost.by}}</small>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
-      </a>
+      </ion-item>
 
-    </div>
+    </ion-list>
     <ion-infinite-scroll
         class="ispinner text-center"
         ng-if="vm.hasMoreData()"
