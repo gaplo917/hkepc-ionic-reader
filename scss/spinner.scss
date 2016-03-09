@@ -1,5 +1,3 @@
-@import "variables";
-
 // normal page spinner
 div{
   &.spinner {
@@ -15,7 +13,7 @@ div{
 // infinity spinner
 .ispinner {
   .spinner {
-    stroke: #8fc320;
-    fill: #8fc320;
+    stroke: $spinner-color;
+    fill: $spinner-color;
   }
 }

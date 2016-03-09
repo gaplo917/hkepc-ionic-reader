@@ -1,14 +1,16 @@
-@import "variables";
-
 .notification-view {
   .odd {
-    background-color: #FFFFFF
+    background-color: $odd-color
   }
 
   .even {
-    background-color: #F5F5F5
+    background-color: $even-color
   }
   .new-notification{
     background-color: #F1F8E9;
+  }
+
+  .item-body{
+    color:$text-color;
   }
 }

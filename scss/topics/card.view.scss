@@ -1,21 +1,30 @@
-@import "variables";
-
 // only for cardholder
 .card-view {
   background-color: $card-holder-bg-color;
 
   .title {
+    color: $text-color;
     padding: 0 20px;
   }
 
   .card {
+    background-color: $card-bg-color;
     margin: 15px 0;
 
+    .card-button{
+      color: $tab-item-stoke-color;
+    }
+
     .active-liked {
-      color: #dd0000;
+      color: $liked-color;
+    }
+
+    td,p,tr {
+      color: $text-color;
     }
 
     .item {
+      background-color:$card-bg-color;
       border-color: $border-color;
       &.tabs {
         background-image: linear-gradient(0deg, $border-color, $border-color 50%);
@@ -35,7 +44,7 @@
         height: 32px;
         text-align: center;
         font-style: normal;
-        color: #999;
+        color: $less-important-color;
         font-size: 12px;
       }
 
@@ -44,7 +53,8 @@
         margin: 10px 0;
         width: 100%;
         padding: 8px 8px 8px 24px;
-        border: 1px dashed #FF9A9A;
+        border: 1px dashed $locked-dash-line;
+        color: $less-important-color;
         font-size: 12px;
       }
 
@@ -63,6 +73,8 @@
         height:auto;
         max-width: 100%;
         width:auto!important;
+        background-color: #fff;
+        border-radius: 100px;
       }
 
       iframe {
@@ -79,7 +91,7 @@
       }
 
       blockquote {
-        border-left: 5px solid #8fc320;
+        border-left: 5px solid $blockquote-color;
       }
 
       font[size="7"]{

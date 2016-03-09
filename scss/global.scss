@@ -1,5 +1,3 @@
-@import "variables";
-
 // word break
 * {
   word-break: break-all;
@@ -33,10 +31,20 @@
 }
 
 // common ionic content
-ionic-content {
+.item.active, .item.activated, .item-complex.active .item-content, .item-complex.activated .item-content, .item .item-content.active, .item .item-content.activated {
+  background-color: $activated-color;
+  border-color: $border-color;
+}
+ion-content {
+  background-color: $bg-color;
+
   /* Font Size */
   .item {
-    .bigger-title {  font-size: 16px;  }
+    border-color: $border-color;
+
+    .bigger-title {
+      font-size: 16px;
+    }
   }
 
   .odd {
@@ -44,7 +52,7 @@ ionic-content {
   }
 
   .even {
-    .item-content{  background-color: #fafafa;  }
+    .item-content{  background-color: $even-color;  }
   }
 }
 
@@ -54,8 +62,61 @@ ion-list, .list {
   // override
   .item {
     &.item-divider {
-      color: #fff;
-      background-color: $epc-color !important;
+      color: $item-divider-font-color;
+      background-color: $epc-color;
     }
+  }
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+  color:$text-color;
+}
+
+.bar.bar-stable {
+  border-color: $border-color;
+  background-color: $header-bg-color;
+  .title{
+    color:$text-color;
+  }
+  button, .button {
+    color: $default-button-font-color;
+  }
+}
+.bar {
+  &.bar-subheader{
+    border:0;
+  }
+}
+
+.tab-nav{
+  border-color: $border-color;
+  background-color: $header-bg-color;
+  i ,span{
+    color:$tab-item-stoke-color;
+  }
+
+}
+
+.item-input, .item-radio,.popover {
+  * {
+    background-color: $bg-color;
+    color:$text-color;
+  }
+  textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+    color:$text-color;
+    background-color: $bg-color;
+  }
+  .item-content {
+    background-color: $bg-color;
+  }
+  background-color: $bg-color;
+}
+
+.button-full {
+  background-color:$default-button-bg-color;
+  color: $default-button-font-color;
+  &.activated {
+    background-color: lighten($default-button-bg-color, 20%);
+    color:$text-color;
   }
 }

@@ -9,11 +9,12 @@
     }
   ],
   "gulpStartupTasks": [
-    "sass",
-    "watch"
+    "watch",
+    "sass"
   ],
   "watchPatterns": [
     "www/js/bundle.js",
+    "scss/**/*",
     "www/templates/**/*",
     "!www/lib/**/*"
   ]

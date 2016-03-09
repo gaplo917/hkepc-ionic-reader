@@ -14,7 +14,7 @@
       <ion-item class="item item-icon-right"  href="{{::mypost.post.url}}"
                 ng-repeat="mypost in vm.myposts track by $index"
                 ng-class-odd="'odd'" ng-class-even="'even'">
-        <div class="item-text-wrap" style="color: #222;font-size: 18px;line-height: 25px;">        <i class="ion-ios-locked" ng-show="::mypost.status == '關閉'"></i> {{::mypost.post.title}}</div>
+        <h2 class="item-text-wrap">        <i class="ion-ios-locked" ng-show="::mypost.status == '關閉'"></i> {{::mypost.post.title}}</h2>
         <div>
           <small style="color:#999">#{{$index + 1}} {{::mypost.topic.title}}</small>
           <small class="fright" style="color:#999">{{::mypost.lastpost.timestamp}} @ {{::mypost.lastpost.by}}</small>

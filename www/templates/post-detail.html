@@ -35,19 +35,19 @@
       </div>
 
       <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item" ng-click="vm.like(message)">
+        <a class="tab-item card-button" ng-click="vm.like(message)">
           <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
           Like
         </a>
-        <a class="tab-item" ng-click="vm.onReply(message)" >
+        <a class="tab-item card-button" ng-click="vm.onReply(message)" >
           <i class="icon ion-ios-chatboxes-outline"></i>
           Comment
         </a>
-        <a class="tab-item" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
+        <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
           <i class="icon ion-ios-flag-outline"></i>
           Report
         </a>
-        <a class="tab-item" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
+        <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
           <i class="icon ion-ios-compose-outline"></i>
           Edit
         </a>

@@ -8,16 +8,27 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 var babel = require("gulp-babel");
 var plumber = require("gulp-plumber");
- 
+var browserSync = require('browser-sync').create();
+
 var paths = {
   es6: ['./www/js/**/*.js'],
   sass: ['./scss/**/*.scss']
 };
 
+gulp.task('browser-sync', function() {
+  browserSync.init({
+    server: {
+      baseDir: "./www/"
+    }
+  });
+
+  gulp.watch(paths.sass, ['sass',browserSync.reload]);
+});
+
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
+  gulp.src(['./scss/ionic.app.scss','./scss/ionic.app.dark.scss'])
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))

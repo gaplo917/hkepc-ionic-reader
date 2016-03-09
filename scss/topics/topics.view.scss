@@ -1,16 +1,22 @@
-@import "variables";
-
 .topics-view {
 
   .last-description{
-    color:#a0a0a0
+    color: $less-important-color
   }
 
   .odd > a{
-    background-color: #F5F5F5
+    background-color: $odd-color
   }
 
   .even > a{
-    background-color: #FFFFFF
+    background-color: $even-color
+  }
+
+  .topic-icon{
+    background-color: #ffffff;
+  }
+
+  .item {
+    border-color: $border-color;
   }
 }

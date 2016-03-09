@@ -1,15 +1,15 @@
 .chats-list-view {
   .odd > a {
-    background-color: #FFFFFF
+    background-color: $odd-color
   }
 
   .even > a {
-    background-color: #F5F5F5
+    background-color: $even-color
   }
 
   .new-pm {
     .item-content{
-      background-color: #F1F8E9;
+      background-color: $bg-color;
     }
   }
 }

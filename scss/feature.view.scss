@@ -1,14 +1,12 @@
-@import "variables";
-
 .feature-view {
   ion-content {
-    background-color: #eeeeee;
+    background-color: $bg-color;
 
   }
 
   .inner-icon {
     font-size:28px;
-    color:white;
+    color:$inner-icon-color;
 
     padding:4px 9px;
     border-radius:10px;
@@ -19,5 +17,12 @@
     left:initial;
     width:20px;
     right:12px;
+  }
+
+  .card {
+    a {
+      color:$text-color;
+      background-color: $card-bg-color;
+    }
   }
 }

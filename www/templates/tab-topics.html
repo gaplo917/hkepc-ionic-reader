@@ -18,7 +18,7 @@
             class="item-remove-animate item-avatar item-icon-right "
             type="item-text-wrap"
             href="#/tab/topics/{{::topic.id}}/page/1">
-          <img ng-src="{{::topic.image}}" ng-show="::vm.canShowIniOSReview(topic.id)"/>
+          <img class="topic-icon" ng-src="{{::topic.image}}" ng-show="::vm.canShowIniOSReview(topic.id)"/>
           <h2 ng-bind="::topic.name"></h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
           <small class="last-description" ng-bind="::topic.description"></small>

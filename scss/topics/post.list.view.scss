@@ -1,33 +1,31 @@
-@import "variables";
-
 .post-list-view {
 
   .last-description{
-    color:#a0a0a0
+    color:$less-important-color
   }
 
   .odd > a{
-    background-color: #FFFFFF
+    background-color: $odd-color
   }
 
   .even > a{
-    background-color: #F5F5F5
+    background-color: $even-color
   }
 
   .bar.bar-subheader{
     background-color: $epc-color;
 
     .title {
-      color: #fff;
+      color: $text-on-epc-color;
     }
     .icon.ion-bonfire {
       float:left;
       font-size:34px;
-      color:#FF6D00;
+      color:$hot-topic-icon-color;
     }
 
     .icon.ion-ios-more{
-      color:#fff;
+      color:$text-on-epc-color;
     }
   }
 
@@ -40,10 +38,17 @@
   }
 
   .less-important-info{
-    color:#aaa
+    color: $less-important-color;
   }
 
   .ion-bonfire{
-    color:#FF6D00
+    color:$hot-topic-icon-color
+  }
+
+
+  .item {
+    border-color: $border-color;
+    background-color: $bg-color;
+
   }
 }

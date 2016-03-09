@@ -1,9 +1,7 @@
-@import "variables";
-
 .chats-view {
 
   ion-content {
-    background-color: #E0E0E0;
+    background-color: $bg-color;
   }
   /* allows the bar-footer to be elastic /*
   /* optionally set a max-height */
@@ -98,12 +96,12 @@
     }
 
     &.left {
-      background-color: #FAFAFA;
+      background-color: $left-bubble-bg-color;
       float: left;
       margin-left: 55px;
 
       :before {
-        background-color: #FAFAFA;
+        background-color: $left-bubble-bg-color;
         left: 10px;
         -webkit-transform: rotate(70deg) skew(5deg);
       }
@@ -111,26 +109,26 @@
     }
 
     &.right {
-      background-color: #8BC34A;
+      background-color: $right-bubble-bg-color;
       color: #222;
       float: right;
       margin-right: 55px;
       :before {
-        background-color: #8BC34A;
+        background-color: $right-bubble-bg-color;
         right: 10px;
         -webkit-transform: rotate(118deg) skew(-5deg);
       }
 
 
       font[color="Silver"]{
-        color:#444;
+        color:$signature-color;
       }
     }
   }
 
 
   input, textarea, .item-input, .item-input-wrapper {
-    background-color: #f4f4f4 !important;
+    background-color: $chat-input-bg-color !important;
   }
 
   .bold {
