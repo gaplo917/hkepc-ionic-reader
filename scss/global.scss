@@ -35,6 +35,11 @@
   background-color: $activated-color;
   border-color: $border-color;
 }
+ion-tabs {
+  &.pane, &.view {
+    background-color: $bg-color;
+  }
+}
 ion-content {
   background-color: $bg-color;
 
@@ -82,9 +87,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     color: $default-button-font-color;
   }
 }
+
 .bar {
+  //&.bar-header{
+  //  background-color: $bg-color;
+  //}
   &.bar-subheader{
     border:0;
+  }
+  .button.button-icon {
+    color: #666;
   }
 }
 
@@ -96,12 +108,29 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   }
 
 }
+.popover, .range.range-positive {
+  color:$text-color;
+  background-color: $popover-bg-color;
 
-.item-input, .item-radio,.popover {
-  * {
-    background-color: $bg-color;
-    color:$text-color;
+  .bar.bar-header, .bar.bar-footer,ion-content,.button.button-icon, .item{
+    background-color: $popover-bg-color;
   }
+  .bar.bar-subheader{
+    border:0;
+  }
+  .button.button-icon {
+    color: #888;
+  }
+
+  ion-content{
+
+  }
+}
+
+.item-checkbox, .item-input, .item-radio, .popover{
+  color:$text-color;
+  background-color: $bg-color;
+
   textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
     color:$text-color;
     background-color: $bg-color;
@@ -109,7 +138,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   .item-content {
     background-color: $bg-color;
   }
-  background-color: $bg-color;
+
+  input:checked + .radio-content .item-content{
+    color:$text-color;
+    background-color: lighten($bg-color,20%);
+  }
 }
 
 .button-full {
@@ -120,3 +153,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     color:$text-color;
   }
 }
+
+@media not all, (-webkit-min-device-pixel-ratio: 1.5), not all, (min-resolution: 144dpi), (min-resolution: 1.5dppx) {
+  .tabs, .bar {
+    background-size: 100% 0px!important;
+  } }

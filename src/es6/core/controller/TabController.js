@@ -7,6 +7,7 @@ import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRe
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import {LoginTabUpdateRequest} from "../model/LoginTabUpdateRequest"
 import {PushHistoryRequest} from "../model/PushHistoryRequest"
+import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
 
 const cheerio = require('cheerio')
 const Rx = require('rx')
@@ -35,6 +36,8 @@ export class TabController{
     this.historyService = HistoryService
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
+
+    this.darkTheme = this.localStorageService.get('theme') == 'dark'
 
     const getMemberCenterPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
     const checkPMPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))
@@ -140,6 +143,14 @@ export class TabController{
         this.historyService.add(arg.historyObj)
       }
 
+    })
+
+    $scope.$on(ChangeThemeRequest.NAME,(event,arg) => {
+      if(arg instanceof ChangeThemeRequest){
+        console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
+        this.darkTheme = arg.theme == 'dark'
+        this.localStorageService.set('theme',arg.theme)
+      }
     })
 
     $ionicModal.fromTemplateUrl('templates/modals/find-message.html', {

@@ -16,19 +16,17 @@
       <div class="row">
         <div class="col">
           <h4 class="text-center">或自行輸入頁數</h4>
-          <label class="item item-input" style="border:3px solid #eee">
+          <label class="item item-input">
             <input type="tel" class="text-center" ng-model="vm.inputPage" min="1" max="{{vm.totalPageNum}}" ng-change="vm.inputPage = vm.inputPage ? vm.inputPage > vm.totalPageNum ? vm.totalPageNum : vm.inputPage > 1 ? vm.inputPage : 1 : ''">
           </label>
         </div>
       </div>
     </div>
-
-
+    <ion-footer-bar class="bar-clear">
+      <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.pageSliderPopover.hide()"></button>
+      <span class="col-20"></span>
+      <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doJumpPage()"> </button>
+    </ion-footer-bar>
   </ion-content>
-  <ion-footer-bar class="bar-clear" style="border-top:1px solid #ddd">
-    <button class="col-40 button-icon ion-ios-close-empty" ng-click="vm.pageSliderPopover.hide()"></button>
-    <span class="col-20"></span>
-    <button class="col-40 button-icon ion-ios-checkmark-empty" ng-click="vm.doJumpPage()"> </button>
 
-  </ion-footer-bar>
 </ion-popover-view>

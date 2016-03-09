@@ -6,6 +6,7 @@ import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
 import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
+import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
 
 const cheerio = require('cheerio')
 const async = require('async')
@@ -33,6 +34,7 @@ export class FeatureRouteController{
     this.state = $state
     this.ngToast = ngToast
     this.localStorageService = LocalStorageService
+    this.darkTheme = this.localStorageService.get('theme') == 'dark'
 
     this.cleanBadgeUpdateListener = $rootScope.$on(NotificationBadgeUpdateRequest.NAME,(e,req) => {
       if(req instanceof NotificationBadgeUpdateRequest) {
@@ -50,5 +52,9 @@ export class FeatureRouteController{
     })
   }
 
+  onDarkTheme(bool){
+    const theme = bool? 'dark' : 'default'
+    this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(theme))
+  }
 
 }

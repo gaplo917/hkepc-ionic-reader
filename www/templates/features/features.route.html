@@ -9,7 +9,7 @@
 
     <div class="list card">
 
-      <a href="#/tab/features/account" class="item item-icon-left">
+      <a href="#/tab/features/account" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-person-stalker inner-icon" style="background-color: #795548;"></i>
         </div>
@@ -22,7 +22,7 @@
 
     <div class="list card">
 
-      <a href="#/tab/features/chats" class="item item-icon-left">
+      <a href="#/tab/features/chats" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-ios-email inner-icon" style="background-color: #2196F3;"></i>
         </div>
@@ -32,7 +32,7 @@
         <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
 
-      <a href="#/tab/features/notifications" class="item item-icon-left">
+      <a href="#/tab/features/notifications" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-ios-paper inner-icon" style="background-color: #43A047;"></i>
         </div>
@@ -41,7 +41,7 @@
         <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
 
-      <a href="#/tab/features/mypost" class="item item-icon-left">
+      <a href="#/tab/features/mypost" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-ios-box inner-icon" style="background-color: #3F51B5;"></i>
         </div>
@@ -49,7 +49,7 @@
         <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
 
-      <a href="#/tab/features/myreply" class="item item-icon-left">
+      <a href="#/tab/features/myreply" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-ios-undo inner-icon" style="background-color: #00BCD4;"></i>
         </div>
@@ -60,7 +60,7 @@
 
     <div class="list card">
 
-      <a href="#/tab/features/history" class="item item-icon-left">
+      <a href="#/tab/features/history" class="feature-route item item-icon-left">
         <div class="icon">
           <i class="ion-ios-clock inner-icon" style="background-color: #FF5722;"></i>
         </div>
@@ -68,6 +68,26 @@
         <div style="margin-left:10px">瀏覧紀錄</div>
         <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
       </a>
+
+    </div>
+
+    <div class="list card">
+
+      <div class="feature-route item item-icon-left">
+        <div class="icon">
+          <i class="ion-ios-color-wand inner-icon" style="background-color: #212121;"></i>
+        </div>
+
+        <div style="margin-left:10px;line-height: 2;" >黑底模式
+          <label class="toggle toggle-assertive fright">
+            <input type="checkbox" ng-change="vm.onDarkTheme(vm.darkTheme)" ng-model="vm.darkTheme">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </div>
+
+      </div>
 
     </div>
   </ion-content>
