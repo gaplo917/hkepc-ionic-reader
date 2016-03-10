@@ -96,7 +96,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     border:0;
   }
   .button.button-icon {
-    color: #666;
+    color: mix($text-color,$bg-color,50%);
   }
 }
 
@@ -119,7 +119,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     border:0;
   }
   .button.button-icon {
-    color: #888;
+    color: mix($text-color,$bg-color,50%);
   }
 
   .item:last-child {
