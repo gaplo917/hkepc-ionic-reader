@@ -198,7 +198,7 @@ export class PostController{
 
           // extract the ads before remove from the parent
           const hasAds = adsSource.has('img')
-          const ads = hasAds && !ionic.Platform.isIOS()  ? adsSource.html() : undefined
+          const ads = hasAds && !ionic.Platform.isIOS() && !ionic.Platform.isAndroid()  ? adsSource.html() : undefined
 
           // really remove the ads
           adsSource.remove()
