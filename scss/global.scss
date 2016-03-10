@@ -122,18 +122,17 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     color: #888;
   }
 
-  ion-content{
-
+  .item:last-child {
+    border-bottom: 1px solid $border-color;
   }
 }
-
 .item-checkbox, .item-input, .item-radio, .popover{
   color:$text-color;
   background-color: $bg-color;
 
   textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
     color:$text-color;
-    background-color: $bg-color;
+    //background-color: $bg-color;
   }
   .item-content {
     background-color: $bg-color;

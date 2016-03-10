@@ -128,7 +128,8 @@
 
 
   input, textarea, .item-input, .item-input-wrapper {
-    background-color: $chat-input-bg-color !important;
+    background-color: $chat-input-bg-color;
+    color: invert($chat-input-bg-color);
   }
 
   .bold {

@@ -7,7 +7,7 @@
     background-color: $even-color
   }
   .new-notification{
-    background-color: #F1F8E9;
+    background-color: mix($epc-color,$bg-color,20%);
   }
 
   .item-body{

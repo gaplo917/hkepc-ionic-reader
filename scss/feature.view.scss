@@ -20,7 +20,7 @@
   }
 
   .card {
-    .feature-route {
+    .feature-route, .item {
       color:$text-color;
       background-color: $card-bg-color;
     }

@@ -9,7 +9,7 @@
 
   .new-pm {
     .item-content{
-      background-color: $bg-color;
+      background-color: mix($epc-color,$bg-color,20%);
     }
   }
 }
