@@ -50,6 +50,8 @@ export class AccountController {
 
       // unset the password field
       this.user.password = undefined
+
+      this.ionicHistory.clearCache()
     })
 
   }
@@ -63,6 +65,9 @@ export class AccountController {
 
     // send the login name to parent controller
     this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest() )
+
+    this.ionicHistory.clearCache()
+
   }
 
   onBack(){
