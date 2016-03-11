@@ -13,7 +13,7 @@
                ng-init="vm.inputPage = 1"
                ng-model="vm.inputPage">
       </div>
-      <div class="row">
+      <div class="row" ng-show="vm.totalPageNum > 1">
         <div class="col">
           <h4 class="text-center">或自行輸入頁數</h4>
           <label class="item item-input">
