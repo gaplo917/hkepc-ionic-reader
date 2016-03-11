@@ -2,13 +2,13 @@
  * Created by Gaplo917 on 23/1/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import {FindMessageRequest} from "../model/FindMessageRequest"
-import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
-import {LoginTabUpdateRequest} from "../model/LoginTabUpdateRequest"
-import {PushHistoryRequest} from "../model/PushHistoryRequest"
-import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
-
+import {FindMessageRequest} from '../model/FindMessageRequest'
+import {NotificationBadgeUpdateRequest} from '../model/NotificationBadgeUpdateRequest'
+import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
+import {LoginTabUpdateRequest} from '../model/LoginTabUpdateRequest'
+import {PushHistoryRequest} from '../model/PushHistoryRequest'
+import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
+import * as Controllers from './index'
 const cheerio = require('cheerio')
 const Rx = require('rx')
 
@@ -24,7 +24,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService) {
+  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -32,6 +32,7 @@ export class TabController{
     this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
     this.http = $http
+    this.state = $state
     this.authService = AuthService
     this.historyService = HistoryService
     // cache the value
@@ -129,6 +130,25 @@ export class TabController{
             .then((data) => {
 
               this.scope.messageModal.message = data.message
+
+              this.scope.messageModal.goToMessage = (msg) => {
+
+                this.messageModal.hide()
+
+                console.log(msg)
+                const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+                ? Controllers.PostController.STATE
+                : Controllers.ViewPostController.STATE
+
+                this.state.go(targetState,{
+                  topicId: msg.post.topicId,
+                  postId: msg.post.id,
+                  page: msg.post.page,
+                  delayRender: 0,
+                  focus: msg.id
+                })
+              }
+
               this.scope.messageModal.hide = () => this.messageModal.hide()
 
             })

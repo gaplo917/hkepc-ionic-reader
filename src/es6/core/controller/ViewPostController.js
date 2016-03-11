@@ -18,7 +18,7 @@ export class ViewPostController extends PostController {
   static get STATE() { return 'tab.features-view-post'}
   static get NAME() { return 'ViewPostController'}
   static get CONFIG() { return {
-    url: '/features/topics/:topicId/posts/:postId/page/:page',
+    url: '/features/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
       'tab-features': {
         templateUrl: 'templates/post-detail.html',
@@ -28,8 +28,8 @@ export class ViewPostController extends PostController {
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService) {
-    super($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService)
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate) {
+    super($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate)
   }
 
 

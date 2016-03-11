@@ -73,7 +73,7 @@ ion-list, .list {
   }
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   color:$text-color;
 }
 
@@ -128,14 +128,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
 }
 .item-checkbox, .item-input, .item-radio, .popover{
   color:$text-color;
-  background-color: $bg-color;
+  background-color: lighten($bg-color,10%);
 
   textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
     color:$text-color;
-    //background-color: $bg-color;
+    background-color: lighten($bg-color,10%);
   }
-  .item-content {
-    background-color: $bg-color;
+  &.item, .item-content {
+    background-color: lighten($bg-color,10%);
   }
 
   input:checked + .radio-content .item-content{
@@ -157,3 +157,4 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   .tabs, .bar {
     background-size: 100% 0px!important;
   } }
+

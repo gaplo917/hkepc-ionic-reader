@@ -18,7 +18,7 @@ $default-button-bg-color: #333;
 $default-button-font-color: #fff;
 
 //popover
-$popover-bg-color: #111;
+$popover-bg-color: lighten($bg-color,10%);
 
 
 // spinner

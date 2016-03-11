@@ -1,0 +1,16 @@
+@import "../../www/lib/csshake/scss/tools";
+
+.shake-notice {
+  @include do-shake(
+          $name: 'shake-notice', /* {String} is the name for the keyframes animation */
+          $h: 1px, /*  {Number} is the max number for random to assign in x axis */
+          $v: 1px, /* {Number} is the max number for random to assign in y axis */
+          $r: 3deg, /* {Number} is the max number for random rotation */
+          $dur: 1500ms, /* {Number} is the animation-duration time value */
+          $precision: .1, /* {Number} is the precision of the keyframes animation. For example .02 generates keyframes each 2% and .1 each 10%. The calculation is $step: 100 * $precision; */
+          $opacity: false,
+          $q: infinite, /* {String} is the animation-iteration-count value */
+          $t: ease-in-out, /* {String} animation-timing-function value */
+          $delay: null, /* {Number} animation-delay time value */
+          $chunk: 100%); /* {Number} is the part of the keyframes where apply the animation */
+}

@@ -110,7 +110,6 @@ export class MyReplyController {
 
       }).get()
 
-      console.log(myreplies)
       // merge array
       for(let i = 0 ; i < myreplies.length ; i += 2 ) {
         myreplies[i].brief = myreplies[i+1].brief

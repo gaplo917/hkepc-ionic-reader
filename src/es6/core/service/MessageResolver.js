@@ -27,6 +27,8 @@ export class MessageResolver {
         .then((resp) => {
           const html = new HKEPCHtml(cheerio.load(resp.data))
 
+          const pageLinkHint = html.getCheerio()('.authorinfo a').attr('href')
+
           let $ = html
               .removeIframe()
               .processImgUrl(HKEPC.baseUrl)
@@ -38,17 +40,10 @@ export class MessageResolver {
               .getTitle()
               .split('-')[0]
 
-          const page = $('.forumcontrol .pages strong').first().text()
-          const pageBtnSource = $('.forumcontrol .pages a').first()
-          const topicId = URLUtils.getQueryVariable(pageBtnSource.attr('href'), 'fid')
-          const postId = URLUtils.getQueryVariable(pageBtnSource.first().attr('href'), 'tid')
+          const topicId = URLUtils.getQueryVariable(pageLinkHint, 'fid')
+          const postId = URLUtils.getQueryVariable(pageLinkHint, 'tid')
           const messageId = URLUtils.getQueryVariable(url, 'pid')
 
-          //const url = this.state.href('tab.topics-posts-detail',{
-          //  topicId: topicId,
-          //  postId: postId,
-          //  page: page
-          //})
           let postSource = cheerio.load($(`#pid${messageId}`).parent().html())
 
           const adsSource = postSource('.adv')
@@ -60,8 +55,19 @@ export class MessageResolver {
           // really remove the ads
           adsSource.remove()
 
+          const pageNumArr = $('.pages strong')
+              .map((i,elem) => $(elem).text())
+              .get()
+              .map(e => e.match(/\d/g)) // array of string with digit
+              .filter(e => e != null) // filter null value
+              .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+          const currentPage = pageNumArr.length == 0
+              ? 1
+              : Math.max(...pageNumArr)
+
           const message = {
-            id: postSource('table').attr('id').replace('pid',''),
+            id: messageId,
             pos: postSource('.postinfo strong a em').text(),
             createdAt: postSource('.posterinfo .authorinfo em').text(),
             content : this.sce.trustAsHtml(
@@ -74,7 +80,7 @@ export class MessageResolver {
               id: postId,
               topicId: topicId,
               title: postTitle,
-              page: 1
+              page: currentPage
             },
             author:{
               image: postSource('.postauthor .avatar img').attr('src'),

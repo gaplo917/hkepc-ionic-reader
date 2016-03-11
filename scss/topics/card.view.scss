@@ -29,6 +29,10 @@
       &.tabs {
         background-image: linear-gradient(0deg, $border-color, $border-color 50%);
       }
+
+      &.item-divider {
+        background-color:$epc-color;
+      }
     }
 
     .list-inset {

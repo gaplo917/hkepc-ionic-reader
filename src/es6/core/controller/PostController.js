@@ -19,7 +19,7 @@ export class PostController{
   static get STATE() { return 'tab.topics-posts-detail'}
   static get NAME() { return 'PostController'}
   static get CONFIG() { return {
-    url: '/topics/:topicId/posts/:postId/page/:page',
+    url: '/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
@@ -29,7 +29,7 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate) {
     this.scope = $scope
     this.http = $http
     this.messageService = MessageService
@@ -41,10 +41,15 @@ export class PostController{
     this.ionicPopover = $ionicPopover
     this.ngToast = ngToast
     this.authService = AuthService
+    this.ionicScrollDelegate = $ionicScrollDelegate
 
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
     this.page = $stateParams.page
+    this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : 100
+
+    this.focus = $stateParams.focus
+
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
     this.currentUsername = AuthService.getUsername()
@@ -181,7 +186,7 @@ export class PostController{
             }
           }).get()
         })
-        .map(postObj => Rx.Observable.return(postObj).delay(100))
+        .map(postObj => Rx.Observable.return(postObj).delay(this.delayRender))
         .concatAll()
 
     // render the post
@@ -232,6 +237,7 @@ export class PostController{
           }
 
           message.liked = this.messageService.isLikedPost(message)
+          message.focused = message.id == this.focus
 
           this.messages.push(message)
 
@@ -240,6 +246,13 @@ export class PostController{
         err => console.trace(err),
         () => {
           console.log("on complete")
+
+          if(this.focus){
+            const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
+            this.ionicScrollDelegate.scrollTo(0,focusPosition,true)
+          }
+
+
           this.refreshing = false
           this.scope.$apply()
           this.scope.$broadcast('scroll.infiniteScrollComplete')
