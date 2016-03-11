@@ -3,8 +3,8 @@
     <h1 class="title">第 {{vm.inputPage}} 頁 / 共 {{vm.totalPageNum}} 頁</h1>
   </ion-header-bar>
   <ion-content >
-    <div class="list">
-      <div class="item range range-positive" ng-show="vm.totalPageNum > 1">
+    <div class="list" ng-show="vm.totalPageNum > 1">
+      <div class="item range range-positive" >
         <input type="range"
                min="1"
                max="{{vm.totalPageNum}}"
@@ -22,11 +22,13 @@
         </div>
       </div>
     </div>
-    <ion-footer-bar class="bar-clear">
-      <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.pageSliderPopover.hide()"></button>
-      <span class="col-20"></span>
-      <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doJumpPage()"> </button>
-    </ion-footer-bar>
+
   </ion-content>
+
+  <ion-footer-bar class="bar bar-clear">
+    <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.pageSliderPopover.hide()"></button>
+    <span class="col-20"></span>
+    <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doJumpPage()"> </button>
+  </ion-footer-bar>
 
 </ion-popover-view>
