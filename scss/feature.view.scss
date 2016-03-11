@@ -24,5 +24,8 @@
       color:$text-color;
       background-color: $card-bg-color;
     }
+    :hover{
+      background-color: $card-selection-color;
+    }
   }
 }
