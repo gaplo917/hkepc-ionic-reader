@@ -250,6 +250,7 @@ export class PostController{
           if(this.focus){
             const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
             this.ionicScrollDelegate.scrollTo(0,focusPosition,true)
+            this.focus = undefined
           }
 
 
