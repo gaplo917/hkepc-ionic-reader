@@ -137,8 +137,8 @@ export class TabController{
 
                 console.log(msg)
                 const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-                ? Controllers.PostController.STATE
-                : Controllers.ViewPostController.STATE
+                ? Controllers.ViewPostController.STATE
+                : Controllers.PostController.STATE
 
                 this.state.go(targetState,{
                   topicId: msg.post.topicId,

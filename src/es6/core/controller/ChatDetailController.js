@@ -120,9 +120,17 @@ export class ChatDetailController{
 
               const newMessage = this.parseChat($('li').html(),true)
 
-              this.messages.push(newMessage)
+              if(newMessage.date != 'invalid date') {
+                this.messages.push(newMessage)
 
-              this.ionicScrollDelegate.scrollBottom(true)
+                this.ionicScrollDelegate.scrollBottom(true)
+
+              } else {
+
+                // hotfix for cannot show message
+                setTimeout(() => this.doRefresh(), 1000)
+
+              }
 
               delete this.input.message
 
