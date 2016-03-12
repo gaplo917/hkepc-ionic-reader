@@ -64,6 +64,11 @@ export class TabController{
         }
     )
 
+    $scope.$on('$ionicView.loaded', (e) => {
+      // FIXME: ugly hack for dark theme, all style use ios style
+      this.removeAndroidStyleCssClass()
+    })
+
     $scope.$on(CommonInfoExtractRequest.NAME, (event,req) =>{
       if(req instanceof CommonInfoExtractRequest){
         console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
@@ -209,6 +214,12 @@ export class TabController{
 
   isLoggedIn(){
     return this._isLoggedIn
+  }
+
+  removeAndroidStyleCssClass(){
+    const body = angular.element(document.querySelector('body'))[0]
+
+    body.className = body.className.replace('platform-android','')
   }
 
 }
