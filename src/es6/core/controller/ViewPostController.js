@@ -35,7 +35,7 @@ export class ViewPostController extends PostController {
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView){
+    if(history.backView && history.backView.stateParams && history.backView.stateParams.postId != history.currentView.stateParams.postId){
       this.ionicHistory.goBack()
     } else {
       this.state.go(Controllers.FeatureRouteController.STATE)

@@ -24,7 +24,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService) {
+  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -35,6 +35,8 @@ export class TabController{
     this.state = $state
     this.authService = AuthService
     this.historyService = HistoryService
+    this.ionicHistory = $ionicHistory
+
     // cache the value
     this._isLoggedIn = AuthService.isLoggedIn()
 
@@ -135,10 +137,14 @@ export class TabController{
 
                 this.messageModal.hide()
 
-                console.log(msg)
                 const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
                 ? Controllers.ViewPostController.STATE
                 : Controllers.PostController.STATE
+
+                const history = this.ionicHistory.viewHistory()
+                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
+                  this.ionicHistory.clearCache([history.currentView.stateId])
+                }
 
                 this.state.go(targetState,{
                   topicId: msg.post.topicId,

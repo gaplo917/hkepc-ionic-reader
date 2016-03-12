@@ -20,7 +20,6 @@ export class PostController{
   static get NAME() { return 'PostController'}
   static get CONFIG() { return {
     url: '/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
-    cache: false,
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-detail.html',
@@ -247,10 +246,11 @@ export class PostController{
 
           if(this.focus){
             console.debug('detected focus object')
-            const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
-            this.ionicScrollDelegate.scrollTo(0,focusPosition,true)
-            this.focus = undefined
-
+            setTimeout(() => {
+              const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
+              this.ionicScrollDelegate.scrollTo(0,focusPosition)
+              this.focus = undefined
+            },200)
           }
 
           this.refreshing = false
@@ -631,8 +631,11 @@ export class PostController{
   onBack(){
     const history = this.ionicHistory.viewHistory()
     console.log(history)
-    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostController.STATE)){
+    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostController.STATE) &&
+        history.backView.stateParams.postId != history.currentView.stateParams.postId){
+
       this.ionicHistory.goBack()
+
     } else {
       this.state.go(Controllers.PostListController.STATE,{
         topicId: this.topicId,
