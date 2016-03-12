@@ -47,10 +47,7 @@
     "cordova-plugin-wkwebview"
   ],
   "cordovaPlatforms": [
-    {
-      "platform": "android",
-      "locator": "browser"
-    },
+    "android",
     {
       "platform": "ios",
       "version": "3.9.2",
