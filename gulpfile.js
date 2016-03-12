@@ -12,7 +12,7 @@ var browserSync = require('browser-sync').create();
 
 var paths = {
   es6: ['./www/js/**/*.js'],
-  sass: ['./scss/**/*.scss']
+  sass: ['./src/scss/**/*']
 };
 
 gulp.task('browser-sync', function() {
@@ -28,7 +28,7 @@ gulp.task('browser-sync', function() {
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-  gulp.src(['./scss/ionic.app.scss','./scss/ionic.app.dark.scss'])
+  gulp.src(['./src/scss/ionic.app.scss','./src/scss/ionic.app.dark.scss'])
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))
