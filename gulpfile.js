@@ -9,6 +9,8 @@ var sh = require('shelljs');
 var babel = require("gulp-babel");
 var plumber = require("gulp-plumber");
 var browserSync = require('browser-sync').create();
+var uglify = require('gulp-uglify');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var paths = {
   es6: ['./www/js/**/*.js'],
@@ -70,4 +72,13 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('compress', function(done) {
+  gulp.src('build/bundle.js')
+      .pipe(ngAnnotate())
+      .pipe(uglify({mangle: false}))
+      .pipe(gulp.dest('./www/js/'))
+      .on('end', done);
+
 });

@@ -1,3 +1,6 @@
+# build sass, js & minify
+sh build-release.sh
+
 rm -rf ./platforms/android/build/outputs/apk/;
 
 ionic build --release android;

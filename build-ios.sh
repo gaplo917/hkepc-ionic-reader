@@ -1,2 +1,2 @@
-sh build.sh
-ionic emulate ios
+sh build-release.sh
+ionic build ios
