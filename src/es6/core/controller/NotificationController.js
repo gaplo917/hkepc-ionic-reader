@@ -81,7 +81,7 @@ export class NotificationController{
             ? 1
             : Math.max(...pageNumArr)
 
-        const notifications = $('.feed li .f_quote, .feed li .f_reply').map((i, elem) => {
+        const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread').map((i, elem) => {
           return {
             isRead: $(elem).find('img').attr('alt') != 'NEW',
             content: this.sce.trustAsHtml($(elem).html())
