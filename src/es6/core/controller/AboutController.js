@@ -33,6 +33,10 @@ export class AboutController {
     return ionic.Platform.isIOS()
   }
 
+  isAndroid(){
+    return ionic.Platform.isAndroid()
+  }
+
   showProxyPopup(){
 
     // An elaborate, custom popup
