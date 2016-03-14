@@ -15,7 +15,7 @@
       <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
     </div>
     <div class="spinner">
-      <ion-spinner class="spinner-balanced" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner" icon="ripple" ng-show="vm.messages.length >= 0"></ion-spinner>
     </div>
     <div id="message-{{::message.id}}" class="list card" style="display:block!important;" ng-class="message.focused? 'shake-notice shake-constant' : ''" ng-repeat="message in vm.messages track by $index" ng-click="message.focused = false">
 

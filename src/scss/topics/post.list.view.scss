@@ -21,7 +21,13 @@
     .icon.ion-bonfire {
       float:left;
       font-size:34px;
-      color:$hot-topic-icon-color;
+
+      &.icon-on{
+        color:$hot-topic-icon-color-on;
+      }
+      &.icon-off{
+        color: $hot-topic-icon-color-off;
+      }
     }
 
     .icon.ion-ios-more{
@@ -42,7 +48,7 @@
   }
 
   .ion-bonfire{
-    color:$hot-topic-icon-color
+    color:$hot-topic-icon-color-on;
   }
 
 

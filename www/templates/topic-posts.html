@@ -13,7 +13,7 @@
       <i class="icon ion-bonfire"
          ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
          ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
-         ng-style="vm.showSticky ?{color:'#FF6D00'} : {color:'#444'}">
+         ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
       </i>
       第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
     <a class="button button-icon icon ion-ios-more" ng-click="vm.doFilterOrder($event)"></a>
@@ -22,7 +22,7 @@
   <ion-content>
     <div class="spinner">
       <ion-spinner
-          class="spinner-balanced"
+          class="spinner"
           icon="ripple"
           ng-show="vm.showSpinner">
       </ion-spinner>

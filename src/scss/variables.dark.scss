@@ -1,28 +1,28 @@
 //////////////////////////black theme///////////////////
 // common color
 $border-color: #353535;
-$epc-color: darken(#8fc320,20%);
-$text-on-epc-color: #fff;
-$bg-color: #222;
+$epc-color: #37474F;
+$text-on-epc-color: #f4f4f0;
+$bg-color: #22221c;
 $header-bg-color: #282828;
-$odd-color: #2b2b2b;
-$even-color: #222;
+$odd-color: #2b2b28;
+$even-color: #22221c;
 $inner-icon-color: #fff;
 // text color
-$text-color: #ffffff;
+$text-color: #f2f2ee;
 $less-important-color: #777;
 $activated-color: #444;
 $tab-item-stoke-color: #999;
 
 $default-button-bg-color: #333;
-$default-button-font-color: #fff;
+$default-button-font-color: $text-color;
 
 //popover
 $popover-bg-color: lighten($bg-color,5%);
 
 
 // spinner
-$spinner-color: #8fc320;
+$spinner-color: #607D8B;
 
 // item-divider
 $item-divider-bg-color: $epc-color;
@@ -31,7 +31,7 @@ $item-divider-font-color: $text-on-epc-color;
 // card view
 $liked-color: #dd0000;
 $locked-dash-line: #FF9A9A;
-$blockquote-color: #8fc320;
+$blockquote-color: #607D8B;
 $card-holder-bg-color: #eee;
 $card-bg-color: #2b2b2b;
 $card-selection-color: lighten($card-bg-color,5%);
@@ -46,4 +46,5 @@ $signature-color: #444444;
 $chat-input-bg-color: #444;
 
 // post list view
-$hot-topic-icon-color: #FF6D00;
+$hot-topic-icon-color-on: #FF6D00;
+$hot-topic-icon-color-off: #666;
