@@ -21,7 +21,7 @@ module.exports = {
     else return ! (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//'))
   },
 
-  isFileSys: () => window.location.href.startsWith("file://"),
+  isFileSys: () => window.location.href.startsWith("file://") || window.location.href.startsWith("ms-appx-web://"),
 
-  isProxy: () => !window.location.href.startsWith("file://")
+  isProxy: () => !window.location.href.startsWith("file://") && !window.location.href.startsWith("ms-appx-web://")
 }
