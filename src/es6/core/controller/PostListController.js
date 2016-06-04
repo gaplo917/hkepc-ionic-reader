@@ -232,8 +232,12 @@ export class PostListController {
     const nextPage = this.currentPageNum + 1
     const deferred = this.q.defer();
 
+    const request = (this.topicId == 'latest' && nextPage > 1)
+                    ? HKEPC.forum.lastestNext(this.searchId, nextPage)
+                    : HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order)
+
     this.http
-        .get(HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order))
+        .get(request)
         .then((resp) => {
           // hide the spinner
           this.showSpinner = false
@@ -242,6 +246,9 @@ export class PostListController {
 
           this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
 
+          // only work for latest
+          const searchId = URLUtils.getQueryVariable($('.pages_btns .pages a').first().attr('href'),'searchid')
+          this.searchId = searchId
 
           const titles = $('#nav').text().split('»')
           const topicName = titles[titles.length - 1]

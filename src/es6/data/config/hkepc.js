@@ -24,9 +24,12 @@ module.exports = {
   version: VERSION,
   forum: {
     index: () => `${BASE_URL}/index.php`,
+    lastestNext: (searchId,page) => {
+      return `${BASE_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+    },
     topics: (topicId,page,filter,orderby) => {
       return topicId == 'latest'
-          ? `${BASE_URL}/search.php?srchfrom=12000&searchsubmit=yes`
+          ? `${BASE_URL}/search.php?srchfrom=12000&searchsubmit=yes&page=${page}`
           : [
               `${BASE_URL}/forumdisplay.php?fid=${topicId}`,
               `page=${page}`,
