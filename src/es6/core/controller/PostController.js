@@ -108,7 +108,10 @@ export class PostController{
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.postTaskSubscription.dispose()
+      if(this.postTaskSubscription) this.postTaskSubscription.dispose()
+      this.deregisterReplyModal()
+      this.deregisterReportModal()
+      this.deregisterEditModal()
     })
   }
 
@@ -550,6 +553,27 @@ export class PostController{
     const editMessageModal = this.scope.editMessageModal = this.scope.$new()
     editMessageModal.show = () => this.editMessageModal.show()
     editMessageModal.hide = () => this.editMessageModal.hide()
+
+    editMessageModal.openGifPopover = ($event) => {
+
+      // load gifs into controller
+      editMessageModal.gifs = HKEPC.data.gifs
+
+      editMessageModal.gifPopover.show($event)
+    }
+
+    editMessageModal.addGifCodeToText = (code) => {
+      editMessageModal.gifPopover.hide()
+
+      const selectionStart = document.getElementById('edit-content').selectionStart
+
+      const content = editMessageModal.edit.content || ""
+
+      const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
+
+      editMessageModal.edit.content = `${splits[0]} ${code} ${splits[1]}`
+    }
+
     editMessageModal.getMessage = (message) => {
       editMessageModal.message = message
 
@@ -612,7 +636,16 @@ export class PostController{
       scope: editMessageModal
     }).then((modal) => {
       this.editMessageModal = modal
+      // register gif popover
+      this.ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
+        scope: editMessageModal
+      }).then((popover) => {
+        editMessageModal.gifPopover = popover;
+      })
     })
+  }
+  deregisterEditModal(){
+    this.editMessageModal.remove()
   }
 
   deregisterReplyModal(){
