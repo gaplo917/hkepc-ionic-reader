@@ -102,7 +102,7 @@ angular.module('starter', [
       responseError: function(err){
         "use strict";
         ngToast.danger({
-          dismissOnTimeout: false,
+          dismissOnTimeout: true,
           content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、Proxy 伺服器出現異常</i>`
         })
         console.log('$http Error',JSON.stringify(err))

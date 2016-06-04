@@ -89,8 +89,17 @@ export class PostController{
       this.postId = $stateParams.postId
       this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : 100
       this.focus = $stateParams.focus
+
       // Last reading page position
-      this.page = this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`) || $stateParams.page
+      const lastPage = this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`)
+      if(lastPage) {
+        this.ngToast.info({
+          horizontalPosition: 'right',
+          timeout: 2000,
+          content: `<i class="ion-ios-eye"> 自動跳到上一次閱讀的頁數</i>`
+        })
+      }
+      this.page = lastPage || $stateParams.page
 
       setTimeout(() => this.loadMessages(), 200)
     })
