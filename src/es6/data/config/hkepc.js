@@ -4,7 +4,7 @@
 const PROXY_URL = 'https://ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v1.2.9"
+const VERSION = "v1.3"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
@@ -25,12 +25,14 @@ module.exports = {
   forum: {
     index: () => `${BASE_URL}/index.php`,
     topics: (topicId,page,filter,orderby) => {
-      return [
-        `${BASE_URL}/forumdisplay.php?fid=${topicId}`,
-        `page=${page}`,
-        `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
-        `orderby=${orderby||''}`
-      ].join("&")
+      return topicId == 'latest'
+          ? `${BASE_URL}/search.php?srchfrom=12000&searchsubmit=yes`
+          : [
+              `${BASE_URL}/forumdisplay.php?fid=${topicId}`,
+              `page=${page}`,
+              `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
+              `orderby=${orderby||''}`
+            ].join("&")
     },
     posts: (topicId,postId,page) => `${BASE_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
     login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
@@ -68,7 +70,7 @@ module.exports = {
     findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`,
     newPost:(fid) => `${BASE_URL}/post.php?action=newthread&fid=${fid}`,
     memberCenter: () => `${BASE_URL}/memcp.php`,
-    checkPM: () => `${BASE_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`
+    checkPM: () => `${BASE_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
   },
   auth:{
     id: 'cdb_sid',
