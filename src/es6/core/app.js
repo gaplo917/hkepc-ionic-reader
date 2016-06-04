@@ -118,7 +118,7 @@ angular.module('starter', [
   ngToast.configure({
     timeout:'3000',
     verticalPosition: 'top',
-    horizontalPosition: 'center',
+    horizontalPosition: 'right',
     animation: "slide"
   });
 }]);
