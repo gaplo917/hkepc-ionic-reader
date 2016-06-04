@@ -28,6 +28,7 @@ export class TopicListController {
     this.scope = $scope
     this.http = $http
     this.localStorageService = LocalStorageService
+    this.authService = AuthService
     this.topics = []
 
     // create a UI rendering queue
@@ -68,7 +69,7 @@ export class TopicListController {
     })
 
     // send the login from db
-    if(AuthService.isLoggedIn()){
+    if(this.authService.isLoggedIn()){
       this.scope.$emit("accountTabUpdate",AuthService.getUsername())
     }
   }
@@ -136,6 +137,10 @@ export class TopicListController {
           }
 
         })
+  }
+
+  isLoggedIn(){
+    return this.authService.isLoggedIn()
   }
 
   doRefresh(){

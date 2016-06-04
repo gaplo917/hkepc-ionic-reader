@@ -9,8 +9,9 @@
     </div>
     <ion-list ng-show="vm.topics.length > 0">
       <!--Static Topic-->
-      <div class="item item-divider">論壇功能</div>
+      <div class="item item-divider" ng-show='vm.isLoggedIn()'>會員功能</div>
       <ion-item
+          ng-show='vm.isLoggedIn()'
           ng-class-odd="'odd'" ng-class-even="'even'"
           class="item-remove-animate item-avatar item-icon-right "
           type="item-text-wrap"
