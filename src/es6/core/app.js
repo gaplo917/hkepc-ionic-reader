@@ -21,7 +21,9 @@ angular.module('starter', [
   'starter.directives',
   'angular-loading-bar',
   'ngToast',
-  'ionicLazyLoad'
+  'ionicLazyLoad',
+  'angulartics',
+  'angulartics.google.analytics'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -38,6 +40,10 @@ angular.module('starter', [
       StatusBar.styleDefault()
     }
   })
+})
+.config(function ($analyticsProvider) {
+  // turn off automatic tracking
+  $analyticsProvider.virtualPageviews(true)
 })
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -89,7 +95,7 @@ angular.module('starter', [
           config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${LocalStorageService.get(HKEPC.auth.id)};${HKEPC.auth.token}=${LocalStorageService.get(HKEPC.auth.token)}`
 
         }
-        config.timeout = 10000 // 10 seconds should be enough to transfer plain HTML text
+        config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
 
         return config
       },

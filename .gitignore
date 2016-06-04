@@ -9,6 +9,7 @@ npm-debug.log
 #ignore bower library dependency
 /www/lib/*
 !/www/lib/.gitkeep
+!/www/lib/ga
 
 # ignore compiled js
 /www/js/bundle.js

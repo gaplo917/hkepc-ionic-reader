@@ -29,7 +29,7 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService) {
     this.scope = $scope
     this.http = $http
     this.messageService = MessageService
@@ -42,6 +42,7 @@ export class PostController{
     this.ngToast = ngToast
     this.authService = AuthService
     this.ionicScrollDelegate = $ionicScrollDelegate
+    this.LocalStorageService = LocalStorageService
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
@@ -86,9 +87,10 @@ export class PostController{
     $scope.$on('$ionicView.loaded', (e) => {
       this.topicId = $stateParams.topicId
       this.postId = $stateParams.postId
-      this.page = $stateParams.page
       this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : 100
       this.focus = $stateParams.focus
+      // Last reading page position
+      this.page = this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`) || $stateParams.page
 
       setTimeout(() => this.loadMessages(), 200)
     })
@@ -106,7 +108,7 @@ export class PostController{
       const nextPage = parseInt(this.page) + 1
       if(nextPage <= this.totalPageNum){
         //update the page count
-        this.page = parseInt(this.page) + 1
+        this.page = nextPage
 
         this.loadMessages()
       }
@@ -124,6 +126,7 @@ export class PostController{
   }
 
   loadMessages(){
+    this.LocalStorageService.set(`${this.topicId}/${this.postId}/lastPage`,this.page)
 
     const source = Rx.Observable
         .fromPromise(this.http.get(HKEPC.forum.posts(this.topicId,this.postId,this.page)))
