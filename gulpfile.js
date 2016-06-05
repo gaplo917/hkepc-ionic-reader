@@ -11,6 +11,7 @@ var plumber = require("gulp-plumber");
 var browserSync = require('browser-sync').create();
 var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
+var stripDebug = require('gulp-strip-debug');
 
 var paths = {
   es6: ['./www/js/**/*.js'],
@@ -77,6 +78,7 @@ gulp.task('git-check', function(done) {
 gulp.task('compress', function(done) {
   gulp.src('build/bundle.js')
       .pipe(ngAnnotate())
+      .pipe(stripDebug())
       .pipe(uglify({mangle: false}))
       .pipe(gulp.dest('./www/js/'))
       .on('end', done);
