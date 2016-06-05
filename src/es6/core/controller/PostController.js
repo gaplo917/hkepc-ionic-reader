@@ -194,7 +194,7 @@ export class PostController{
             return {
               $: $,
               elem: elem,
-              postTitle: html.getTitle().split('-')[0]
+              postTitle: html.getTitle().split(' - ')[0]
             }
           }).get()
         })
