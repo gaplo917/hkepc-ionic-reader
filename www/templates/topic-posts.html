@@ -1,4 +1,4 @@
-<ion-view class="post-list-view" ng-init="vm.slidePages=[{},{},{}];">
+<ion-view class="post-list-view" ng-init="vm.slidePages=[{},{},{}];" on-swipe-right="vm.swipeLeft()">
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>

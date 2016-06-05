@@ -48,6 +48,8 @@ export class PostListController {
     this.currentPageNum = this.page - 1
     this.showSpinner = true
     this.newPostModal = {}
+    this.canSwipeBack = true
+
     const newPostModal = this.scope.newPostModal = $scope.$new()
     newPostModal.post = {}
 
@@ -387,13 +389,14 @@ export class PostListController {
       const pagesNums = this.pages.map(p => p.num)
       this.currentPageNum = this.slidePages[this.currentIndex].num
       this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(true)
-
+      this.canSwipeBack = false
 
       if(diff == 1 || diff == -2){
 
         if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
           // disable the does-continue if the it is the initial page
           this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(false)
+          this.canSwipeBack = true
         }
 
         // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
@@ -407,11 +410,8 @@ export class PostListController {
           const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
           this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
 
-
-        }
-        else{
+        } else {
           console.log("loadMore Before()")
-          // TODO: loadMoare beofre
         }
       }
       else{
@@ -512,6 +512,12 @@ export class PostListController {
       return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
     } else {
       return dateStr
+    }
+  }
+
+  swipeLeft(){
+    if(this.canSwipeBack){
+      this.onBack()
     }
   }
 }
