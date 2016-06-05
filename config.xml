@@ -17,7 +17,10 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="1000" />
+    <preference name="SplashScreenDelay" value="2000" />
+    <preference name="FadeSplashScreen" value="true"/>
+    <preference name="FadeSplashScreenDuration" value="400"/>
+    <preference name="ShowSplashScreenSpinner" value="false"/>
     <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="deployment-target" value="8.0" />
     <preference name="CrosswalkAnimatable" value="true" />
