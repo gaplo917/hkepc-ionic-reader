@@ -8,6 +8,8 @@ import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
 import {LoginTabUpdateRequest} from '../model/LoginTabUpdateRequest'
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
+import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
+
 import * as Controllers from './index'
 const cheerio = require('cheerio')
 const Rx = require('rx')
@@ -182,6 +184,14 @@ export class TabController{
         console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
         this.darkTheme = arg.theme == 'dark'
         this.localStorageService.set('theme',arg.theme)
+      }
+    })
+
+    $scope.$on(ChangeFontSizeRequest.NAME,(event,arg) => {
+      if(arg instanceof ChangeFontSizeRequest){
+        console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
+        this.fontSize = arg.size
+        this.localStorageService.set('fontSize',arg.size)
       }
     })
 

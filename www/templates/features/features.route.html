@@ -95,5 +95,29 @@
       </div>
 
     </div>
+
+    <div class="list card">
+
+      <div class="feature-route item item-icon-left">
+        <div class="icon">
+          <i class=" inner-icon" style="background-color: #212121;">A</i>
+        </div>
+
+        <div style="margin-left:10px;line-height: 2;" >字型大小
+          <div class="fright">
+            <select ng-model="vm.fontSize" ng-change="vm.onResizeFont(vm.fontSize)">
+              <option value="50">人類極限</option>
+              <option value="70">極小</option>
+              <option value="80">小</option>
+              <option value="90">較小</option>
+              <option value="100">標準</option>
+              <option value="125">大</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
   </ion-content>
 </ion-view>
