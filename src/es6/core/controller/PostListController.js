@@ -298,7 +298,7 @@ export class PostListController {
                 id: URLUtils.getQueryVariable(postUrl, 'tid'),
                 topicId: URLUtils.getQueryVariable(postUrl, 'fid'),
                 tag: postSource('tr .subject em a').text() || postSource('.forum a').text(),
-                name: postSource('tr .subject span[id^=thread_] a ').text() || postSource('tr .subject a ').text(),
+                name: postSource('tr .subject span[id^=thread_] a ').text() || postSource('tr .subject > a ').text(),
                 lastPost:{
                   name: postSource('tr .lastpost cite a').text(),
                   timestamp: postSource('tr .lastpost em a span').attr('title') || postSource('tr .lastpost em a').text()
