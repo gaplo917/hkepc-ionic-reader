@@ -16,6 +16,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename')
 const ngAnnotate = require('gulp-ng-annotate');
 const minifyCss = require('gulp-minify-css')
+const runSequence = require('run-sequence');
 
 function onError(err) {
   console.log(err.message)
@@ -63,30 +64,41 @@ gulp.task('sass', function() {
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
 })
 
-gulp.task('watch', function() {
-  gulp.watch(['./src/es6/**/*.js'], ['browserify'])
-  gulp.watch(['./src/scss/**/*'], ['sass'])
+gulp.task('watchJs', function() {
+  return gulp.watch(['./src/scss/**/*'], ['sass'])
 })
 
-gulp.task('compress', function(done) {
+gulp.task('watchSass', function() {
+  return gulp.watch(['./src/scss/**/*'], ['sass'])
+})
+
+gulp.task('watch', ['watchJs','watchSass'])
+
+gulp.task('compressCss', function() {
+  return gulp.src(['./www/css/ionic.app.css','./www/css/ionic.app.dark.css'])
+      .pipe(minifyCss({
+        keepSpecialComments: 0
+      }))
+      .pipe(gulp.dest('./www/css/'))
+})
+gulp.task('compressJs', function() {
   return gulp.src('./www/js/app.js')
       .pipe(ngAnnotate())
       .pipe(stripDebug())
       .pipe(uglify({mangle: false}))
       .pipe(gulp.dest('./www/js/'))
-      .on('end', done)
-
 })
 
-gulp.task('build', ['browserify','sass'])
+gulp.task('build', (cb) => {
+  return runSequence(['browserify','sass'],cb)
+})
 
-gulp.task('release', ['build','compress'])
+gulp.task('release', (cb) => {
+  return runSequence('build',['compressJs','compressCss'],cb)
+})
 
-gulp.task('run', ['build','watch','webserver'])
+gulp.task('run', (cb) => {
+  return runSequence('build','watch','webserver',cb)
+})
