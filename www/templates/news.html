@@ -1,0 +1,75 @@
+<ion-view class="card-view">
+  <ion-nav-title>
+    新聞中心
+  </ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
+    </button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <ion-content lazy-scroll>
+    <div class="text-center">
+      <label class="item item-input w100">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input placeholder="搜尋... (待開發，視乎需求)" type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
+      </label>
+    </div>
+    <div class="text-center" ng-show="vm.messages.length == 0 && vm.searchText != ''">
+      <h4 class="title">沒有任何相新聞！</h4>
+    </div>
+    <div class="list card news" ng-repeat="message in vm.messages track by $index">
+
+      <div class="item item-avatar">
+        <img src="data:image/png;base64,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">
+
+        <h2 ng-bind="::message.author.name"></h2>
+        <p>{{::message.createdAt}}</p>
+      </div>
+
+      <div class="item item-body" ng-init="message.isExcerpt = true">
+        <div class="excerpt" ng-show='message.isExcerpt'>
+          <div compile="::message.excerpt"></div>
+
+        </div>
+        <div class="full" ng-show='!message.isExcerpt'>
+          <div compile="::message.content" ></div>
+          <a ng-click="vm.goToPost(message.url)">繼續閱讀全文</a>
+        </div>
+
+        <a class="wrapper" ng-click="vm.goToPost(message.url)">
+          <div class="inner-wrapper">
+            <img class="title-image" ng-src="{{::message.image}}"/>
+            <p class="card-title" style="">{{::message.title}}</p>
+          </div>
+
+        </a>
+      </div>
+
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item card-button">
+          <i class="icon ion-ios-eye-outline"></i>
+          {{::message.count.view}} Views
+        </a>
+        <a class="tab-item card-button" ng-click="vm.goToPost(message.url,'#comments')" >
+          <i class="icon ion-ios-chatboxes-outline"></i>
+          Comment
+        </a>
+      </div>
+
+    </div>
+    <ion-infinite-scroll
+        class="ispinner text-center"
+        ng-if="vm.hasMoreData()"
+        on-infinite="vm.loadMore()"
+        spinner="ripple"
+        immediate-check="false"
+        distance="7%">
+    </ion-infinite-scroll>
+    <div class="text-center" ng-show="vm.end">
+      <h4 class="title">完</h4>
+    </div>
+  </ion-content>
+</ion-view>
+

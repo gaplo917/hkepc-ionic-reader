@@ -2,7 +2,8 @@
  * Created by Gaplo917 on 9/1/2016.
 */
 const PROXY_URL = 'https://ionic-reader.xyz'
-const BASE_URL = `http://www.hkepc.com/forum`
+const BASE_URL = `http://www.hkepc.com`
+const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
 const VERSION = "v1.3.3"
 function getMobileOperatingSystem(userAgent){
@@ -23,23 +24,24 @@ module.exports = {
   imageUrl:IMAGE_URL,
   version: VERSION,
   forum: {
-    index: () => `${BASE_URL}/index.php`,
+    index: () => `${BASE_FORUM_URL}/index.php`,
     lastestNext: (searchId,page) => {
-      return `${BASE_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+      return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
     },
     topics: (topicId,page,filter,orderby) => {
       return topicId == 'latest'
-          ? `${BASE_URL}/search.php?srchfrom=12000&searchsubmit=yes&page=${page}`
+          ? `${BASE_FORUM_URL}/search.php?srchfrom=12000&searchsubmit=yes&page=${page}`
           : [
-              `${BASE_URL}/forumdisplay.php?fid=${topicId}`,
+              `${BASE_FORUM_URL}/forumdisplay.php?fid=${topicId}`,
               `page=${page}`,
               `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
               `orderby=${orderby||''}`
             ].join("&")
     },
-    posts: (topicId,postId,page) => `${BASE_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
-    login: () => `${BASE_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
-    logout: (formhash) => `${BASE_URL}/logging.php?action=logout&formhash=${formhash}`,
+    posts: (topicId,postId,page) => `${BASE_FORUM_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
+    login: () => `${BASE_FORUM_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
+    logout: (formhash) => `${BASE_FORUM_URL}/logging.php?action=logout&formhash=${formhash}`,
+    news: (page) => `${BASE_URL}/moreNews/page/${page}`,
     replyPage:(reply) => {
 
       /**
@@ -51,7 +53,7 @@ module.exports = {
        * }
        */
 
-      const url = `${BASE_URL}/post.php?action=reply&fid=${reply.topicId}&tid=${reply.postId}`
+      const url = `${BASE_FORUM_URL}/post.php?action=reply&fid=${reply.topicId}&tid=${reply.postId}`
 
       switch(reply.type){
         case 1:
@@ -65,15 +67,15 @@ module.exports = {
       }
 
     },
-    reportPage:(topicId,postId,messageId) => `${BASE_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}`,
-    editMessage:(topicId,postId,messageId) => `${BASE_URL}/post.php?action=edit&fid=${topicId}&tid=${postId}&pid=${messageId}`,
-    pmList: (page) => `${BASE_URL}/pm.php?filter=privatepm&page=${page}`,
-    pm: (id) => `${BASE_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
-    notifications: (page) => `${BASE_URL}/notice.php?page=${page}`,
-    findMessage:(postId,messageId) => `${BASE_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`,
-    newPost:(fid) => `${BASE_URL}/post.php?action=newthread&fid=${fid}`,
-    memberCenter: () => `${BASE_URL}/memcp.php`,
-    checkPM: () => `${BASE_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
+    reportPage:(topicId,postId,messageId) => `${BASE_FORUM_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}`,
+    editMessage:(topicId,postId,messageId) => `${BASE_FORUM_URL}/post.php?action=edit&fid=${topicId}&tid=${postId}&pid=${messageId}`,
+    pmList: (page) => `${BASE_FORUM_URL}/pm.php?filter=privatepm&page=${page}`,
+    pm: (id) => `${BASE_FORUM_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,
+    notifications: (page) => `${BASE_FORUM_URL}/notice.php?page=${page}`,
+    findMessage:(postId,messageId) => `${BASE_FORUM_URL}/redirect.php?goto=findpost&ptid=${postId}&pid=${messageId}`,
+    newPost:(fid) => `${BASE_FORUM_URL}/post.php?action=newthread&fid=${fid}`,
+    memberCenter: () => `${BASE_FORUM_URL}/memcp.php`,
+    checkPM: () => `${BASE_FORUM_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
   },
   auth:{
     id: 'cdb_sid',
