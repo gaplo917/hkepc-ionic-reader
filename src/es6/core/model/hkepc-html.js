@@ -84,7 +84,7 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).attr('target',`_system`)
         this.source(e).attr('onclick',`window.open('${HKEPC.imageUrl}/${url}', '_system', 'location=yes'); return false;`)
       } else {
-        this.source(e).attr('data-href',`${HKEPC.baseForumUrl}${url}`)
+        this.source(e).attr('data-href',`${HKEPC.baseUrl}${url}`)
       }
 
       // TODO: more rules needs to be applied here
