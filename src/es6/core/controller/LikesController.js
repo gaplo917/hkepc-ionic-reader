@@ -1,7 +1,9 @@
 /**
  * Created by Gaplo917 on 6/2/2016.
  */
+import * as HKEPC from '../../data/config/hkepc'
 import {FindMessageRequest} from "../model/FindMessageRequest"
+import { Clipboard } from 'ionic-native';
 
 export class LikesController{
   static get STATE() { return 'tab.likes'}
@@ -198,16 +200,17 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-share balanced"></i> Share(開發中)' }
+        { text: '<i class="icon ion-share balanced"></i> 分享連結' }
       ],
       destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> Unlike',
       titleText: 'Options',
       cancelText: 'Cancel',
-      cancel: function() {
+      cancel: () => {
         // add cancel code..
       },
-      buttonClicked: function(index) {
-        //
+      buttonClicked: (index) => {
+        Clipboard.copy(HKEPC.forum.posts(message.post.topicId,message.post.id,message.post.page))
+        this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         return true;
       },
       destructiveButtonClicked: (index) => {

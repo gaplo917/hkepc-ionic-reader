@@ -19,7 +19,7 @@
       color: $liked-color;
     }
 
-    td,p,tr,span {
+    td,p,tr {
       color: $text-color;
     }
 
@@ -42,6 +42,9 @@
     // mainly for epc content
     .item-body {
 
+      span {
+        color: $text-color;
+      }
       // the last edit timestamp
       .pstatus {
         display: block;

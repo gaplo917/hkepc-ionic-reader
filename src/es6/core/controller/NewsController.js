@@ -169,8 +169,7 @@ export class NewsController{
   onBack(){
     const history = this.ionicHistory.viewHistory()
     console.log(history)
-    if(history.backView && (history.backView.stateName == Controllers.TopicListController.STATE || history.backView.stateName == Controllers.NewsController.STATE) &&
-        history.backView.stateParams.postId != history.currentView.stateParams.postId){
+    if(history.backView && (history.backView.stateName == Controllers.TopicListController.STATE || history.backView.stateName == Controllers.NewsController.STATE)){
 
       this.ionicHistory.goBack()
 

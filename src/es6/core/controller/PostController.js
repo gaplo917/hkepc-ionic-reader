@@ -9,6 +9,7 @@ import {FindMessageRequest} from "../model/FindMessageRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 
 import * as Controllers from "./index"
+import { Clipboard } from 'ionic-native';
 
 const cheerio = require('cheerio')
 const Rx = require('rx')
@@ -29,7 +30,7 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet) {
     this.scope = $scope
     this.http = $http
     this.messageService = MessageService
@@ -43,6 +44,7 @@ export class PostController{
     this.authService = AuthService
     this.ionicScrollDelegate = $ionicScrollDelegate
     this.LocalStorageService = LocalStorageService
+    this.ionicActionSheet = $ionicActionSheet
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
@@ -699,5 +701,30 @@ export class PostController{
     } else {
       return dateStr
     }
+  }
+
+
+  onMore(url){
+    // Show the action sheet
+    var hideSheet = this.ionicActionSheet.show({
+      buttons: [
+        { text: '<i class="icon ion-share balanced"></i> 分享連結' }
+      ],
+      destructiveText: '取消',
+      titleText: 'Options',
+      cancelText: '取消',
+      cancel: function() {
+        // add cancel code..
+      },
+      buttonClicked: (index) => {
+        Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.page));
+        this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
+        return true;
+      },
+      destructiveButtonClicked: (index) => {
+        return true
+      }
+    });
+
   }
 }
