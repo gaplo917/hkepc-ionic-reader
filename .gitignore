@@ -5,6 +5,7 @@ node_modules/
 platforms/
 plugins/
 npm-debug.log
+!.gitkeep
 
 #ignore bower library dependency
 /www/lib/*
@@ -12,8 +13,7 @@ npm-debug.log
 !/www/lib/ga
 
 # ignore compiled js
-/www/js/bundle.js
-build/bundle.js
+/www/js/**.js*
 
 # ignore compiled css
 /www/css/ionic.app.*

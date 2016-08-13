@@ -1,37 +1,65 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var bower = require('bower');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
-var babel = require("gulp-babel");
-var plumber = require("gulp-plumber");
-var browserSync = require('browser-sync').create();
-var uglify = require('gulp-uglify');
-var ngAnnotate = require('gulp-ng-annotate');
-var stripDebug = require('gulp-strip-debug');
+const browserify = require('browserify');
+const babelify = require('babelify');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const concat = require('gulp-concat');
+const run = require('gulp-run');
+const webserver = require('gulp-webserver')
+const stripDebug = require('gulp-strip-debug');
+const minify = require('gulp-minify');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const gutil = require('gulp-util');
+const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-rename')
+const ngAnnotate = require('gulp-ng-annotate');
+const minifyCss = require('gulp-minify-css')
 
-var paths = {
-  es6: ['./www/js/**/*.js'],
-  sass: ['./src/scss/**/*']
-};
+function onError(err) {
+  console.log(err.message)
+  this.emit('end')
+}
 
-gulp.task('browser-sync', function() {
-  browserSync.init({
-    server: {
-      baseDir: "./www/"
-    }
-  });
+gulp.task('browserify', function () {
+  // set up the browserify instance on a task basis
+  var b = browserify({
+    entries: './src/es6/core/app.js',
+    insertGlobals : true,
+    debug: false,
+    // defining transforms here will avoid crashing your stream
+    transform: [
+      babelify.configure({
+        presets: ["es2015"]
+      })
+    ]
+  })
 
-  gulp.watch(paths.sass, ['sass',browserSync.reload]);
-});
+  return b
+      .bundle()
+      .on('error', onError)
+      .pipe(source('app.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      // Add transformation tasks to the pipeline here.
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./www/js/'))
+})
 
-gulp.task('default', ['sass']);
 
-gulp.task('sass', function(done) {
-  gulp.src(['./src/scss/ionic.app.scss','./src/scss/ionic.app.dark.scss'])
+gulp.task('webserver',() => {
+  return gulp.src('./www')
+      .pipe(webserver({
+        host: '0.0.0.0',
+        port: 3000,
+        livereload: true,
+        open: true,
+      }))
+})
+
+gulp.task('sass', function() {
+  return gulp.src(['./src/scss/ionic.app.scss','./src/scss/ionic.app.dark.scss'])
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))
@@ -40,47 +68,25 @@ gulp.task('sass', function(done) {
     }))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
-});
-
-//gulp.task("babel", function () {
-//  return gulp.src(paths.es6)
-//    .pipe(plumber())
-//    .pipe(babel({presets: ['es2015']}))
-//    .pipe(gulp.dest("www/js"));
-//});
+})
 
 gulp.task('watch', function() {
-  gulp.watch(paths.es6, []);
-  gulp.watch(paths.sass, ['sass']);
-});
-
-gulp.task('install', ['git-check'], function() {
-  return bower.commands.install()
-    .on('log', function(data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-    });
-});
-
-gulp.task('git-check', function(done) {
-  if (!sh.which('git')) {
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    );
-    process.exit(1);
-  }
-  done();
-});
+  gulp.watch(['./src/es6/**/*.js'], ['browserify'])
+  gulp.watch(['./src/scss/**/*'], ['sass'])
+})
 
 gulp.task('compress', function(done) {
-  gulp.src('build/bundle.js')
+  return gulp.src('./www/js/app.js')
       .pipe(ngAnnotate())
       .pipe(stripDebug())
       .pipe(uglify({mangle: false}))
       .pipe(gulp.dest('./www/js/'))
-      .on('end', done);
+      .on('end', done)
 
-});
+})
+
+gulp.task('build', ['browserify','sass'])
+
+gulp.task('release', ['build','compress'])
+
+gulp.task('run', ['build','watch','webserver'])

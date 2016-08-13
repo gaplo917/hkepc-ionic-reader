@@ -9,7 +9,6 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
 
 const cheerio = require('cheerio')
-const async = require('async')
 
 /**
  * Just a Clone Controller for display in features tab

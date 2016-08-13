@@ -1,8 +1,10 @@
+import controllerModules from './controllers'
+import directivesModules from './directives'
+import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
-import 'babel-polyfill'
-import 'angular-loading-bar'
+
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()

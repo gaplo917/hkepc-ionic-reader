@@ -5,7 +5,6 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
 const cheerio = require('cheerio')
-const async = require('async')
 
 export class AuthService {
   static get NAME() { return 'AuthService' }

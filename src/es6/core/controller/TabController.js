@@ -59,6 +59,7 @@ export class TabController{
         HKEPC.forum.checkPM(),
         1000 * 60 , /* 1 minutes */
         (url) =>  {
+          console.debug(`[${TabController.NAME}] Background getting PM`)
           this.http.get(url)
           return url
         }

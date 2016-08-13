@@ -9,7 +9,6 @@ import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRe
 import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
 
 const cheerio = require('cheerio')
-const async = require('async')
 
 export class FeatureRouteController{
   static get STATE() { return 'tab.features'}

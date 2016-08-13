@@ -9,7 +9,6 @@ import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
-const async = require('async')
 
 export class NotificationController{
   static get STATE() { return 'tab.features-notifications'}

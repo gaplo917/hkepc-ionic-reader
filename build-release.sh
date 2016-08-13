@@ -1,3 +1,1 @@
-sh build.sh;
-
-gulp compress;
+gulp release;
