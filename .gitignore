@@ -13,7 +13,7 @@ npm-debug.log
 !/www/lib/ga
 
 # ignore compiled js
-/www/js/**.js*
+/www/js/*.js*
 
 # ignore compiled css
 /www/css/ionic.app.*

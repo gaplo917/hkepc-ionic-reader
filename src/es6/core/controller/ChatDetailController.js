@@ -55,7 +55,7 @@ export class ChatDetailController{
 
           let $ = html
               .removeIframe()
-              .processImgUrl(HKEPC.baseUrl)
+              .processImgUrl(HKEPC.baseForumUrl)
               .processExternalUrl()
               .getCheerio()
 
@@ -86,7 +86,7 @@ export class ChatDetailController{
           this.sendMessage = (message) => {
             // prepare the chat message
             const relativeUrl = $('#pmform').attr('action')
-            const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
+            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
             let formSource = cheerio.load($('#pmform').html())
 

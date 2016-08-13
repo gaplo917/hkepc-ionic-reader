@@ -393,7 +393,7 @@ export class PostController{
             .then((resp) => {
               let $ = cheerio.load(resp.data)
               const relativeUrl = $('#postform').attr('action')
-              const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&inajax=1`
+              const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
               console.log(postUrl)
 
@@ -465,7 +465,7 @@ export class PostController{
             .then((resp) => {
               let $ = cheerio.load(resp.data)
               const relativeUrl = $('#postform').attr('action')
-              const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
+              const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
               let formSource = cheerio.load($('#postform').html())
 
@@ -584,7 +584,7 @@ export class PostController{
           .then((resp) => {
             let $ = cheerio.load(resp.data)
             const relativeUrl = $('#postform').attr('action')
-            const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&inajax=1`
+            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
             console.log(postUrl)
 

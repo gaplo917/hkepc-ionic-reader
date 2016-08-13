@@ -5,7 +5,7 @@ const PROXY_URL = 'https://ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v1.4.0"
+const VERSION = "v1.4.1"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
@@ -21,6 +21,7 @@ module.exports = {
   userAgent: () => getMobileOperatingSystem(),
   proxy: PROXY_URL,
   baseUrl: BASE_URL,
+  baseForumUrl: BASE_FORUM_URL,
   imageUrl:IMAGE_URL,
   version: VERSION,
   forum: {

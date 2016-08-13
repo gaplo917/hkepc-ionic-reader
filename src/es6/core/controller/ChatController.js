@@ -54,7 +54,7 @@ export class ChatController{
 
           let $ = html
               .removeIframe()
-              .processImgUrl(HKEPC.baseUrl)
+              .processImgUrl(HKEPC.baseForumUrl)
               .getCheerio()
 
           this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))

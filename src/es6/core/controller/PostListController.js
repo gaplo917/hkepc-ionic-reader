@@ -96,7 +96,7 @@ export class PostListController {
               let $ = cheerio.load(resp.data)
 
               const relativeUrl = $('#postform').attr('action')
-              const postUrl = `${HKEPC.baseUrl}/${relativeUrl}&infloat=yes&inajax=1`
+              const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
               const hiddenFormInputs = $(`input[type='hidden']`).map((i,elem) => {
                 const k = $(elem).attr('name')
