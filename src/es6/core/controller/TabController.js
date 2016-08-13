@@ -43,6 +43,7 @@ export class TabController{
     this._isLoggedIn = AuthService.isLoggedIn()
 
     this.darkTheme = this.localStorageService.get('theme') == 'dark'
+    this.fontSize = this.localStorageService.get('fontSize') || "100"
 
     const getMemberCenterPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
     const checkPMPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))

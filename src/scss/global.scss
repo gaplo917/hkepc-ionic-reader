@@ -1,6 +1,7 @@
 // word break
 * {
   word-break: break-all;
+  -webkit-text-size-adjust: auto!important;
 }
 
 // shortcut for image center
@@ -48,7 +49,7 @@ ion-content {
     border-color: $border-color;
 
     .bigger-title {
-      font-size: 16px;
+      font-size: floor($font-size-base * 1.2);
     }
   }
 

@@ -104,9 +104,6 @@ export class NewsController{
               const viewCount = postSource('.count').text().match(/\d/g).join('')
               const commentCount = postSource('.fb_comments_count').text()
 
-              console.log(viewCount)
-              console.log(commentCount)
-
               this.messages.push({
                 author: {
                   image: "",
@@ -122,7 +119,8 @@ export class NewsController{
                 image: imgUrl,
                 tags: tags,
                 excerpt: excerpt,
-                content: content
+                content: content,
+                tags: tags,
               })
 
               this.scope.$apply()

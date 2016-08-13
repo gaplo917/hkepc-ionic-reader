@@ -20,7 +20,7 @@
     }
     .icon.ion-bonfire {
       float:left;
-      font-size:34px;
+      font-size: floor($font-size-large * 1.8);
 
       &.icon-on{
         color:$hot-topic-icon-color-on;
@@ -40,7 +40,7 @@
   }
 
   .tag {
-    font-size:14px
+    font-size:$font-size-small;
   }
 
   .less-important-info{

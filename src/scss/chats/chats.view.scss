@@ -53,12 +53,12 @@
   }
 
   .message {
-    font-size: 14px;
+    font-size: $font-size-base;
   }
 
   .message-detail {
     white-space: nowrap;
-    font-size: 14px;
+    font-size: $font-size-base;
   }
 
   .bar.item-input-inset .item-input-wrapper input {

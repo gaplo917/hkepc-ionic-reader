@@ -10,6 +10,9 @@
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <ion-content lazy-scroll>
+    <div class="spinner">
+      <ion-spinner class="spinner" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
+    </div>
     <div class="text-center">
       <label class="item item-input w100">
         <i class="icon ion-search placeholder-icon"></i>
@@ -41,7 +44,12 @@
         <a class="wrapper" ng-click="vm.goToPost(message.url)">
           <div class="inner-wrapper">
             <img class="title-image" ng-src="{{::message.image}}"/>
-            <p class="card-title" style="">{{::message.title}}</p>
+            <div class="card-description">
+              <p class="card-title" style="">{{::message.title}}</p>
+              <p class="tags">
+                <span class="tag" ng-repeat="tag in ::message.tags" >#{{tag}}</span>
+              </p>
+            </div>
           </div>
 
         </a>
