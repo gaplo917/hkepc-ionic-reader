@@ -67,7 +67,7 @@ gulp.task('sass', function() {
 })
 
 gulp.task('watchJs', function() {
-  return gulp.watch(['./src/scss/**/*'], ['sass'])
+  return gulp.watch(['./src/es6/**/*'], ['browserify'])
 })
 
 gulp.task('watchSass', function() {
