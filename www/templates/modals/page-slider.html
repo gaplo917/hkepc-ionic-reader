@@ -1,34 +1,34 @@
-<ion-popover-view>
+<ion-popover-view style="width:90%; height:70%">
   <ion-header-bar>
     <h1 class="title">第 {{vm.inputPage}} 頁 / 共 {{vm.totalPageNum}} 頁</h1>
   </ion-header-bar>
-  <ion-content >
-    <div class="list" ng-show="vm.totalPageNum > 1">
-      <div class="item range range-positive" >
-        <input type="range"
-               min="1"
-               max="{{vm.totalPageNum}}"
-               value="{{vm.page}}"
-               step="1"
-               ng-init="vm.inputPage = 1"
-               ng-model="vm.inputPage">
+  <ion-content scroll="false" scrollbar-y="false">
+    <ion-scroll style=" height:100%;width:50%;float:left; border-right:1px solid #ddd"  ng-if="vm.totalPageNum > 1 && vm.inputPage"   ng-init="vm.inputPageRangeStart = vm.parseInt(vm.inputPage / 50)">
+      <div class="list">
+        <ion-radio class="item"
+             style="border:0px"
+             ng-repeat="page in vm.getTimes(vm.totalPageNum / 50 + 1) track by $index"
+             ng-init="start = $index * 50 + 1; end = ($index+1) * 50"
+             ng-model="vm.inputPageRangeStart"
+             ng-value="$index"
+        >
+          {{::start}} - {{::end}}  頁
+        </ion-radio>
       </div>
-      <div class="row" ng-show="vm.totalPageNum > 1">
-        <div class="col">
-          <h4 class="text-center">或自行輸入頁數</h4>
-          <label class="item item-input">
-            <input type="tel" class="text-center" ng-model="vm.inputPage" min="1" max="{{vm.totalPageNum}}" ng-change="vm.inputPage = vm.inputPage ? vm.inputPage > vm.totalPageNum ? vm.totalPageNum : vm.inputPage > 1 ? vm.inputPage : 1 : ''">
-          </label>
+    </ion-scroll>
+
+    <ion-scroll style=" height:100%;width:50%;float:left">
+      <div class="list" >
+        <div class="item text-center"
+             ng-repeat="any in vm.getTimes(50) track by $index"
+             ng-show="page <= vm.totalPageNum"
+             ng-click="vm.inputPage = page; vm.doJumpPage()"
+             ng-style="page == vm.inputPage ? { 'background-color': '#FFF9C4' } : {} "
+        >
+          第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
         </div>
       </div>
-    </div>
-
+    </ion-scroll>
   </ion-content>
-
-  <ion-footer-bar class="bar bar-clear">
-    <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.pageSliderPopover.hide()"></button>
-    <span class="col-20"></span>
-    <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doJumpPage()"> </button>
-  </ion-footer-bar>
 
 </ion-popover-view>

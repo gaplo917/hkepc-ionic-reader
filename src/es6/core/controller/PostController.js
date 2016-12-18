@@ -246,7 +246,7 @@ export class PostController{
               rank: rank ? rank.replace('Rank: ','') : 0,
               image: postSource('.postauthor .avatar img').attr('src'),
               name : postSource('.postauthor > .postinfo').text(),
-              isSelf: postSource('.postauthor > .postinfo').text().indexOf(this.currentUsername) >= 0
+              isSelf: postSource(' author > .postinfo').text().indexOf(this.currentUsername) >= 0
             }
           }
 
@@ -689,6 +689,10 @@ export class PostController{
         page: 1
       })
     }
+  }
+
+  parseInt(i){
+    return parseInt(i)
   }
 
   getTimes(i){

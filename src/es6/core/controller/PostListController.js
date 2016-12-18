@@ -197,6 +197,9 @@ export class PostListController {
       // update the post list
       const post = task()
 
+      console.log("TEST",post)
+
+
       if(post.id || post.id != ""){
         const page = this.pages.find(p => p.num == post.pageNum)
 
@@ -235,7 +238,7 @@ export class PostListController {
     const deferred = this.q.defer();
 
     const request = (this.topicId == 'latest' && nextPage > 1)
-                    ? HKEPC.forum.lastestNext(this.searchId, nextPage)
+                    ? HKEPC.forum.latestNext(this.searchId, nextPage)
                     : HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order)
 
     this.http
@@ -291,7 +294,8 @@ export class PostListController {
               const htmlId = $(elem).attr('id')
 
               const postSource = cheerio.load($(elem).html())
-              const postUrl = postSource('tr .subject span a').attr('href')
+              // fall back for latest postUrl finding
+              const postUrl = postSource('tr .subject span a').attr('href') || postSource('tr .subject a').attr('href')
               const postTitleImgUrl = postSource('tr .folder img').attr('src')
 
               return {

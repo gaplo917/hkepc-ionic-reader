@@ -26,7 +26,7 @@ module.exports = {
   version: VERSION,
   forum: {
     index: () => `${BASE_FORUM_URL}/index.php`,
-    lastestNext: (searchId,page) => {
+    latestNext: (searchId,page) => {
       return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
     },
     topics: (topicId,page,filter,orderby) => {
