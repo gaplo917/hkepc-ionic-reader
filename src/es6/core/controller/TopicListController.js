@@ -173,16 +173,16 @@ export class TopicListController {
   }
 
   canShowGroupNameIniOSReview(groupName){
-    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
+    return groupName != 'Mobile Phone' || (this.authService.isLoggedIn() && this.authService.getUsername() != 'logary917')
   }
 
   canShowIniOSReview(topicId){
     const blackList = [121,123,202]
-    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+    return blackList.indexOf(parseInt(topicId)) < 0 || (this.authService.isLoggedIn() && this.authService.getUsername() != 'logary917')
   }
 
   canShowSectionInIOSReview(topicId){
     const blackList = [171,168,170,44,277,202]
-    return this.localStorageService.get('hiddeMode') == 20 || !ionic.Platform.isIOS() || blackList.indexOf(parseInt(topicId)) < 0
+    return blackList.indexOf(parseInt(topicId)) < 0 || (this.authService.isLoggedIn() && this.authService.getUsername() != 'logary917')
   }
 }

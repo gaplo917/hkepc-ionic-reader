@@ -36,6 +36,7 @@ export class FeatureRouteController{
     this.localStorageService = LocalStorageService
     this.darkTheme = this.localStorageService.get('theme') == 'dark'
     this.fontSize = this.localStorageService.get('fontSize') || "100"
+    this.authService = AuthService
 
     this.cleanBadgeUpdateListener = $rootScope.$on(NotificationBadgeUpdateRequest.NAME,(e,req) => {
       if(req instanceof NotificationBadgeUpdateRequest) {
@@ -112,6 +113,10 @@ export class FeatureRouteController{
 
   onResizeFont(size) {
     this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(size))
+  }
+
+  isLoggedIn(){
+    return this.authService.isLoggedIn()
   }
 
 }
