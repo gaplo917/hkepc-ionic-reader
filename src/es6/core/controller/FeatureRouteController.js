@@ -50,7 +50,59 @@ export class FeatureRouteController{
 
       this.notification = this.localStorageService.getObject('notification')
 
+      this.registerOnChangeForumStyle()
+
     })
+  }
+
+  registerOnChangeForumStyle(){
+
+    this.http.get(HKEPC.forum.settings())
+      .then((resp) => {
+        let $ = cheerio.load(resp.data)
+        let form = $(`form[name='reg']`)
+        let formSource = cheerio.load(form.html())
+        const relativeUrl = form.attr('action')
+        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
+
+        const formInputs = formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i,elem) => {
+          const k = formSource(elem).attr('name')
+          const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
+
+          return `${k}=${encodeURIComponent(v)}`
+        }).get()
+
+        $(`select[name='styleidnew'] option`).each((i,elem) => {
+          const obj = $(elem)
+          const isSelected = obj.attr('selected') == 'selected'
+          const value = obj.attr('value')
+          const name = obj.text()
+
+          if(isSelected){
+            this.forumStyle = value
+          }
+        })
+
+        this.onChangeForumStyle = (newStyle) => {
+
+          const postData = [
+            `styleidnew=${newStyle}`,
+            formInputs.join('&')
+          ].join('&')
+
+          // Post to the server
+          this.http({
+            method: "POST",
+            url : postUrl,
+            data : postData,
+            headers : {'Content-Type':'application/x-www-form-urlencoded'}
+          }).then((resp) => {
+
+            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功更改！</i>`)
+          })
+        }
+
+      })
   }
 
   onDarkTheme(bool){

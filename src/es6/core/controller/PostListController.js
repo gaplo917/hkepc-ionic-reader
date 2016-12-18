@@ -197,9 +197,6 @@ export class PostListController {
       // update the post list
       const post = task()
 
-      console.log("TEST",post)
-
-
       if(post.id || post.id != ""){
         const page = this.pages.find(p => p.num == post.pageNum)
 

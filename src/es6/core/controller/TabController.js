@@ -80,11 +80,11 @@ export class TabController{
         const $ = req.cheerio
 
         // select the current login user
-        const currentUsername = $('#umenu > cite').text()
+        const currentUsername = $('#umenu > cite').text() || /* HKEPC 2.0 beta */$('header .userInfo span').text()
 
-        const pmNotification = $('#prompt_pm').text().match(/\d/g)[0]
+        const pmNotification = ($('#prompt_pm').text().match(/\d/g) || [] ) [0]
 
-        const postNotification = $('#prompt_threads').text().match(/\d/g)[0]
+        const postNotification = ($('#prompt_threads').text().match(/\d/g) || [] )[0]
 
         // send the login name to parent controller
         this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
@@ -111,7 +111,7 @@ export class TabController{
 
     $scope.$on(LoginTabUpdateRequest.NAME, (event,req) =>{
       if(req instanceof LoginTabUpdateRequest){
-        console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`)
+        console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
         this.login = req.username
         if(this.login) {

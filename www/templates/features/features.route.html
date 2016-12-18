@@ -119,5 +119,29 @@
       </div>
 
     </div>
+
+    <div class="list card">
+
+      <div class="feature-route item item-icon-left">
+        <div class="icon">
+          <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
+        </div>
+
+        <div style="margin-left:10px;line-height: 2;" >論壇風格設定
+          <div class="fright">
+            <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
+              <option value="23">HKEPC（傳統介面）(HKEPC IR 不支援)</option>
+              <option value="28">HKEPC</option>
+              <option value="29">HKEPC 2.0（beta）(HKEPC IR 不支援)</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div style="height:100px"></div>
   </ion-content>
 </ion-view>

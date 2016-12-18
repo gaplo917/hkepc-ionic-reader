@@ -708,21 +708,27 @@ export class PostController{
   }
 
 
-  onMore(url){
+  onMore(message){
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-share balanced"></i> 分享連結' }
+        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC IR 連結' },
+        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC 原始連結' },
       ],
-      destructiveText: '取消',
-      titleText: 'Options',
+      titleText: '分享連結',
       cancelText: '取消',
       cancel: function() {
         // add cancel code..
       },
       buttonClicked: (index) => {
-        Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.page));
+        if(index == 0){
+          Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.page));
+        }
+        else {
+          Clipboard.copy(`http://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.page}?delayRender=&focus=${message.id}`);
+        }
         this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
+
         return true;
       },
       destructiveButtonClicked: (index) => {
