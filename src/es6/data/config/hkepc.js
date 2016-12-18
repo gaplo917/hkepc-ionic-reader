@@ -5,7 +5,7 @@ const PROXY_URL = 'https://ionic-reader.xyz'
 const BASE_URL = `http://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'http://www.hkepc.com/forum'
-const VERSION = "v1.4.2"
+const VERSION = "v1.5.0"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
@@ -77,6 +77,7 @@ module.exports = {
     newPost:(fid) => `${BASE_FORUM_URL}/post.php?action=newthread&fid=${fid}`,
     memberCenter: () => `${BASE_FORUM_URL}/memcp.php`,
     checkPM: () => `${BASE_FORUM_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
+    settings:() => `${BASE_FORUM_URL}/memcp.php?action=profile&typeid=5`
   },
   auth:{
     id: 'cdb_sid',
