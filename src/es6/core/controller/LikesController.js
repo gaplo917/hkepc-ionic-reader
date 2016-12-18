@@ -200,16 +200,22 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-share balanced"></i> 分享連結' }
+        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC IR Web 版連結' },
+        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC 原始連結' },
       ],
+      titleText: '分享連結',
       destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> Unlike',
-      titleText: 'Options',
-      cancelText: 'Cancel',
+      cancelText: '取消',
       cancel: () => {
         // add cancel code..
       },
       buttonClicked: (index) => {
-        Clipboard.copy(HKEPC.forum.posts(message.post.topicId,message.post.id,message.post.page))
+        if(index == 0){
+          Clipboard.copy(`http://hkepc.ionic-reader.xyz/#/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}?delayRender=&focus=${message.id}`);
+        }
+        else {
+          Clipboard.copy(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
+        }
         this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         return true;
       },

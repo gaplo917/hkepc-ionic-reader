@@ -197,7 +197,7 @@ export class PostListController {
       // update the post list
       const post = task()
 
-      if(post.id || post.id != ""){
+      if(post.name && post.id){
         const page = this.pages.find(p => p.num == post.pageNum)
 
         if(page){
@@ -292,7 +292,7 @@ export class PostListController {
 
               const postSource = cheerio.load($(elem).html())
               // fall back for latest postUrl finding
-              const postUrl = postSource('tr .subject span a').attr('href') || postSource('tr .subject a').attr('href')
+              const postUrl = postSource('tr .subject span a').attr('href') || /* latest post */postSource('tr .subject a').attr('href')
               const postTitleImgUrl = postSource('tr .folder img').attr('src')
 
               return {

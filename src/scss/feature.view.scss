@@ -28,4 +28,13 @@
       background-color: $card-selection-color;
     }
   }
+
+  .forum-style-warning{
+    color:red;
+    text-align: right;
+    position:absolute;
+    font-size:12px;
+    right:20px;
+    bottom:0px
+  }
 }
