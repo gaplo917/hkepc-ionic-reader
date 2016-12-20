@@ -1,0 +1,22 @@
+.page-picker-view{
+  .item {
+    color: $text-color;
+    &.active {
+      background-color: $activated-color;
+    }
+  }
+
+  .range-pick{
+    border-right:1px solid $border-color;
+  }
+
+  .button-full {
+    border: 1px solid $less-important-color;
+  }
+
+  ion-scroll{
+    height:90%;
+    width:50%;
+    float:left;
+  }
+}

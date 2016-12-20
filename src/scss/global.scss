@@ -109,9 +109,17 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   }
 
 }
+.platform-ios .popover-arrow:after {
+  background-color:  $popover-bg-color;
+}
+
 .popover, .range.range-positive {
   color:$text-color;
   background-color: $popover-bg-color;
+
+  ion-header-bar{
+    border-bottom: 1px solid $border-color;
+  }
 
   .bar.bar-header, .bar.bar-footer,ion-content,.button.button-icon, .item{
     background-color: $popover-bg-color;

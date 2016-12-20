@@ -1,9 +1,17 @@
-<ion-popover-view style="width:90%; height:70%">
+<ion-popover-view style="width:90%; height:70%" class="page-picker-view">
   <ion-header-bar>
-    <h1 class="title">第 {{vm.inputPage}} 頁 / 共 {{vm.totalPageNum}} 頁</h1>
+    <h1 class="col-90 title">第 {{vm.inputPage}} 頁 / 共 {{vm.totalPageNum}} 頁</h1>
   </ion-header-bar>
   <ion-content scroll="false" scrollbar-y="false">
-    <ion-scroll style=" height:100%;width:50%;float:left; border-right:1px solid #ddd"  ng-if="vm.totalPageNum > 1 && vm.inputPage"   ng-init="vm.inputPageRangeStart = vm.parseInt(vm.inputPage / 50)">
+    <div class="row">
+      <button class="button col-33 button-full" ng-click="vm.inputPage = 1; vm.doJumpPage()">第一頁</button>
+      <button class="button col-33 button-full" ng-click="vm.inputPage = vm.inputPage == 1 ? 1 : vm.inputPage - 1; vm.doJumpPage()">上一頁</button>
+      <button class="button col-33 button-full" ng-click="vm.inputPage = vm.totalPageNum; vm.doJumpPage()">最後一頁</button>
+    </div>
+    <ion-scroll
+        class="range-pick"
+        ng-if="vm.totalPageNum > 1 && vm.inputPage"
+        ng-init="vm.inputPageRangeStart = vm.parseInt(vm.inputPage / 50)">
       <div class="list">
         <ion-radio class="item"
              style="border:0px"
@@ -17,13 +25,13 @@
       </div>
     </ion-scroll>
 
-    <ion-scroll style=" height:100%;width:50%;float:left">
+    <ion-scroll>
       <div class="list" >
         <div class="item text-center"
              ng-repeat="any in vm.getTimes(50) track by $index"
              ng-show="page <= vm.totalPageNum"
              ng-click="vm.inputPage = page; vm.doJumpPage()"
-             ng-style="page == vm.inputPage ? { 'background-color': '#FFF9C4' } : {} "
+             ng-class="page == vm.inputPage ? 'active' : '' "
         >
           第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
         </div>
