@@ -8,15 +8,16 @@ export class HistoryService {
   static get NAME() { return 'HistoryService'}
 
   static get DI() {
-    return (LocalStorageService) => new HistoryService(LocalStorageService)
+    return (LocalStorageService,rx) => new HistoryService(LocalStorageService,rx)
   }
 
   static get BROWSE_HISTORY() {  return 'browse.history' }
 
   static get BROWSE_HISTORY_STAT() { return 'browse.history.stat'}
 
-  constructor(LocalStorageService) {
+  constructor(LocalStorageService,rx) {
     this.localStorageService = LocalStorageService
+    this.rx = rx
   }
 
   save (dateStr,historyList) {
@@ -28,62 +29,73 @@ export class HistoryService {
   }
 
   add (historyObj) {
-    const stat = this.getHistoryStat()
-
     const today = moment().format('YYYYMMDD')
 
-    const histories = this.getHistoryAt(today)
-
-    // add uuid for the history obj
-    historyObj.uuid = uuid()
-    historyObj.createdAt = new Date().getTime()
-
-    if(Object.keys(histories).length == 0){
-      this.save(today,[historyObj])
-
-      stat[today] = {
-        count : 1
+    this.rx.Observable.combineLatest(
+      this.getHistoryStat(),
+      this.getHistoryAt(today),
+      (stat, histories) => {
+        return {
+          stat: stat,
+          histories: histories
+        }
       }
-      this.saveStat(stat)
-    }
-    else{
+    ).subscribe(({stat, histories}) => {
+
+      // // add uuid for the history obj
+      historyObj.uuid = uuid()
+      historyObj.createdAt = new Date().getTime()
+
       histories.unshift(historyObj)
 
-      stat[today].count += 1
+      this.save(today,histories)
 
-      this.save(today,histories.slice(0, Math.min(histories.length,1000)))
+      const todayStat = stat[today] || {}
+      todayStat.count = todayStat.count ?  todayStat.count + 1 : 1
+      stat[today] = todayStat
+
       this.saveStat(stat)
-    }
+
+      //
+      // if(Object.keys(histories).length == 0){
+      //   this.save(today,[historyObj])
+      //
+      //   stat[today] = {
+      //     count : 1
+      //   }
+      //   this.saveStat(stat)
+      // }
+      // else{
+      //   histories.unshift(historyObj)
+      //
+      //   stat[today].count += 1
+      //
+      //   this.save(today,histories.slice(0, Math.min(histories.length,1000)))
+      //   this.saveStat(stat)
+      // }
+
+    })
+
   }
-  //remove (historyObj) {
-  //  const histories = this.getAllHistory()
-  //  let filtered = histories
-  //      .filter((obj) => obj.uuid !== historyObj.uuid)
-  //
-  //  this.save(filtered)
-  //
-  //}
 
   getHistoryStat(){
-    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY_STAT)
+    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY_STAT).map(data => data || {})
   }
 
   getHistoryAt(dateStr){
-    return this.localStorageService.getObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`)
-  }
-
-  getAllHistory ()  {
-    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY)
+    return this.localStorageService.getObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`).map(data => data || [])
   }
 
   clearHistory(key) {
     this.save(key,undefined)
 
-    const stat = this.getHistoryStat()
+    this.getHistoryStat().subscribe(stat => {
 
-    delete stat[key]
+      delete stat[key]
 
-    this.saveStat(stat)
+      this.saveStat(stat)
+    })
+
 
   }
 

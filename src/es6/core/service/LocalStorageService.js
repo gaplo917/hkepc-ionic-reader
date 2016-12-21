@@ -1,55 +1,60 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
-  
 export class LocalStorageService {
   static get NAME() { return 'LocalStorageService'}
 
   static get DI() {
-    return ($window) => new LocalStorageService($window)
+    return ($window,$localForage,rx) => new LocalStorageService($window,$localForage,rx)
   }
 
-  constructor($window) {
-    this.window = $window
+  constructor($window,$localForage,rx) {
+    this.$localForage = $localForage
+    this.rx = rx
     this.cache = new Map()
   }
   set(key, value) {
     this.cache.set(key,value)
-    if(value == undefined){
-      delete this.window.localStorage[key]
-    }
-    else {
-      this.window.localStorage[key] = value;
-    }
+
+    return this.rx.Observable
+      .fromPromise(this.$localForage.setItem(key,value))
+      .observeOn(this.rx.Scheduler.default)
   }
   
   get(key, defaultValue) {
-    const values = this.cache.get(key)
-    if(!values){
-      console.log('get initilize this.cache',key)
-      this.cache.set(key, this.window.localStorage[key] || defaultValue || 'undefined')
-    }
-    const cachedVal = this.cache.get(key)
-    return cachedVal === 'undefined' ? undefined : cachedVal
+    const value = this.cache.get(key)
+
+    return value
+      ? this.rx.Observable.just(value).do(_ => console.debug(`load key:${key} from cache`))
+      : this.rx.Observable
+        .fromPromise(this.$localForage.getItem(key))
+        .map(data => data && data != null ? data : defaultValue)
+        .do(data => {
+          this.cache.set(key, data)
+        })
+        .observeOn(this.rx.Scheduler.default)
   }
   
   setObject(key, value) {
-    this.cache.set(key,value)
-    if(value == undefined){
-      delete this.window.localStorage[key]
-    }
-    else {
-      this.window.localStorage[key] = JSON.stringify(value);
-    }
+    this.cache.set(key, value)
+
+    return this.rx.Observable
+      .fromPromise(this.$localForage.setItem(key,JSON.stringify(value)))
+      .observeOn(this.rx.Scheduler.default)
   }
   
   getObject(key) {
-    const values = this.cache.get(key)
-    if(!values){
-      console.log('getObject initilize this.cache')
-      this.cache.set(key, JSON.parse(this.window.localStorage[key] || '{}'))
-    }
-    return this.cache.get(key);
+    const value = this.cache.get(key)
+
+    return value
+      ? this.rx.Observable.just(value).do(_ => console.debug(`load key:${key} from cache`))
+      : this.rx.Observable
+        .fromPromise(this.$localForage.getItem(key))
+        .map(JSON.parse)
+        .do(data => {
+          this.cache.set(key, data)
+        })
+        .observeOn(this.rx.Scheduler.default)
   }
 }
     

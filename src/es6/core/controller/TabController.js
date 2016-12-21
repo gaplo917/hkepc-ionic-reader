@@ -12,7 +12,6 @@ import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 
 import * as Controllers from './index'
 const cheerio = require('cheerio')
-const Rx = require('rx')
 
 export class TabController{
   static get STATE() { return 'tab'}
@@ -26,7 +25,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory) {
+  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -34,22 +33,31 @@ export class TabController{
     this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
     this.http = $http
+    this.rx = rx
     this.state = $state
     this.authService = AuthService
     this.historyService = HistoryService
     this.ionicHistory = $ionicHistory
 
+    this.isLoggedIn = false
+
     // cache the value
-    this._isLoggedIn = AuthService.isLoggedIn()
+    AuthService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    })
 
-    this.darkTheme = this.localStorageService.get('theme') == 'dark'
-    this.fontSize = this.localStorageService.get('fontSize') || "100"
+    this.localStorageService.get('theme').subscribe(data => {
+      this.darkTheme = data == 'dark'
+    })
+    this.localStorageService.get('fontSize').subscribe(data => {
+      this.fontSize = data || "100"
+    })
 
-    const getMemberCenterPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
-    const checkPMPromise = Rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))
+    const getMemberCenterPromise = this.rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
+    const checkPMPromise = this.rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))
 
     // Try the credential on start app
-    Rx.Observable
+    this.rx.Observable
         .concat(checkPMPromise,getMemberCenterPromise)
         .map(resp => cheerio.load(resp.data))
         .filter($ => $('body').html() != null)
@@ -58,7 +66,7 @@ export class TabController{
         )
 
     // schedule to check PM
-    Rx.Scheduler.default.schedulePeriodic(
+    this.rx.Scheduler.default.schedulePeriodic(
         HKEPC.forum.checkPM(),
         1000 * 60 , /* 1 minutes */
         (url) =>  {
@@ -115,16 +123,21 @@ export class TabController{
 
         this.login = req.username
         if(this.login) {
-          this._isLoggedIn = true
+          this.isLoggedIn = true
         } else {
-          this._isLoggedIn = false
 
           this.login = undefined
 
-          if (AuthService.isLoggedIn()){
-            ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-            AuthService.logout()
-          }
+          AuthService.isLoggedIn().subscribe(isLoggedIn => {
+            if(isLoggedIn) {
+              ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+              AuthService.logout()
+
+              this.isLoggedIn = false
+            }
+          })
+
+
         }
       }
     })
@@ -202,31 +215,30 @@ export class TabController{
       this.messageModal = modal
     })
 
-    if(!this.localStorageService.get('agreeEULA',0)){
+    this.localStorageService.get('agreeEULA',0).subscribe(data => {
+      if(!data){
+        $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
+          scope: $scope.eulaModal,
+          backdropClickToClose: false
+        }).then((modal) => {
+          this.eulaModal = modal
+          this.eulaModal.show()
 
-      $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
-        scope: $scope.eulaModal,
-        backdropClickToClose: false
-      }).then((modal) => {
-        this.eulaModal = modal
-        this.eulaModal.show()
+          this.scope.eulaModal.disagree = () => {
+            alert("請自行離開！")
+          }
 
-        this.scope.eulaModal.disagree = () => {
-          alert("請自行離開！")
-        }
-
-        this.scope.eulaModal.agree = () => {
-          this.localStorageService.set('agreeEULA',1)
-          this.eulaModal.hide()
-        }
-      })
-    }
+          this.scope.eulaModal.agree = () => {
+            this.localStorageService.set('agreeEULA',1)
+            this.eulaModal.hide()
+          }
+        })
+      }
+    })
 
   }
 
-  isLoggedIn(){
-    return this._isLoggedIn
-  }
+
 
   removeAndroidStyleCssClass(){
     const body = angular.element(document.querySelector('body'))[0]

@@ -10,35 +10,42 @@ export class AuthService {
   static get NAME() { return 'AuthService' }
 
   static get DI() {
-    return (LocalStorageService,$http,ngToast) => new AuthService(LocalStorageService,$http,ngToast)
+    return (LocalStorageService,$http,ngToast,rx) => new AuthService(LocalStorageService,$http,ngToast,rx)
   }
 
-  constructor(LocalStorageService,$http,ngToast) {
+  constructor(LocalStorageService,$http,ngToast,rx) {
     this.localStorageService = LocalStorageService
     this.http = $http
     this.ngToast = ngToast
+    this.rx = rx
   }
 
   saveAuthority(authority) {
     // remove the password before save
     delete authority['password']
 
-    this.localStorageService.setObject('authority',authority)
+    return this.localStorageService.setObject('authority',authority)
   }
 
   removeAuthority(){
-   this.localStorageService.setObject('authority',{})
+   return this.localStorageService.setObject('authority',{})
   }
 
   getUsername () {
-    return this.localStorageService.getObject('authority').username
+    return this.localStorageService.getObject('authority')
+      .filter(authority => authority && authority != null)
+      .map(data => data.username)
   }
 
   isLoggedIn() {
-
-  return this.localStorageService.get(HKEPC.auth.id) &&
-      this.localStorageService.get(HKEPC.auth.token) &&
-      new Date().getTime() < parseInt(this.localStorageService.get(HKEPC.auth.expire))
+    return this.rx.Observable.combineLatest(
+      this.localStorageService.get(HKEPC.auth.id),
+      this.localStorageService.get(HKEPC.auth.token),
+      this.localStorageService.get(HKEPC.auth.expire),
+      (id, token, expire) => {
+        return id && token && new Date().getTime() < parseInt(expire)
+      }
+    )
   }
 
   login (authority,cb) {

@@ -31,8 +31,9 @@ export class HistoryController {
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      const historyStat = this.historyService.getHistoryStat()
-      this.historyStat = historyStat
+      this.historyService.getHistoryStat().subscribe(stat => {
+        this.historyStat = stat
+      })
 
     })
   }

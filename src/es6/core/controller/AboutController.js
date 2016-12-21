@@ -26,7 +26,9 @@ export class AboutController {
     this.scope = $scope
     this.ionicPopup = $ionicPopup
     this.version = HKEPC.version
-    this.proxy = LocalStorageService.get('proxy') || HKEPC.proxy
+    LocalStorageService.get('proxy').subscribe(data => {
+      this.proxy = data || HKEPC.proxy
+    })
   }
 
   isIOS(){

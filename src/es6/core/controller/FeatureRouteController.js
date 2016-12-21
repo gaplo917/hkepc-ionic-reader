@@ -34,8 +34,15 @@ export class FeatureRouteController{
     this.state = $state
     this.ngToast = ngToast
     this.localStorageService = LocalStorageService
-    this.darkTheme = this.localStorageService.get('theme') == 'dark'
-    this.fontSize = this.localStorageService.get('fontSize') || "100"
+    this.isLoggedIn = false
+
+    this.localStorageService.get('theme').subscribe(data => {
+      this.darkTheme = data == 'dark'
+    })
+    this.localStorageService.get('fontSize').subscribe(data => {
+      this.fontSize = data || "100"
+    })
+
     this.authService = AuthService
 
     this.cleanBadgeUpdateListener = $rootScope.$on(NotificationBadgeUpdateRequest.NAME,(e,req) => {
@@ -49,9 +56,17 @@ export class FeatureRouteController{
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      this.notification = this.localStorageService.getObject('notification')
+      this.localStorageService.getObject('notification').subscribe( data => {
+        this.notification = data
+      })
 
-      this.registerOnChangeForumStyle()
+
+      this.authService.isLoggedIn().subscribe(isLoggedIn => {
+        this.isLoggedIn = isLoggedIn
+        if(isLoggedIn) {
+          this.registerOnChangeForumStyle()
+        }
+      })
 
     })
   }
@@ -115,8 +130,5 @@ export class FeatureRouteController{
     this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(size))
   }
 
-  isLoggedIn(){
-    return this.authService.isLoggedIn()
-  }
 
 }

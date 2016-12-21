@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="img-src * 'self' data:; default-src * 'self' gap: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; ">
     <title></title>
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -19,8 +18,16 @@
     <script src='lib/ga/analytics.js'></script>
     <script src="lib/angulartics/dist/angulartics.min.js"></script>
     <script src="lib/angulartics-google-analytics/dist/angulartics-google-analytics.min.js"></script>
+    <script src="lib/localforage/dist/localforage.min.js"></script>
+    <script src="lib/angular-localforage/dist/angular-localForage.min.js"></script>
+    <script src="lib/angulartics-google-analytics/dist/angulartics-google-analytics.min.js"></script>
+
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+
+    <!--RxJs + Angular-->
+    <script src="lib/rxjs/dist/rx.all.js"></script>
+    <script src="lib/rx-angular/dist/rx.angular.js"></script>
 
     <!-- your app's js -->
     <script src="lib/babel-polyfill/browser-polyfill.js"></script>

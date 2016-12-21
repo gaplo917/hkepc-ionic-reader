@@ -22,7 +22,7 @@ export class ChatController{
       }
     }
   }}
-  constructor($scope, $http, AuthService,$state,ngToast,$ionicHistory){
+  constructor($scope, $http, AuthService,$state,ngToast,$ionicHistory,rx){
 
     this.http = $http
     this.scope = $scope
@@ -30,17 +30,30 @@ export class ChatController{
     this.state = $state
     this.ngToast = ngToast
     this.ionicHistory = $ionicHistory
+    this.rx = rx
 
     this.page = 1
 
     $scope.$on('$ionicView.loaded', (e) => {
-      if(AuthService.isLoggedIn()){
-        this.scope.$emit("accountTabUpdate",AuthService.getUsername())
-        this.loadChats()
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 私人訊息需要會員權限，請先登入！</i>`)
-        $state.go(Controllers.AccountController.STATE)
-      }
+
+      this.rx.Observable.combineLatest(
+        AuthService.isLoggedIn(),
+        AuthService.getUsername(),
+        (isLoggedIn, username) => {
+          return {
+            isLoggedIn: isLoggedIn,
+            username: username
+          }
+        }
+      ).subscribe(({isLoggedIn, username}) => {
+        if (isLoggedIn) {
+          this.scope.$emit("accountTabUpdate",username)
+          this.loadChats()
+        } else {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 私人訊息需要會員權限，請先登入！</i>`)
+          $state.go(Controllers.AccountController.STATE)
+        }
+      })
 
     })
   }

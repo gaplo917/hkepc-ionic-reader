@@ -23,7 +23,6 @@ export class LikesController{
 
     this.http = $http
     this.scope = $scope
-    this.chats = []
     this.ngToast = ngToast
     this.pageSize = 5
     this.sanitize = $sanitize
@@ -34,11 +33,14 @@ export class LikesController{
 
     $scope.$on('$ionicView.enter', (e) => {
       // get the whole list from db
-      this.wholeMessages = Object.assign([],MessageService.getAllLikedPost()).reverse()
+      MessageService.getAllLikedPost().subscribe(posts => {
+        this.wholeMessages = Object.assign([],posts).reverse()
+        this.messages = this.wholeMessages.slice(0,this.pageSize)
+        this.totalPageNum = Math.ceil(this.wholeMessages.length / this.pageSize)
 
-      this.messages = this.wholeMessages.slice(0,this.pageSize)
+      })
 
-      this.totalPageNum = Math.ceil(this.wholeMessages.length / this.pageSize)
+
     })
 
   }

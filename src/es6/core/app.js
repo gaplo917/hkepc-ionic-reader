@@ -5,7 +5,6 @@ import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
 
-
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
 
@@ -25,7 +24,9 @@ angular.module('starter', [
   'ngToast',
   'ionicLazyLoad',
   'angulartics',
-  'angulartics.google.analytics'
+  'angulartics.google.analytics',
+  'LocalForageModule',
+  'rx'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -70,7 +71,7 @@ angular.module('starter', [
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
   "use strict";
   $ionicConfigProvider.scrolling.jsScrolling(false)
-  $ionicConfigProvider.views.maxCache(5)
+  $ionicConfigProvider.views.maxCache(20)
   $ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')
@@ -82,24 +83,42 @@ angular.module('starter', [
 }])
 .provider('HKEPC_PROXY',[function(){
 
-  this.$get = ['ngToast','LocalStorageService', function(ngToast, LocalStorageService){
+  this.$get = (rx, $q, ngToast, LocalStorageService) =>{
     return {
       request: function(config) {
-        if(isProxied) {
-          // we need to proxy all the request to prevent CORS
+        var deferred = $q.defer()
 
-          if(config.url.indexOf(HKEPC.baseUrl) >= 0){
+        rx.Observable.combineLatest(
+          LocalStorageService.get('proxy'),
+          LocalStorageService.get(HKEPC.auth.id),
+          LocalStorageService.get(HKEPC.auth.token),
+          (proxyInDb, authId, token) => {
+            return {
+              proxyInDb: proxyInDb,
+              authId: authId,
+              token: token
+            }
+          }).subscribe(({proxyInDb, authId, token}) => {
+            if(isProxied) {
+              // we need to proxy all the request to prevent CORS
 
-            const proxy = LocalStorageService.get('proxy') || HKEPC.proxy
-            // rewrite the url with proxy
-            config.url = config.url.replace('http://',`${proxy}/`)
-          }
-          config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${LocalStorageService.get(HKEPC.auth.id)};${HKEPC.auth.token}=${LocalStorageService.get(HKEPC.auth.token)}`
+              if(config.url.indexOf(HKEPC.baseUrl) >= 0){
 
-        }
-        config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
+                const proxy = proxyInDb || HKEPC.proxy
+                // rewrite the url with proxy
+                config.url = config.url.replace('http://',`${proxy}/`)
+              }
+              config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
 
-        return config
+            }
+            config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
+
+            deferred.resolve(config)
+        }, (err) => {
+          deferred.resolve(config)
+        })
+
+        return deferred.promise
       },
       responseError: function(err){
         "use strict";
@@ -111,7 +130,7 @@ angular.module('starter', [
         return err
       }
     }
-  }]
+  }
 }])
 .config(function($httpProvider) {
   $httpProvider.interceptors.push('HKEPC_PROXY')
@@ -122,6 +141,15 @@ angular.module('starter', [
     verticalPosition: 'top',
     horizontalPosition: 'right',
     animation: "slide"
+  });
+}])
+.config(['$localForageProvider', function($localForageProvider){
+  $localForageProvider.config({
+    driver      : localforage.WEBSQL, // if you want to force a driver
+    name        : 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
+    version     : 1.0, // version of the database, you shouldn't have to use this
+    storeName   : 'keyvaluepairs', // name of the table
+    description : 'Simple persistant storage'
   });
 }]);
 

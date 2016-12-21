@@ -12,7 +12,6 @@ import * as Controllers from "./index"
 import { Clipboard } from 'ionic-native';
 
 const cheerio = require('cheerio')
-const Rx = require('rx')
 const moment = require('moment')
 require('moment/locale/zh-tw');
 
@@ -30,9 +29,10 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,rx) {
     this.scope = $scope
     this.http = $http
+    this.rx = rx
     this.messageService = MessageService
     this.state = $state
     this.location = $location
@@ -48,7 +48,11 @@ export class PostController{
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
-    this.currentUsername = AuthService.getUsername()
+    this.currentUsername = undefined
+
+    AuthService.getUsername().subscribe(username => {
+      this.currentUsername = username
+    })
 
     // register reply modal
     this.registerReplyModal()
@@ -93,17 +97,22 @@ export class PostController{
       this.focus = $stateParams.focus
 
       // Last reading page position
-      const lastPage = this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`)
-      if(lastPage) {
-        this.ngToast.info({
-          horizontalPosition: 'right',
-          timeout: 2000,
-          content: `<i class="ion-ios-eye"> 自動跳到上一次閱讀的頁數</i>`
-        })
-      }
-      this.page = lastPage || $stateParams.page
+      this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`).subscribe(data => {
+        const lastPage = data
 
-      setTimeout(() => this.loadMessages(), 200)
+        if(lastPage) {
+          this.ngToast.info({
+            horizontalPosition: 'right',
+            timeout: 2000,
+            content: `<i class="ion-ios-eye"> 自動跳到上一次閱讀的頁數</i>`
+          })
+        }
+        this.page = lastPage || $stateParams.page
+
+        setTimeout(() => this.loadMessages(), 200)
+
+      })
+
     })
 
     $scope.$on('$ionicView.enter', (e) => {
@@ -142,7 +151,7 @@ export class PostController{
   loadMessages(){
     this.LocalStorageService.set(`${this.topicId}/${this.postId}/lastPage`,this.page)
 
-    const source = Rx.Observable
+    const source = this.rx.Observable
         .fromPromise(this.http.get(HKEPC.forum.posts(this.topicId,this.postId,this.page)))
         .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
         .map(
@@ -200,7 +209,7 @@ export class PostController{
             }
           }).get()
         })
-        .map(postObj => Rx.Observable.return(postObj).delay(this.delayRender))
+        .map(postObj => this.rx.Observable.return(postObj).delay(this.delayRender))
         .concatAll()
 
     // render the post
@@ -250,7 +259,9 @@ export class PostController{
             }
           }
 
-          message.liked = this.messageService.isLikedPost(message)
+          this.messageService.isLikedPost(message).subscribe(isLiked => {
+            message.liked = isLiked
+          })
           message.focused = message.id == this.focus
 
           this.messages.push(message)
@@ -281,7 +292,7 @@ export class PostController{
   like(message){
     console.log('like',message)
 
-    if(this.messageService.isLikedPost(message)){
+    if(message.liked){
       this.messageService.remove(message)
       message.liked = false
     }
@@ -310,62 +321,70 @@ export class PostController{
   }
 
   onQuickReply(post){
-    if(this.authService.isLoggedIn()){
-      const replyModal = this.scope.replyModal
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      if(isLoggedIn){
+        const replyModal = this.scope.replyModal
 
-      replyModal.message = {
-        post: post
+        replyModal.message = {
+          post: post
+        }
+
+        replyModal.reply = {
+          id : undefined,
+          postId: post.id,
+          topicId: post.topicId,
+          type: 1 // default to use quote
+        }
+
+        replyModal.show()
+
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
+    })
 
-      replyModal.reply = {
-        id : undefined,
-        postId: post.id,
-        topicId: post.topicId,
-        type: 1 // default to use quote
-      }
-
-      replyModal.show()
-
-    } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
-    }
   }
 
   onReply(message){
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      if(isLoggedIn){
+        const replyModal = this.scope.replyModal
 
-    if(this.authService.isLoggedIn()){
-      const replyModal = this.scope.replyModal
+        replyModal.message = message
 
-      replyModal.message = message
+        replyModal.reply = {
+          id : message.id,
+          postId: message.post.id,
+          topicId: message.post.topicId,
+          type: 3 // default to use quote
+        }
 
-      replyModal.reply = {
-        id : message.id,
-        postId: message.post.id,
-        topicId: message.post.topicId,
-        type: 3 // default to use quote
+        replyModal.show()
+
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
+    })
 
-      replyModal.show()
-
-    } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
-    }
 
   }
 
   onReport(message){
-    if(this.authService.isLoggedIn()){
-      const reportModal = this.scope.reportModal
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      if(isLoggedIn){
+        const reportModal = this.scope.reportModal
 
-      reportModal.message = message
+        reportModal.message = message
 
-      reportModal.report = {}
+        reportModal.report = {}
 
-      reportModal.show()
+        reportModal.show()
 
-    } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
-    }
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
+      }
+    })
+
   }
 
   onEdit(message){

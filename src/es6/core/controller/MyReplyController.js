@@ -52,12 +52,14 @@ export class MyReplyController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      if(AuthService.isLoggedIn()){
-        this.loadMyReplies()
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
-        $state.go(Controllers.AccountController.STATE)
-      }
+      AuthService.isLoggedIn().subscribe(isLoggedIn => {
+        if (isLoggedIn) {
+          this.loadMyReplies()
+        } else {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
+          $state.go(Controllers.AccountController.STATE)
+        }
+      })
     })
 
 

@@ -21,51 +21,42 @@ export class MessageService {
   }
 
   add (message) {
-    const liked = this.getAllLikedPost()
-    console.log('likedPosts',liked)
+    this.getAllLikedPost().subscribe(liked => {
+      console.log('likedPosts',liked)
 
-    if(Object.keys(liked).length == 0){
-      this.save([message])
-    }
-    else{
-      let filtered = liked
+      if(Object.keys(liked).length == 0){
+        this.save([message])
+      }
+      else{
+        let filtered = liked
           .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
 
-      filtered.push(message)
+        filtered.push(message)
 
-      this.save(filtered)
-    }
+        this.save(filtered)
+      }
+    })
+
   }
   remove (message) {
-    const liked = this.getAllLikedPost()
-    let filtered = liked
+    this.getAllLikedPost().subscribe(liked => {
+      let filtered = liked
         .filter((msg) => msg.id !== message.id || msg.post.id !== message.post.id)
 
-    this.save(filtered)
-
+      this.save(filtered)
+    })
   }
 
   isLikedPost (message)  {
-    const liked = this.getAllLikedPost()
-    return Object.keys(liked).length > 0
+    return this.getAllLikedPost().map(liked => {
+      return Object.keys(liked).length > 0
         ? liked.filter((msg) => msg.id == message.id && msg.post.id == message.post.id).length == 1
         : false;
+    })
+
   }
 
   getAllLikedPost ()  {
-    return this.localStorageService.getObject(MessageService.MESSAGES_LIKE_KEY)
-  }
-
-  saveDraft (postId,content)  {
-    console.log('save Draft',postId,content)
-  }
-
-  getDraft(postId)  {
-    console.log('get Draft',postId)
-  }
-
-  getAllDrafts ()  {
-    console.log('getAllDrafts')
-    return this.localStorageService.getObject(MessageService.MESSAGE_DRAFT)
+    return this.localStorageService.getObject(MessageService.MESSAGES_LIKE_KEY).map(data => data || [])
   }
 }

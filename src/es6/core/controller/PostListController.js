@@ -26,7 +26,7 @@ export class PostListController {
       }
     }
   }}
-  constructor($scope,$http,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q) {
+  constructor($scope,$http,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
     this.scope = $scope
     this.http = $http
     this.state = $state
@@ -38,6 +38,8 @@ export class PostListController {
     this.localStorageService = LocalStorageService
     this.ngToast = ngToast
     this.q = $q
+    this.apiService = apiService
+    this.rx = rx
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
@@ -191,161 +193,49 @@ export class PostListController {
       this.newPostModal.remove()
     })
 
-    // create a UI rendering queue
-    this.queue = async.queue((task, callback) => {
-
-      // update the post list
-      const post = task()
-
-      if(post.name && post.id){
-        const page = this.pages.find(p => p.num == post.pageNum)
-
-        if(page){
-          page.posts.push(post)
-        }
-      }
-
-      if(this.queue.length() % 3 == 0){
-        // force update the view after 3 task
-        this.scope.$apply()
-      }
-
-      const delayRenderTime = post.isSticky && !this.showSticky ? 0 : 40
-      setTimeout(() => callback(), delayRenderTime)
-    }, 1)
-
     $scope.$on('$ionicView.loaded', (e) => {
-      setTimeout(() => this.loadMore(), 200)
+      this.rx.Observable.timer(200).flatMap(this.loadMore()).subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.queue.resume()
-
       // stringify and compare to string value
-      this.showSticky = String(this.getShowSticky()) === 'true'
+      this.localStorageService.get('showSticky',true).subscribe(data => {
+        this.showSticky = String(data) == 'true'
+      })
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.queue.pause()
     })
   }
 
   loadMore(cb){
     const nextPage = this.currentPageNum + 1
-    const deferred = this.q.defer();
 
-    const request = (this.topicId == 'latest' && nextPage > 1)
-                    ? HKEPC.forum.latestNext(this.searchId, nextPage)
-                    : HKEPC.forum.topics(this.topicId, nextPage, this.filter,this.order)
+    return this.apiService.postListPage(this.topicId, nextPage, this.filter, this.order)
+      .do(resp => {
+        this.searchId = resp.searchId
+        // only extract the number
+        this.totalPageNum = resp.totalPageNum
 
-    this.http
-        .get(request)
-        .then((resp) => {
-          // hide the spinner
-          this.showSpinner = false
+        this.subTopicList =  resp.subTopicList
 
-          let $ = cheerio.load(resp.data)
+        this.categories = resp.categories
 
-          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
+        // push into the array
+        this.pages.push({
+          posts: resp.posts,
+          num: resp.pageNum
+        })
 
-          // only work for latest
-          const searchId = URLUtils.getQueryVariable($('.pages_btns .pages a').first().attr('href'),'searchid')
-          this.searchId = searchId
+        if(this.currentIndex == 0){
+          this.slidePages[0] = this.pages[0]
+        }
 
-          const titles = $('#nav').text().split('»')
-          const topicName = titles[titles.length - 1]
-          const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages a').not('.next').last().text()
-          const subTopicList = $('#subforum table h2 a').map((i,elem) => {
-            const obj = $(elem)
-            const name = obj.text()
-            const id = URLUtils.getQueryVariable(obj.attr('href'), 'fid')
-            return {
-              id: id,
-              name: name
-            }
-          }).get()
-
-          const postCategories = this.categories.length == 0
-              ? $('.threadtype a').map((i,elem) => {
-                  const obj = $(elem)
-                  return {
-                    id: URLUtils.getQueryVariable(obj.attr('href'), 'typeid'),
-                    name: obj.text()
-                  }
-                }).get()
-              : this.categories
-
-          // only extract the number
-          this.totalPageNum = totalPageNumText
-                              ? totalPageNumText.match(/\d/g).join("")
-                              : 1
-
-          this.subTopicList = subTopicList.length > 0
-                              ? subTopicList
-                              : this.subTopicList
-
-          this.categories = postCategories
-
-          const tasks = $('.threadlist table tbody').map( (i, elem) => {
-            return () => {
-              const htmlId = $(elem).attr('id')
-
-              const postSource = cheerio.load($(elem).html())
-              // fall back for latest postUrl finding
-              const postUrl = postSource('tr .subject span a').attr('href') || /* latest post */postSource('tr .subject a').attr('href')
-              const postTitleImgUrl = postSource('tr .folder img').attr('src')
-
-              return {
-                id: URLUtils.getQueryVariable(postUrl, 'tid'),
-                topicId: URLUtils.getQueryVariable(postUrl, 'fid'),
-                tag: postSource('tr .subject em a').text() || postSource('.forum a').text(),
-                name: postSource('tr .subject span[id^=thread_] a ').text() || postSource('tr .subject > a ').text(),
-                lastPost:{
-                  name: postSource('tr .lastpost cite a').text(),
-                  timestamp: postSource('tr .lastpost em a span').attr('title') || postSource('tr .lastpost em a').text()
-                },
-                author: {
-                  name: postSource('tr .author a').text()
-                },
-                count: {
-                  view: postSource('tr .nums em').text(),
-                  reply: postSource('tr .nums strong').text()
-                },
-                publishDate: postSource('tr .author em').text(),
-                pageNum: nextPage,
-                isSticky: htmlId ? htmlId.startsWith("stickthread") : false,
-                isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false
-              }
-            }
-          }).get()
-
-          this.queue.push(tasks, (err) => {
-            // callback of each task if any
-          })
-
-          // when all task finished
-          this.queue.drain = () => {
-            this.updateUI()
-          }
-
-          // push into the array
-          this.pages.push({
-            posts: [],
-            num: nextPage
-          })
-
-          if(this.currentIndex == 0){
-            this.slidePages[0] = this.pages[0]
-          }
-
-          this.topic = {
-            id: this.topicId,
-            name: topicName
-          }
-          deferred.resolve({})
-        },(err) => deferred.reject(err))
-
-    return deferred.promise
+        this.topic = {
+          id: this.topicId,
+          name: resp.topicName
+        }
+      })
   }
 
   updateUI(){
@@ -354,7 +244,6 @@ export class PostListController {
   }
 
   reset(){
-    this.queue.kill()
     this.pages = []
     this.slidePages = [{},{},{}]
     this.ionicSlideBoxDelegate.slide(0,10)
@@ -370,7 +259,7 @@ export class PostListController {
       const category = this.categories.find(e => e.id == this.filter)
       this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
     }
-    this.loadMore()
+    this.loadMore().subscribe()
   }
 
   onSlideChanged(index){
@@ -385,76 +274,76 @@ export class PostListController {
     // clear the model first
     //this.slidePages[index] = []
 
-    setTimeout(() => {
-      const diff = this.currentIndex - index
-      const pagesNums = this.pages.map(p => p.num)
-      this.currentPageNum = this.slidePages[this.currentIndex].num
-      this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(true)
-      this.canSwipeBack = false
+    this.rx.Observable.timer(100)
+      .subscribe(() => {
+        const diff = this.currentIndex - index
+        const pagesNums = this.pages.map(p => p.num)
+        this.currentPageNum = this.slidePages[this.currentIndex].num
+        this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(true)
+        this.canSwipeBack = false
 
-      if(diff == 1 || diff == -2){
+        if(diff == 1 || diff == -2){
 
-        if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
-          // disable the does-continue if the it is the initial page
-          this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(false)
-          this.canSwipeBack = true
+          if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
+            // disable the does-continue if the it is the initial page
+            this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(false)
+            this.canSwipeBack = true
+          }
+
+          // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
+          const smallestPageNum = Math.min.apply(Math, pagesNums)
+
+          if(this.currentPageNum > smallestPageNum){
+            console.log("default previous page")
+            this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+
+            // prefetch for better UX
+            const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
+            this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
+
+          } else {
+            console.log("loadMore Before()")
+          }
         }
+        else{
+          // next page
+          const largestPageNum = Math.max.apply(Math, pagesNums)
 
-        // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
-        const smallestPageNum = Math.min.apply(Math, pagesNums)
+          if(this.currentPageNum == this.totalPageNum){
 
-        if(this.currentPageNum > smallestPageNum){
-          console.log("default previous page")
-          this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+            this.ngToast.warning("已到最後一頁！")
+            // scroll back the previous slides
+            this.ionicSlideBoxDelegate.previous()
+          }
+          if(this.currentPageNum >= largestPageNum){
+            console.log("loadMore After()")
+            this.slidePages[index] = []
+            this.loadMore().subscribe(() => {
+              const len = this.pages.length -1
+              const nextPage = Math.floor(len / 3) * 3 + index
+              this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
+              this.slidePages[index] = this.pages[nextPage]
 
-          // prefetch for better UX
-          const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
-          this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
+              // prefetch for better UX
+              const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
+              this.slidePages[prefetchSlideIndex] = []
+            })
 
-        } else {
-          console.log("loadMore Before()")
-        }
-      }
-      else{
-        // next page
-        const largestPageNum = Math.max.apply(Math, pagesNums)
-
-        if(this.currentPageNum == this.totalPageNum){
-
-          this.ngToast.warning("已到最後一頁！")
-          // scroll back the previous slides
-          this.ionicSlideBoxDelegate.previous()
-        }
-        if(this.currentPageNum >= largestPageNum){
-          console.log("loadMore After()")
-          this.slidePages[index] = []
-          this.loadMore().then(() => {
-            const len = this.pages.length -1
-            const nextPage = Math.floor(len / 3) * 3 + index
-            this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
-            this.slidePages[index] = this.pages[nextPage]
+          }
+          else{
+            console.log("default next page")
+            this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
 
             // prefetch for better UX
             const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-            this.slidePages[prefetchSlideIndex] = []
-          })
+            this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
+          }
 
         }
-        else{
-          console.log("default next page")
-          this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
 
-          // prefetch for better UX
-          const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-          this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
-        }
-
-      }
-
-      this.currentIndex = index
-      this.updateUI()
-
-    },100)
+        this.currentIndex = index
+        this.updateUI()
+      })
 
     console.log(`onSlideChanged${index}`)
   }
@@ -475,10 +364,6 @@ export class PostListController {
 
   saveShowSticky(bool) {
     this.localStorageService.set('showSticky',bool)
-  }
-
-  getShowSticky(){
-    return this.localStorageService.get('showSticky',true)
   }
 
   doNewPost(topic){

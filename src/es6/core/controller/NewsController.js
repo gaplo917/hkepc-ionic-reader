@@ -8,7 +8,6 @@ import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
-const Rx = require('rx')
 const moment = require('moment')
 require('moment/locale/zh-tw');
 
@@ -26,9 +25,10 @@ export class NewsController{
       }
     }
   }}
-  constructor($scope, $http,$ionicHistory,ngToast,MessageService,$sanitize,$ionicActionSheet,$state){
+  constructor($scope, $http,$ionicHistory,ngToast,MessageService,$sanitize,$ionicActionSheet,$state,rx){
 
     this.http = $http
+    this.rx = rx
     this.scope = $scope
     this.chats = []
     this.ngToast = ngToast
@@ -54,7 +54,7 @@ export class NewsController{
   loadNews(){
     this.refreshing = true
 
-    const source = Rx.Observable
+    const source = this.rx.Observable
         .fromPromise(this.http.get(HKEPC.forum.news(this.page)))
         .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
         .map(
@@ -74,7 +74,7 @@ export class NewsController{
           const $ = html.getCheerio()
           return $('#items .item').map((i, elem) => { return {$: $, elem: elem} }).get()
         })
-        .map(postObj => Rx.Observable.return(postObj).delay(this.delayRender))
+        .map(postObj => this.rx.Observable.return(postObj).delay(this.delayRender))
         .concatAll()
 
     // render the post

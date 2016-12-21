@@ -3,7 +3,7 @@
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-content>
-    <div class="list" ng-show="!vm.isLoggedIn()">
+    <div class="list" ng-show="!vm.isLoggedIn">
       <label class="item item-input">
         <span class="input-label">登入名稱</span>
         <input type="text" placeholder="Username" ng-model="vm.user.username">
@@ -20,7 +20,7 @@
         <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">我明白並登入</button>
       </div>
     </div>
-    <div class="list" ng-show="vm.isLoggedIn()">
+    <div class="list" ng-show="vm.isLoggedIn">
       <div class="padding">
         <button class="button button-block button-assertive activated" ng-click="vm.logout()">登出</button>
       </div>

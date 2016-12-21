@@ -30,9 +30,19 @@ export class AccountController {
     this.ionicPopup = $ionicPopup
     this.version = HKEPC.version
     this.ionicHistory = $ionicHistory
-    this.proxy = LocalStorageService.get('proxy') || HKEPC.proxy
+    this.isLoggedIn = false
 
-    this.user = LocalStorageService.getObject('authority')
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    })
+
+    LocalStorageService.get('proxy').subscribe(data => {
+      this.proxy = data || HKEPC.proxy
+    })
+
+    LocalStorageService.getObject('authority').subscribe( data => {
+      this. user = data
+    })
 
   }
 
@@ -52,12 +62,11 @@ export class AccountController {
       this.user.password = undefined
 
       this.ionicHistory.clearCache()
+
+      // back to previous page
+      this.onBack()
     })
 
-  }
-
-  isLoggedIn(){
-    return this.authService.isLoggedIn()
   }
 
   logout(){
@@ -68,6 +77,7 @@ export class AccountController {
 
     this.ionicHistory.clearCache()
 
+    this.isLoggedIn = false
   }
 
   onBack(){
