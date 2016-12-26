@@ -52,7 +52,7 @@ export class TopicListController {
     $scope.$on('$ionicView.loaded', (e) => {
       console.log("loaded")
 
-      this.localStorageService.getObject('topics')
+      this.topicsSubscription = this.localStorageService.getObject('topics')
         .do(topics => {
           if (topics) {
             ngToast.success('正在使用快取..')
@@ -60,7 +60,7 @@ export class TopicListController {
             this.cached = true
           }
         })
-        .flatMap(topics => {
+        .switchMap(topics => {
           return topics ? rx.Observable.just(topics) : this.apiService.topicList()
         })
         .subscribe(topics => {
@@ -76,19 +76,25 @@ export class TopicListController {
     
   }
 
-
-
   reset(){
     // reset the model
     this.topics = []
+    this.topicsSubscription && this.topicsSubscription.dispose()
   }
 
   loadList() {
     //remove the cached badge
     this.cached = false
 
-    this.apiService.topicList().subscribe(topics => {
-      this.topics = topics
+    this.topicsSubscription = this.apiService.topicList()
+      .switchMap(topics => {
+        return this.rx.Observable.from(topics)
+      })
+      .map(topic => Rx.Observable.return(topic).delay(30))
+      .concatAll()
+      .subscribe(topic => {
+        this.topics.push(topic)
+        this.scope.$apply()
     })
   }
 

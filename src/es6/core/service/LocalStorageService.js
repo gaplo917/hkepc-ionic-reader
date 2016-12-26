@@ -28,7 +28,7 @@ export class LocalStorageService {
       ? this.rx.Observable.just(value).do(_ => console.debug(`load key:${key} from cache`))
       : this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
-        .map(data => data && data != null ? data : defaultValue)
+        .map(data => data !== undefined && data != null ? data : defaultValue)
         .do(data => {
           this.cache.set(key, data)
         })

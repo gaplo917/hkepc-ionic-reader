@@ -172,7 +172,7 @@ export class PostController{
           // remove the hkepc forum text
           const postTitle = html
               .getTitle()
-              .split('-')[0]
+              .split(' -  電腦領域')[0]
 
           const $ = html.getCheerio()
 
@@ -310,7 +310,7 @@ export class PostController{
   reset(){
     this.messages = []
     this.postTaskSubscription.dispose()
-    this.end = false;
+    this.end = false
 
   }
 
