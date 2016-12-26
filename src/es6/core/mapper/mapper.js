@@ -111,6 +111,7 @@ export default class Mapper{
       subTopicList: subTopicList,
       categories: postCategories,
       posts: posts.filter(_ => _.id && _.name),
+      topicName: topicName,
       pageNum: pageNum,
     }
   }

@@ -56,7 +56,9 @@ export class ApiService {
       .map(Mapper.topicListHtmlToTopicList)
   }
 
-  postListPage(topicId, pageNum, filter, order){
+  postListPage(opt){
+    const {topicId, pageNum, filter, order, searchId} = opt
+
     const request = (topicId == 'latest' && pageNum > 1)
       ? HKEPC.forum.latestNext(searchId, pageNum)
       : HKEPC.forum.topics(topicId, pageNum, filter,order)

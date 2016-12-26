@@ -211,7 +211,13 @@ export class PostListController {
   loadMore(cb){
     const nextPage = this.currentPageNum + 1
 
-    return this.apiService.postListPage(this.topicId, nextPage, this.filter, this.order)
+    return this.apiService.postListPage({
+      topicId: this.topicId,
+      pageNum: nextPage,
+      filter : this.filter,
+      order: this.order,
+      searchId: this.searchId
+    })
       .do(resp => {
         this.searchId = resp.searchId
         // only extract the number
