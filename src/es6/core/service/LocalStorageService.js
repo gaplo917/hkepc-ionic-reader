@@ -47,7 +47,7 @@ export class LocalStorageService {
     const value = this.cache.get(key)
 
     return value
-      ? this.rx.Observable.just(value).do(_ => console.debug(`load key:${key} from cache`))
+      ? this.rx.Observable.just(value).do(_ => console.debug(`load key:${key} from cache`, _ ))
       : this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
         .map(JSON.parse)

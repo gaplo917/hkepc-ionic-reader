@@ -153,12 +153,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   }
 }
 
+.button:hover {
+  color:$default-button-font-color;
+}
 .button-full {
   background-color:$default-button-bg-color;
   color: $default-button-font-color;
+  border:0px;
   &.activated {
     background-color: lighten($default-button-bg-color, 20%);
-    color:$text-color;
+    color:darken($default-button-font-color, 5%);
   }
 }
 

@@ -1,23 +1,32 @@
 import * as HKEPC from '../../data/config/hkepc'
 const cheerio = require('cheerio')
 import {GeneralHtml} from '../model/general-html'
+import {HKEPCHtml} from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
 
 export default class Mapper{
 
   static apiSuccess(o) { return { message: o.message }}
 
-  static htmlToCherrio(resp) {
+  static responseToGeneralHtml(resp) {
     const html = new GeneralHtml(cheerio.load(resp.data))
 
     return html
       .removeIframe()
       .processImgUrl(HKEPC.imageUrl)
-      .getCheerio()
   }
 
-  static topicListHtmlToTopicList($) {
+  static responseToHKEPCHtml(resp) {
+    const html = new HKEPCHtml(cheerio.load(resp.data))
 
+    return html.processImgUrl(HKEPC.imageUrl)
+      .processEpcUrl()
+      .processExternalUrl()
+  }
+
+  static topicListHtmlToTopicList(html) {
+
+    const $ = html.getCheerio()
 
     return $('#mainIndex > div').map((i, elem) => {
       const source = cheerio.load($(elem).html())
@@ -42,7 +51,9 @@ export default class Mapper{
     }).get()
   }
 
-  static postListHtmlToPostListPage($,pageNum){
+  static postListHtmlToPostListPage(html,pageNum){
+    const $ = html.getCheerio()
+
     // only work for latest
     const searchId = URLUtils.getQueryVariable($('.pages_btns .pages a').first().attr('href'),'searchid')
 
@@ -113,6 +124,84 @@ export default class Mapper{
       posts: posts.filter(_ => _.id && _.name),
       topicName: topicName,
       pageNum: pageNum,
+    }
+  }
+
+  /**
+   *
+   * @param html HKEPCHtml
+   * @param opt {postId, page}
+   * @returns {*}
+   */
+  static postHtmlToPost(html, opt){
+
+    const {postId, page} = opt
+
+    const $ = html.getCheerio()
+
+    // render the basic information first
+    const pageBackLink = $('.forumcontrol .pageback a').attr('href')
+
+    const topicId = URLUtils.getQueryVariable(pageBackLink,'fid')
+
+    // remove the hkepc forum text
+    const postTitle = html
+      .getTitle()
+      .split(' -  電腦領域')[0]
+
+    const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
+
+    const pageNumArr = pageNumSource
+      .map((i,elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length == 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    const messages = $('#postlist > div').map((i, elem) => {
+
+      let postSource = cheerio.load($(elem).html())
+
+      const content = new HKEPCHtml(
+        cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
+          postSource('.postcontent > .defaultpost > .postmessage').html())
+      ).processImageToLazy()
+        .getCheerio()
+
+      const rank = postSource('.postauthor > p > img').attr('alt')
+
+      return {
+        id: postSource('table').attr('id').replace('pid',''),
+        pos: postSource('.postinfo strong a em').text(),
+        createdAt: postSource('.posterinfo .authorinfo em span').attr('title') || postSource('.posterinfo .authorinfo em').text().replace('發表於 ',''),
+        content : content.html(),
+        post:{
+          id: postId,
+          topicId: topicId,
+          title: postTitle,
+          page: page
+        },
+        author:{
+          rank: rank ? rank.replace('Rank: ','') : 0,
+          image: postSource('.postauthor .avatar img').attr('src'),
+          name : postSource('.postauthor > .postinfo').text().trim(),
+          isSelf: false // default is false, mutate later
+        }
+      }
+
+    }).get()
+
+
+    return {
+      title: postTitle,
+      id: postId,
+      topicId: topicId,
+      totalPageNum: totalPageNum,
+      messages: messages,
     }
   }
 

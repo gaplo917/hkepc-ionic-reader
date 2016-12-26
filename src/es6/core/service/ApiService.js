@@ -47,12 +47,15 @@ export class ApiService {
     )
   }
 
+  emitCommonInfoExtractEvent(html){
+    const $ = html.getCheerio()
+    this.$rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
+  }
+
   topicList(){
     return this.composeApi(this.http.get(HKEPC.forum.index()))
-      .map(Mapper.htmlToCherrio)
-      .do(($) => {
-        this.$rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-      })
+      .map(Mapper.responseToGeneralHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
       .map(Mapper.topicListHtmlToTopicList)
   }
 
@@ -64,10 +67,18 @@ export class ApiService {
       : HKEPC.forum.topics(topicId, pageNum, filter,order)
 
     return this.composeApi(this.http.get(request))
-      .map(Mapper.htmlToCherrio)
-      .do(($) => {
-        this.$rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-      })
-      .map($ => Mapper.postListHtmlToPostListPage($,pageNum))
+      .map(Mapper.responseToGeneralHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
+      .map(html => Mapper.postListHtmlToPostListPage(html,pageNum))
+  }
+
+  postDetails(opt){
+    const {topicId, postId, page} = opt
+
+    return this.composeApi(this.http.get(HKEPC.forum.posts(topicId,postId,page)))
+      .map(Mapper.responseToHKEPCHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
+      .map(html => Mapper.postHtmlToPost(html,opt))
+
   }
 }

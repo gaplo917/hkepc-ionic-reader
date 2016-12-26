@@ -7,14 +7,20 @@
   </ion-header-bar>
   <ion-content>
     <ion-list >
-    <button class="button button-full" ng-click="openGifPopover($event)">
-      <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif"
-           style="background-color:#fff;border-radius:100px;" alt=""/> Gif
-    </button>
+
+    <input-helper modal='this' content-model='edit.content'></input-helper>
+
     <div class="row">
       <div class="col">
         <label class="item item-input text">
-          <textarea id="edit-content"  rows="12" ng-model="edit.content" ng-Required="true" name="description"></textarea>
+          <textarea
+              id="edit-content"
+              rows="12"
+              ng-model="edit.content"
+              ng-Required="true"
+              name="description"
+              autocomplete="off"
+          ></textarea>
         </label>
       </div>
     </div>

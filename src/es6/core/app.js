@@ -71,7 +71,7 @@ angular.module('starter', [
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
   "use strict";
   $ionicConfigProvider.scrolling.jsScrolling(false)
-  $ionicConfigProvider.views.maxCache(20)
+  $ionicConfigProvider.views.maxCache(5)
   $ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')

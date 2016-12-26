@@ -53,6 +53,7 @@ export class PostListController {
     this.canSwipeBack = true
 
     const newPostModal = this.scope.newPostModal = $scope.$new()
+    newPostModal.id = "new-content"
     newPostModal.post = {}
 
     newPostModal.hide = () => this.newPostModal.hide()
@@ -64,21 +65,7 @@ export class PostListController {
     newPostModal.openCategoryPopover = ($event) => {
       newPostModal.categoryPopover.show($event)
     }
-    newPostModal.openGifPopover = ($event) => {
-      newPostModal.gifs = HKEPC.data.gifs
-      newPostModal.gifPopover.show($event)
-    }
-    newPostModal.addGifCodeToText = (code) => {
-      newPostModal.gifPopover.hide()
-      const selectionStart = document.getElementById('new-content').selectionStart
 
-      const content = newPostModal.post.content || ""
-
-      const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
-
-      newPostModal.post.content = `${splits[0]} ${code} ${splits[1]}`
-
-    }
     newPostModal.selectCategory = (category) => {
       newPostModal.categoryPopover.hide()
       newPostModal.post.category = category
@@ -153,12 +140,6 @@ export class PostListController {
       scope: newPostModal
     }).then((modal) => {
       this.newPostModal = modal
-
-      $ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
-        scope: newPostModal
-      }).then((popover) => {
-        newPostModal.gifPopover = popover;
-      })
 
       $ionicPopover.fromTemplateUrl('templates/modals/categories.html', {
         scope: newPostModal

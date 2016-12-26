@@ -22,6 +22,8 @@
         >
           {{::start}} - {{::end}}  頁
         </ion-radio>
+        <!--Offset-->
+        <div style="height:100px"></div>
       </div>
     </ion-scroll>
 
@@ -35,6 +37,8 @@
         >
           第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
         </div>
+        <!--Offset-->
+        <div style="height:100px"></div>
       </div>
     </ion-scroll>
   </ion-content>

@@ -98,7 +98,7 @@
 
     <div class="list card">
 
-      <div class="feature-route item item-icon-left">
+      <div class="feature-route item item-icon-left selectable">
         <div class="icon">
           <i class=" inner-icon" style="background-color: #212121;">A</i>
         </div>
@@ -122,13 +122,13 @@
 
     <div class="list card" ng-show="vm.isLoggedIn">
 
-      <div class="feature-route item item-icon-left">
+      <div class="feature-route item item-icon-left selectable">
         <div class="icon">
           <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
         </div>
 
         <div style="margin-left:10px;line-height: 3;" >論壇風格設定
-          <div class="fright">
+          <div class="fright ">
             <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
               <option value="">使用默認</option>
               <option value="23">HKEPC（傳統介面)</option>
@@ -142,7 +142,6 @@
       </div>
 
     </div>
-
 
     <div style="height:100px"></div>
   </ion-content>

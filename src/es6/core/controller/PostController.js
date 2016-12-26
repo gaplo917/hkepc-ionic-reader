@@ -29,7 +29,7 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,rx) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx) {
     this.scope = $scope
     this.http = $http
     this.rx = rx
@@ -45,6 +45,8 @@ export class PostController{
     this.ionicScrollDelegate = $ionicScrollDelegate
     this.LocalStorageService = LocalStorageService
     this.ionicActionSheet = $ionicActionSheet
+    this.apiService = apiService
+    this.authService = AuthService
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
@@ -54,14 +56,6 @@ export class PostController{
       this.currentUsername = username
     })
 
-    // register reply modal
-    this.registerReplyModal()
-
-    // register report modal
-    this.registerReportModal()
-
-    //register edit message modal
-    this.registerEditMessageModal()
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
@@ -116,6 +110,15 @@ export class PostController{
     })
 
     $scope.$on('$ionicView.enter', (e) => {
+
+      // register reply modal
+      this.registerReplyModal()
+
+      // register report modal
+      this.registerReportModal()
+
+      //register edit message modal
+      this.registerEditMessageModal()
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -151,141 +154,50 @@ export class PostController{
   loadMessages(){
     this.LocalStorageService.set(`${this.topicId}/${this.postId}/lastPage`,this.page)
 
-    const source = this.rx.Observable
-        .fromPromise(this.http.get(HKEPC.forum.posts(this.topicId,this.postId,this.page)))
-        .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
-        .map(
-          html => html.processImgUrl(HKEPC.imageUrl)
-            .processEpcUrl()
-            .processExternalUrl()
-        )
+    this.postTaskSubscription && this.postTaskSubscription.dispose()
 
-    source.map(html => html.getCheerio())
-        .subscribe($ => this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($)))
+    this.postTaskSubscription = this.apiService.postDetails({
+      topicId: this.topicId,
+      postId: this.postId,
+      page: this.page
+    }).subscribe(post => {
+      console.debug(post)
 
+      this.post = post
 
-    // render the basic information first
-    source.subscribe(
-        html => {
-          const pageBackLink = html.getCheerio()('.forumcontrol .pageback a').attr('href')
+      this.totalPageNum = post.totalPageNum
 
-          // remove the hkepc forum text
-          const postTitle = html
-              .getTitle()
-              .split(' -  電腦領域')[0]
-
-          const $ = html.getCheerio()
-
-          const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
-
-          const pageNumArr = pageNumSource
-                              .map((i,elem) => $(elem).text())
-                              .get()
-                              .map(e => e.match(/\d/g)) // array of string with digit
-                              .filter(e => e != null) // filter null value
-                              .map(e => parseInt(e.join(''))) // join the array and parseInt
-
-          this.totalPageNum = pageNumArr.length == 0
-                                ? 1
-                                : Math.max(...pageNumArr)
-          this.post = {
-              title: postTitle,
-              id: this.postId,
-              topicId: URLUtils.getQueryVariable(pageBackLink,'fid')
-            }
-
-        },
-        err => console.log(err)
-    )
-
-    const postTasks = source
-        .flatMap(html => {
-          const $ = html.getCheerio()
-          return $('#postlist > div').map((i, elem) => {
-            return {
-              $: $,
-              elem: elem,
-              postTitle: html.getTitle().split(' - ')[0]
-            }
-          }).get()
+      post.messages.forEach(message => {
+        this.messageService.isLikedPost(message).subscribe(isLiked => {
+          message.liked = isLiked
         })
-        .map(postObj => this.rx.Observable.return(postObj).delay(this.delayRender))
-        .concatAll()
 
-    // render the post
-    this.postTaskSubscription = postTasks
-      .subscribe(
-        postObj => {
-          const elem = postObj.elem,
-                $ = postObj.$,
-                postTitle = postObj.postTitle
+        message.focused = message.id == this.focus
 
-          let postSource = cheerio.load($(elem).html())
+        this.authService.getUsername().subscribe(username => {
+          message.author.isSelf = message.author.name == username
+        })
+      })
 
-          const adsSource = postSource('.adv iframe')
+      this.messages = this.messages.concat(post.messages)
+    },
+    err => console.trace(err),
+    () => {
+      console.debug("All Render Task Completed")
 
-          // extract the ads before remove from the parent
-          const hasAds = adsSource.has('img')
-          const ads = hasAds && !ionic.Platform.isIOS() && !ionic.Platform.isAndroid()  ? adsSource.html() : undefined
+      if(this.focus){
+        console.debug('detected focus object')
+        setTimeout(() => {
+          const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
+          this.ionicScrollDelegate.scrollTo(0,focusPosition)
+          this.focus = undefined
+        },200)
+      }
 
-          // really remove the ads
-          adsSource.remove()
-
-          const content = new HKEPCHtml(
-              cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
-                  postSource('.postcontent > .defaultpost > .postmessage').html())
-          ).processImageToLazy()
-              .getCheerio()
-
-          const rank = postSource('.postauthor > p > img').attr('alt')
-
-          const message = {
-            id: postSource('table').attr('id').replace('pid',''),
-            pos: postSource('.postinfo strong a em').text(),
-            createdAt: postSource('.posterinfo .authorinfo em span').attr('title') || postSource('.posterinfo .authorinfo em').text().replace('發表於 ',''),
-            content : content.html(),
-            ads: ads,
-            post:{
-              id: this.postId,
-              topicId: this.topicId,
-              title: postTitle,
-              page: this.page
-            },
-            author:{
-              rank: rank ? rank.replace('Rank: ','') : 0,
-              image: postSource('.postauthor .avatar img').attr('src'),
-              name : postSource('.postauthor > .postinfo').text(),
-              isSelf: postSource(' author > .postinfo').text().indexOf(this.currentUsername) >= 0
-            }
-          }
-
-          this.messageService.isLikedPost(message).subscribe(isLiked => {
-            message.liked = isLiked
-          })
-          message.focused = message.id == this.focus
-
-          this.messages.push(message)
-
-          this.scope.$apply()
-        },
-        err => console.trace(err),
-        () => {
-          console.debug("All Render Task Completed")
-
-          if(this.focus){
-            console.debug('detected focus object')
-            setTimeout(() => {
-              const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
-              this.ionicScrollDelegate.scrollTo(0,focusPosition)
-              this.focus = undefined
-            },200)
-          }
-
-          this.refreshing = false
-          this.scope.$apply()
-          this.scope.$broadcast('scroll.infiniteScrollComplete')
-        }
-    )
+      this.refreshing = false
+      this.scope.$apply()
+      this.scope.$broadcast('scroll.infiniteScrollComplete')
+    })
 
   }
 
@@ -309,7 +221,7 @@ export class PostController{
 
   reset(){
     this.messages = []
-    this.postTaskSubscription.dispose()
+    this.postTaskSubscription && this.postTaskSubscription.dispose()
     this.end = false
 
   }
@@ -470,16 +382,23 @@ export class PostController{
   registerReplyModal(){
 
     const replyModal = this.scope.replyModal = this.scope.$new()
-    replyModal.show = () => this.replyModal.show()
-    replyModal.hide = () => this.replyModal.hide()
-    replyModal.doReply = (reply) => {
+    replyModal.id = "reply-content"
 
-      console.log(JSON.stringify(reply))
+    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
+      scope: replyModal
+    }).then((modal) => {
+      this.replyModal = modal
 
-      if(reply.content){
+      replyModal.show = () => this.replyModal.show()
+      replyModal.hide = () => this.replyModal.hide()
+      replyModal.doReply = (reply) => {
 
-        // get the form hash first
-        this.http
+        console.log(JSON.stringify(reply))
+
+        if(reply.content){
+
+          // get the form hash first
+          this.http
             .get(HKEPC.forum.replyPage(reply))
             .then((resp) => {
               let $ = cheerio.load(resp.data)
@@ -529,74 +448,25 @@ export class PostController{
               })
 
             })
+        }
+        else {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
+        }
       }
-      else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
-      }
-
-
-    }
-    replyModal.openGifPopover = ($event) => {
-
-      // load gifs into controller
-      replyModal.gifs = HKEPC.data.gifs
-
-      replyModal.gifPopover.show($event)
-    }
-
-    replyModal.addGifCodeToText = (code) => {
-      replyModal.gifPopover.hide()
-
-      const selectionStart = document.getElementById('reply-content').selectionStart
-
-      const content = replyModal.reply.content || ""
-
-      const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
-
-      replyModal.reply.content = `${splits[0]} ${code} ${splits[1]}`
-    }
-
-    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
-      scope: replyModal
-    }).then((modal) => {
-      this.replyModal = modal
-      // register gif popover
-      this.ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
-        scope: replyModal
-      }).then((popover) => {
-        replyModal.gifPopover = popover;
-      })
     })
   }
 
   registerEditMessageModal(){
 
     const editMessageModal = this.scope.editMessageModal = this.scope.$new()
+    editMessageModal.id = "edit-content"
     editMessageModal.show = () => this.editMessageModal.show()
     editMessageModal.hide = () => this.editMessageModal.hide()
 
-    editMessageModal.openGifPopover = ($event) => {
-
-      // load gifs into controller
-      editMessageModal.gifs = HKEPC.data.gifs
-
-      editMessageModal.gifPopover.show($event)
-    }
-
-    editMessageModal.addGifCodeToText = (code) => {
-      editMessageModal.gifPopover.hide()
-
-      const selectionStart = document.getElementById('edit-content').selectionStart
-
-      const content = editMessageModal.edit.content || ""
-
-      const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
-
-      editMessageModal.edit.content = `${splits[0]} ${code} ${splits[1]}`
-    }
-
     editMessageModal.getMessage = (message) => {
       editMessageModal.message = message
+
+      console.log("edit message",message)
 
       this.http
           .get(HKEPC.forum.editMessage(message.post.topicId,message.post.id,message.id))
@@ -657,12 +527,6 @@ export class PostController{
       scope: editMessageModal
     }).then((modal) => {
       this.editMessageModal = modal
-      // register gif popover
-      this.ionicPopover.fromTemplateUrl('templates/modals/gifs.html', {
-        scope: editMessageModal
-      }).then((popover) => {
-        editMessageModal.gifPopover = popover;
-      })
     })
   }
   deregisterEditModal(){

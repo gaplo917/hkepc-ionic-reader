@@ -31,7 +31,7 @@ export class AuthService {
    return this.localStorageService.setObject('authority',{})
   }
 
-  getUsername () {
+  getUsername() {
     return this.localStorageService.getObject('authority')
       .filter(authority => authority && authority != null)
       .map(data => data.username)

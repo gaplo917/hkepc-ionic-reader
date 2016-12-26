@@ -10,7 +10,7 @@ export class GeneralHtml{
 
     // remove all the script tags
     this.removeScripts()
-
+    this.removeIframe()
   }
 
   removeScripts(){

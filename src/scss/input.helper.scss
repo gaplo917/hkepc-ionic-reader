@@ -1,0 +1,54 @@
+.input-helper{
+    .gif{
+        padding:12px;
+        margin:5px;
+        background-color:#f5f5f5;
+        border-radius: 100px;
+    }
+
+    .input-helper-control{
+        .button {
+            color:$text-color;
+            width: 25%;
+            background-color: lighten($bg-color,10%);
+            border-radius: 0px;
+            font-size:30px;
+
+            img {
+                height: 25px;
+            }
+
+            .bold{
+                font-weight: bold;
+            }
+        }
+    }
+
+    .asessory-view {
+        width: 100%;
+        height: 170px !important;
+
+        .preview-image-url{
+            img {
+                height: 50px;
+                width: auto;
+                margin:auto;
+                display: block;
+                margin-top:10px;
+            }
+        }
+    }
+    .item {
+        color: $text-color;
+        &.active {
+            background-color: $activated-color;
+        }
+    }
+    .flow-button{
+        @extend .button;
+        @extend .button-full;
+        @extend .col-25;
+        @extend .fleft;
+        margin:4px;
+    }
+}

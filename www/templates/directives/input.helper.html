@@ -1,0 +1,85 @@
+<div class="input-helper">
+  <div class="row input-helper-control">
+    <button class="button " ng-click="modal.showInputHelperAt = 0">
+      <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif"
+           style="background-color:#fff;border-radius:100px;" alt=""/>
+    </button>
+    <button class="button" ng-click="modal.showInputHelperAt = 1">
+      <i class="ion ion-link"></i>
+    </button>
+    <button class="button" ng-click="modal.showInputHelperAt = 2">
+      <span class="bold">B</span>
+    </button>
+    <button class="button" ng-click="modal.showInputHelperAt = 3">
+      <i class="ion ion-arrow-expand"></i>
+    </button>
+    <button class="button" ng-click="modal.showInputHelperAt = 4">
+      <i class="ion ion-images"></i>
+    </button>
+    <button class="button" ng-show="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
+      <i class="ion ion-ios-close-empty"></i>
+    </button>
+  </div>
+
+  <ion-scroll class="asessory-view"
+              zooming="false"
+              ng-show="modal.showInputHelperAt >= 0"
+              direction="y">
+    <img class="gif"
+         ng-show="modal.showInputHelperAt == 0"
+         ng-repeat="gif in ::modal.gifs track by $index"
+         ng-click="modal.addGifCodeToText(gif.code)"
+         ng-src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
+
+    <div ng-show="modal.showInputHelperAt == 1">
+      <label class="item item-input">
+        <input type="text" placeholder="請輸入鏈接的地址" ng-model="url">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="請輸入鏈接的文字" ng-model="urlText">
+      </label>
+      <button class="button button-full" ng-click="url && modal.addUrlToText(url,urlText)">
+        插入
+      </button>
+
+    </div>
+
+    <div ng-show="modal.showInputHelperAt == 2">
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('s')">刪除</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('hr')">分隔線</button>
+
+    </div>
+
+    <div ng-show="modal.showInputHelperAt == 3">
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">1</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">2</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">3</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('4')">4</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('5')">5</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('6')">6</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('7')">7</button>
+
+    </div>
+
+    <div ng-show="modal.showInputHelperAt == 4">
+      <label class="item item-input">
+        <input type="text" placeholder="請輸入圖片地址" ng-model="imageUrl">
+      </label>
+      <button ng-show="!imageUrl" class="button button-full">
+        <i class="ion ion-upload button-icon icon icon-right"></i>或上載至
+      </button>
+      <div ng-if="imageUrl" class="preview-image-url">
+        <img ng-if="imageUrl" src="{{imageUrl}}" >
+      </div>
+      <button class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
+        插入
+      </button>
+
+    </div>
+
+  </ion-scroll>
+
+</div>
