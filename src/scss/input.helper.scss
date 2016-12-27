@@ -51,4 +51,17 @@
         @extend .fleft;
         margin:4px;
     }
+
+
+    .image-upload-control{
+        .image-error{
+            color:$danger-text-color; text-align: center; display:block
+        }
+        .image-error-suggestion{
+            color:$less-important-color; display:block; padding:0 5px
+        }
+        .image-upload-success{
+            color:$success-text-color; display:block; padding:0 5px
+        }
+    }
 }

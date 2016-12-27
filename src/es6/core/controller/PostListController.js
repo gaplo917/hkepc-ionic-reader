@@ -58,7 +58,7 @@ export class PostListController {
 
     newPostModal.hide = () => this.newPostModal.hide()
     newPostModal.show = () => {
-      console.log( this.categories)
+      console.log(this.categories)
       newPostModal.categories = this.categories
       this.newPostModal.show()
     }
@@ -70,22 +70,52 @@ export class PostListController {
       newPostModal.categoryPopover.hide()
       newPostModal.post.category = category
     }
-    newPostModal.doPublishNewPost = (post) => {
-      console.log('do publist new post')
 
-      const isValidInput = post.title && post.content
-      const hasChoosenPostType =
-            (post.category.id && newPostModal.categories.length > 0) ||
-             newPostModal.categories.length == 0
+    newPostModal.initialize = (topic) => {
+      newPostModal.topic = topic
 
-      if(isValidInput && hasChoosenPostType){
+      this.http.get(HKEPC.forum.newPost(this.topicId))
+        .then(resp => {
+          let $ = cheerio.load(resp.data)
 
-        this.http.get(HKEPC.forum.newPost(this.topicId))
-            .then((resp) => {
-              let $ = cheerio.load(resp.data)
+          const relativeUrl = $('#postform').attr('action')
+          const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
 
-              const relativeUrl = $('#postform').attr('action')
-              const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+// ---------- Upload image preparation ----------------------------------------------
+          let imgattachform = $('#imgattachform')
+          let attachFormSource = cheerio.load(imgattachform.html())
+
+          const hiddenAttachFormInputs = {}
+
+          hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
+
+          attachFormSource(`input[type='hidden']`).map((i,elem) => {
+            const k = attachFormSource(elem).attr('name')
+            const v = attachFormSource(elem).attr('value')
+
+            return hiddenAttachFormInputs[k] = encodeURIComponent(v)
+          }).get()
+
+          // assign hiddenAttachFormInputs to modal
+          newPostModal.hiddenAttachFormInputs = hiddenAttachFormInputs
+          newPostModal.images = []
+
+          newPostModal.onImageUpload = (image) => {
+            console.log("onImageUplod",image)
+            newPostModal.images.push(image)
+          }
+
+// ---------- End of Upload image preparation -----------------------------------------------
+
+          newPostModal.doPublishNewPost = (post) => {
+            console.log('do publist new post')
+
+            const isValidInput = post.title && post.content
+            const hasChoosenPostType =
+                    (post.category.id && newPostModal.categories.length > 0) ||
+                    newPostModal.categories.length == 0
+
+            if(isValidInput && hasChoosenPostType){
 
               const hiddenFormInputs = $(`input[type='hidden']`).map((i,elem) => {
                 const k = $(elem).attr('name')
@@ -107,9 +137,10 @@ export class PostListController {
                 `typeid=${post.category.id}`,
                 `handlekey=newthread`,
                 `topicsubmit=true`,
-                hiddenFormInputs.join('&')
+                hiddenFormInputs.join('&'),
+                newPostModal.images.map(_ => _.formData).join('&')
               ].filter(e => !undefinedFilter.test(e))
-                  .join('&')
+                .join('&')
 
               //Post to the server
               this.http({
@@ -127,12 +158,15 @@ export class PostListController {
 
               })
 
-            })
-      } else if(hasChoosenPostType) {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 必須選擇新帖分類！</i>`)
-      }
+            } else if(hasChoosenPostType) {
+              this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
+            } else {
+              this.ngToast.danger(`<i class="ion-alert-circled"> 必須選擇新帖分類！</i>`)
+            }
+          }
+
+
+        })
     }
 
 
@@ -356,7 +390,7 @@ export class PostListController {
 
   doNewPost(topic){
     const newPostModal = this.scope.newPostModal
-    newPostModal.topic = topic
+    newPostModal.initialize(topic)
     newPostModal.show()
 
   }

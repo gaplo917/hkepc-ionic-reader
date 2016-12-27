@@ -237,16 +237,18 @@ export class PostController{
       if(isLoggedIn){
         const replyModal = this.scope.replyModal
 
-        replyModal.message = {
+        const message = {
           post: post
         }
 
-        replyModal.reply = {
+        const reply = {
           id : undefined,
           postId: post.id,
           topicId: post.topicId,
           type: 1 // default to use quote
         }
+
+        replyModal.initialize(message, reply)
 
         replyModal.show()
 
@@ -262,14 +264,14 @@ export class PostController{
       if(isLoggedIn){
         const replyModal = this.scope.replyModal
 
-        replyModal.message = message
-
-        replyModal.reply = {
+        const reply = {
           id : message.id,
           postId: message.post.id,
           topicId: message.post.topicId,
           type: 3 // default to use quote
         }
+
+        replyModal.initialize(message, reply)
 
         replyModal.show()
 
@@ -302,7 +304,7 @@ export class PostController{
   onEdit(message){
     const editMessageModal = this.scope.editMessageModal
 
-    editMessageModal.getMessage(message)
+    editMessageModal.initialize(message)
 
     editMessageModal.show()
 
@@ -391,42 +393,76 @@ export class PostController{
 
       replyModal.show = () => this.replyModal.show()
       replyModal.hide = () => this.replyModal.hide()
-      replyModal.doReply = (reply) => {
 
-        console.log(JSON.stringify(reply))
+      replyModal.initialize = (message, reply) => {
 
-        if(reply.content){
+        replyModal.message = message
 
-          // get the form hash first
-          this.http
-            .get(HKEPC.forum.replyPage(reply))
-            .then((resp) => {
-              let $ = cheerio.load(resp.data)
-              const relativeUrl = $('#postform').attr('action')
-              const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+        replyModal.reply = reply
 
-              let formSource = cheerio.load($('#postform').html())
+        // get the form hash first
+        this.http
+          .get(HKEPC.forum.replyPage(reply))
+          .then(resp => {
 
-              // the text showing the effects of reply / quote
-              const preText = formSource('#e_textarea').text()
+            let $ = cheerio.load(resp.data)
+            const relativeUrl = $('#postform').attr('action')
+            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+
+// ---------- Upload image preparation ----------------------------------------------
+            let imgattachform = $('#imgattachform')
+            let attachFormSource = cheerio.load(imgattachform.html())
+
+            const hiddenAttachFormInputs = {}
+
+            hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
+
+            attachFormSource(`input[type='hidden']`).map((i,elem) => {
+              const k = attachFormSource(elem).attr('name')
+              const v = attachFormSource(elem).attr('value')
+
+              return hiddenAttachFormInputs[k] = encodeURIComponent(v)
+            }).get()
+
+            // assign hiddenAttachFormInputs to modal
+            replyModal.hiddenAttachFormInputs = hiddenAttachFormInputs
+            replyModal.images = []
+
+            replyModal.onImageUpload = (image) => {
+              console.log("onImageUplod",image)
+              replyModal.images.push(image)
+            }
+
+// ---------- End of Upload image preparation -----------------------------------------
+
+            let formSource = cheerio.load($('#postform').html())
+
+            // the text showing the effects of reply / quote
+            const preText = formSource('#e_textarea').text()
+
+            const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+              const k = formSource(elem).attr('name')
+              const v = formSource(elem).attr('value')
+
+              return `${k}=${encodeURIComponent(v)}`
+            }).get()
 
 
-              const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
-                const k = formSource(elem).attr('name')
-                const v = formSource(elem).attr('value')
+            const ionicReaderSign = HKEPC.signature()
 
-                return `${k}=${encodeURIComponent(v)}`
-              }).get()
+            // register new function
+            replyModal.doReply = (reply) => {
 
+              console.log(JSON.stringify(reply))
 
-              const ionicReaderSign = HKEPC.signature()
 
               // build the reply message
               const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
               const postData = [
                 `message=${encodeURIComponent(replyMessage)}`,
-                hiddenFormInputs.join('&')
+                hiddenFormInputs.join('&'),
+                replyModal.images.map(_ => _.formData).join('&')
               ].join('&')
 
               // Post to the server
@@ -447,12 +483,14 @@ export class PostController{
 
               })
 
-            })
-        }
-        else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
-        }
+
+            }
+
+
+          })
+
       }
+
     })
   }
 
@@ -462,8 +500,7 @@ export class PostController{
     editMessageModal.id = "edit-content"
     editMessageModal.show = () => this.editMessageModal.show()
     editMessageModal.hide = () => this.editMessageModal.hide()
-
-    editMessageModal.getMessage = (message) => {
+    editMessageModal.initialize = (message) => {
       editMessageModal.message = message
 
       console.log("edit message",message)
@@ -476,6 +513,32 @@ export class PostController{
             const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
             console.log(postUrl)
+
+// ---------- Upload image preparation ----------------------------------------------
+            let imgattachform = $('#imgattachform')
+            let attachFormSource = cheerio.load(imgattachform.html())
+
+            const hiddenAttachFormInputs = {}
+
+            hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
+
+            attachFormSource(`input[type='hidden']`).map((i,elem) => {
+              const k = attachFormSource(elem).attr('name')
+              const v = attachFormSource(elem).attr('value')
+
+              return hiddenAttachFormInputs[k] = encodeURIComponent(v)
+            }).get()
+
+            // assign hiddenAttachFormInputs to modal
+            editMessageModal.hiddenAttachFormInputs = hiddenAttachFormInputs
+            editMessageModal.images = []
+
+            editMessageModal.onImageUpload = (image) => {
+              console.log("onImageUplod",image)
+              editMessageModal.images.push(image)
+            }
+
+// ---------- End of Upload image preparation -----------------------------------------------
 
             let formSource = cheerio.load($('#postform').html())
 
@@ -497,7 +560,8 @@ export class PostController{
               const postData = [
                 `editsubmit=true`,
                 `message=${encodeURIComponent(content)}`,
-                hiddenFormInputs.join('&')
+                hiddenFormInputs.join('&'),
+                editMessageModal.images.map(_ => _.formData).join('&')
               ].join('&')
 
               // Post to the server
@@ -602,6 +666,7 @@ export class PostController{
       cancelText: '取消',
       cancel: function() {
         // add cancel code..
+        return true
       },
       buttonClicked: (index) => {
         if(index == 0){

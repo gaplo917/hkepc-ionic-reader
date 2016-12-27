@@ -26,7 +26,8 @@ angular.module('starter', [
   'angulartics',
   'angulartics.google.analytics',
   'LocalForageModule',
-  'rx'
+  'rx',
+  'ngFileUpload'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -63,7 +64,13 @@ angular.module('starter', [
 })
 .config(['$httpProvider', function($httpProvider) {
   // true if ionic is run in ios/android to allow use of cookies
-  $httpProvider.defaults.withCredentials = true
+  if(isProxied){
+    $httpProvider.defaults.withCredentials = false
+
+  } else {
+    $httpProvider.defaults.withCredentials = true
+
+  }
 
   // always use async is a good practice
   $httpProvider.useApplyAsync(true)

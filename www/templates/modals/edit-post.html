@@ -3,12 +3,12 @@
   <ion-header-bar class="bar-balanced">
     <button class="button" ng-click="hide()">取消</button>
     <h1 class="title">{{ message.post.title }}</h1>
-    <button class="button" ng-click="doEdit(edit.content)">修改</button>
+    <button class="button" ng-click="doEdit(edit.content, images)">修改</button>
   </ion-header-bar>
   <ion-content>
     <ion-list >
 
-    <input-helper modal='this' content-model='edit.content'></input-helper>
+    <input-helper modal='this' content-model='edit.content' on-image-upload="onImageUpload"></input-helper>
 
     <div class="row">
       <div class="col">

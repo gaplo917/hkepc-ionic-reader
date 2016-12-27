@@ -23,17 +23,96 @@ export default
           }
       )};
   }])
-  .directive('inputHelper', () => {
+  .directive('inputHelper', (Upload,$timeout) => {
     return {
       transclude: true,
       restrict: 'E',
       scope: {
         modal:'=',
-        contentModel:'='
+        contentModel:'=',
+        onImageUpload: '='
       },
       link: function (scope, element) {
-
         const modal = scope.modal
+
+        scope.prepareUpload = function (file) {
+          scope.imageErr = undefined
+          scope.imageErrSuggestion = undefined
+          scope.previewUploadImage = undefined
+
+
+          if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+              const fileSizeInKB = e.total/1000
+              if(fileSizeInKB >= 150){
+
+                scope.imageErr = `圖片(${fileSizeInKB} KB) 大於 HKEPC 限制(150KB)`
+                scope.imageErrSuggestion = `作者推薦：使用 Telegram 發送圖片給自己 (一般圖片都能被壓縮少於 150 KB) 或使用其它圖片壓縮軟件。`
+              } else {
+                // image is valid to upload
+                scope.file = file
+              }
+
+              scope.previewUploadImage = e.target.result
+              scope.$apply()
+            }
+
+            reader.readAsDataURL(file)
+          }
+
+        }
+
+        scope.upload = function () {
+          console.log("modal.hiddenAttachFormInputs", modal.hiddenAttachFormInputs)
+          if(!modal.hiddenAttachFormInputs){
+            throw new Error("Modal Missing hiddenAttachFormInputs")
+          }
+
+          const data = modal.hiddenAttachFormInputs
+          data.Filedata = scope.file
+
+          Upload.upload({
+            url: data.action,
+            data: data
+          }).then(function (resp) {
+            console.log('Success uploaded. Response: ' , resp.data);
+
+            //DISCUZUPLOAD|0|1948831|1
+            const attactmentId = resp.data.split('|')[2]
+
+            const selectorId = modal.id
+            const content = document.getElementById(selectorId).value
+
+            const attachImageCode = `[attachimg]${attactmentId}[/attachimg]`
+            scope.contentModel = `${content} \n${attachImageCode}`
+
+            scope.onImageUpload({
+              formData:`attachnew[${attactmentId}][description]=`,
+              id: attactmentId
+            })
+
+            scope.imageUploadSuccess = `上傳成功，已插入 ${attachImageCode}。如你喜歡此功能，可到 關於 > 想支持作者? 內捐款支持！`
+
+            // release the file
+            scope.file = undefined
+
+          }, function (resp) {
+            console.log('Error status: ' + resp.status);
+          }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total)
+            console.log('progress: ' + progressPercentage + '%')
+          })
+        }
+
+        scope.resetUpload = function () {
+          scope.imageErr = undefined
+          scope.imageErrSuggestion = undefined
+          scope.previewUploadImage = undefined
+          scope.file = undefined
+          scope.imageUploadSuccess = undefined
+        }
 
         modal.gifs = HKEPC.data.gifs
 
