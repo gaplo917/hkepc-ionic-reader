@@ -1,8 +1,8 @@
 <ion-modal-view ng-init="post.category={}">
   <ion-header-bar class="bar-positive">
-    <button class="button" ng-click="hide()">Cancel</button>
+    <i class="button ion ion-close" ng-click="hide()"></i>
     <h1 class="title">{{ topic.name }}</h1>
-    <button class="button" ng-click="doPublishNewPost(post)">Post</button>
+    <button class="button" ng-click="doPublishNewPost(post)">發佈</button>
   </ion-header-bar>
   <ion-content>
     <ion-list>
