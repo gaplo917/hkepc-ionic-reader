@@ -149,11 +149,11 @@ export default
 
           const nselectionStart = selectionStart + openTag.length
 
-          setTimeout(() => {
+          $timeout(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },300)
+          },100)
 
         }
         modal.addFontSizeTagToText = function(size) {
@@ -169,11 +169,11 @@ export default
 
           const nselectionStart = selectionStart + openTag.length
 
-          setTimeout(() => {
+          $timeout(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },300)
+          },100)
 
         }
 
@@ -187,11 +187,11 @@ export default
 
           const nselectionStart = selectionStart + code.length + 1
 
-          setTimeout(() => {
+          $timeout(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },300)
+          },100)
 
         }
 

@@ -1,19 +1,29 @@
 <div class="input-helper">
   <div class="row input-helper-control">
-    <button class="button " ng-click="modal.showInputHelperAt = 0">
+    <button class="button"
+            ng-click="modal.showInputHelperAt = 0"
+            ng-class="modal.showInputHelperAt == 0 ? 'active': ''">
       <img src="http://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif"
            style="background-color:#fff;border-radius:100px;" alt=""/>
     </button>
-    <button class="button" ng-click="modal.showInputHelperAt = 1">
+    <button class="button"
+            ng-click="modal.showInputHelperAt = 1"
+            ng-class="modal.showInputHelperAt == 1 ? 'active': ''">
       <i class="ion ion-link"></i>
     </button>
-    <button class="button" ng-click="modal.showInputHelperAt = 2">
+    <button class="button"
+            ng-click="modal.showInputHelperAt = 2"
+            ng-class="modal.showInputHelperAt == 2 ? 'active': ''">
       <span class="bold">B</span>
     </button>
-    <button class="button" ng-click="modal.showInputHelperAt = 3">
+    <button class="button"
+            ng-click="modal.showInputHelperAt = 3"
+            ng-class="modal.showInputHelperAt == 3 ? 'active': ''">
       <span class="bold">T</span>
     </button>
-    <button class="button" ng-click="modal.showInputHelperAt = 4">
+    <button class="button"
+            ng-click="modal.showInputHelperAt = 4"
+            ng-class="modal.showInputHelperAt == 4 ? 'active': ''">
       <i class="ion ion-images"></i>
     </button>
     <button class="button" ng-show="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
