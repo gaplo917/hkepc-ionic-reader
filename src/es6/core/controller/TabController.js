@@ -198,6 +198,15 @@ export class TabController{
         console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
         this.darkTheme = arg.theme == 'dark'
         this.localStorageService.set('theme',arg.theme)
+
+        if (window.StatusBar) {
+          if(this.darkTheme){
+            StatusBar.styleLightContent()
+          } else {
+            StatusBar.styleDefault()
+          }
+        }
+
       }
     })
 

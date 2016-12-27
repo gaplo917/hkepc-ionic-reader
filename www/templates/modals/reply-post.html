@@ -36,11 +36,12 @@
         <label class="item item-input text">
           <textarea id="reply-content"
                     placeholder="請輸入文字"
-                    rows="10"
+                    rows="5"
                     ng-model="reply.content"
                     ng-Required="true"
                     name="description"
                     autocomplete="off"
+                    msd-elastic="\n"
           ></textarea>
         </label>
       </div>

@@ -83,8 +83,18 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).attr('href','')
         this.source(e).attr('target',`_system`)
         this.source(e).attr('onclick',`window.open('${HKEPC.imageUrl}/${url}', '_system', 'location=yes'); return false;`)
+      } else if(url && !url.startsWith("http")) {
+        // relative url
+        this.source(e).removeAttr('onload')
+        this.source(e).removeAttr('onclick')
+        this.source(e).removeAttr('onmouseover')
+
+        this.source(e).attr('href','')
+        this.source(e).attr('target',`_system`)
+        this.source(e).attr('onclick',`window.open('${HKEPC.baseForumUrl}/${url}', '_system', 'location=yes'); return false;`)
+        this.source(e).attr('data-href',`${HKEPC.baseForumUrl}/${url}`)
       } else {
-        this.source(e).attr('data-href',`${HKEPC.baseUrl}${url}`)
+        this.source(e).attr('data-href',`${url}`)
       }
 
       // TODO: more rules needs to be applied here

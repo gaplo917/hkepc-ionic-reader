@@ -18,8 +18,20 @@
 
       margin-top: 20px;
 
+      h1 {
+        @extend h3;
+      }
+
+      h3 {
+        @extend h4;
+      }
+
       * {
         color: $text-color;
+      }
+
+      a {
+        color: $link-color;
       }
 
       table{

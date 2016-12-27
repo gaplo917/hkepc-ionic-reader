@@ -24,7 +24,14 @@
     <div class="row">
       <div class="col">
         <label class="item item-input text">
-          <textarea id="new-content" placeholder="請輸入文字" rows="10" ng-model="post.content" ng-Required="true" name="description"></textarea>
+          <textarea
+              id="new-content"
+              placeholder="請輸入文字"
+              rows="3"
+              ng-model="post.content"
+              ng-Required="true"
+              msd-elastic="\n"
+          ></textarea>
         </label>
       </div>
     </div>

@@ -27,9 +27,10 @@ angular.module('starter', [
   'angulartics.google.analytics',
   'LocalForageModule',
   'rx',
-  'ngFileUpload'
+  'ngFileUpload',
+  'monospaced.elastic'
 ])
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,LocalStorageService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -41,7 +42,16 @@ angular.module('starter', [
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.overlaysWebView(true)
-      StatusBar.styleDefault()
+
+      LocalStorageService.get('theme').subscribe(data => {
+        const darkTheme = data == 'dark'
+        if(darkTheme){
+          StatusBar.styleLightContent()
+        } else {
+          StatusBar.styleDefault()
+        }
+      })
+
     }
   })
 })

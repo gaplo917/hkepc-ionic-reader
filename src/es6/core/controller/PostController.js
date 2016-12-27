@@ -67,8 +67,11 @@ export class PostController{
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
       this.pageSliderPopover.remove()
+      if(this.postTaskSubscription) this.postTaskSubscription.dispose()
       this.deregisterReplyModal()
       this.deregisterReportModal()
+      this.deregisterEditModal()
+      this.deregisterUserProfileModal()
     })
     // Execute action on hide popover
     $scope.$on('popover.hidden', () => {
@@ -123,13 +126,6 @@ export class PostController{
       this.registerUserProfileModal()
     })
 
-    $scope.$on('$ionicView.beforeLeave', (e) => {
-      if(this.postTaskSubscription) this.postTaskSubscription.dispose()
-      this.deregisterReplyModal()
-      this.deregisterReportModal()
-      this.deregisterEditModal()
-      this.deregisterUserProfileModal()
-    })
   }
 
   loadMore(){
