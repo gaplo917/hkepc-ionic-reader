@@ -87,14 +87,8 @@ export class TopicListController {
     this.cached = false
 
     this.topicsSubscription = this.apiService.topicList()
-      .switchMap(topics => {
-        return this.rx.Observable.from(topics)
-      })
-      .map(topic => Rx.Observable.return(topic).delay(30))
-      .concatAll()
-      .subscribe(topic => {
-        this.topics.push(topic)
-        this.scope.$apply()
+      .subscribe(topics => {
+        this.topics = topics
     })
   }
 
