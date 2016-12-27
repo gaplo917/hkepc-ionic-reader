@@ -119,6 +119,8 @@ export class PostController{
 
       //register edit message modal
       this.registerEditMessageModal()
+
+      this.registerUserProfileModal()
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -126,6 +128,7 @@ export class PostController{
       this.deregisterReplyModal()
       this.deregisterReportModal()
       this.deregisterEditModal()
+      this.deregisterUserProfileModal()
     })
   }
 
@@ -381,6 +384,21 @@ export class PostController{
     })
   }
 
+  registerUserProfileModal(){
+    const userProfileModal = this.scope.userProfileModal = this.scope.$new()
+
+    this.ionicModal.fromTemplateUrl('templates/modals/user-profile.html', {
+      scope: userProfileModal
+    }).then(modal => {
+      this.userProfileModal = modal
+
+      userProfileModal.show = () => this.userProfileModal.show()
+      userProfileModal.hide = () => this.userProfileModal.hide()
+
+
+    })
+  }
+
   registerReplyModal(){
 
     const replyModal = this.scope.replyModal = this.scope.$new()
@@ -593,6 +611,10 @@ export class PostController{
       this.editMessageModal = modal
     })
   }
+  deregisterUserProfileModal(){
+    this.userProfileModal.remove()
+  }
+
   deregisterEditModal(){
     this.editMessageModal.remove()
   }
@@ -654,6 +676,29 @@ export class PostController{
     }
   }
 
+  onUserProfilePic(author){
+
+      this.authService.isLoggedIn().subscribe(isLoggedIn => {
+        if(isLoggedIn){
+          const userProfileModal = this.scope.userProfileModal
+
+          userProfileModal.show()
+          userProfileModal.author = author
+          userProfileModal.content = undefined
+
+
+          this.apiService.userProfile(author.uid).subscribe( data => {
+            userProfileModal.author = author
+            userProfileModal.content = data.content
+          })
+
+
+        } else {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
+        }
+      })
+
+  }
 
   onMore(message){
     // Show the action sheet
@@ -664,8 +709,9 @@ export class PostController{
       ],
       titleText: '分享連結',
       cancelText: '取消',
-      cancel: function() {
+      cancel: () => {
         // add cancel code..
+        hideSheet()
         return true
       },
       buttonClicked: (index) => {
@@ -682,7 +728,7 @@ export class PostController{
       destructiveButtonClicked: (index) => {
         return true
       }
-    });
+    })
 
   }
 }

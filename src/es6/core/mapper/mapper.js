@@ -174,6 +174,8 @@ export default class Mapper{
 
       const rank = postSource('.postauthor > p > img').attr('alt')
 
+      const avatarImageUrl = postSource('.postauthor .avatar img').attr('src')
+
       return {
         id: postSource('table').attr('id').replace('pid',''),
         pos: postSource('.postinfo strong a em').text(),
@@ -187,7 +189,8 @@ export default class Mapper{
         },
         author:{
           rank: rank ? rank.replace('Rank: ','') : 0,
-          image: postSource('.postauthor .avatar img').attr('src'),
+          image: avatarImageUrl,
+          uid: URLUtils.getQueryVariable(avatarImageUrl,'uid'),
           name : postSource('.postauthor > .postinfo').text().trim(),
           isSelf: false // default is false, mutate later
         }
@@ -203,6 +206,15 @@ export default class Mapper{
       totalPageNum: totalPageNum,
       messages: messages,
     }
+  }
+
+  static userProfileHtmlToUserProfile(html){
+    const $ = html.getCheerio()
+
+    return {
+      content: $('#profilecontent').html()
+    }
+
   }
 
 }

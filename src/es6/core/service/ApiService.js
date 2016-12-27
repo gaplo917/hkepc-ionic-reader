@@ -81,4 +81,11 @@ export class ApiService {
       .map(html => Mapper.postHtmlToPost(html,opt))
 
   }
+
+  userProfile(uid) {
+    return this.composeApi(this.http.get(`http://www.hkepc.com/forum/space.php?uid=${uid}`))
+      .map(Mapper.responseToHKEPCHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
+      .map(Mapper.userProfileHtmlToUserProfile)
+  }
 }

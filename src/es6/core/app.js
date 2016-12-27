@@ -144,7 +144,7 @@ angular.module('starter', [
 })
 .config(['ngToastProvider', function(ngToast) {
   ngToast.configure({
-    timeout:'3000',
+    timeout:'2000',
     verticalPosition: 'top',
     horizontalPosition: 'right',
     animation: "slide"

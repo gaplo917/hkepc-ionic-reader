@@ -1,0 +1,34 @@
+.user-profile{
+
+  ion-content{
+
+    padding:20px;
+
+    .dashline{
+      border:1px solid $border-color;
+    }
+
+    .profile-pic{
+      display:block;
+      margin:auto;
+      padding-bottom: 20px;
+    }
+
+    .content{
+
+      margin-top: 20px;
+
+      * {
+        color: $text-color;
+      }
+
+      table{
+        text-align: left;
+      }
+
+
+    }
+
+  }
+
+}

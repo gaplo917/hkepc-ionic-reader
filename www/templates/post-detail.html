@@ -20,7 +20,7 @@
     <div id="message-{{::message.id}}" class="list card" style="display:block!important;" ng-class="message.focused? 'shake-notice shake-constant' : ''" ng-repeat="message in vm.messages track by $index" ng-click="message.focused = false">
 
       <div class="item item-avatar">
-        <img ng-src="{{::message.author.image}}">
+        <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
         <button class="button button-icon ion-ios-arrow-down" style="position: absolute;right: 10px" ng-click="vm.onMore(message)"></button>
         <h2 ng-bind="::message.author.name"></h2>
         <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>
