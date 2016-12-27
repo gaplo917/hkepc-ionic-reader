@@ -60,7 +60,7 @@ export class TopicListController {
             this.cached = true
           }
         })
-        .switchMap(topics => {
+        .flatMap(topics => {
           return topics ? rx.Observable.just(topics) : this.apiService.topicList()
         })
         .subscribe(topics => {

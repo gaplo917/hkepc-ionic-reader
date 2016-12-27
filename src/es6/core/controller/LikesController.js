@@ -10,7 +10,7 @@ export class LikesController{
   static get NAME() { return 'LikesController'}
   static get CONFIG() { return {
     url: '/likes',
-    cache: false,
+    cache: true,
     views: {
       'tab-likes': {
         templateUrl: 'templates/tab-likes.html',
@@ -210,6 +210,7 @@ export class LikesController{
       cancelText: '取消',
       cancel: () => {
         // add cancel code..
+        return true
       },
       buttonClicked: (index) => {
         if(index == 0){
