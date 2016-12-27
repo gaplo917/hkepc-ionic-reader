@@ -175,7 +175,6 @@ export default
             elem.setSelectionRange(nselectionStart,nselectionStart)
           },300)
 
-
         }
 
         modal.addGifCodeToText = function(code) {
@@ -185,6 +184,15 @@ export default
           const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
 
           scope.contentModel = `${splits[0]} ${code} ${splits[1]}`
+
+          const nselectionStart = selectionStart + code.length + 1
+
+          setTimeout(() => {
+            const elem = document.getElementById(selectorId)
+            elem.focus()
+            elem.setSelectionRange(nselectionStart,nselectionStart)
+          },300)
+
         }
 
         modal.addImageUrlToText = function(imageUrl) {
