@@ -124,6 +124,8 @@ angular.module('starter', [
                 const proxy = proxyInDb || HKEPC.proxy
                 // rewrite the url with proxy
                 config.url = config.url.replace('http://',`${proxy}/`)
+
+                console.debug("proxied request", config.url)
               }
               config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
 
@@ -158,15 +160,16 @@ angular.module('starter', [
     verticalPosition: 'top',
     horizontalPosition: 'right',
     animation: "slide"
-  });
+  })
 }])
 .config(['$localForageProvider', function($localForageProvider){
+
   $localForageProvider.config({
-    driver      : localforage.WEBSQL, // if you want to force a driver
     name        : 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
     version     : 1.0, // version of the database, you shouldn't have to use this
     storeName   : 'keyvaluepairs', // name of the table
     description : 'Simple persistant storage'
-  });
-}]);
+  })
+
+}])
 
