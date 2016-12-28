@@ -28,7 +28,7 @@
       </ion-spinner>
     </div>
 
-    <ion-slide-box id="ionic-slide-box" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
+    <ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
 
       <ion-slide ng-repeat="page in vm.slidePages track by $index">
         <ion-list >

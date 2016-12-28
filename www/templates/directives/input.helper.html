@@ -75,8 +75,8 @@
     </div>
 
     <div class="image-upload-control" ng-show="modal.showInputHelperAt == 4">
-      <label ng-if="!previewUploadImage" class="item item-input">
-        <input type="text" placeholder="請輸入圖片地址" ng-model="imageUrl">
+      <label ng-show="!previewUploadImage" class="item item-input">
+          <textarea ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址"></textarea>
       </label>
 
       <div ng-if="!imageUrl && !previewUploadImage" class="button button-full" ngf-select="prepareUpload($file)">
@@ -84,7 +84,7 @@
       </div>
 
       <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
-        <img ng-src="{{imageUrl || previewUploadImage}}" >
+        <img ng-src="{{imageUrl}}" >
       </div>
 
       <button ng-if="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">

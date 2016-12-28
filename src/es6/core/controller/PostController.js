@@ -131,7 +131,7 @@ export class PostController{
   loadMore(){
     if(this.hasMoreData()){
       const nextPage = parseInt(this.page) + 1
-      if(nextPage <= this.totalPageNum){
+      if(nextPage < this.totalPageNum){
         //update the page count
         this.page = nextPage
 

@@ -154,8 +154,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
 }
 
 .button {
-  &.ion-close {
+  &.ion-close, &.ion-ios-close-empty {
     border:0;
+    font-size:30px;
   }
 }
 
@@ -179,4 +180,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
 
 .action-sheet-open, .modal-open {
   pointer-events: auto !important;
+}
+
+.ir-divider{
+  width: 100%;
+  border:1px solid $border-color;
+}
+
+textarea {
+  min-height: 60px;
+  padding-right: 10px;
 }

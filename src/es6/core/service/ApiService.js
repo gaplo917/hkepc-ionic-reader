@@ -29,7 +29,10 @@ export class ApiService {
    * @returns {Observable<*>}
    */
   composeApi(httpPromise){
-    return this.rx.Observable.fromPromise(httpPromise).do(
+    return this.rx.Observable.fromPromise(httpPromise)
+      .observeOn(this.rx.Scheduler.default)
+      .subscribeOn(this.rx.Scheduler.default)
+      .do(
       resp => {
         // on api success, anything need to handle?
 

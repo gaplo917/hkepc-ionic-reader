@@ -5,7 +5,7 @@
     padding:20px;
 
     .dashline{
-      border:1px solid $border-color;
+      @extend .ir-divider;
     }
 
     .profile-pic{

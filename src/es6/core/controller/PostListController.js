@@ -272,7 +272,7 @@ export class PostListController {
     this.currentIndex = 0
     this.currentPageNum = 0
     this.showSpinner = true
-
+    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
   }
 
   doRefresh(){
@@ -301,14 +301,14 @@ export class PostListController {
         const diff = this.currentIndex - index
         const pagesNums = this.pages.map(p => p.num)
         this.currentPageNum = this.slidePages[this.currentIndex].num
-        this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(true)
+        this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
         this.canSwipeBack = false
 
         if(diff == 1 || diff == -2){
 
           if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
             // disable the does-continue if the it is the initial page
-            this.ionicSlideBoxDelegate.$getByHandle('slideshow-slidebox')._instances[0].loop(false)
+            this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(false)
             this.canSwipeBack = true
           }
 

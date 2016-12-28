@@ -43,6 +43,9 @@ export class HKEPCHtml extends GeneralHtml{
       }
       else if (url && url.indexOf('forumdisplay.php') >= 0){
         const topicId = URLUtils.getQueryVariable(url,'fid')
+
+        this.source(e).removeAttr('target')
+
         if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0) {
           this.source(e).attr('href',`#/tab/features/topics/${topicId}/page/1`)
 
@@ -53,6 +56,8 @@ export class HKEPCHtml extends GeneralHtml{
       else if(url && url.indexOf('viewthread.php?') >= 0){
         const postId = URLUtils.getQueryVariable(url,'tid')
 
+        this.source(e).removeAttr('target')
+
         // detect the tab
         if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
           this.source(e).attr('href',`#/tab/features/topics//posts/${postId}/page/1`)
@@ -60,7 +65,6 @@ export class HKEPCHtml extends GeneralHtml{
           this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
         }
 
-        this.source(e).removeAttr('target')
       }
       else if(url && url.indexOf('space.php?') >= 0){
         if(this.source(e).children('img').attr('src') == undefined){
@@ -83,7 +87,8 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).attr('href','')
         this.source(e).attr('target',`_system`)
         this.source(e).attr('onclick',`window.open('${HKEPC.imageUrl}/${url}', '_system', 'location=yes'); return false;`)
-      } else if(url && !url.startsWith("http")) {
+      }
+      else if(url && !url.startsWith("http") && !url.startsWith('#') && !url.startsWith("//")) {
         // relative url
         this.source(e).removeAttr('onload')
         this.source(e).removeAttr('onclick')

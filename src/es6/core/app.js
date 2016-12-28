@@ -20,7 +20,7 @@ angular.module('starter', [
   'starter.controllers',
   'starter.services',
   'starter.directives',
-  'angular-loading-bar',
+  // 'angular-loading-bar',
   'ngToast',
   'ionicLazyLoad',
   'angulartics',
