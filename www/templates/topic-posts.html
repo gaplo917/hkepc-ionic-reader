@@ -3,7 +3,7 @@
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>
 
-  <ion-nav-title ng-click="openPopover($event)">{{vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
+  <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
@@ -15,8 +15,8 @@
          ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
          ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
       </i>
-      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
-    <a class="button button-icon icon ion-ios-more" ng-click="vm.doFilterOrder($event)"></a>
+      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁</h2>
+    <a class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
   </div>
   <ion-content>
@@ -28,7 +28,7 @@
       </ion-spinner>
     </div>
 
-    <ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
+    <ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{::vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
 
       <ion-slide ng-repeat="page in vm.slidePages track by $index">
         <ion-list >
@@ -55,7 +55,7 @@
           </ion-item>
 
           <ion-item
-              ng-show="page.posts.length > 10"
+              ng-show="page.posts.length >= 10"
           >
             <button class="button col-40 fleft button-full"
                     ng-show="vm.slidePages[vm.currentIndex].num > 1"

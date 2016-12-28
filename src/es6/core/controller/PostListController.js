@@ -209,7 +209,6 @@ export class PostListController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.rx.Observable.timer(100).flatMap(this.loadMore()).subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {
@@ -218,6 +217,12 @@ export class PostListController {
         console.log("showSticky",data)
         this.showSticky = String(data) == 'true'
       })
+
+      this.filter = undefined
+      this.order = undefined
+
+      this.rx.Observable.timer(100).flatMap(this.loadMore()).subscribe()
+
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -279,7 +284,9 @@ export class PostListController {
     this.reset()
     if(this.filter) {
       const category = this.categories.find(e => e.id == this.filter)
-      this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
+      if(category){
+        this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
+      }
     }
     this.loadMore().subscribe()
   }
