@@ -9,13 +9,13 @@
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <div class="bar bar-subheader">
-    <h2 class="title">
+    <h2 class="title" ng-show="vm.totalPageNum">
       <i class="icon ion-bonfire"
          ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
          ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
          ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
       </i>
-      第 {{vm.slidePages[vm.currentIndex].num}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
+      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{vm.totalPageNum}} 頁</h2>
     <a class="button button-icon icon ion-ios-more" ng-click="vm.doFilterOrder($event)"></a>
 
   </div>
