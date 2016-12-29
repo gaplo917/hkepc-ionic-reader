@@ -9,7 +9,6 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
 
 const cheerio = require('cheerio')
-const async = require('async')
 const moment = require('moment')
 require('moment/locale/zh-tw');
 

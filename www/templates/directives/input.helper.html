@@ -84,7 +84,7 @@
       </div>
 
       <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
-        <img ng-src="{{imageUrl}}" >
+        <img ng-src="{{imageUrl || previewUploadImage}}" >
       </div>
 
       <button ng-if="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">

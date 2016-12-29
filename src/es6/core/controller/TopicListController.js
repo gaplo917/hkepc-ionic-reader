@@ -7,7 +7,6 @@ import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 
 const cheerio = require('cheerio')
-const async = require('async')
 
 export class TopicListController {
   static get STATE() { return 'tab.topics'}
