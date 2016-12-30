@@ -29,7 +29,7 @@ export class PostController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx) {
+  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout) {
     this.scope = $scope
     this.http = $http
     this.rx = rx
@@ -47,6 +47,8 @@ export class PostController{
     this.ionicActionSheet = $ionicActionSheet
     this.apiService = apiService
     this.authService = AuthService
+    this.$timeout = $timeout
+
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
@@ -82,6 +84,20 @@ export class PostController{
       // Execute action
     })
 
+    $scope.$on('lastread', (event,{ page, id }) => {
+
+      console.log("received broadcast lastread",page, id)
+      this.currentPage = page
+
+      $scope.$apply()
+
+      this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
+        page: page,
+        postId: id.replace('message-','')
+      })
+
+    })
+
     // to control the post is end
     this.end = false;
 
@@ -90,23 +106,20 @@ export class PostController{
     $scope.$on('$ionicView.loaded', (e) => {
       this.topicId = $stateParams.topicId
       this.postId = $stateParams.postId
-      this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : 100
+      this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
       this.focus = $stateParams.focus
 
       // Last reading page position
-      this.LocalStorageService.get(`${this.topicId}/${this.postId}/lastPage`).subscribe(data => {
-        const lastPage = data
+      this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`).subscribe(data => {
+        console.log("last page ", data)
+        const lastPage = data.page
+        const lastPostId = data.postId
 
-        if(lastPage) {
-          this.ngToast.info({
-            horizontalPosition: 'right',
-            timeout: 2000,
-            content: `<i class="ion-ios-eye"> 自動跳到上一次閱讀的頁數</i>`
-          })
-        }
         this.page = lastPage || $stateParams.page
+        this.currentPage = this.page
+        this.focus = lastPostId
 
-        setTimeout(() => this.loadMessages(), 200)
+        setTimeout(() => this.loadMessages(), 100)
 
       })
 
@@ -146,12 +159,25 @@ export class PostController{
 
   }
 
+  forceLoadMore(){
+    this.page += 1
+
+    this.loadMessages()
+  }
+
   hasMoreData(){
     return !this.end && !this.refreshing
   }
 
-  loadMessages(){
-    this.LocalStorageService.set(`${this.topicId}/${this.postId}/lastPage`,this.page)
+  /**
+   *
+   * @param style 'previous' or 'next'
+   */
+  loadMessages(style = 'next'){
+
+    if(this.refreshing) return
+
+    this.refreshing = true
 
     this.postTaskSubscription && this.postTaskSubscription.dispose()
 
@@ -171,31 +197,68 @@ export class PostController{
           message.liked = isLiked
         })
 
-        message.focused = message.id == this.focus
+        // delayRender == -1 => not from find message
+        message.focused = this.delayRender != -1 && message.id == this.focus
 
         this.authService.getUsername().subscribe(username => {
           message.author.isSelf = message.author.name == username
         })
       })
 
-      this.messages = this.messages.concat(post.messages)
+      if(this.page >= this.totalPageNum){
+        this.page = this.totalPageNum
+
+        // maybe have duplicate message
+        const messageIds = this.messages.map(_ => _.id)
+        const filtered = post.messages.filter(msg => {
+          return messageIds.indexOf(msg.id) == -1
+        })
+
+        this.messages = this.messages.concat(filtered)
+
+      } else {
+        if(style == 'previous'){
+          const messageIds = this.messages.map(_ => _.id)
+          const filtered = post.messages.filter(msg => {
+            return messageIds.indexOf(msg.id) == -1
+          })
+
+          this.focus = this.messages[0].id
+
+          console.log("load previous, the original focus is", this.focus)
+
+          this.messages = filtered.concat(this.messages)
+
+
+        } else {
+
+          this.scope.$broadcast('scroll.infiniteScrollComplete')
+
+          this.messages = this.messages.concat(post.messages)
+        }
+      }
+
+      this.refreshing = false
+      this.loadingPrevious = false
+
     },
     err => console.trace(err),
     () => {
       console.debug("All Render Task Completed")
 
       if(this.focus){
-        console.debug('detected focus object')
-        setTimeout(() => {
+        this.$timeout(() => {
+          console.debug('detected focus object')
           const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
+          console.log("ready to scroll to ",document.querySelector(`#message-${this.focus}`), focusPosition)
+
           this.ionicScrollDelegate.scrollTo(0,focusPosition)
+
           this.focus = undefined
-        },200)
+
+        })
       }
 
-      this.refreshing = false
-      this.scope.$apply()
-      this.scope.$broadcast('scroll.infiniteScrollComplete')
     })
 
   }
@@ -226,7 +289,6 @@ export class PostController{
   }
 
   doRefresh(){
-    this.refreshing = true
     this.reset()
     this.loadMessages()
   }
@@ -469,7 +531,6 @@ export class PostController{
 
               console.log(JSON.stringify(reply))
 
-
               // build the reply message
               const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
@@ -630,9 +691,18 @@ export class PostController{
 
   doJumpPage(){
     this.pageSliderPopover.hide()
-    this.reset()
     this.page = this.inputPage
-    this.loadMessages()
+
+    if(this.page == this.currentPage - 1){
+      this.loadingPrevious = true
+      this.loadMessages('previous')
+
+    } else {
+      this.reset()
+      this.page = this.inputPage
+      this.loadMessages()
+    }
+
   }
 
   findMessage(postId,messageId){

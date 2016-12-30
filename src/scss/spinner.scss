@@ -20,3 +20,12 @@ div{
   stroke: $spinner-color;
   fill: $spinner-color;
 }
+.image-loader-container{
+  text-align: center;
+  height: 200px;
+  border: 1px solid $less-important-color;
+  ion-spinner{
+    top:90px;
+    position: relative;
+  }
+}

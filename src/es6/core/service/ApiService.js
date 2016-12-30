@@ -14,7 +14,7 @@ export class ApiService {
   }
 
   static get DI() {
-    return ($http,rx, $rootScope) => new ApiService($http,rx, $rootScope)
+    return ($http,rx,$rootScope) => new ApiService($http,rx,$rootScope)
   }
 
   constructor($http, rx, $rootScope) {

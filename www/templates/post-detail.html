@@ -1,6 +1,6 @@
 <ion-view ng-init="vm.messages=[]" class="card-view">
-  <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
-      第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
+  <ion-nav-title ng-click="vm.openPageSliderPopover($event)">
+      第 {{vm.currentPage}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
@@ -10,14 +10,25 @@
     <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-  <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" >
+  <ion-content lazy-scroll on-swipe-right="$ionicGoBack()">
     <div class="text-center">
-      <h4 class="title" >{{vm.post.title || '下載中'}}</h4>
+      <h4 class="title">{{vm.post.title}}</h4>
+      <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
     </div>
     <div class="spinner">
-      <ion-spinner class="spinner" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
-    <div id="message-{{::message.id}}" class="list card" style="display:block!important;" ng-class="message.focused? 'shake-notice shake-constant' : ''" ng-repeat="message in vm.messages track by $index" ng-click="message.focused = false">
+
+
+    <div id="message-{{::message.id}}"
+         page="{{::message.post.page}}"
+         class="list card "
+         style="display:block!important;"
+         ng-class="message.focused? 'shake-notice shake-constant' : ''"
+         ng-repeat="message in vm.messages"
+         ng-click="message.focused = false"
+         lastread
+    >
 
       <div class="item item-avatar">
         <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
@@ -37,19 +48,19 @@
       <div class="item tabs tabs-secondary tabs-icon-left">
         <a class="tab-item card-button" ng-click="vm.like(message)">
           <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
-          Like
+          喜歡
         </a>
         <a class="tab-item card-button" ng-click="vm.onReply(message)" >
           <i class="icon ion-ios-chatboxes-outline"></i>
-          Comment
+          留言
         </a>
         <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
           <i class="icon ion-ios-flag-outline"></i>
-          Report
+          舉報
         </a>
         <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
           <i class="icon ion-ios-compose-outline"></i>
-          Edit
+          修改
         </a>
       </div>
 
@@ -58,12 +69,13 @@
         class="ispinner text-center"
         ng-if="vm.hasMoreData()"
         on-infinite="vm.loadMore()"
-        spinner="ripple"
+        spinner="android"
         immediate-check="false"
         distance="7%">
     </ion-infinite-scroll>
     <div class="text-center" ng-show="vm.end">
-      <h4 class="title">完</h4>
+      <ion-spinner icon="android" ng-if="vm.refreshing"></ion-spinner>
+      <button class="button button-full" ng-click="vm.forceLoadMore()">F5</button>
     </div>
   </ion-content>
 </ion-view>

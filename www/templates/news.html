@@ -11,7 +11,7 @@
   </ion-nav-buttons>
   <ion-content lazy-scroll>
     <div class="spinner">
-      <ion-spinner class="spinner" icon="ripple" ng-show="vm.messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
     <div class="text-center">
       <label class="item item-input w100">
@@ -71,7 +71,7 @@
         class="ispinner text-center"
         ng-if="vm.hasMoreData()"
         on-infinite="vm.loadMore()"
-        spinner="ripple"
+        spinner="android"
         immediate-check="false"
         distance="7%">
     </ion-infinite-scroll>

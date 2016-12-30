@@ -59,6 +59,7 @@ export class GeneralHtml{
         this.source(e).attr('image-lazy-src',imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
         this.source(e).removeAttr('src')
+        this.source(e).removeAttr('alt')
       }
     })
 

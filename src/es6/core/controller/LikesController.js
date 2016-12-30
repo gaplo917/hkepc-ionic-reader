@@ -206,7 +206,7 @@ export class LikesController{
         { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC 原始連結' },
       ],
       titleText: '分享連結',
-      destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> Unlike',
+      destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> 從我的最愛移除',
       cancelText: '取消',
       cancel: () => {
         // add cancel code..

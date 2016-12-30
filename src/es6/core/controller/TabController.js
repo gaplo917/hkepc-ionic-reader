@@ -126,17 +126,16 @@ export class TabController{
           this.isLoggedIn = true
         } else {
 
-          this.login = undefined
-
-          AuthService.isLoggedIn().subscribe(isLoggedIn => {
-            if(isLoggedIn) {
-              ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-              AuthService.logout()
-
-              this.isLoggedIn = false
-            }
-          })
-
+          // this.login = undefined
+          //
+          // AuthService.isLoggedIn().subscribe(isLoggedIn => {
+          //   if(isLoggedIn) {
+          //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+          //     AuthService.logout()
+          //
+          //     this.isLoggedIn = false
+          //   }
+          // })
 
         }
       }

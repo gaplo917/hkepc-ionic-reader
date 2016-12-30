@@ -23,6 +23,49 @@ export default
           }
       )};
   }])
+  .directive('lastread', ($document, $timeout, $ionicScrollDelegate) => {
+    return {
+        restrict: 'A',
+        scope: true,
+        link: ($scope, $element, $attributes) => {
+
+          const deregistration = $scope.$on('lazyScrollEvent', () => {
+            if (isInView()) {
+              console.log("isInView",$attributes.id,$attributes.page)
+              $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
+            }
+          })
+
+          function isInView() {
+            var clientHeight = $document[0].documentElement.clientHeight;
+            var clientWidth = $document[0].documentElement.clientWidth;
+            var imageRect = $element[0].getBoundingClientRect();
+
+            // scroll to the half of the screen mean user if viewing
+            return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
+              && (imageRect.left >= 0 && imageRect.left <= clientWidth);
+          }
+
+          // bind listener
+          // listenerRemover = scrollAndResizeListener.bindListener(isInView);
+
+          // unbind event listeners if element was destroyed
+          // it happens when you change view, etc
+          $element.on('$destroy', () => {
+            deregistration();
+          })
+
+          $timeout(() => {
+            if (isInView()) {
+              $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
+              deregistration();
+            }
+          });
+
+        }
+      }
+
+  })
   .directive('inputHelper', (Upload,$timeout) => {
     return {
       transclude: true,

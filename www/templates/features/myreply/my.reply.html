@@ -8,7 +8,7 @@
   </ion-nav-buttons>
   <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" >
     <div class="spinner">
-      <ion-spinner class="spinner" icon="ripple" ng-show="vm.myreplies.length == 0"></ion-spinner>
+      <ion-spinner class="spinner" icon="android" ng-show="vm.myreplies.length == 0"></ion-spinner>
     </div>
     <ion-list>
       <ion-item class="item item-icon-right"
@@ -35,7 +35,7 @@
         class="ispinner text-center"
         ng-if="vm.hasMoreData()"
         on-infinite="vm.loadMore()"
-        spinner="ripple"
+        spinner="android"
         immediate-check="false"
         distance="7%">
     </ion-infinite-scroll>

@@ -88,7 +88,7 @@ angular.module('starter', [
   "use strict";
   $ionicConfigProvider.scrolling.jsScrolling(false)
   $ionicConfigProvider.views.maxCache(5)
-  $ionicConfigProvider.spinner.icon('ripple')
+  $ionicConfigProvider.spinner.icon('android')
   $ionicConfigProvider.tabs.style('standard')
   $ionicConfigProvider.tabs.position('bottom')
   $ionicConfigProvider.views.swipeBackEnabled(false)
