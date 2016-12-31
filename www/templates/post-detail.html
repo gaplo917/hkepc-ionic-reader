@@ -22,60 +22,74 @@
 
     <div id="message-{{::message.id}}"
          page="{{::message.post.page}}"
-         class="list card "
+         class="list"
          style="display:block!important;"
-         ng-class="message.focused? 'shake-notice shake-constant' : ''"
+         ng-class="{
+           'shake-notice shake-constant': message.focused,
+           'card': message.type == 'POST_MESSAGE'
+          }"
          ng-repeat="message in vm.messages"
          ng-click="message.focused = false"
          lastread
     >
 
-      <div class="item item-avatar">
-        <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
-        <button class="button button-icon ion-ios-arrow-down" style="position: absolute;right: 10px" ng-click="vm.onMore(message)"></button>
-        <h2 ng-bind="::message.author.name" ng-click="vm.onUserProfilePic(message.author)"></h2>
-        <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>
-        <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index" class="ion-ios-star" style="color:#F9A825;"></i>
-        <p>發表於 {{::vm.relativeMomentize(message.createdAt)}}<span class="fright">#{{::message.pos}}</span></p>
-      </div>
-      <div class="item item-body" compile="::message.content">
-      </div>
-      <div class="item ads" ng-show="::message.ads">
-        <div class="w100 text-center" style="color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
-        <span compile="::message.ads"></span>
+      <!--Section Header to show the page number-->
+      <h5 ng-if="message.type == 'POST_PAGE_DIVIDER'"
+          class="text-center"
+      >
+        <div ng-if="message.content" compile="::message.content"></div>
+        <div ng-if="!message.content">第 {{ ::message.post.page }} 頁 <i class="ion-android-arrow-down"></i></div>
+      </h5>
+
+      <!--Really the Post-->
+      <div ng-if="message.type == 'POST_MESSAGE'">
+        <div class="item item-avatar">
+          <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
+          <button class="button button-icon ion-ios-arrow-down" style="position: absolute;right: 10px" ng-click="vm.onMore(message)"></button>
+          <h2 ng-bind="::message.author.name" ng-click="vm.onUserProfilePic(message.author)"></h2>
+          <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>
+          <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index" class="ion-ios-star" style="color:#F9A825;"></i>
+          <p>發表於 {{::vm.relativeMomentize(message.createdAt)}}<span class="fright">#{{::message.pos}}</span></p>
+        </div>
+        <div class="item item-body" compile="::message.content">
+        </div>
+        <div class="item ads" ng-show="::message.ads">
+          <div class="w100 text-center" style="color:#bbb; font-size: 10px">HKEPC 內嵌的廣告</div>
+          <span compile="::message.ads"></span>
+        </div>
+
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <a class="tab-item card-button" ng-click="vm.like(message)">
+            <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
+            喜歡
+          </a>
+          <a class="tab-item card-button" ng-click="vm.onReply(message)" >
+            <i class="icon ion-ios-chatboxes-outline"></i>
+            留言
+          </a>
+          <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
+            <i class="icon ion-ios-flag-outline"></i>
+            舉報
+          </a>
+          <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
+            <i class="icon ion-ios-compose-outline"></i>
+            修改
+          </a>
+        </div>
       </div>
 
-      <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item card-button" ng-click="vm.like(message)">
-          <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
-          喜歡
-        </a>
-        <a class="tab-item card-button" ng-click="vm.onReply(message)" >
-          <i class="icon ion-ios-chatboxes-outline"></i>
-          留言
-        </a>
-        <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
-          <i class="icon ion-ios-flag-outline"></i>
-          舉報
-        </a>
-        <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
-          <i class="icon ion-ios-compose-outline"></i>
-          修改
-        </a>
-      </div>
 
     </div>
     <ion-infinite-scroll
         class="ispinner text-center"
-        ng-if="vm.hasMoreData()"
+        ng-if="!vm.end && vm.messages.length > 0"
         on-infinite="vm.loadMore()"
         spinner="android"
-        immediate-check="false"
+        immediate-check="true"
         distance="7%">
     </ion-infinite-scroll>
-    <div class="text-center" ng-show="vm.end">
-      <ion-spinner icon="android" ng-if="vm.refreshing"></ion-spinner>
-      <button class="button button-full" ng-click="vm.forceLoadMore()">F5</button>
+    <div class="text-center" ng-if="vm.end">
+      <button class="button button-full"  ng-click="vm.forceLoadMore()">F5</button>
     </div>
   </ion-content>
 </ion-view>

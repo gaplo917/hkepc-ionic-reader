@@ -51,7 +51,6 @@ export class LocalStorageService {
       : this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
         .map(JSON.parse)
-        .map(data => data == null ? {} : data)
         .do(data => {
           this.cache.set(key, data)
         })

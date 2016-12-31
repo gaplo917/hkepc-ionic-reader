@@ -37,7 +37,7 @@ export class HistoryService {
       (stat, histories) => {
         return {
           stat: stat,
-          histories: histories
+          histories: histories || []
         }
       }
     ).subscribe(({stat, histories}) => {

@@ -181,6 +181,7 @@ export default class Mapper{
         pos: postSource('.postinfo strong a em').text(),
         createdAt: postSource('.posterinfo .authorinfo em span').attr('title') || postSource('.posterinfo .authorinfo em').text().replace('發表於 ',''),
         content : content.html(),
+        type: 'POST_MESSAGE',
         post:{
           id: postId,
           topicId: topicId,

@@ -104,28 +104,30 @@ export class PostController{
     // add action
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.topicId = $stateParams.topicId
-      this.postId = $stateParams.postId
-      this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
-      this.focus = $stateParams.focus
+
 
       // Last reading page position
-      this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`).subscribe(data => {
-        console.log("last page ", data)
-        const lastPage = data.page
-        const lastPostId = data.postId
+      this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
+        .map(data => data || {})
+        .subscribe(data => {
+          console.log("last page ", data)
+          const lastPage = data.page
+          const lastPostId = data.postId
 
-        this.page = lastPage || $stateParams.page
-        this.currentPage = this.page
-        this.focus = lastPostId
+          this.page = lastPage || $stateParams.page
+          this.currentPage = this.page
+          this.focus = lastPostId || $stateParams.focus
 
-        setTimeout(() => this.loadMessages(), 100)
-
+          setTimeout(() => this.loadMessages(), 100)
       })
 
     })
 
     $scope.$on('$ionicView.enter', (e) => {
+      this.topicId = $stateParams.topicId
+      this.postId = $stateParams.postId
+      this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
+      this.focus = $stateParams.focus
 
       // register reply modal
       this.registerReplyModal()
@@ -142,38 +144,24 @@ export class PostController{
   }
 
   loadMore(){
-    if(this.hasMoreData()){
-      const nextPage = parseInt(this.page) + 1
-      if(nextPage < this.totalPageNum){
-        //update the page count
-        this.page = nextPage
+    if(!this.end){
+      //update the page count
+      this.page = parseInt(this.page) + 1
 
-        this.loadMessages()
-      }
-      else{
-        // set a flag for end
-        this.end = true
-      }
-
+      this.loadMessages()
     }
-
   }
 
   forceLoadMore(){
-    this.page += 1
-
-    this.loadMessages()
+    this.end = false
   }
 
-  hasMoreData(){
-    return !this.end && !this.refreshing
-  }
 
   /**
    *
    * @param style 'previous' or 'next'
    */
-  loadMessages(style = 'next'){
+  loadMessages(style = 'next', page = this.page){
 
     if(this.refreshing) return
 
@@ -184,7 +172,7 @@ export class PostController{
     this.postTaskSubscription = this.apiService.postDetails({
       topicId: this.topicId,
       postId: this.postId,
-      page: this.page
+      page: page
     }).subscribe(post => {
       console.debug(post)
 
@@ -205,8 +193,8 @@ export class PostController{
         })
       })
 
-      if(this.page >= this.totalPageNum){
-        this.page = this.totalPageNum
+      if(page >= this.totalPageNum){
+        page = this.totalPageNum
 
         // maybe have duplicate message
         const messageIds = this.messages.map(_ => _.id)
@@ -223,28 +211,47 @@ export class PostController{
             return messageIds.indexOf(msg.id) == -1
           })
 
-          this.focus = this.messages[0].id
+          const nextFocusId = `divider-previous-${page}`
 
-          console.log("load previous, the original focus is", this.focus)
+          // add on the top
+          this.messages.unshift({
+            id: nextFocusId,
+            post: { page: parseInt(page) + 1 },
+            type: 'POST_PAGE_DIVIDER',
+            content:`<i class="ion-android-arrow-up"></i> 上一頁加載完成 <i class="ion-ios-checkmark-outline" ></i>`,
+          })
 
           this.messages = filtered.concat(this.messages)
 
+          this.messages.unshift({
+            id:`divider-${page}`,
+            post: { page: page },
+            type: 'POST_PAGE_DIVIDER',
+          })
+
+          // focus one the finish loading previous message
+          this.focus = nextFocusId
 
         } else {
 
           this.scope.$broadcast('scroll.infiniteScrollComplete')
 
+          this.messages.push({
+            post: { page: page },
+            type: 'POST_PAGE_DIVIDER'
+          })
           this.messages = this.messages.concat(post.messages)
         }
       }
 
       this.refreshing = false
       this.loadingPrevious = false
-
+      this.end = page >= this.totalPageNum
+      this.page = page
     },
     err => console.trace(err),
     () => {
-      console.debug("All Render Task Completed")
+      console.debug("All Render Task Completed", { focus: this.focus, delayRender: this.delayRender})
 
       if(this.focus){
         this.$timeout(() => {
@@ -252,7 +259,9 @@ export class PostController{
           const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
           console.log("ready to scroll to ",document.querySelector(`#message-${this.focus}`), focusPosition)
 
-          this.ionicScrollDelegate.scrollTo(0,focusPosition)
+          this.$timeout(() =>{
+            this.ionicScrollDelegate.scrollTo(0,focusPosition)
+          })
 
           this.focus = undefined
 
@@ -685,22 +694,20 @@ export class PostController{
   }
 
   openPageSliderPopover($event) {
-    this.inputPage = this.page
+    this.inputPage = this.currentPage
     this.pageSliderPopover.show($event)
   }
 
   doJumpPage(){
     this.pageSliderPopover.hide()
-    this.page = this.inputPage
 
-    if(this.page == this.currentPage - 1){
+    if(this.inputPage == this.currentPage - 1){
       this.loadingPrevious = true
-      this.loadMessages('previous')
+      this.loadMessages('previous', this.inputPage)
 
     } else {
       this.reset()
-      this.page = this.inputPage
-      this.loadMessages()
+      this.loadMessages('next', this.inputPage)
     }
 
   }
