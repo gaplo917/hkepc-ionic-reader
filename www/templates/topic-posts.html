@@ -6,17 +6,19 @@
   <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
   <ion-nav-buttons side="right">
     <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
-    <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <div class="bar bar-subheader">
+    <a class="button button-icon icon ion-bonfire"
+       ng-if="vm.topic.name"
+       ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
+       ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
+       ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
+    </a>
     <h2 class="title" ng-show="vm.totalPageNum">
-      <i class="icon ion-bonfire"
-         ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
-         ng-show="vm.hasStickyPost(vm.slidePages[vm.currentIndex].posts)"
-         ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
-      </i>
-      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁</h2>
-    <a class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
+      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁
+    </h2>
+    <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
   </div>
   <ion-content>
@@ -36,7 +38,7 @@
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-icon-right item-text-wrap"
               ng-repeat="post in page.posts"
-              ng-show="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
+              ng-if="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
               ng-click="::vm.onGoToPost(post)"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
             <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
@@ -54,11 +56,9 @@
             <i class="icon ion-chevron-right icon-accessory"></i>
           </ion-item>
 
-          <ion-item
-              ng-show="page.posts.length >= 10"
-          >
+          <ion-item ng-show="page.posts.length >0">
             <button class="button col-40 fleft button-full"
-                    ng-show="vm.slidePages[vm.currentIndex].num > 1"
+                    ng-if="vm.slidePages[vm.currentIndex].num > 1"
                     ng-click="vm.ionicSlideBoxDelegate.previous()" >
               <i class="icon ion-ios-arrow-thin-left"></i>上一頁</button>
             <span class="col-20"></span>

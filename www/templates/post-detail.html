@@ -8,7 +8,7 @@
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <a ng-if="vm.post.title" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
-    <a ng-if="vm.post.title" class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <ion-content lazy-scroll on-swipe-right="$ionicGoBack()">
     <div class="text-center">

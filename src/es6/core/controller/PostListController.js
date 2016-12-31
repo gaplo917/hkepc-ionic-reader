@@ -265,7 +265,8 @@ export class PostListController {
   }
 
   updateUI(){
-    this.ionicSlideBoxDelegate.update()
+    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].update()
+
     this.scope.$apply()
   }
 
@@ -276,7 +277,6 @@ export class PostListController {
     this.currentIndex = 0
     this.currentPageNum = 0
     this.showSpinner = true
-    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
   }
 
   doRefresh(){
@@ -298,11 +298,9 @@ export class PostListController {
     //scroll to the hash tag
     this.location.hash(`ionic-slide-box`)
     this.ionicScrollDelegate.scrollTop(false)
-
-    // clear the model first
     //this.slidePages[index] = []
 
-    this.rx.Observable.timer(100)
+    this.rx.Observable.timer(200)
       .subscribe(() => {
         const diff = this.currentIndex - index
         const pagesNums = this.pages.map(p => p.num)

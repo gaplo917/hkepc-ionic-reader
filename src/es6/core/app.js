@@ -93,7 +93,9 @@ angular.module('starter', [
   $ionicConfigProvider.tabs.position('bottom')
   $ionicConfigProvider.views.swipeBackEnabled(false)
   $ionicConfigProvider.navBar.alignTitle('center')
-  $ionicConfigProvider.templates.maxPrefetch(100)
+
+  // always load all templates to prevent white screen
+  $ionicConfigProvider.templates.maxPrefetch(1000)
 
   $ionicConfigProvider.backButton.icon("ion-ios-arrow-thin-left")
   $ionicConfigProvider.backButton.text("")
