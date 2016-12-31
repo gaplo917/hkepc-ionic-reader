@@ -5,8 +5,8 @@
 
   <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown" ng-show="vm.subTopicList.length > 0"></i></ion-nav-title>
   <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
-    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
+    <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <div class="bar bar-subheader">
     <h2 class="title" ng-show="vm.totalPageNum">

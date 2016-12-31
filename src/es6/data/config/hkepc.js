@@ -39,7 +39,7 @@ module.exports = {
               `orderby=${orderby||''}`
             ].join("&")
     },
-    posts: (topicId,postId,page) => `${BASE_FORUM_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}`,
+    posts: (topicId,postId,page,orderType,filterOnlyAuthorId) => `${BASE_FORUM_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}&ordertype=${orderType}&authorid=${filterOnlyAuthorId}`,
     login: () => `${BASE_FORUM_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
     logout: (formhash) => `${BASE_FORUM_URL}/logging.php?action=logout&formhash=${formhash}`,
     news: (page) => `${BASE_URL}/moreNews/page/${page}`,
@@ -77,7 +77,8 @@ module.exports = {
     newPost:(fid) => `${BASE_FORUM_URL}/post.php?action=newthread&fid=${fid}`,
     memberCenter: () => `${BASE_FORUM_URL}/memcp.php`,
     checkPM: () => `${BASE_FORUM_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
-    settings:() => `${BASE_FORUM_URL}/memcp.php?action=profile&typeid=5`
+    settings:() => `${BASE_FORUM_URL}/memcp.php?action=profile&typeid=5`,
+    subscribeNewReply: (postId) => `${BASE_FORUM_URL}/my.php?item=attention&action=add&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`
   },
   auth:{
     id: 'cdb_sid',

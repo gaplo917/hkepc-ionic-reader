@@ -85,7 +85,7 @@ angular.module('starter', [
   $httpProvider.useApplyAsync(true)
 }])
 .config(['$ionicConfigProvider',function($ionicConfigProvider){
-  "use strict";
+
   $ionicConfigProvider.scrolling.jsScrolling(false)
   $ionicConfigProvider.views.maxCache(5)
   $ionicConfigProvider.spinner.icon('android')
@@ -93,9 +93,24 @@ angular.module('starter', [
   $ionicConfigProvider.tabs.position('bottom')
   $ionicConfigProvider.views.swipeBackEnabled(false)
   $ionicConfigProvider.navBar.alignTitle('center')
+  $ionicConfigProvider.templates.maxPrefetch(100)
 
-  // focus on content, should not have fancy transition
-  $ionicConfigProvider.views.transition('none')
+  $ionicConfigProvider.backButton.icon("ion-ios-arrow-thin-left")
+  $ionicConfigProvider.backButton.text("")
+  $ionicConfigProvider.backButton.previousTitleText(false)
+
+  if(ionic.Platform.isIOS()){
+    // iOS is guarentee to have smooth transition >= iPhone 5s
+    $ionicConfigProvider.views.transition('ios')
+  }
+  else if(ionic.Platform.isAndroid()) {
+    $ionicConfigProvider.views.transition('android')
+  }
+  else {
+    // Web can't guarentee the page order, transition direction is too difficult to handle
+    $ionicConfigProvider.views.transition('none')
+  }
+
 }])
 .provider('HKEPC_PROXY',[function(){
 

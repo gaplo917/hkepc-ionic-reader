@@ -1,0 +1,18 @@
+<ion-view class="ir-view" on-swipe-right="vm.swipeLeft()">
+  <ion-nav-buttons side="left">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  </ion-nav-buttons>
+
+  <ion-nav-title> IR 專區</ion-nav-title>
+
+  <ion-content>
+    <div class="spinner">
+      <ion-spinner
+          class="spinner"
+          icon="android"
+          ng-show="vm.showSpinner">
+      </ion-spinner>
+    </div>
+
+  </ion-content>
+</ion-view>

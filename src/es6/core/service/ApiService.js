@@ -76,9 +76,9 @@ export class ApiService {
   }
 
   postDetails(opt){
-    const {topicId, postId, page} = opt
+    const {topicId, postId, page, orderType, filterOnlyAuthorId} = opt
 
-    return this.composeApi(this.http.get(HKEPC.forum.posts(topicId,postId,page)))
+    return this.composeApi(this.http.get(HKEPC.forum.posts(topicId,postId,page,orderType,filterOnlyAuthorId)))
       .map(Mapper.responseToHKEPCHtml)
       .do( _ => this.emitCommonInfoExtractEvent(_))
       .map(html => Mapper.postHtmlToPost(html,opt))
@@ -90,5 +90,9 @@ export class ApiService {
       .map(Mapper.responseToHKEPCHtml)
       .do( _ => this.emitCommonInfoExtractEvent(_))
       .map(Mapper.userProfileHtmlToUserProfile)
+  }
+
+  subscribeNewReply(postId){
+    return this.composeApi(this.http.get(HKEPC.forum.subscribeNewReply(postId)))
   }
 }

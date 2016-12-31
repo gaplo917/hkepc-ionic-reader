@@ -15,6 +15,7 @@ export * from './HistoryDetailController'
 export * from './MyPostController'
 export * from './MyReplyController'
 export * from './NewsController'
+export * from './IRListController'
 
 
 // Just a clone

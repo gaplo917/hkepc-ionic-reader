@@ -131,5 +131,11 @@ export class FeatureRouteController{
     this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(size))
   }
 
+  onDev(){
+    this.ngToast.warning({
+      dismissOnTimeout: false,
+      content:`<i class="ion-ios-time"> 功能待開發中! <br/> 如你希望作者能盡快加入此功能，可考慮捐款支持作者。</i>`
+    })
+  }
 
 }
