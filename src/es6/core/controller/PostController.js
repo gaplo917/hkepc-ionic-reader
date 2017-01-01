@@ -808,8 +808,8 @@ export class PostController{
           this.doRefresh()
         }
         else if(index == 3){
-          this.filterOnlyAuthorId = this.filterOnlyAuthorId ? message.author.uid : undefined
-          if(this.filterOnlyAuthorId) this.ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
+          this.filterOnlyAuthorId = this.filterOnlyAuthorId == undefined ? message.author.uid : undefined
+          if(this.filterOnlyAuthorId !== undefined) this.ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
           else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
 
           this.doRefresh()
