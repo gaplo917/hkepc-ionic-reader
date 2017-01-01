@@ -12,8 +12,6 @@ import * as Controllers from "./index"
 import { Clipboard } from 'ionic-native';
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class PostController{
   static get STATE() { return 'tab.topics-posts-detail'}
@@ -89,7 +87,7 @@ export class PostController{
       console.log("received broadcast lastread",page, id)
       this.currentPage = page
 
-      $scope.$apply()
+      $scope.$applyAsync()
 
       this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
         page: page,
@@ -174,7 +172,7 @@ export class PostController{
       page: page,
       orderType: this.reversePostOrder ? 1 : 0,
       filterOnlyAuthorId: this.filterOnlyAuthorId
-    }).subscribe(post => {
+    }).safeApply(this.scope, post => {
       console.debug(post)
 
       this.post = post
@@ -249,10 +247,6 @@ export class PostController{
       this.loadingPrevious = false
       this.end = page >= this.totalPageNum
       this.page = page
-    },
-    err => console.trace(err),
-    () => {
-      console.debug("All Render Task Completed", { focus: this.focus, delayRender: this.delayRender})
 
       if(this.focus){
         this.$timeout(() => {
@@ -268,8 +262,7 @@ export class PostController{
 
         })
       }
-
-    })
+    }).subscribe()
 
   }
 

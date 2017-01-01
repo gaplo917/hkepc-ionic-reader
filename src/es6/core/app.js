@@ -4,6 +4,8 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
+const moment = require('moment')
+require('moment/locale/zh-tw');
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
@@ -29,6 +31,9 @@ angular.module('starter', [
   'ngFileUpload',
   'monospaced.elastic'
 ])
+.run(function($rootScope) {
+  window.moment = moment
+})
 .run(function($ionicPlatform,LocalStorageService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -105,10 +110,8 @@ angular.module('starter', [
     // iOS is guarentee to have smooth transition >= iPhone 5s
     $ionicConfigProvider.views.transition('ios')
   }
-  else if(ionic.Platform.isAndroid()) {
-    $ionicConfigProvider.views.transition('android')
-  }
   else {
+    // Android too many low end device, not good performance
     // Web can't guarentee the page order, transition direction is too difficult to handle
     $ionicConfigProvider.views.transition('none')
   }

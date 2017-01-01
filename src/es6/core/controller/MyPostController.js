@@ -7,8 +7,6 @@ import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class MyPostController {
   static get STATE() { return 'tab.features-mypost' }

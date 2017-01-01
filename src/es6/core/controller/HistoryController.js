@@ -3,9 +3,6 @@
  */
 import * as Controllers from "./index"
 
-const moment = require('moment')
-require('moment/locale/zh-tw');
-
 export class HistoryController {
   static get STATE() { return 'tab.features-history' }
 

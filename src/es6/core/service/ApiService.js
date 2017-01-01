@@ -45,7 +45,7 @@ export class ApiService {
       completed => {
         // on api completed
         // force scope update to reflect UI changes
-        this.$rootScope.$apply()
+        // this.$rootScope.$applyAsync()
       }
     )
   }
@@ -94,5 +94,17 @@ export class ApiService {
 
   subscribeNewReply(postId){
     return this.composeApi(this.http.get(HKEPC.forum.subscribeNewReply(postId)))
+  }
+
+  memberCenter(){
+    return this.composeApi(this.http.get(HKEPC.forum.memberCenter()))
+      .map(Mapper.responseToHKEPCHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
+  }
+
+  checkPM(){
+    return this.composeApi(this.http.get(HKEPC.forum.checkPM()))
+      .map(Mapper.responseToHKEPCHtml)
+      .do( _ => this.emitCommonInfoExtractEvent(_))
   }
 }

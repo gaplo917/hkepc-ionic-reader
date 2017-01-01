@@ -22,7 +22,7 @@ export class TopicListController {
     }
   }}
 
-  constructor($scope,$http,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope) {
+  constructor($scope,$http,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope,$q) {
 
     this.scope = $scope
     this.http = $http
@@ -31,13 +31,27 @@ export class TopicListController {
     this.authService = AuthService
     this.topics = []
     this.apiService = apiService
+    this.q = $q
 
-    observeOnScope($scope, 'vm.topics').subscribe(({newValue, oldValue}) => {
-      if (newValue.length > 0) {
-        console.log("save topics", newValue)
-        this.localStorageService.setObject('topics', newValue)
-      }
-    })
+    rx.Observable.interval(30000, new rx.ScopeScheduler($scope))
+      .startWith(0)
+      .flatMap(this.localStorageService.get('topics-cache-timestamp'))
+      .safeApply($scope, data => {
+        if(data){
+          this.cacheTimestamp = moment(data * 1000).fromNow()
+          console.log(this.cacheTimestamp)
+
+        }
+      }).subscribe()
+
+
+    observeOnScope($scope, 'vm.topics')
+      .delay(1000) // delay for saving topics
+      .subscribe(({newValue, oldValue}) => {
+        if (newValue.length > 0) {
+          this.localStorageService.setObject('topics', newValue)
+        }
+      })
 
     AuthService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn
@@ -62,12 +76,14 @@ export class TopicListController {
         .flatMap(topics => {
           return topics ? rx.Observable.just(topics) : this.apiService.topicList()
         })
-        .subscribe(topics => {
+        .safeApply($scope, topics => {
           this.topics = topics
         })
+        .subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {
+
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -77,7 +93,7 @@ export class TopicListController {
 
   reset(){
     // reset the model
-    this.topics = []
+    // this.topics = []
     this.topicsSubscription && this.topicsSubscription.dispose()
   }
 
@@ -85,10 +101,32 @@ export class TopicListController {
     //remove the cached badge
     this.cached = false
 
+    this.refreshing = true
+    this.scope.$applyAsync()
+
     this.topicsSubscription = this.apiService.topicList()
-      .subscribe(topics => {
-        this.topics = topics
-    })
+      .safeApply(this.scope, topics => {
+        this.cacheTimestamp = moment().fromNow()
+
+        // save to local
+        this.localStorageService.set('topics-cache-timestamp', moment().unix())
+
+        if(topics.length == this.topics.length){
+          this.topics = topics
+
+          this.topics.forEach( topic => {
+            const nTopic = topics.find(_ => _.id == topic.id)
+            topic.description = nTopic.description
+          })
+        } else {
+
+          this.topics = topics
+        }
+
+        this.refreshing = false
+
+      })
+      .subscribe()
   }
 
 
@@ -123,4 +161,5 @@ export class TopicListController {
     const blackList = [171,168,170,44,277,202]
     return blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917')
   }
+
 }

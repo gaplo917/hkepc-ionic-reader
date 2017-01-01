@@ -8,8 +8,6 @@ import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class NewsController{
   static get STATE() { return 'tab.topics-news'}
@@ -123,7 +121,6 @@ export class NewsController{
                 tags: tags,
               })
 
-              this.scope.$apply()
             },
             err => console.trace(err),
             () => {
@@ -139,7 +136,6 @@ export class NewsController{
               }
 
               this.refreshing = false
-              this.scope.$apply()
               this.scope.$broadcast('scroll.infiniteScrollComplete')
             }
         )

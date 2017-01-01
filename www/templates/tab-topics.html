@@ -1,5 +1,9 @@
 <ion-view class="topics-view">
-  <ion-nav-title ng-click="vm.hiddenMode()">論壇版塊 <i class="ion-speedometer" style="color:#1560ff" ng-show="vm.cached"></i></ion-nav-title>
+  <ion-nav-title ng-click="vm.hiddenMode()">論壇版塊
+    <span class="less-important-info" style="font-size:10px;color:#1560ff">{{vm.cacheTimestamp}}</span>
+    <ion-spinner class="spinner spinner-xs" icon="spiral" ng-if="vm.refreshing"></ion-spinner>
+
+  </ion-nav-title>
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
@@ -80,7 +84,7 @@
           <img class="topic-icon" ng-src="{{::topic.image}}" ng-show="::vm.canShowIniOSReview(topic.id)"/>
           <h2 ng-bind="::topic.name"></h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description" ng-bind="::topic.description"></small>
+          <small class="last-description" ng-bind="topic.description"></small>
         </ion-item>
       </span>
 

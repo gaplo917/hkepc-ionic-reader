@@ -25,7 +25,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx) {
+  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -38,6 +38,7 @@ export class TabController{
     this.authService = AuthService
     this.historyService = HistoryService
     this.ionicHistory = $ionicHistory
+    this.apiService = apiService
 
     this.isLoggedIn = false
 
@@ -53,17 +54,11 @@ export class TabController{
       this.fontSize = data || "100"
     })
 
-    const getMemberCenterPromise = this.rx.Observable.fromPromise(this.http.get(HKEPC.forum.memberCenter()))
-    const checkPMPromise = this.rx.Observable.fromPromise(this.http.get(HKEPC.forum.checkPM()))
-
     // Try the credential on start app
     this.rx.Observable
-        .concat(checkPMPromise,getMemberCenterPromise)
-        .map(resp => cheerio.load(resp.data))
-        .filter($ => $('body').html() != null)
-        .subscribe(
-            $ => this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-        )
+        .concat(this.apiService.memberCenter(),this.apiService.checkPM())
+        .delay(2000)
+        .subscribe()
 
     // schedule to check PM
     this.rx.Scheduler.default.schedulePeriodic(
@@ -81,140 +76,149 @@ export class TabController{
       this.removeAndroidStyleCssClass()
     })
 
-    $scope.$on(CommonInfoExtractRequest.NAME, (event,req) =>{
-      if(req instanceof CommonInfoExtractRequest){
-        console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
+    $scope.$eventToObservable(CommonInfoExtractRequest.NAME)
+      .debounce(500)
+      .subscribe( ([event, req]) =>{
+        if(req instanceof CommonInfoExtractRequest){
+          console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
 
-        const $ = req.cheerio
+          const $ = req.cheerio
 
-        // select the current login user
-        const currentUsername = $('#umenu > cite').text() || /* HKEPC 2.0 beta */$('header .userInfo span').text()
+          // select the current login user
+          const currentUsername = $('#umenu > cite').text() || /* HKEPC 2.0 beta */$('header .userInfo span').text()
 
-        const pmNotification = ($('#prompt_pm').text().match(/\d/g) || [] ) [0]
+          const pmNotification = ($('#prompt_pm').text().match(/\d/g) || [] ) [0]
 
-        const postNotification = ($('#prompt_threads').text().match(/\d/g) || [] )[0]
+          const postNotification = ($('#prompt_threads').text().match(/\d/g) || [] )[0]
 
-        // send the login name to parent controller
-        this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
+          // send the login name to parent controller
+          this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
 
-        // send the notification badge update in rootscope
-        this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
-        this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
-
-      }
-    })
-
-    $scope.$on(NotificationBadgeUpdateRequest.NAME,(event,req) => {
-      if(req instanceof NotificationBadgeUpdateRequest){
-        console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
-
-        console.log(req.notification)
-        const notification = req.notification
-
-        this.notification = notification
-
-        this.localStorageService.setObject('notification',notification)
-      }
-    })
-
-    $scope.$on(LoginTabUpdateRequest.NAME, (event,req) =>{
-      if(req instanceof LoginTabUpdateRequest){
-        console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
-
-        this.login = req.username
-        if(this.login) {
-          this.isLoggedIn = true
-        } else {
-
-          // this.login = undefined
-          //
-          // AuthService.isLoggedIn().subscribe(isLoggedIn => {
-          //   if(isLoggedIn) {
-          //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-          //     AuthService.logout()
-          //
-          //     this.isLoggedIn = false
-          //   }
-          // })
+          // send the notification badge update in rootscope
+          this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
+          this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
 
         }
-      }
     })
 
-    $scope.$on(FindMessageRequest.NAME, (event,arg) =>{
-      if(arg instanceof FindMessageRequest){
-        console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
+    $scope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+      .subscribe( ([event, req]) => {
+        if(req instanceof NotificationBadgeUpdateRequest){
+          console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
 
-        this.messageModal.show()
-        // reset the message first
-        this.scope.messageModal.message = {}
+          console.log(req.notification)
+          const notification = req.notification
 
-        MessageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
-            .then((data) => {
+          this.notification = notification
 
-              this.scope.messageModal.message = data.message
-
-              this.scope.messageModal.goToMessage = (msg) => {
-
-                this.messageModal.hide()
-
-                const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-                ? Controllers.ViewPostController.STATE
-                : Controllers.PostController.STATE
-
-                const history = this.ionicHistory.viewHistory()
-                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
-                  this.ionicHistory.clearCache([history.currentView.stateId])
-                }
-
-                this.state.go(targetState,{
-                  topicId: msg.post.topicId,
-                  postId: msg.post.id,
-                  page: msg.post.page,
-                  delayRender: 0,
-                  focus: msg.id
-                })
-              }
-
-              this.scope.messageModal.hide = () => this.messageModal.hide()
-
-            })
-      }
-
+          this.localStorageService.setObject('notification',notification)
+        }
     })
 
-    $scope.$on(PushHistoryRequest.NAME, (event,arg) =>{
-      if(arg instanceof PushHistoryRequest){
-        console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
+    $scope.$eventToObservable(LoginTabUpdateRequest.NAME)
+      .subscribe( ([event, req]) => {
+        if(req instanceof LoginTabUpdateRequest){
+          console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-        this.historyService.add(arg.historyObj)
-      }
-
-    })
-
-    $scope.$on(ChangeThemeRequest.NAME,(event,arg) => {
-      if(arg instanceof ChangeThemeRequest){
-        console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
-        this.darkTheme = arg.theme == 'dark'
-        this.localStorageService.set('theme',arg.theme)
-
-        if (window.StatusBar) {
-          if(this.darkTheme){
-            StatusBar.styleLightContent()
+          this.login = req.username
+          if(this.login) {
+            this.isLoggedIn = true
           } else {
-            StatusBar.styleDefault()
+
+            // this.login = undefined
+            //
+            // AuthService.isLoggedIn().subscribe(isLoggedIn => {
+            //   if(isLoggedIn) {
+            //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+            //     AuthService.logout()
+            //
+            //     this.isLoggedIn = false
+            //   }
+            // })
+
           }
         }
-
-      }
     })
 
-    $scope.$on(ChangeFontSizeRequest.NAME,(event,arg) => {
-      if(arg instanceof ChangeFontSizeRequest){
-        console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
-        this.fontSize = arg.size
-        this.localStorageService.set('fontSize',arg.size)
-      }
+    $scope.$eventToObservable(FindMessageRequest.NAME)
+      .subscribe( ([event, arg]) => {
+        if(arg instanceof FindMessageRequest){
+          console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
+
+          this.messageModal.show()
+          // reset the message first
+          this.scope.messageModal.message = {}
+
+          MessageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
+              .then((data) => {
+
+                this.scope.messageModal.message = data.message
+
+                this.scope.messageModal.goToMessage = (msg) => {
+
+                  this.messageModal.hide()
+
+                  const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+                  ? Controllers.ViewPostController.STATE
+                  : Controllers.PostController.STATE
+
+                  const history = this.ionicHistory.viewHistory()
+                  if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
+                    this.ionicHistory.clearCache([history.currentView.stateId])
+                  }
+
+                  this.state.go(targetState,{
+                    topicId: msg.post.topicId,
+                    postId: msg.post.id,
+                    page: msg.post.page,
+                    delayRender: 0,
+                    focus: msg.id
+                  })
+                }
+
+                this.scope.messageModal.hide = () => this.messageModal.hide()
+
+              })
+        }
+
+    })
+
+    $scope.$eventToObservable(PushHistoryRequest.NAME)
+      .subscribe( ([event, arg]) => {
+        if(arg instanceof PushHistoryRequest){
+          console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
+
+          this.historyService.add(arg.historyObj)
+        }
+
+    })
+
+    $scope.$eventToObservable(ChangeThemeRequest.NAME)
+      .subscribe( ([event, arg]) => {
+        if(arg instanceof ChangeThemeRequest){
+          console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
+          this.darkTheme = arg.theme == 'dark'
+          this.localStorageService.set('theme',arg.theme)
+
+          if (window.StatusBar) {
+            if(this.darkTheme){
+              StatusBar.styleLightContent()
+            } else {
+              StatusBar.styleDefault()
+            }
+          }
+
+        }
+    })
+
+    $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
+      .subscribe( ([event, arg]) => {
+        if(arg instanceof ChangeFontSizeRequest){
+          console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
+          this.fontSize = arg.size
+          this.localStorageService.set('fontSize',arg.size)
+          this.ionicHistory.clearCache();
+        }
     })
 
     $ionicModal.fromTemplateUrl('templates/modals/find-message.html', {
@@ -224,7 +228,7 @@ export class TabController{
     })
 
     this.localStorageService.get('agreeEULA',0).subscribe(data => {
-      if(!data){
+      if(!data && (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) ){
         $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
           scope: $scope.eulaModal,
           backdropClickToClose: false

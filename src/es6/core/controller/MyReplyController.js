@@ -8,8 +8,6 @@ import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class MyReplyController {
   static get STATE() { return 'tab.features-myreply' }

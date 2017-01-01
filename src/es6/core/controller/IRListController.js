@@ -9,8 +9,6 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class IRListController {
   static get STATE() { return 'tab.topics-ir'}

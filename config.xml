@@ -18,9 +18,9 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="2000" />
-    <preference name="FadeSplashScreen" value="true"/>
-    <preference name="FadeSplashScreenDuration" value="400"/>
-    <preference name="ShowSplashScreenSpinner" value="false"/>
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value="400" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="deployment-target" value="8.0" />
     <preference name="CrosswalkAnimatable" value="true" />
@@ -87,8 +87,4 @@
     </platform>
     <plugin name="cordova-plugin-inappbrowser" spec="https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="https://github.com/Telerik-Verified-Plugins/NativePageTransitions" />
-    <preference name="xwalkVersion" value="18+" />
-    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-    <preference name="xwalkMode" value="embedded" />
-    <preference name="xwalkMultipleApk" value="true" />
 </widget>

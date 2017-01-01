@@ -29,16 +29,16 @@ export default class Mapper{
     const $ = html.getCheerio()
 
     return $('#mainIndex > div').map((i, elem) => {
-      const source = cheerio.load($(elem).html())
+      const source = $(elem)
 
-      const groupName = $(elem).hasClass('group')
-        ? source('a').text()
+      const groupName = source.hasClass('group')
+        ? source.find('a').text()
         : undefined
 
-      const topicId = URLUtils.getQueryVariable(source('.forumInfo .caption').attr('href'), 'fid')
-      const topicName = source('.forumInfo .caption').text()
-      const description = source('.forumInfo p').next().text()
-      const image = source('.icon img').attr('src')
+      const topicId = URLUtils.getQueryVariable(source.find('.forumInfo .caption').attr('href'), 'fid')
+      const topicName = source.find('.forumInfo .caption').text()
+      const description = source.find('.forumInfo p').next().text()
+      const image = source.find('.icon img').attr('src')
 
       return {
         id: topicId,
@@ -87,28 +87,28 @@ export default class Mapper{
     const posts = $('.threadlist table tbody').map( (i, elem) => {
       const htmlId = $(elem).attr('id')
 
-      const postSource = cheerio.load($(elem).html())
+      const postSource = $(elem)
       // fall back for latest postUrl finding
-      const postUrl = postSource('tr .subject span a').attr('href') || /* latest post */postSource('tr .subject a').attr('href')
-      const postTitleImgUrl = postSource('tr .folder img').attr('src')
+      const postUrl = postSource.find('tr .subject span a').attr('href') || /* latest post */postSource.find('tr .subject a').attr('href')
+      const postTitleImgUrl = postSource.find('tr .folder img').attr('src')
 
       return {
         id: URLUtils.getQueryVariable(postUrl, 'tid'),
         topicId: URLUtils.getQueryVariable(postUrl, 'fid'),
-        tag: postSource('tr .subject em a').text() || postSource('.forum a').text(),
-        name: postSource('tr .subject span[id^=thread_] a ').text() || postSource('tr .subject > a ').text(),
+        tag: postSource.find('tr .subject em a').text() || postSource.find('.forum a').text(),
+        name: postSource.find('tr .subject span[id^=thread_] a ').text() || postSource.find('tr .subject > a ').text(),
         lastPost:{
-          name: postSource('tr .lastpost cite a').text(),
-          timestamp: postSource('tr .lastpost em a span').attr('title') || postSource('tr .lastpost em a').text()
+          name: postSource.find('tr .lastpost cite a').text(),
+          timestamp: postSource.find('tr .lastpost em a span').attr('title') || postSource.find('tr .lastpost em a').text()
         },
         author: {
-          name: postSource('tr .author a').text()
+          name: postSource.find('tr .author a').text()
         },
         count: {
-          view: postSource('tr .nums em').text(),
-          reply: postSource('tr .nums strong').text()
+          view: postSource.find('tr .nums em').text(),
+          reply: postSource.find('tr .nums strong').text()
         },
-        publishDate: postSource('tr .author em').text(),
+        publishDate: postSource.find('tr .author em').text(),
         pageNum: pageNum,
         isSticky: htmlId ? htmlId.startsWith("stickthread") : false,
         isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false
@@ -164,22 +164,22 @@ export default class Mapper{
 
     const messages = $('#postlist > div').map((i, elem) => {
 
-      let postSource = cheerio.load($(elem).html())
+      let postSource = $(elem)
 
       const content = new HKEPCHtml(
-        cheerio.load(postSource('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
-          postSource('.postcontent > .defaultpost > .postmessage').html())
+        cheerio.load(postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
+          postSource.find('.postcontent > .defaultpost > .postmessage').html())
       ).processImageToLazy()
         .getCheerio()
 
-      const rank = postSource('.postauthor > p > img').attr('alt')
+      const rank = postSource.find('.postauthor > p > img').attr('alt')
 
-      const avatarImageUrl = postSource('.postauthor .avatar img').attr('src')
+      const avatarImageUrl = postSource.find('.postauthor .avatar img').attr('src')
 
       return {
-        id: postSource('table').attr('id').replace('pid',''),
-        pos: postSource('.postinfo strong a em').text(),
-        createdAt: postSource('.posterinfo .authorinfo em span').attr('title') || postSource('.posterinfo .authorinfo em').text().replace('發表於 ',''),
+        id: postSource.find('table').attr('id').replace('pid',''),
+        pos: postSource.find('.postinfo strong a em').text(),
+        createdAt: postSource.find('.posterinfo .authorinfo em span').attr('title') || postSource.find('.posterinfo .authorinfo em').text().replace('發表於 ',''),
         content : content.html(),
         type: 'POST_MESSAGE',
         post:{
@@ -192,7 +192,7 @@ export default class Mapper{
           rank: rank ? rank.replace('Rank: ','') : 0,
           image: avatarImageUrl,
           uid: URLUtils.getQueryVariable(avatarImageUrl,'uid'),
-          name : postSource('.postauthor > .postinfo').text().trim(),
+          name : postSource.find('.postauthor > .postinfo').text().trim(),
           isSelf: false // default is false, mutate later
         }
       }

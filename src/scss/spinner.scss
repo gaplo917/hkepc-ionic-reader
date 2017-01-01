@@ -29,3 +29,8 @@ div{
     position: relative;
   }
 }
+
+.spinner.spinner-xs > svg {
+  width: 10px;
+  height: 10px;
+}

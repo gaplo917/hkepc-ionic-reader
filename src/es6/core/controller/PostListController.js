@@ -9,8 +9,6 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
 
 const cheerio = require('cheerio')
-const moment = require('moment')
-require('moment/locale/zh-tw');
 
 export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
@@ -238,7 +236,7 @@ export class PostListController {
       order: this.order,
       searchId: this.searchId
     })
-      .do(resp => {
+      .safeApply(this.scope, resp => {
         this.searchId = resp.searchId
         // only extract the number
         this.totalPageNum = resp.totalPageNum
@@ -262,12 +260,6 @@ export class PostListController {
           name: resp.topicName
         }
       })
-  }
-
-  updateUI(){
-    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].update()
-
-    this.scope.$apply()
   }
 
   reset(){
@@ -300,8 +292,7 @@ export class PostListController {
     this.ionicScrollDelegate.scrollTop(false)
     //this.slidePages[index] = []
 
-    this.rx.Observable.timer(200)
-      .subscribe(() => {
+    setTimeout(() => {
         const diff = this.currentIndex - index
         const pagesNums = this.pages.map(p => p.num)
         this.currentPageNum = this.slidePages[this.currentIndex].num
@@ -344,16 +335,19 @@ export class PostListController {
           if(this.currentPageNum >= largestPageNum){
             console.log("loadMore After()")
             this.slidePages[index] = []
-            this.loadMore().subscribe(() => {
-              const len = this.pages.length -1
-              const nextPage = Math.floor(len / 3) * 3 + index
-              this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
-              this.slidePages[index] = this.pages[nextPage]
 
-              // prefetch for better UX
-              const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-              this.slidePages[prefetchSlideIndex] = []
-            })
+            this.loadMore()
+              .safeApply(this.scope,() => {
+                const len = this.pages.length -1
+                const nextPage = Math.floor(len / 3) * 3 + index
+                this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
+                this.slidePages[index] = this.pages[nextPage]
+
+                // prefetch for better UX
+                const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
+                this.slidePages[prefetchSlideIndex] = []
+
+              }).subscribe()
 
           }
           else{
@@ -368,8 +362,9 @@ export class PostListController {
         }
 
         this.currentIndex = index
-        this.updateUI()
-      })
+
+        this.scope.$apply()
+      },200)
 
     console.log(`onSlideChanged${index}`)
   }
