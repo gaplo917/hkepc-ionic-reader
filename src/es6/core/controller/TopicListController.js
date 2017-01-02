@@ -68,9 +68,7 @@ export class TopicListController {
       this.topicsSubscription = this.localStorageService.getObject('topics')
         .do(topics => {
           if (topics) {
-            ngToast.success('正在使用快取..')
             console.log('[TopicListController]', 'using cache')
-            this.cached = true
           }
         })
         .flatMap(topics => {
@@ -101,8 +99,6 @@ export class TopicListController {
   }
 
   loadList() {
-    //remove the cached badge
-    this.cached = false
 
     this.refreshing = true
     this.scope.$applyAsync()
