@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.gaplotech.hkepc-ionic-reader"
         android-packageName="com.gaplotech.hkepc_ionic_reader"
+        ios-CFBundleVersion="1501"
         ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader"
         version="1.5.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>HKEPC IR</name>
@@ -60,7 +61,7 @@
     </platform>
     <platform name="android">
         <preference name="android-targetSdkVersion" value="24"/>
-        <preference name="android-minSdkVersion" value="20" />
+        <preference name="android-minSdkVersion" value="19" />
         <icon density="mdpi" src="res/android/icon/drawable-mdpi/appicon.png" />
         <icon density="hdpi" src="res/android/icon/drawable-hdpi/appicon.png" />
         <icon density="xhdpi" src="res/android/icon/drawable-xhdpi/appicon.png" />
