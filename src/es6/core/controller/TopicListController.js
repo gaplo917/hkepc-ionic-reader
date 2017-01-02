@@ -33,9 +33,9 @@ export class TopicListController {
     this.apiService = apiService
     this.q = $q
 
-    rx.Observable.interval(30000, new rx.ScopeScheduler($scope))
+    rx.Observable.interval(30000)
       .startWith(0)
-      .flatMap(this.localStorageService.get('topics-cache-timestamp'))
+      .flatMap(() => this.localStorageService.get('topics-cache-timestamp'))
       .safeApply($scope, data => {
         if(data){
           this.cacheTimestamp = moment(data * 1000).fromNow()
