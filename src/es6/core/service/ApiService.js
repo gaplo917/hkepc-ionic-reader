@@ -66,9 +66,6 @@ export class ApiService {
       .do(
       resp => {
         // on api success, anything need to handle?
-
-        // make the rx stream to error if the status code >= 400
-        if(resp.status >= 400) throw resp
       },
       error => {
         // on api fail
