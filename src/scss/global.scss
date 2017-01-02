@@ -191,3 +191,8 @@ textarea {
   min-height: 60px;
   padding-right: 10px;
 }
+
+.less-important-info {
+  color: $less-important-color;
+  font-size: 12px;
+}

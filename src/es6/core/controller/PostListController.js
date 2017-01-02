@@ -237,6 +237,8 @@ export class PostListController {
       searchId: this.searchId
     })
       .safeApply(this.scope, resp => {
+        console.log(resp)
+
         this.searchId = resp.searchId
         // only extract the number
         this.totalPageNum = resp.totalPageNum

@@ -111,7 +111,8 @@ export default class Mapper{
         publishDate: postSource.find('tr .author em').text(),
         pageNum: pageNum,
         isSticky: htmlId ? htmlId.startsWith("stickthread") : false,
-        isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false
+        isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false,
+        isLock: postTitleImgUrl ? postTitleImgUrl.indexOf('lock') > 0 : false
       }
 
     }).get()
@@ -143,6 +144,8 @@ export default class Mapper{
     const pageBackLink = $('.forumcontrol .pageback a').attr('href')
 
     const topicId = URLUtils.getQueryVariable(pageBackLink,'fid')
+
+    const isLock = $('.replybtn').text() ? false : true
 
     // remove the hkepc forum text
     const postTitle = html
@@ -186,7 +189,7 @@ export default class Mapper{
           id: postId,
           topicId: topicId,
           title: postTitle,
-          page: page
+          page: page,
         },
         author:{
           rank: rank ? rank.replace('Rank: ','') : 0,
@@ -206,6 +209,7 @@ export default class Mapper{
       topicId: topicId,
       totalPageNum: totalPageNum,
       messages: messages,
+      isLock: isLock
     }
   }
 

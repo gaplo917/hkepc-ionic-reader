@@ -18,7 +18,6 @@ export class LocalStorageService {
 
     return this.rx.Observable
       .fromPromise(this.$localForage.setItem(key,value))
-      .observeOn(this.rx.Scheduler.default)
   }
   
   get(key, defaultValue) {
@@ -32,7 +31,6 @@ export class LocalStorageService {
         .do(data => {
           this.cache.set(key, data)
         })
-        .observeOn(this.rx.Scheduler.default)
   }
   
   setObject(key, value) {
@@ -40,7 +38,6 @@ export class LocalStorageService {
 
     return this.rx.Observable
       .fromPromise(this.$localForage.setItem(key,JSON.stringify(value)))
-      .observeOn(this.rx.Scheduler.default)
   }
   
   getObject(key) {
@@ -54,7 +51,6 @@ export class LocalStorageService {
         .do(data => {
           this.cache.set(key, data)
         })
-        .observeOn(this.rx.Scheduler.default)
   }
 }
     

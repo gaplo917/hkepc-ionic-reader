@@ -18,16 +18,16 @@
           class="item-icon-right item-text-wrap"
           ng-repeat="post in vm.histories | orderBy : post.createdAt track by $index"
           href="#/tab/features/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-        <small class="fright less-important-info">{{::vm.relativeMomentizeTimestamp(post.createdAt)}}</small>
+        <span class="fright less-important-info">{{::vm.relativeMomentizeTimestamp(post.createdAt)}}</span>
         <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
         <div>
           <i class="ion-bonfire" ng-show="::post.isSticky"></i>
           <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-          <small class="less-important-info ion-person"> {{::post.author.name}}</small>
-          <small class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</small>
+          <span class="less-important-info ion-person"> {{::post.author.name}}</span>
+          <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
         </div>
         <div>
-          <small class="less-important-info">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</small>
+          <span class="less-important-info">{{::post.lastPost.timestamp}} @ {{::post.lastPost.name}}</span>
 
         </div>
 

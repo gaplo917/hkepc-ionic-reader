@@ -1,7 +1,7 @@
 <ion-view class="topics-view">
   <ion-nav-title ng-click="vm.hiddenMode()">論壇版塊
-    <span class="less-important-info" style="font-size:10px;color:#1560ff">{{vm.cacheTimestamp}}</span>
-    <ion-spinner class="spinner spinner-xs" icon="spiral" ng-if="vm.refreshing"></ion-spinner>
+    <span class="less-important-info">{{vm.cacheTimestamp}}</span>
+    <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
 
   </ion-nav-title>
   <ion-nav-buttons side="right">

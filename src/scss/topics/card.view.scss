@@ -2,6 +2,12 @@
 .card-view {
   background-color: $card-holder-bg-color;
 
+  .on-more-button {
+    color: $text-color;
+    position: absolute;
+    right: 10px;
+  }
+
   .title {
     color: $text-color;
     padding: 0 20px;

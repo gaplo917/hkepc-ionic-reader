@@ -74,7 +74,10 @@ export class TopicListController {
           }
         })
         .flatMap(topics => {
-          return topics ? rx.Observable.just(topics) : this.apiService.topicList()
+          return topics
+            ? rx.Observable.just(topics)
+            : this.apiService.topicList()
+              .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
         })
         .safeApply($scope, topics => {
           this.topics = topics

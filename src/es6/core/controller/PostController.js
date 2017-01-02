@@ -178,6 +178,7 @@ export class PostController{
       this.post = post
 
       this.totalPageNum = post.totalPageNum
+      this.isLock = post.isLock
 
       post.messages.forEach(message => {
         this.messageService.isLikedPost(message).subscribe(isLiked => {
@@ -771,13 +772,13 @@ export class PostController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC IR Web 版連結' },
-        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC 原始連結' },
-        { text: `<i class="icon ion-ios-loop-strong"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
-        { text: `<i class="icon ion-person"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
+        { text: '<i class="icon ion-ios-copy-outline"></i> 複製 HKEPC IR Web 版連結' },
+        { text: '<i class="icon ion-ios-copy-outline"></i> 複製 HKEPC 原始連結' },
+        { text: `<i class="icon ion-ios-loop"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
+        { text: `<i class="icon ion-ios-eye-outline"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
         { text: `<i class="icon ion-ios-lightbulb-outline"></i> 關注此主題的新回覆` },
       ],
-      titleText: '分享連結',
+      titleText: '更多功能',
       cancelText: '取消',
       cancel: () => {
         // add cancel code..

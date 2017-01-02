@@ -7,16 +7,16 @@
     </button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <a ng-if="vm.post.title" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
+    <a ng-if="vm.post.title && !vm.isLock" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
   <ion-content lazy-scroll on-swipe-right="$ionicGoBack()">
     <div class="text-center">
-      <h4 class="title">{{vm.post.title}}</h4>
+      <h4 class="title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</h4>
       <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
     </div>
     <div class="spinner">
-      <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
+      <ion-spinner class="spinner" icon="android"></ion-spinner>
     </div>
 
 
@@ -45,7 +45,7 @@
       <div ng-if="message.type == 'POST_MESSAGE'">
         <div class="item item-avatar">
           <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
-          <button class="button button-icon ion-ios-arrow-down" style="position: absolute;right: 10px" ng-click="vm.onMore(message)"></button>
+          <button class="button button-icon ion-android-more-vertical on-more-button" ng-click="vm.onMore(message)"></button>
           <h2 ng-bind="::message.author.name" ng-click="vm.onUserProfilePic(message.author)"></h2>
           <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>
           <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index" class="ion-ios-star" style="color:#F9A825;"></i>
@@ -63,7 +63,7 @@
             <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
             喜歡
           </a>
-          <a class="tab-item card-button" ng-click="vm.onReply(message)" >
+          <a class="tab-item card-button" ng-click="vm.onReply(message)" ng-if="!vm.isLock">
             <i class="icon ion-ios-chatboxes-outline"></i>
             留言
           </a>
