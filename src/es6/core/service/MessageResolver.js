@@ -32,7 +32,7 @@ export class MessageResolver {
           let $ = html
               .removeIframe()
               .processImgUrl(HKEPC.baseForumUrl)
-              .processEpcUrl()
+              .processEpcUrl(window.location.hash)
               .processExternalUrl()
               .getCheerio()
 

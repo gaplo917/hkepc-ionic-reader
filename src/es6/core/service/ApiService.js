@@ -4,6 +4,10 @@
 import * as HKEPC from '../../data/config/hkepc'
 import Mapper from "../mapper/mapper";
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+const work = require('webworkify');
+
+const cheerioWorker = work(require('../cheerio-worker'));
+
 
 export class ApiService {
   /**
@@ -17,10 +21,37 @@ export class ApiService {
     return ($http,rx,$rootScope) => new ApiService($http,rx,$rootScope)
   }
 
-  constructor($http, rx, $rootScope) {
+  constructor($http, rx, $rootScope,) {
     this.http = $http
     this.rx = rx
     this.$rootScope = $rootScope
+
+    this.rx.Observable.fromWebWorkerAndTopic = function(worker, topicKey){
+      return this.fromEvent(worker, 'message')
+        .map(_ => _.data) // unwrap from event.data
+        .filter(_ => _.topic == topicKey)
+        .map(_ => _.data) // real data we need
+    }
+
+    // make a extension to bridge global web worker
+    this.rx.Observable.prototype.flatMapApiFromCheerioworker = function(topicKey, data = {}){
+      return this.do(resp => cheerioWorker.postMessage(
+          Object.assign({ topic: topicKey, data: resp.data}, data)
+        )
+      )
+      .flatMap(() => rx.Observable.fromWebWorkerAndTopic(cheerioWorker, topicKey).take(1))
+      .do(result => console.log(topicKey, result))
+    }
+
+    this.rx.Observable.fromWebWorkerAndTopic(cheerioWorker, 'commonInfo')
+      .do(console.log)
+      .subscribe(data => {
+        $rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest(
+          data.username,
+          data.pmNotification,
+          data.postNotification
+        ))
+      })
   }
 
   /**
@@ -50,16 +81,9 @@ export class ApiService {
     )
   }
 
-  emitCommonInfoExtractEvent(html){
-    const $ = html.getCheerio()
-    this.$rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-  }
-
   topicList(){
     return this.composeApi(this.http.get(HKEPC.forum.index()))
-      .map(Mapper.responseToGeneralHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
-      .map(Mapper.topicListHtmlToTopicList)
+      .flatMapApiFromCheerioworker('topicList')
   }
 
   postListPage(opt){
@@ -70,26 +94,23 @@ export class ApiService {
       : HKEPC.forum.topics(topicId, pageNum, filter,order)
 
     return this.composeApi(this.http.get(request))
-      .map(Mapper.responseToGeneralHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
-      .map(html => Mapper.postListHtmlToPostListPage(html,pageNum))
+      .flatMapApiFromCheerioworker('postListPage', { pageNum: pageNum })
   }
 
   postDetails(opt){
     const {topicId, postId, page, orderType, filterOnlyAuthorId} = opt
 
     return this.composeApi(this.http.get(HKEPC.forum.posts(topicId,postId,page,orderType,filterOnlyAuthorId)))
-      .map(Mapper.responseToHKEPCHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
-      .map(html => Mapper.postHtmlToPost(html,opt))
+      .flatMapApiFromCheerioworker('postDetails', {
+        opt: opt,
+        currentHash: window.location.hash
+      })
 
   }
 
   userProfile(uid) {
     return this.composeApi(this.http.get(`http://www.hkepc.com/forum/space.php?uid=${uid}`))
-      .map(Mapper.responseToHKEPCHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
-      .map(Mapper.userProfileHtmlToUserProfile)
+      .flatMapApiFromCheerioworker('userProfile')
   }
 
   subscribeNewReply(postId){
@@ -98,13 +119,11 @@ export class ApiService {
 
   memberCenter(){
     return this.composeApi(this.http.get(HKEPC.forum.memberCenter()))
-      .map(Mapper.responseToHKEPCHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
+      .flatMapApiFromCheerioworker('memberCenter')
   }
 
   checkPM(){
     return this.composeApi(this.http.get(HKEPC.forum.checkPM()))
-      .map(Mapper.responseToHKEPCHtml)
-      .do( _ => this.emitCommonInfoExtractEvent(_))
+      .flatMapApiFromCheerioworker('checkPM')
   }
 }

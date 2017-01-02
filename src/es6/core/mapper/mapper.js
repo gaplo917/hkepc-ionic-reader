@@ -8,22 +8,6 @@ export default class Mapper{
 
   static apiSuccess(o) { return { message: o.message }}
 
-  static responseToGeneralHtml(resp) {
-    const html = new GeneralHtml(cheerio.load(resp.data))
-
-    return html
-      .removeIframe()
-      .processImgUrl(HKEPC.imageUrl)
-  }
-
-  static responseToHKEPCHtml(resp) {
-    const html = new HKEPCHtml(cheerio.load(resp.data))
-
-    return html.processImgUrl(HKEPC.imageUrl)
-      .processEpcUrl()
-      .processExternalUrl()
-  }
-
   static topicListHtmlToTopicList(html) {
 
     const $ = html.getCheerio()
@@ -35,10 +19,10 @@ export default class Mapper{
         ? source.find('a').text()
         : undefined
 
-      const topicId = URLUtils.getQueryVariable(source.find('.forumInfo .caption').attr('href'), 'fid')
+      const topicId = URLUtils.getQueryVariable(source.find('.forumInfo .caption').attr('raw-href'), 'fid')
       const topicName = source.find('.forumInfo .caption').text()
       const description = source.find('.forumInfo p').next().text()
-      const image = source.find('.icon img').attr('src')
+      const image = source.find('.icon img').attr('raw-src')
 
       return {
         id: topicId,
@@ -55,7 +39,7 @@ export default class Mapper{
     const $ = html.getCheerio()
 
     // only work for latest
-    const searchId = URLUtils.getQueryVariable($('.pages_btns .pages a').first().attr('href'),'searchid')
+    const searchId = URLUtils.getQueryVariable($('.pages_btns .pages a').first().attr('raw-href'),'searchid')
 
     const titles = $('#nav').text().split('»')
     const topicName = titles[titles.length - 1]
@@ -63,7 +47,7 @@ export default class Mapper{
     const subTopicList = $('#subforum table h2 a').map((i,elem) => {
       const obj = $(elem)
       const name = obj.text()
-      const id = URLUtils.getQueryVariable(obj.attr('href'), 'fid')
+      const id = URLUtils.getQueryVariable(obj.attr('raw-href'), 'fid')
       return {
         id: id,
         name: name
@@ -73,7 +57,7 @@ export default class Mapper{
     const postCategories = $('.threadtype a').map((i,elem) => {
           const obj = $(elem)
           return {
-            id: URLUtils.getQueryVariable(obj.attr('href'), 'typeid'),
+            id: URLUtils.getQueryVariable(obj.attr('raw-href'), 'typeid'),
             name: obj.text()
           }
         }).get()
@@ -89,8 +73,8 @@ export default class Mapper{
 
       const postSource = $(elem)
       // fall back for latest postUrl finding
-      const postUrl = postSource.find('tr .subject span a').attr('href') || /* latest post */postSource.find('tr .subject a').attr('href')
-      const postTitleImgUrl = postSource.find('tr .folder img').attr('src')
+      const postUrl = postSource.find('tr .subject span a').attr('raw-href') || /* latest post */postSource.find('tr .subject a').attr('raw-href')
+      const postTitleImgUrl = postSource.find('tr .folder img').attr('raw-src')
 
       return {
         id: URLUtils.getQueryVariable(postUrl, 'tid'),
@@ -141,7 +125,7 @@ export default class Mapper{
     const $ = html.getCheerio()
 
     // render the basic information first
-    const pageBackLink = $('.forumcontrol .pageback a').attr('href')
+    const pageBackLink = $('.forumcontrol .pageback a').attr('raw-href')
 
     const topicId = URLUtils.getQueryVariable(pageBackLink,'fid')
 
@@ -177,7 +161,7 @@ export default class Mapper{
 
       const rank = postSource.find('.postauthor > p > img').attr('alt')
 
-      const avatarImageUrl = postSource.find('.postauthor .avatar img').attr('src')
+      const avatarImageUrl = postSource.find('.postauthor .avatar img').attr('raw-src')
 
       return {
         id: postSource.find('table').attr('id').replace('pid',''),

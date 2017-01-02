@@ -5,7 +5,9 @@
 export class CommonInfoExtractRequest {
   static get NAME() { return 'CommonInfoExtractRequest'}
 
-  constructor(cheerio) {
-    this.cheerio = cheerio
+  constructor(username,pmNotification,postNotification) {
+    this.username = username
+    this.pmNotification = pmNotification
+    this.postNotification = postNotification
   }
 }

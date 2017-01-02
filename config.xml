@@ -24,7 +24,7 @@
     <preference name="FadeSplashScreenDuration" value="400" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
-    <preference name="deployment-target" value="8.0" />
+    <preference name="deployment-target" value="9.1" />
     <preference name="CrosswalkAnimatable" value="true" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <feature name="StatusBar">

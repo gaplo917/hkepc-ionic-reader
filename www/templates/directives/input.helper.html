@@ -26,7 +26,7 @@
             ng-class="modal.showInputHelperAt == 4 ? 'active': ''">
       <i class="ion ion-images"></i>
     </button>
-    <button class="button" ng-show="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
+    <button class="button" ng-if="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
       <i class="ion ion-ios-close-empty"></i>
     </button>
   </div>
@@ -36,7 +36,7 @@
               ng-show="modal.showInputHelperAt >= 0"
               direction="y">
     <img class="gif"
-         ng-show="modal.showInputHelperAt == 0"
+         ng-if="modal.showInputHelperAt == 0"
          ng-repeat="gif in ::modal.gifs track by $index"
          ng-click="modal.addGifCodeToText(gif.code)"
          ng-src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
@@ -54,7 +54,7 @@
 
     </div>
 
-    <div ng-show="modal.showInputHelperAt == 2">
+    <div ng-if="modal.showInputHelperAt == 2">
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
@@ -63,7 +63,7 @@
 
     </div>
 
-    <div ng-show="modal.showInputHelperAt == 3">
+    <div ng-if="modal.showInputHelperAt == 3">
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
@@ -74,8 +74,8 @@
 
     </div>
 
-    <div class="image-upload-control" ng-show="modal.showInputHelperAt == 4">
-      <label ng-show="!previewUploadImage" class="item item-input">
+    <div class="image-upload-control" ng-if="modal.showInputHelperAt == 4">
+      <label ng-if="!previewUploadImage" class="item item-input">
           <textarea ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址"></textarea>
       </label>
 

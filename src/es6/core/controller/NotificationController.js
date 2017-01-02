@@ -62,7 +62,7 @@ export class NotificationController{
 
         let $ = html
             .removeIframe()
-            .processEpcUrl()
+            .processEpcUrl(window.location.hash)
             .processExternalUrl()
             .processImgUrl(HKEPC.baseForumUrl)
             .getCheerio()

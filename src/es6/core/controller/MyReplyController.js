@@ -72,7 +72,7 @@ export class MyReplyController {
       const html = new HKEPCHtml(cheerio.load(resp.data))
 
       const $ = html.processImgUrl(HKEPC.imageUrl)
-          .processEpcUrl()
+          .processEpcUrl(window.location.hash)
           .processExternalUrl()
           .getCheerio()
 

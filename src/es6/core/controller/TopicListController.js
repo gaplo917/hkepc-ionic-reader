@@ -106,6 +106,7 @@ export class TopicListController {
     this.topicsSubscription = this.apiService.topicList()
       .safeApply(this.scope, topics => {
         this.cacheTimestamp = moment().fromNow()
+        this.refreshing = false
 
         // save to local
         this.localStorageService.set('topics-cache-timestamp', moment().unix())
@@ -121,9 +122,6 @@ export class TopicListController {
 
           this.topics = topics
         }
-
-        this.refreshing = false
-
       })
       .subscribe()
   }

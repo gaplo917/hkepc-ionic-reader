@@ -755,14 +755,14 @@ export class PostController{
           userProfileModal.content = undefined
 
 
-          this.apiService.userProfile(author.uid).subscribe( data => {
+          this.apiService.userProfile(author.uid).safeApply(this.scope.userProfileModal, data => {
             userProfileModal.author = author
             userProfileModal.content = data.content
-          })
+          }).subscribe()
 
 
         } else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
+          this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
         }
       })
 

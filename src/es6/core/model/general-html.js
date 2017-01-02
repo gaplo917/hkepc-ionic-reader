@@ -42,6 +42,8 @@ export class GeneralHtml{
         this.source(e).attr('src',`http:${imgSrc}`)
       }
 
+      this.source(e).attr('raw-src', imgSrc)
+
       // remove action attr on img
       this.source(e).removeAttr('onload')
       this.source(e).removeAttr('onclick')
@@ -55,7 +57,9 @@ export class GeneralHtml{
   processImageToLazy(){
     this.source('img').each((i,e) => {
       const imgSrc = this.source(e).attr('src')
-      if(!imgSrc.endsWith('.gif')){
+      this.source(e).attr('raw-src',imgSrc)
+
+      if(imgSrc && !imgSrc.endsWith('.gif')){
         this.source(e).attr('image-lazy-src',imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
         this.source(e).removeAttr('src')
@@ -81,6 +85,8 @@ export class GeneralHtml{
         this.source(e).attr('href','')
         this.source(e).attr('target',`_system`)
         this.source(e).attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
+        this.source(e).attr('raw-href', url)
+
       }
 
 

@@ -57,7 +57,7 @@ export class NewsController{
         .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
         .map(
             html => html.processImgUrl(HKEPC.imageUrl)
-                .processEpcUrl()
+                .processEpcUrl(window.location.hash)
                 .processExternalUrl()
         )
 

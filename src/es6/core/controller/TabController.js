@@ -61,47 +61,41 @@ export class TabController{
         .subscribe()
 
     // schedule to check PM
-    this.rx.Scheduler.default.schedulePeriodic(
-        HKEPC.forum.checkPM(),
-        1000 * 60 , /* 1 minutes */
-        (url) =>  {
-          console.debug(`[${TabController.NAME}] Background getting PM`)
-          this.http.get(url)
-          return url
-        }
-    )
+    this.rx.Observable.interval(1000 * 60)
+      .flatMap(() => this.apiService.checkPM())
+      .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
+      .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
       // FIXME: ugly hack for dark theme, all style use ios style
       this.removeAndroidStyleCssClass()
     })
 
-    $scope.$eventToObservable(CommonInfoExtractRequest.NAME)
+    $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
+      .filter(([event, req]) => req.username != "")
       .debounce(500)
       .subscribe( ([event, req]) =>{
         if(req instanceof CommonInfoExtractRequest){
           console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
 
-          const $ = req.cheerio
-
           // select the current login user
-          const currentUsername = $('#umenu > cite').text() || /* HKEPC 2.0 beta */$('header .userInfo span').text()
+          const username = req.username
 
-          const pmNotification = ($('#prompt_pm').text().match(/\d/g) || [] ) [0]
+          const pmNotification = req.pmNotification
 
-          const postNotification = ($('#prompt_threads').text().match(/\d/g) || [] )[0]
+          const postNotification = req.postNotification
 
           // send the login name to parent controller
-          this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(currentUsername))
+          this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
 
           // send the notification badge update in rootscope
           this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
-          this.scope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
 
         }
     })
 
-    $scope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+    $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+      .debounce(500)
       .subscribe( ([event, req]) => {
         if(req instanceof NotificationBadgeUpdateRequest){
           console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
