@@ -70,8 +70,6 @@ export class ChatController{
               .processImgUrl(HKEPC.baseForumUrl)
               .getCheerio()
 
-          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-
           const pageNumSource = $('.pages a, .pages strong')
 
           const pageNumArr = pageNumSource

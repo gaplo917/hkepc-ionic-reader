@@ -9,9 +9,12 @@
   /* it from getting too large also */
   .bar-footer {
     overflow: visible !important;
+    height:100px;
+    max-height: 200px;
     textarea {
       resize: none;
-      height: 25px;
+      height: 60px;
+      max-height: 80px;
       width:100%;
     }
   }
@@ -25,9 +28,8 @@
   at the bottom as the textarea resizes */
   .footer-btn-wrap {
     position: relative;
-    height: 100%;
-    width: 50px;
-    top: 7px;
+    width: 60px;
+    top: 15px;
   }
 
   .footer-btn {

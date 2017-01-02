@@ -59,8 +59,6 @@ export class ChatDetailController{
               .processExternalUrl()
               .getCheerio()
 
-          this.scope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest($))
-
           const messages = $('.pm_list li.s_clear').map((i, elem) => {
             const isSelf = $(elem).attr('class').indexOf('self') > 0
 

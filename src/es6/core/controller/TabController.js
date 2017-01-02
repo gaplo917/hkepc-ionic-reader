@@ -72,148 +72,139 @@ export class TabController{
     })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
-      .filter(([event, req]) => req.username != "")
+      .filter(([event, req]) => req instanceof CommonInfoExtractRequest && req.username != "")
       .debounce(500)
       .subscribe( ([event, req]) =>{
-        if(req instanceof CommonInfoExtractRequest){
-          console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
+        console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
 
-          // select the current login user
-          const username = req.username
+        // select the current login user
+        const username = req.username
 
-          const pmNotification = req.pmNotification
+        const pmNotification = req.pmNotification
 
-          const postNotification = req.postNotification
+        const postNotification = req.postNotification
 
-          // send the login name to parent controller
-          this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
+        // send the login name to parent controller
+        this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
 
-          // send the notification badge update in rootscope
-          this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
+        // send the notification badge update in rootscope
+        this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME,new NotificationBadgeUpdateRequest(pmNotification,postNotification))
 
-        }
     })
 
     $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+      .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
       .debounce(500)
       .subscribe( ([event, req]) => {
-        if(req instanceof NotificationBadgeUpdateRequest){
-          console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
+        console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
 
-          console.log(req.notification)
-          const notification = req.notification
+        console.log(req.notification)
+        const notification = req.notification
 
-          this.notification = notification
+        this.notification = notification
 
-          this.localStorageService.setObject('notification',notification)
-        }
-    })
+        this.localStorageService.setObject('notification',notification)
+      })
 
     $scope.$eventToObservable(LoginTabUpdateRequest.NAME)
+      .filter(([event,req]) => req instanceof LoginTabUpdateRequest)
       .subscribe( ([event, req]) => {
-        if(req instanceof LoginTabUpdateRequest){
-          console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
+        console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-          this.login = req.username
-          if(this.login) {
-            this.isLoggedIn = true
-          } else {
+        this.login = req.username
+        if(this.login) {
+          this.isLoggedIn = true
+        } else {
 
-            // this.login = undefined
-            //
-            // AuthService.isLoggedIn().subscribe(isLoggedIn => {
-            //   if(isLoggedIn) {
-            //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-            //     AuthService.logout()
-            //
-            //     this.isLoggedIn = false
-            //   }
-            // })
+          // this.login = undefined
+          //
+          // AuthService.isLoggedIn().subscribe(isLoggedIn => {
+          //   if(isLoggedIn) {
+          //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+          //     AuthService.logout()
+          //
+          //     this.isLoggedIn = false
+          //   }
+          // })
 
-          }
         }
     })
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
-      .subscribe( ([event, arg]) => {
-        if(arg instanceof FindMessageRequest){
-          console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
+      .filter(([event,req]) => req instanceof FindMessageRequest)
+      .subscribe( ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
 
-          this.messageModal.show()
-          // reset the message first
-          this.scope.messageModal.message = {}
+        this.messageModal.show()
+        // reset the message first
+        this.scope.messageModal.message = {}
 
-          MessageResolver.resolve(HKEPC.forum.findMessage(arg.postId,arg.messageId))
-              .then((data) => {
+        MessageResolver.resolve(HKEPC.forum.findMessage(req.postId,req.messageId))
+            .then((data) => {
 
-                this.scope.messageModal.message = data.message
+              this.scope.messageModal.message = data.message
 
-                this.scope.messageModal.goToMessage = (msg) => {
+              this.scope.messageModal.goToMessage = (msg) => {
 
-                  this.messageModal.hide()
+                this.messageModal.hide()
 
-                  const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-                  ? Controllers.ViewPostController.STATE
-                  : Controllers.PostController.STATE
+                const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+                ? Controllers.ViewPostController.STATE
+                : Controllers.PostController.STATE
 
-                  const history = this.ionicHistory.viewHistory()
-                  if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
-                    this.ionicHistory.clearCache([history.currentView.stateId])
-                  }
-
-                  this.state.go(targetState,{
-                    topicId: msg.post.topicId,
-                    postId: msg.post.id,
-                    page: msg.post.page,
-                    delayRender: 0,
-                    focus: msg.id
-                  })
+                const history = this.ionicHistory.viewHistory()
+                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
+                  this.ionicHistory.clearCache([history.currentView.stateId])
                 }
 
-                this.scope.messageModal.hide = () => this.messageModal.hide()
+                this.state.go(targetState,{
+                  topicId: msg.post.topicId,
+                  postId: msg.post.id,
+                  page: msg.post.page,
+                  delayRender: 0,
+                  focus: msg.id
+                })
+              }
 
-              })
-        }
+              this.scope.messageModal.hide = () => this.messageModal.hide()
+
+            })
 
     })
 
     $scope.$eventToObservable(PushHistoryRequest.NAME)
-      .subscribe( ([event, arg]) => {
-        if(arg instanceof PushHistoryRequest){
-          console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
+      .filter(([event,req]) => req instanceof PushHistoryRequest)
+      .subscribe( ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
 
-          this.historyService.add(arg.historyObj)
-        }
+        this.historyService.add(req.historyObj)
 
-    })
+      })
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
-      .subscribe( ([event, arg]) => {
-        if(arg instanceof ChangeThemeRequest){
-          console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
-          this.darkTheme = arg.theme == 'dark'
-          this.localStorageService.set('theme',arg.theme)
+      .filter(([event,req]) => req instanceof ChangeThemeRequest)
+      .subscribe( ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
+        this.darkTheme = req.theme == 'dark'
+        this.localStorageService.set('theme',req.theme)
 
-          if (window.StatusBar) {
-            if(this.darkTheme){
-              StatusBar.styleLightContent()
-            } else {
-              StatusBar.styleDefault()
-            }
+        if (window.StatusBar) {
+          if(this.darkTheme){
+            StatusBar.styleLightContent()
+          } else {
+            StatusBar.styleDefault()
           }
-
         }
-    })
+      })
 
     $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
-      .subscribe( ([event, arg]) => {
-        if(arg instanceof ChangeFontSizeRequest){
-          console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
-          this.fontSize = arg.size
-          this.localStorageService.set('fontSize',arg.size)
-          this.ionicHistory.clearCache();
-        }
-    })
+      .filter(([event,req]) => req instanceof ChangeFontSizeRequest)
+      .subscribe( ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
+        this.fontSize = req.size
+        this.localStorageService.set('fontSize',req.size)
+        this.ionicHistory.clearCache();
+      })
 
     $ionicModal.fromTemplateUrl('templates/modals/find-message.html', {
       scope: $scope.messageModal
