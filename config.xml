@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.gaplotech.hkepc_ionic_reader" android-versionCode="1050110"
-        ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader" ios-CFBundleVersion="1511" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.gaplotech.hkepc_ionic_reader" android-versionCode="1050120"
+        ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader" ios-CFBundleVersion="1512" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>HKEPC IR</name>
     <description>
         HKECP Ionic Reader
