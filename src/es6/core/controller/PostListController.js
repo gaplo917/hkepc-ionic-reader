@@ -206,19 +206,21 @@ export class PostListController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-    })
-
-    $scope.$on('$ionicView.enter', (e) => {
-      // stringify and compare to string value
-      this.localStorageService.get('showSticky',true).subscribe(data => {
-        console.log("showSticky",data)
-        this.showSticky = String(data) == 'true'
-      })
 
       this.filter = undefined
       this.order = undefined
 
       this.rx.Observable.timer(100).flatMap(this.loadMore()).subscribe()
+
+    })
+
+    $scope.$on('$ionicView.enter', (e) => {
+      console.log("enter PostListController")
+      // stringify and compare to string value
+      this.localStorageService.get('showSticky',true).subscribe(data => {
+        console.log("showSticky",data)
+        this.showSticky = String(data) == 'true'
+      })
 
     })
 

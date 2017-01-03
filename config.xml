@@ -1,9 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.gaplotech.hkepc-ionic-reader"
-        android-packageName="com.gaplotech.hkepc_ionic_reader"
-        ios-CFBundleVersion="1510"
-        ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader"
-        version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.gaplotech.hkepc_ionic_reader" android-versionCode="1050110"
+        ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader" ios-CFBundleVersion="1511" version="1.5.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>HKEPC IR</name>
     <description>
         HKECP Ionic Reader
@@ -26,7 +23,6 @@
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="deployment-target" value="9.1" />
-    <preference name="CrosswalkAnimatable" value="true" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
@@ -60,7 +56,7 @@
         <splash height="960" src="res/ios/splash/Default@2x.png" width="640" />
     </platform>
     <platform name="android">
-        <preference name="android-targetSdkVersion" value="24"/>
+        <preference name="android-targetSdkVersion" value="24" />
         <preference name="android-minSdkVersion" value="19" />
         <icon density="mdpi" src="res/android/icon/drawable-mdpi/appicon.png" />
         <icon density="hdpi" src="res/android/icon/drawable-hdpi/appicon.png" />

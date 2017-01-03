@@ -106,16 +106,8 @@ angular.module('starter', [
   $ionicConfigProvider.backButton.text("")
   $ionicConfigProvider.backButton.previousTitleText(false)
 
-  if(ionic.Platform.isIOS()){
-    // iOS is guarentee to have smooth transition >= iPhone 5s
-    $ionicConfigProvider.views.transition('ios')
-  }
-  else {
-    // Android too many low end device, not good performance
-    // Web can't guarentee the page order, transition direction is too difficult to handle
-    $ionicConfigProvider.views.transition('none')
-  }
-
+  // focus on content
+  $ionicConfigProvider.views.transition('none')
 }])
 .provider('HKEPC_PROXY',[function(){
 

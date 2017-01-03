@@ -101,7 +101,6 @@ export class TopicListController {
   loadList() {
 
     this.refreshing = true
-    this.scope.$applyAsync()
 
     this.topicsSubscription = this.apiService.topicList()
       .safeApply(this.scope, topics => {
@@ -112,10 +111,8 @@ export class TopicListController {
         this.localStorageService.set('topics-cache-timestamp', moment().unix())
 
         if(topics.length == this.topics.length){
-          this.topics = topics
-
           this.topics.forEach( topic => {
-            const nTopic = topics.find(_ => _.id == topic.id)
+            const nTopic = topics.find(_ => _.id == topic.id && _.name == topic.name)
             topic.description = nTopic.description
           })
         } else {
@@ -132,17 +129,6 @@ export class TopicListController {
     this.reset()
 
     this.loadList()
-  }
-
-  hiddenMode(){
-    // deprecated
-    const hiddenModeClicks = 0
-
-    if(hiddenModeClicks != 20){
-      this.localStorageService.set('hiddeMode', hiddenModeClicks + 1)
-    } else {
-      this.doRefresh()
-    }
   }
 
   canShowGroupNameIniOSReview(groupName){

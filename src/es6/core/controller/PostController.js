@@ -623,11 +623,12 @@ export class PostController{
 
             // the text showing the effects of reply / quote
             editMessageModal.edit = {
+              subject: formSource('#subject').attr('value'),
               content :formSource('#e_textarea').text()
             }
 
             // register new function
-            editMessageModal.doEdit = (content) => {
+            editMessageModal.doEdit = (subject,content) => {
               console.log(content)
               const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
                 const k = formSource(elem).attr('name')
@@ -639,6 +640,7 @@ export class PostController{
               const postData = [
                 `editsubmit=true`,
                 `message=${encodeURIComponent(content)}`,
+                `subject=${encodeURIComponent(subject)}`,
                 hiddenFormInputs.join('&'),
                 editMessageModal.images.map(_ => _.formData).join('&')
               ].join('&')
