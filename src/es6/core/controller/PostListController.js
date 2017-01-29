@@ -210,7 +210,7 @@ export class PostListController {
       this.filter = undefined
       this.order = undefined
 
-      this.rx.Observable.timer(100).flatMap(this.loadMore()).subscribe()
+      this.loadMore().subscribe()
 
     })
 
@@ -230,6 +230,8 @@ export class PostListController {
 
   loadMore(cb){
     const nextPage = this.currentPageNum + 1
+
+    this.showSpinner = true
 
     return this.apiService.postListPage({
       topicId: this.topicId,
@@ -257,12 +259,25 @@ export class PostListController {
 
         if(this.currentIndex == 0){
           this.slidePages[0] = this.pages[0]
+
+          this.slidePages[0].limit = 2
+
+          this.rx.Observable.interval(150).subscribe( () => {
+            this.slidePages[0].limit += 2
+            this.scope.$apply()
+          })
+
         }
 
         this.topic = {
           id: this.topicId,
           name: resp.topicName
         }
+
+        this.showSpinner = false
+
+
+
       })
   }
 
@@ -296,79 +311,86 @@ export class PostListController {
     this.ionicScrollDelegate.scrollTop(false)
     //this.slidePages[index] = []
 
-    setTimeout(() => {
-        const diff = this.currentIndex - index
-        const pagesNums = this.pages.map(p => p.num)
-        this.currentPageNum = this.slidePages[this.currentIndex].num
-        this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
-        this.canSwipeBack = false
+    const diff = this.currentIndex - index
+    const pagesNums = this.pages.map(p => p.num)
+    this.currentPageNum = this.slidePages[this.currentIndex].num
+    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
+    this.canSwipeBack = false
 
-        if(diff == 1 || diff == -2){
+    if(diff == 1 || diff == -2){
 
-          if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
-            // disable the does-continue if the it is the initial page
-            this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(false)
-            this.canSwipeBack = true
-          }
+      if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
+        // disable the does-continue if the it is the initial page
+        this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(false)
+        setTimeout(() => { this.canSwipeBack = true },200)
+      }
 
-          // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
-          const smallestPageNum = Math.min.apply(Math, pagesNums)
+      // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
+      const smallestPageNum = Math.min.apply(Math, pagesNums)
 
-          if(this.currentPageNum > smallestPageNum){
-            console.log("default previous page")
-            this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
+      if(this.currentPageNum > smallestPageNum){
+        console.log("default previous page")
+        this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
 
-            // prefetch for better UX
-            const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
-            this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
+        // prefetch for better UX
+        const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
+        this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
 
-          } else {
-            console.log("loadMore Before()")
-          }
-        }
-        else{
-          // next page
-          const largestPageNum = Math.max.apply(Math, pagesNums)
+      } else {
+        console.log("loadMore Before()")
+      }
+    }
+    else{
+      // next page
+      const largestPageNum = Math.max.apply(Math, pagesNums)
 
-          if(this.currentPageNum == this.totalPageNum){
+      if(this.currentPageNum == this.totalPageNum){
 
-            this.ngToast.warning("已到最後一頁！")
-            // scroll back the previous slides
-            this.ionicSlideBoxDelegate.previous()
-          }
-          if(this.currentPageNum >= largestPageNum){
-            console.log("loadMore After()")
-            this.slidePages[index] = []
+        this.ngToast.warning("已到最後一頁！")
+        // scroll back the previous slides
+        this.ionicSlideBoxDelegate.previous()
+      }
+      if(this.currentPageNum >= largestPageNum){
+        console.log("loadMore After()")
+        this.slidePages[index] = []
 
-            this.loadMore()
-              .safeApply(this.scope,() => {
-                const len = this.pages.length -1
-                const nextPage = Math.floor(len / 3) * 3 + index
-                this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
-                this.slidePages[index] = this.pages[nextPage]
-
-                // prefetch for better UX
-                const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-                this.slidePages[prefetchSlideIndex] = []
-
-              }).subscribe()
-
-          }
-          else{
-            console.log("default next page")
-            this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+        this.loadMore()
+          .subscribe(() => {
+            const len = this.pages.length -1
+            const nextPage = Math.floor(len / 3) * 3 + index
+            this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
+            this.slidePages[index] = this.pages[nextPage]
 
             // prefetch for better UX
             const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-            this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
-          }
+            this.slidePages[prefetchSlideIndex] = []
 
-        }
 
-        this.currentIndex = index
+            this.slidePages[index].limit = 2
+            this.scope.$apply()
 
-        this.scope.$apply()
-      },200)
+            this.rx.Observable.interval(150).subscribe( () => {
+              this.slidePages[index].limit += 2
+              this.scope.$apply()
+            })
+
+        })
+
+      }
+      else{
+        console.log("default next page")
+        this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
+
+        // prefetch for better UX
+        const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
+        this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
+      }
+
+    }
+
+    this.currentIndex = index
+
+    this.scope.$apply()
 
     console.log(`onSlideChanged${index}`)
   }

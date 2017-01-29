@@ -110,15 +110,7 @@ export class TopicListController {
         // save to local
         this.localStorageService.set('topics-cache-timestamp', moment().unix())
 
-        if(topics.length == this.topics.length){
-          this.topics.forEach( topic => {
-            const nTopic = topics.find(_ => _.id == topic.id && _.name == topic.name)
-            topic.description = nTopic.description
-          })
-        } else {
-
-          this.topics = topics
-        }
+        this.topics = topics
       })
       .subscribe()
   }

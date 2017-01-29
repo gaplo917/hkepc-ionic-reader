@@ -22,7 +22,7 @@
 
   </div>
   <ion-content>
-    <div class="spinner">
+    <div class="spinner" ng-if="vm.showSpinner" >
       <ion-spinner
           class="spinner"
           icon="android">
@@ -31,12 +31,12 @@
 
     <ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{::vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
 
-      <ion-slide ng-repeat="page in vm.slidePages track by $index">
+      <ion-slide ng-repeat="page in vm.slidePages track by $index ">
         <ion-list >
           <ion-item
               ng-class-odd="'odd'" ng-class-even="'even'"
               class="item-icon-right item-text-wrap"
-              ng-repeat="post in page.posts"
+              ng-repeat="post in page.posts | limitTo: page.limit"
               ng-if="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
               ng-click="::vm.onGoToPost(post)"
               href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
@@ -56,7 +56,7 @@
             <i class="icon ion-chevron-right icon-accessory"></i>
           </ion-item>
 
-          <ion-item ng-show="page.posts.length >0">
+          <ion-item ng-show="page.posts.limit > 10">
             <button class="button col-40 fleft button-full"
                     ng-if="vm.slidePages[vm.currentIndex].num > 1"
                     ng-click="vm.ionicSlideBoxDelegate.previous()" >
