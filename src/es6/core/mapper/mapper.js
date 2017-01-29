@@ -149,7 +149,12 @@ export default class Mapper{
       ? 1
       : Math.max(...pageNumArr)
 
-    const messages = $('#postlist > div').map((i, elem) => {
+    const messages = $('#postlist > div')
+      .filter((i,elem) => {
+        // fix HKEPC server rendering bug
+        return elem.children.length > 0
+      })
+      .map((i, elem) => {
 
       let postSource = $(elem)
 
