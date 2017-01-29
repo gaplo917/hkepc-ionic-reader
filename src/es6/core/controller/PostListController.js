@@ -42,12 +42,93 @@ export class PostListController {
     this.page = $stateParams.page
     this.pages = []
     this.categories = []
-    this.slidePages = [{},{},{}]
-    this.currentIndex = 0
+    this.slidePages = []
     this.currentPageNum = this.page - 1
     this.showSpinner = true
     this.newPostModal = {}
     this.canSwipeBack = true
+
+    this.activeIndex = 0
+    this.lastTouchData = null
+
+    this.sildeOptions = {
+      loop: false,
+      speed: 400,
+      pagination: false
+    }
+
+    $scope.$on("$ionicSlides.sliderInitialized", (event, data) => {
+      // data.slider is the instance of Swiper
+      this.slider = data.slider;
+
+      this.slider.on("touchMove",(event,data) => {
+        if(this.activeIndex == 0){
+          if(this.lastTouchData == null){
+            this.lastTouchData = data
+          }
+          const touchX = data.touches[0].clientX
+          const lastTouchX = this.lastTouchData.touches[0].clientX
+
+          const timeStamp = data.timeStamp
+          const lastTimeStamp = this.lastTouchData.timeStamp
+
+          const velocity = (touchX - lastTouchX) / (timeStamp - lastTimeStamp)
+
+          console.log("Triggered function!!!!!!!!!!!!",data)
+          console.log("velocity =", )
+
+          this.lastTouchData = data
+
+          // magic value is produced by error
+          if(velocity > 1){
+            setTimeout(() => {
+              this.swipeLeft()
+            }, 200)
+          }
+
+        }
+      })
+    })
+
+    $scope.$on("$ionicSlides.reachBeginning", (event, data) => {
+      console.log('Slide change is reachBeginning reachBeginning reachBeginning reachBeginning',data);
+
+
+    })
+
+    $scope.$on("$ionicSlides.slideChangeStart", (event, data) => {
+      console.log('Slide change is beginning',data);
+
+
+      if(data.slider.activeIndex >= this.slidePages.length - 1){
+        // prefetch next page
+        this.loadMore().subscribe()
+
+      }
+
+      if(data.slider.activeIndex > this.activeIndex) {
+        // to next page
+        this.activeIndex += 1;
+        $scope.$apply()
+      }
+      else if(data.slider.activeIndex < this.activeIndex){
+        // to previous page
+        this.activeIndex -= 1;
+        $scope.$apply()
+      }
+
+    })
+
+    $scope.$on("$ionicSlides.slideChangeEnd", (event, data) => {
+      console.log('slideChangeEnd',data);
+
+      // note: the indexes are 0-based
+      this.activeIndex = data.slider.activeIndex;
+      this.previousIndex = data.slider.previousIndex;
+
+      $scope.$apply()
+    });
+
 
     const newPostModal = this.scope.newPostModal = $scope.$new()
     newPostModal.id = "new-content"
@@ -257,23 +338,24 @@ export class PostListController {
           this.showSticky = true
         }
 
-        // push into the array
-        this.pages.push({
+        const page = {
           posts: resp.posts,
-          num: resp.pageNum
-        })
-
-        if(this.currentIndex == 0){
-          this.slidePages[0] = this.pages[0]
-
-          this.slidePages[0].limit = 2
-
-          this.rx.Observable.interval(150).subscribe( () => {
-            this.slidePages[0].limit += this.showSticky ? 2 : stickyPostCount + 2
-            this.scope.$apply()
-          })
-
+          num: resp.pageNum,
+          limit: 100
         }
+
+        // push into the array
+        this.pages.push(page)
+
+        this.slidePages[this.activeIndex] = page
+
+        this.currentPageNum += 1
+
+        if(page.num + 1 <= resp.totalPageNum){
+          // push empty page to enable swipping
+          this.slidePages.push({})
+        }
+
 
         this.topic = {
           id: this.topicId,
@@ -282,16 +364,17 @@ export class PostListController {
 
         this.showSpinner = false
 
-
+        if ( this.slider ){
+          this.slider.updateLoop();
+        }
 
       })
   }
 
   reset(){
     this.pages = []
-    this.slidePages = [{},{},{}]
+    this.slidePages = []
     this.ionicSlideBoxDelegate.slide(0,10)
-    this.currentIndex = 0
     this.currentPageNum = 0
     this.showSpinner = true
   }
@@ -306,101 +389,6 @@ export class PostListController {
     }
     this.loadMore().subscribe()
   }
-
-  onSlideChanged(index){
-    if(this.slidePages.length == 0) return 0
-
-    this.showSpinner = true
-
-    //scroll to the hash tag
-    this.location.hash(`ionic-slide-box`)
-    this.ionicScrollDelegate.scrollTop(false)
-    //this.slidePages[index] = []
-
-    const diff = this.currentIndex - index
-    const pagesNums = this.pages.map(p => p.num)
-    this.currentPageNum = this.slidePages[this.currentIndex].num
-    this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(true)
-    this.canSwipeBack = false
-
-    if(diff == 1 || diff == -2){
-
-      if(this.currentPageNum ==  1 || (this.currentIndex == 1 && this.currentPageNum == 2)) {
-        // disable the does-continue if the it is the initial page
-        this.ionicSlideBoxDelegate.$getByHandle(`posts-slidebox-${this.topicId}`)._instances[0].loop(false)
-        setTimeout(() => { this.canSwipeBack = true },200)
-      }
-
-      // previous page, i.e.  2 -> 1 , 1 -> 0 , 0 -> 2
-      const smallestPageNum = Math.min.apply(Math, pagesNums)
-
-      if(this.currentPageNum > smallestPageNum){
-        console.log("default previous page")
-        this.slidePages[index] = this.pages.find(page => page.num == this.currentPageNum - 1)
-
-        // prefetch for better UX
-        const prefetchSlideIndex = index - 1 < 0 ? 2 : index - 1
-        this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum - 2)
-
-      } else {
-        console.log("loadMore Before()")
-      }
-    }
-    else{
-      // next page
-      const largestPageNum = Math.max.apply(Math, pagesNums)
-
-      if(this.currentPageNum == this.totalPageNum){
-
-        this.ngToast.warning("已到最後一頁！")
-        // scroll back the previous slides
-        this.ionicSlideBoxDelegate.previous()
-      }
-      if(this.currentPageNum >= largestPageNum){
-        console.log("loadMore After()")
-        this.slidePages[index] = []
-
-        this.loadMore()
-          .subscribe(() => {
-            const len = this.pages.length -1
-            const nextPage = Math.floor(len / 3) * 3 + index
-            this.slidePages[this.currentIndex] = this.pages[nextPage - 1]
-            this.slidePages[index] = this.pages[nextPage]
-
-            // prefetch for better UX
-            const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-            this.slidePages[prefetchSlideIndex] = []
-
-
-            this.slidePages[index].limit = 2
-            this.scope.$apply()
-
-            this.rx.Observable.interval(150).subscribe( () => {
-              this.slidePages[index].limit += 2
-              this.scope.$apply()
-            })
-
-        })
-
-      }
-      else{
-        console.log("default next page")
-        this.slidePages[index] = this.pages.find(p => p.num == this.currentPageNum + 1)
-
-        // prefetch for better UX
-        const prefetchSlideIndex = index + 1 > 2 ? 0 : index + 1
-        this.slidePages[prefetchSlideIndex] = this.pages.find(page => page.num == this.currentPageNum + 2)
-      }
-
-    }
-
-    this.currentIndex = index
-
-    this.scope.$apply()
-
-    console.log(`onSlideChanged${index}`)
-  }
-
 
   goToSubTopic(index,subTopic){
     this.subTopicListPopover.hide();

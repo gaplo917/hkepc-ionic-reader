@@ -1,4 +1,4 @@
-<ion-view class="post-list-view" ng-init="vm.slidePages=[{},{},{}];" on-swipe-right="vm.swipeLeft()">
+<ion-view class="post-list-view" ng-init="vm.slidePages=[];" on-swipe-right="vm.swipeLeft()">
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>
@@ -16,7 +16,7 @@
        ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
     </a>
     <h2 class="title" ng-show="vm.totalPageNum">
-      第 {{vm.slidePages[vm.currentIndex].num || vm.currentPageNum + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁
+      第 {{vm.activeIndex + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁
     </h2>
     <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
@@ -29,45 +29,85 @@
       </ion-spinner>
     </div>
 
-    <ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{::vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >
+      <ion-slides  options="vm.sildeOptions" slider="vm.slider" >
+          <ion-slide-page ng-repeat="page in vm.slidePages track by $index " on-swipe-right="vm.swipeLeft()">
+              <ion-scroll style="padding-top:44px;width: 100%; height:100%"  direction="y" on-swipe-right="vm.swipeLeft()">
+                      <ion-item
+                              ng-class-odd="'odd'" ng-class-even="'even'"
+                              class="item-icon-right item-text-wrap"
+                              ng-repeat="post in page.posts | limitTo: page.limit"
+                              ng-if="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
+                              ng-click="::vm.onGoToPost(post)"
+                              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
+                          <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
+                          <div>
+                              <i class="ion-bonfire" ng-show="::post.isSticky"></i>
+                              <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
+                              <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
+                              <span class="less-important-info ion-person"> {{::post.author.name}}</span>
+                              <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
+                          </div>
+                          <div>
+                              <span class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>
 
-      <ion-slide ng-repeat="page in vm.slidePages track by $index ">
-        <ion-list >
-          <ion-item
-              ng-class-odd="'odd'" ng-class-even="'even'"
-              class="item-icon-right item-text-wrap"
-              ng-repeat="post in page.posts | limitTo: page.limit"
-              ng-if="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
-              ng-click="::vm.onGoToPost(post)"
-              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-            <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
-            <div>
-              <i class="ion-bonfire" ng-show="::post.isSticky"></i>
-              <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-              <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-              <span class="less-important-info ion-person"> {{::post.author.name}}</span>
-              <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
-            </div>
-            <div>
-              <span class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>
+                          </div>
 
-            </div>
+                          <i class="icon ion-chevron-right icon-accessory"></i>
+                      </ion-item>
 
-            <i class="icon ion-chevron-right icon-accessory"></i>
-          </ion-item>
+                      <ion-item ng-show="page.posts.limit > 10">
+                          <button class="button col-40 fleft button-full"
+                                  ng-if="vm.slidePages[vm.currentIndex].num > 1"
+                                  ng-click="vm.ionicSlideBoxDelegate.previous()" >
+                              <i class="icon ion-ios-arrow-thin-left"></i>上一頁</button>
+                          <span class="col-20"></span>
+                          <button class="button col-40 fright button-full" ng-click="vm.ionicSlideBoxDelegate.next()">下一頁 <i class="icon ion-ios-arrow-thin-right"></i></button>
+                      </ion-item>
 
-          <ion-item ng-show="page.posts.limit > 10">
-            <button class="button col-40 fleft button-full"
-                    ng-if="vm.slidePages[vm.currentIndex].num > 1"
-                    ng-click="vm.ionicSlideBoxDelegate.previous()" >
-              <i class="icon ion-ios-arrow-thin-left"></i>上一頁</button>
-            <span class="col-20"></span>
-            <button class="button col-40 fright button-full" ng-click="vm.ionicSlideBoxDelegate.next()">下一頁 <i class="icon ion-ios-arrow-thin-right"></i></button>
-          </ion-item>
-        </ion-list>
-      </ion-slide>
+              </ion-scroll>
 
-    </ion-slide-box>
+          </ion-slide-page>
+      </ion-slides>
+
+    <!--<ion-slide-box id="ionic-slide-box" delegate-handle="posts-slidebox-{{::vm.topicId}}" on-slide-changed="vm.onSlideChanged($index)" does-continue="false" show-pager="false" >-->
+
+      <!--<ion-slide ng-repeat="page in vm.slidePages track by $index ">-->
+        <!--<ion-list >-->
+          <!--<ion-item-->
+              <!--ng-class-odd="'odd'" ng-class-even="'even'"-->
+              <!--class="item-icon-right item-text-wrap"-->
+              <!--ng-repeat="post in page.posts | limitTo: page.limit"-->
+              <!--ng-if="post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"-->
+              <!--ng-click="::vm.onGoToPost(post)"-->
+              <!--href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">-->
+            <!--<h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>-->
+            <!--<div>-->
+              <!--<i class="ion-bonfire" ng-show="::post.isSticky"></i>-->
+              <!--<i class="ion-ios-locked" ng-if="::post.isLock" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>-->
+              <!--<i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>-->
+              <!--<span class="less-important-info ion-person"> {{::post.author.name}}</span>-->
+              <!--<span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>-->
+            <!--</div>-->
+            <!--<div>-->
+              <!--<span class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>-->
+
+            <!--</div>-->
+
+            <!--<i class="icon ion-chevron-right icon-accessory"></i>-->
+          <!--</ion-item>-->
+
+          <!--<ion-item ng-show="page.posts.limit > 10">-->
+            <!--<button class="button col-40 fleft button-full"-->
+                    <!--ng-if="vm.slidePages[vm.currentIndex].num > 1"-->
+                    <!--ng-click="vm.ionicSlideBoxDelegate.previous()" >-->
+              <!--<i class="icon ion-ios-arrow-thin-left"></i>上一頁</button>-->
+            <!--<span class="col-20"></span>-->
+            <!--<button class="button col-40 fright button-full" ng-click="vm.ionicSlideBoxDelegate.next()">下一頁 <i class="icon ion-ios-arrow-thin-right"></i></button>-->
+          <!--</ion-item>-->
+        <!--</ion-list>-->
+      <!--</ion-slide>-->
+
+    <!--</ion-slide-box>-->
 
   </ion-content>
 </ion-view>
