@@ -251,6 +251,12 @@ export class PostListController {
 
         this.categories = resp.categories
 
+        const stickyPostCount = resp.posts.filter( post => post.isSticky).length
+        if(resp.posts.length == stickyPostCount){
+          // Better UX, if all post is sticky, just show it
+          this.showSticky = true
+        }
+
         // push into the array
         this.pages.push({
           posts: resp.posts,
@@ -263,7 +269,7 @@ export class PostListController {
           this.slidePages[0].limit = 2
 
           this.rx.Observable.interval(150).subscribe( () => {
-            this.slidePages[0].limit += 2
+            this.slidePages[0].limit += this.showSticky ? 2 : stickyPostCount + 2
             this.scope.$apply()
           })
 
