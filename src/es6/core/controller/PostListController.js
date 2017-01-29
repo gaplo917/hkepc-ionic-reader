@@ -80,7 +80,7 @@ export class PostListController {
           this.lastTouchData = data
 
           // magic value is produced by error
-          if(velocity > 1){
+          if(velocity > 1.3){
             setTimeout(() => {
               this.swipeLeft()
             }, 200)
@@ -341,13 +341,21 @@ export class PostListController {
         const page = {
           posts: resp.posts,
           num: resp.pageNum,
-          limit: 100
         }
 
         // push into the array
         this.pages.push(page)
 
         this.slidePages[this.activeIndex] = page
+
+        this.slidePages[this.activeIndex].limit = 2
+
+        this.rx.Observable.interval(150).take(20).subscribe( () => {
+          if(this.slidePages[this.activeIndex].limit < resp.posts.length){
+            this.slidePages[this.activeIndex].limit += this.showSticky ? 2 : stickyPostCount + 2
+            this.scope.$apply()
+          }
+        })
 
         this.currentPageNum += 1
 

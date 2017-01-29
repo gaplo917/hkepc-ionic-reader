@@ -75,9 +75,7 @@
     </div>
 
     <div class="image-upload-control" ng-if="modal.showInputHelperAt == 4">
-      <label ng-if="!previewUploadImage" class="item item-input">
-          <textarea ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址"></textarea>
-      </label>
+      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
 
       <div ng-if="!imageUrl && !previewUploadImage" class="button button-full" ngf-select="prepareUpload($file)">
         或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC

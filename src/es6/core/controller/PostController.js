@@ -193,7 +193,7 @@ export class PostController{
         message.focused = this.delayRender != -1 && message.id == this.focus
 
         this.authService.getUsername().subscribe(username => {
-          message.author.isSelf = message.author.name == username
+          message.author.isSelf = (message.author.name == username)
         })
       })
 
@@ -468,6 +468,12 @@ export class PostController{
   registerReplyModal(){
 
     const replyModal = this.scope.replyModal = this.scope.$new()
+
+
+    replyModal.$on('elastic:adjust', (e) => {
+      console.log("========elastic:adjust========")
+
+    })
     replyModal.id = "reply-content"
 
     this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {

@@ -18,22 +18,14 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col">
-        <label class="item item-input text">
-          <textarea
-              id="edit-content"
-              rows="12"
+    <textarea id="edit-content"
+              placeholder="請輸入文字"
               ng-model="edit.content"
-              ng-Required="true"
-              name="description"
-              autocomplete="off"
+              style="width: 100%;height: 100%; padding: 20px;"
               msd-elastic="\n"
-          ></textarea>
-        </label>
-      </div>
-    </div>
+    ></textarea>
 
-    <div style="width:100%; height:500px"></div>
+    <div style="width:100%; height:100px"></div>
+
   </ion-content>
 </ion-modal-view>

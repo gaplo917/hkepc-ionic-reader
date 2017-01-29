@@ -34,7 +34,7 @@ export class AuthService {
   getUsername() {
     return this.localStorageService.getObject('authority')
       .filter(authority => authority && authority != null)
-      .map(data => data.username)
+      .map(data => data.username.trim())
   }
 
   isLoggedIn() {

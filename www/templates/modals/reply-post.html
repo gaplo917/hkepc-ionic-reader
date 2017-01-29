@@ -5,20 +5,8 @@
     <h1 class="title">{{ message.post.title }}</h1>
     <button class="button" ng-click="doReply(reply)">發佈</button>
   </ion-header-bar>
-  <ion-content lazy-scroll>
-    <div class="list card" ng-show="reply.id">
-
-      <div class="item item-avatar">
-        <img ng-src="{{message.author.image}}">
-        <h2 ng-bind="message.author.name"></h2>
-        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
-      </div>
-
-      <div class="item item-body" compile="message.content">
-      </div>
-
-    </div>
-    <ion-list ng-show="reply.id">
+  <ion-content overflow-scroll="true">
+    <ion-list>
       <div class="item item-divider" style="text-align: center;">
         回覆類別
       </div>
@@ -31,22 +19,13 @@
 
     <input-helper modal='this' content-model='reply.content' on-image-upload="onImageUpload"></input-helper>
 
-    <div class="row">
-      <div class="col">
-        <label class="item item-input text" ng-if="true">
-          <textarea id="reply-content"
-                    placeholder="請輸入文字"
-                    ng-model="reply.content"
-                    ng-Required="true"
-                    name="description"
-                    autocomplete="off"
-                    msd-elastic="\n"
-          ></textarea>
-        </label>
-      </div>
-    </div>
+      <textarea id="reply-content"
+                placeholder="請輸入文字"
+                ng-model="reply.content"
+                style="width: 100%;height: 100%; padding: 20px;"
+                msd-elastic="\n"
+      ></textarea>
+      <div style="width:100%; height:100px"></div>
 
-    <!--<button class="button button-balanced button-full" >草稿(開發中)</button>-->
-    <div style="width:100%; height:500px"></div>
   </ion-content>
 </ion-modal-view>
