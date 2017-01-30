@@ -9,6 +9,7 @@ import {LoginTabUpdateRequest} from '../model/LoginTabUpdateRequest'
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
 import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
+import {HideUsernameRequest} from '../model/HideUsernameRequest'
 
 import * as Controllers from './index'
 const cheerio = require('cheerio')
@@ -111,23 +112,21 @@ export class TabController{
       .subscribe( ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-        this.login = req.username
-        if(this.login) {
-          this.isLoggedIn = true
-        } else {
+        this.localStorageService.get('hideUsername').safeApply($scope,data => {
+          const hideUsername = String(data) == 'true'
 
-          // this.login = undefined
-          //
-          // AuthService.isLoggedIn().subscribe(isLoggedIn => {
-          //   if(isLoggedIn) {
-          //     ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
-          //     AuthService.logout()
-          //
-          //     this.isLoggedIn = false
-          //   }
-          // })
+          this.login = req.username
 
-        }
+          if(this.login) {
+
+            this.isLoggedIn = true
+            this.login = hideUsername ? "IR 用家" : req.username
+
+            console.log("changed login name to ", this.login)
+
+          }
+
+        }).subscribe()
     })
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
@@ -179,6 +178,25 @@ export class TabController{
 
         this.historyService.add(req.historyObj)
 
+      })
+
+    $scope.$eventToObservable(HideUsernameRequest.NAME)
+      .filter(([event,req]) => req instanceof HideUsernameRequest)
+      .subscribe( ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received HideUsernameRequest`, req)
+        this.hideUsername = req.hidden
+        this.localStorageService.set('hideUsername',req.hidden)
+
+        if (req.hidden) {
+          // hide user name
+          $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest("IR 用家"))
+        }
+        else {
+          // show user name
+          this.authService.getUsername().subscribe((data) => {
+            $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(data))
+          })
+        }
       })
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)

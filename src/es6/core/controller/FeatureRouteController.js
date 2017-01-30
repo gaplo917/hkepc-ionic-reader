@@ -8,6 +8,7 @@ import {FindMessageRequest} from "../model/FindMessageRequest"
 import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
 import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
 import {ChangeFontSizeRequest} from "../model/ChangeFontSizeRequest"
+import {HideUsernameRequest} from "../model/HideUsernameRequest"
 
 const cheerio = require('cheerio')
 
@@ -42,6 +43,11 @@ export class FeatureRouteController{
     this.localStorageService.get('fontSize').subscribe(data => {
       this.fontSize = data || "100"
     })
+
+    this.localStorageService.get('hideUsername').subscribe(data => {
+        this.hideUsername = data == undefined ? false : data
+    })
+
 
     this.authService = AuthService
 
@@ -138,4 +144,7 @@ export class FeatureRouteController{
     })
   }
 
+  onHideUsername(hidden){
+    this.scope.$emit(HideUsernameRequest.NAME, new HideUsernameRequest(hidden))
+  }
 }
