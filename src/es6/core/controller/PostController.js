@@ -52,11 +52,6 @@ export class PostController{
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
     this.currentUsername = undefined
 
-    AuthService.getUsername().subscribe(username => {
-      this.currentUsername = username
-    })
-
-
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
       scope: $scope
@@ -131,6 +126,10 @@ export class PostController{
       this.registerEditMessageModal()
 
       this.registerUserProfileModal()
+
+      this.authService.getUsername().subscribe(username => {
+        this.currentUsername = username.trim()
+      })
     })
 
 
@@ -192,12 +191,11 @@ export class PostController{
         // delayRender == -1 => not from find message
         message.focused = this.delayRender != -1 && message.id == this.focus
 
-        this.authService.getUsername().subscribe(username => {
-          message.author.isSelf = (message.author.name == username)
-        })
+        message.author.isSelf = (message.author.name == this.currentUsername)
+
       })
 
-      if(page >= this.totalPageNum){
+      if(page > this.totalPageNum){
         page = this.totalPageNum
 
         // maybe have duplicate message
@@ -749,8 +747,10 @@ export class PostController{
   }
 
   relativeMomentize(dateStr){
-    if(moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(),'days') >= -3 ){
-      return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
+    const momentDate = moment(dateStr)
+
+    if(momentDate.diff(new Date(),'days') >= -3 ){
+      return momentDate.fromNow()
     } else {
       return dateStr
     }
