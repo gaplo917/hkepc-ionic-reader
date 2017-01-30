@@ -45,7 +45,7 @@ export class FeatureRouteController{
     })
 
     this.localStorageService.get('hideUsername').subscribe(data => {
-        this.hideUsername = data == undefined ? false : data
+        this.hideUsername = String(data) == 'true'
     })
 
 
