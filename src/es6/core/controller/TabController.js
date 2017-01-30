@@ -12,7 +12,6 @@ import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 import {HideUsernameRequest} from '../model/HideUsernameRequest'
 
 import * as Controllers from './index'
-const cheerio = require('cheerio')
 
 export class TabController{
   static get STATE() { return 'tab'}

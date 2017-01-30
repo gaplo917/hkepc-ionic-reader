@@ -31,6 +31,7 @@ export class TopicListController {
     this.authService = AuthService
     this.topics = []
     this.apiService = apiService
+    this.firstLogin = true
     this.q = $q
 
     rx.Observable.interval(30000)
@@ -80,8 +81,11 @@ export class TopicListController {
       this.authService.isLoggedIn().subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn
 
-        if(isLoggedIn) {
+        if(isLoggedIn && this.firstLogin) {
           this.loadList()
+
+          // unset to false to prevent next loading
+          this.firstLogin = false
         }
 
       })
