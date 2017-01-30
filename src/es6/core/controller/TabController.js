@@ -108,25 +108,29 @@ export class TabController{
 
     $scope.$eventToObservable(LoginTabUpdateRequest.NAME)
       .filter(([event,req]) => req instanceof LoginTabUpdateRequest)
-      .subscribe( ([event, req]) => {
+      .flatMap(([event,req]) => {
+        return this.localStorageService.get('hideUsername').map(hideUsername => {
+          return {
+            req: req,
+            hideUsername: String(hideUsername) == 'true',
+          }
+        })
+      })
+      .safeApply($scope, ({req, hideUsername}) => {
         console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-        this.localStorageService.get('hideUsername').safeApply($scope,data => {
-          const hideUsername = String(data) == 'true'
+        this.login = req.username
 
-          this.login = req.username
+        if(this.login) {
 
-          if(this.login) {
+          this.isLoggedIn = true
+          this.login = hideUsername == 'true' ? "IR 用家" : req.username
 
-            this.isLoggedIn = true
-            this.login = hideUsername ? "IR 用家" : req.username
+          console.log("changed login name to ", this.login)
 
-            console.log("changed login name to ", this.login)
+        }
 
-          }
-
-        }).subscribe()
-    })
+    }).subscribe()
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
       .filter(([event,req]) => req instanceof FindMessageRequest)
@@ -181,10 +185,17 @@ export class TabController{
 
     $scope.$eventToObservable(HideUsernameRequest.NAME)
       .filter(([event,req]) => req instanceof HideUsernameRequest)
-      .subscribe( ([event, req]) => {
-        console.debug(`[${TabController.NAME}] Received HideUsernameRequest`, req)
+      .flatMap(([event,req]) => {
 
-        this.hideUsername = req.hidden
+        return this.authService.getUsername().map(username => {
+          return {
+            req: req,
+            username: username
+          }
+        })
+      })
+      .safeApply($scope, ({req, username}) => {
+        console.debug(`[${TabController.NAME}] Received HideUsernameRequest`, req)
 
         this.localStorageService.set('hideUsername',req.hidden)
 
@@ -195,11 +206,9 @@ export class TabController{
         }
         else {
           // show user name
-          this.authService.getUsername().subscribe((data) => {
-            $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(data))
-          })
+          $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
         }
-      })
+      }).subscribe()
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof ChangeThemeRequest)

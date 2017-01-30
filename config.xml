@@ -2,7 +2,7 @@
 <widget android-packageName="com.gaplotech.hkepc_ionic_reader"
         ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader"
         android-versionCode="1050200"
-        ios-CFBundleVersion="1521"
+        ios-CFBundleVersion="1522"
         version="1.5.2"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
