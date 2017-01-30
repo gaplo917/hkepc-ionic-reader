@@ -183,8 +183,11 @@ export class TabController{
       .filter(([event,req]) => req instanceof HideUsernameRequest)
       .subscribe( ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received HideUsernameRequest`, req)
+
         this.hideUsername = req.hidden
+
         this.localStorageService.set('hideUsername',req.hidden)
+
 
         if (req.hidden) {
           // hide user name

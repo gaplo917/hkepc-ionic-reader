@@ -33,8 +33,14 @@ export class AuthService {
 
   getUsername() {
     return this.localStorageService.getObject('authority')
-      .filter(authority => authority && authority != null)
-      .map(data => data.username.trim())
+      .map(authority => {
+        if(authority && authority.username){
+          return authority.username.trim()
+        }
+        else {
+          return undefined
+        }
+      })
   }
 
   isLoggedIn() {
@@ -113,6 +119,7 @@ export class AuthService {
     this.localStorageService.set(HKEPC.auth.id,undefined)
     this.localStorageService.set(HKEPC.auth.token,undefined)
     this.localStorageService.set(HKEPC.auth.expire,undefined)
+    this.removeAuthority()
 
     // must be success
     this.http.get(HKEPC.forum.logout(this.localStorageService.get(HKEPC.auth.formhash))).then((resp) => {
