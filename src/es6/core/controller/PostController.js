@@ -467,11 +467,6 @@ export class PostController{
 
     const replyModal = this.scope.replyModal = this.scope.$new()
 
-
-    replyModal.$on('elastic:adjust', (e) => {
-      console.log("========elastic:adjust========")
-
-    })
     replyModal.id = "reply-content"
 
     this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
