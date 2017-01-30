@@ -42,4 +42,4 @@
 		// android 6.0.0 version has bug on locating the icon & splash image
 		// use 5.2.2 instead and update to 6.x.x later 
 		ionic platforms add android@5.2.2
-		ionic platforms upgrade android
+		ionic platform update android@6.0.0

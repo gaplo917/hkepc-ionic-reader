@@ -117,7 +117,7 @@ angular.module('starter', [
         var deferred = $q.defer()
 
         rx.Observable.combineLatest(
-          LocalStorageService.get('proxy'),
+          LocalStorageService.get('proxy',HKEPC.proxy),
           LocalStorageService.get(HKEPC.auth.id),
           LocalStorageService.get(HKEPC.auth.token),
           (proxyInDb, authId, token) => {

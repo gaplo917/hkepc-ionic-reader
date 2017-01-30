@@ -27,7 +27,7 @@ export class LocalStorageService {
       ? this.rx.Observable.just(value)
       : this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
-        .map(data => data !== undefined && data != null ? data : defaultValue)
+        .map(data => (data !== undefined && data != null) ? data : defaultValue)
         .do(data => {
           this.cache.set(key, data)
         })

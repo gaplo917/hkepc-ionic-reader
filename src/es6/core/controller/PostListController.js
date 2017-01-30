@@ -40,16 +40,12 @@ export class PostListController {
 
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
-    this.pages = []
     this.categories = []
     this.slidePages = []
     this.currentPageNum = this.page - 1
     this.showSpinner = true
     this.newPostModal = {}
-    this.canSwipeBack = true
-
     this.activeIndex = 0
-    this.lastTouchData = null
 
     this.sildeOptions = {
       loop: false,
@@ -62,25 +58,13 @@ export class PostListController {
       this.slider = data.slider;
 
       this.slider.on("touchMove",(event,data) => {
-        if(this.activeIndex == 0){
-          if(this.lastTouchData == null){
-            this.lastTouchData = data
-          }
-          const touchX = data.touches[0].clientX
-          const lastTouchX = this.lastTouchData.touches[0].clientX
-
-          const timeStamp = data.timeStamp
-          const lastTimeStamp = this.lastTouchData.timeStamp
-
-          const velocity = (touchX - lastTouchX) / (timeStamp - lastTimeStamp)
-
-          this.lastTouchData = data
+        if(this.slider.isBeginning){
+          console.log("this.slider.translate ",this.slider.translate )
+          console.log("this.slider.width / 4",this.slider.width / 5)
 
           // magic value is produced by error
-          if(velocity > 1.5){
-            setTimeout(() => {
+          if(this.slider.translate > this.slider.width / 5){
               this.swipeLeft()
-            }, 200)
           }
 
         }
@@ -118,6 +102,7 @@ export class PostListController {
       this.previousIndex = data.slider.previousIndex;
 
       $scope.$apply()
+
     });
 
 
@@ -334,15 +319,12 @@ export class PostListController {
           num: resp.pageNum,
         }
 
-        // push into the array
-        this.pages.push(page)
-
         this.slidePages[this.activeIndex] = page
 
         this.slidePages[this.activeIndex].limit = 2
 
         this.rx.Observable.interval(150).take(20).subscribe( () => {
-          if(this.slidePages[this.activeIndex].limit < resp.posts.length){
+          if(this.slidePages[this.activeIndex] && this.slidePages[this.activeIndex].limit < resp.posts.length){
             this.slidePages[this.activeIndex].limit += this.showSticky ? 2 : stickyPostCount + 2
             this.scope.$apply()
           }
@@ -363,19 +345,28 @@ export class PostListController {
 
         this.showSpinner = false
 
-        if ( this.slider ){
-          this.slider.updateLoop();
-        }
+        this.updateSlider()
 
       })
   }
 
+  updateSlider(){
+    if ( this.slider ){
+      this.slider.updateLoop();
+    }
+  }
+
   reset(){
-    this.pages = []
     this.slidePages = []
     this.ionicSlideBoxDelegate.slide(0,10)
     this.currentPageNum = 0
     this.showSpinner = true
+
+    // reset slider
+    this.slider.activeIndex = 0
+    this.activeIndex = 0
+    this.updateSlider()
+
   }
 
   doRefresh(){
@@ -442,8 +433,6 @@ export class PostListController {
   }
 
   swipeLeft(){
-    if(this.canSwipeBack){
-      this.onBack()
-    }
+    this.onBack()
   }
 }

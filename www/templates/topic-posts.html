@@ -1,4 +1,4 @@
-<ion-view class="post-list-view" ng-init="vm.slidePages=[];" on-swipe-right="vm.swipeLeft()">
+<ion-view class="post-list-view" ng-init="vm.slidePages=[];">
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
   </ion-nav-buttons>
@@ -30,8 +30,8 @@
     </div>
 
       <ion-slides  options="vm.sildeOptions" slider="vm.slider" >
-          <ion-slide-page ng-repeat="page in vm.slidePages track by $index " on-swipe-right="vm.swipeLeft()">
-              <ion-scroll style="padding-top:44px;width: 100%; height:100%"  direction="y" on-swipe-right="vm.swipeLeft()">
+          <ion-slide-page ng-repeat="page in vm.slidePages track by $index ">
+              <ion-scroll style="padding-top:44px;width: 100%; height:100%"  direction="y">
                       <ion-item
                               ng-class-odd="'odd'" ng-class-even="'even'"
                               class="item-icon-right item-text-wrap"
