@@ -74,13 +74,10 @@ export class PostListController {
 
           const velocity = (touchX - lastTouchX) / (timeStamp - lastTimeStamp)
 
-          console.log("Triggered function!!!!!!!!!!!!",data)
-          console.log("velocity =", )
-
           this.lastTouchData = data
 
           // magic value is produced by error
-          if(velocity > 1.3){
+          if(velocity > 1.5){
             setTimeout(() => {
               this.swipeLeft()
             }, 200)
@@ -88,12 +85,6 @@ export class PostListController {
 
         }
       })
-    })
-
-    $scope.$on("$ionicSlides.reachBeginning", (event, data) => {
-      console.log('Slide change is reachBeginning reachBeginning reachBeginning reachBeginning',data);
-
-
     })
 
     $scope.$on("$ionicSlides.slideChangeStart", (event, data) => {
@@ -120,7 +111,7 @@ export class PostListController {
     })
 
     $scope.$on("$ionicSlides.slideChangeEnd", (event, data) => {
-      console.log('slideChangeEnd',data);
+      console.log('Slide change is end',data);
 
       // note: the indexes are 0-based
       this.activeIndex = data.slider.activeIndex;
