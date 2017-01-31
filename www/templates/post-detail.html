@@ -10,9 +10,10 @@
     <a ng-if="vm.post.title && !vm.isLock" class="button button-icon icon ion-ios-plus-empty" ng-click="vm.onQuickReply(vm.post)"></a>
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
   </ion-nav-buttons>
-    <span class="text-center sticky-title" ><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
+    <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
 
     <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" style="padding-top:20px">
+
     <div class="text-center">
       <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
     </div>
