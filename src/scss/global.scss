@@ -213,3 +213,17 @@ textarea {
     width: 100%;
   }
 }
+
+
+.sticky-title {
+  background-color:$bg-color;
+  color:$text-color;
+  position:fixed;
+  z-index:1000;
+  top:44px;
+  font-weight: bold;
+  font-size:11px;
+  width:100%;
+  white-space: nowrap ;
+  padding: 0 5px;
+}

@@ -133,17 +133,17 @@ export class TopicListController {
   }
 
   canShowGroupNameIniOSReview(groupName){
-    return groupName != 'Mobile Phone' || (this.isLoggedIn && this.username != 'logary917')
+    return !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
   }
 
   canShowIniOSReview(topicId){
     const blackList = [121,123,202]
-    return blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917')
+    return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
   }
 
   canShowSectionInIOSReview(topicId){
-    const blackList = [171,168,170,44,277,202]
-    return blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917')
+    const blackList = [171,168,170,44,277,202,-1] // -1 is IR Zone
+    return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
   }
 
 }
