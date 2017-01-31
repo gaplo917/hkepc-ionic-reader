@@ -725,7 +725,11 @@ export class PostController{
 
       this.ionicHistory.goBack()
 
-    } else {
+    }
+    else if(history.backView && history.backView.stateName == Controllers.IRListController.STATE){
+      this.ionicHistory.goBack()
+    }
+    else {
       this.state.go(Controllers.PostListController.STATE,{
         topicId: this.topicId,
         page: 1

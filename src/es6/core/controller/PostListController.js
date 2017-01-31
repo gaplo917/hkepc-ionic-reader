@@ -60,10 +60,10 @@ export class PostListController {
       this.slider.on("touchMove",(event,data) => {
         if(this.slider.isBeginning){
           console.log("this.slider.translate ",this.slider.translate )
-          console.log("this.slider.width / 4",this.slider.width / 5)
+          console.log("this.slider.width / 7",this.slider.width / 7)
 
           // magic value is produced by error
-          if(this.slider.translate > this.slider.width / 5){
+          if(this.slider.translate > this.slider.width / 7){
               this.swipeLeft()
           }
 
@@ -411,7 +411,8 @@ export class PostListController {
     const history = this.ionicHistory.viewHistory()
     if(history.backView && history.backView.stateName == Controllers.TopicListController.STATE){
       this.ionicHistory.goBack()
-    } else {
+    }
+    else {
       this.state.go(Controllers.TopicListController.STATE)
     }
   }
