@@ -29,8 +29,8 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hkepc-ir.keysto
 
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hkepc-ir.keystore ./platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk hkepc-ir;
 
-$ANDROID_HOME/build-tools/24.0.2/zipalign -v 4 ./platforms/android/build/outputs/apk/android-x86-release-unsigned.apk ./platforms/android/build/outputs/apk/android-x86-release.apk;
+~/Library/Android/sdk//build-tools/24.0.2/zipalign -v 4 ./platforms/android/build/outputs/apk/android-x86-release-unsigned.apk ./platforms/android/build/outputs/apk/android-x86-release.apk;
 
-$ANDROID_HOME/build-tools/24.0.2/zipalign -v 4 ./platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk ./platforms/android/build/outputs/apk/android-armv7-release.apk;
+~/Library/Android/sdk/build-tools/24.0.2/zipalign -v 4 ./platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk ./platforms/android/build/outputs/apk/android-armv7-release.apk;
 
 open ./platforms/android/build/outputs/apk/
