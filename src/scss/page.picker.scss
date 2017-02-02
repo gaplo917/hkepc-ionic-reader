@@ -1,4 +1,9 @@
 .page-picker-view{
+  left:5% !important;
+
+  .popover-arrow {
+    left:49% !important;
+  }
   .item {
     color: $text-color;
     &.active {
