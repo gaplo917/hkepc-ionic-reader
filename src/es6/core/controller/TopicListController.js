@@ -22,7 +22,7 @@ export class TopicListController {
     }
   }}
 
-  constructor($scope,$http,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope,$q) {
+  constructor($scope,$http,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope,$q,$state) {
 
     this.scope = $scope
     this.http = $http
@@ -33,6 +33,7 @@ export class TopicListController {
     this.apiService = apiService
     this.firstLogin = true
     this.q = $q
+    this.state = $state
 
     rx.Observable.interval(30000)
       .startWith(0)
@@ -119,6 +120,9 @@ export class TopicListController {
         // save to local
         this.localStorageService.set('topics-cache-timestamp', moment().unix())
 
+        if(this.topics.length != topics.length){
+          this.state.go(this.state.currentState, {}, {reload:true})
+        }
         this.topics = topics
       })
       .subscribe()
