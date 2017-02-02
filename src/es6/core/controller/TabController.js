@@ -54,6 +54,10 @@ export class TabController{
       this.fontSize = data || "100"
     })
 
+    this.localStorageService.get('hideUsername').subscribe(data => {
+      this.hideUsername = String(data) == "true"
+    })
+
     // Try the credential on start app
     this.rx.Observable
         .concat(this.apiService.memberCenter(),this.apiService.checkPM())
@@ -108,23 +112,13 @@ export class TabController{
 
     $scope.$eventToObservable(LoginTabUpdateRequest.NAME)
       .filter(([event,req]) => req instanceof LoginTabUpdateRequest)
-      .flatMap(([event,req]) => {
-        return this.localStorageService.get('hideUsername').map(hideUsername => {
-          return {
-            req: req,
-            hideUsername: String(hideUsername) == 'true',
-          }
-        })
-      })
-      .safeApply($scope, ({req, hideUsername}) => {
+      .safeApply($scope, ([event,req]) => {
         console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-        this.login = req.username
-
-        if(this.login) {
+        if(req.username) {
 
           this.isLoggedIn = true
-          this.login = hideUsername == 'true' ? "IR 用家" : req.username
+          this.login = String(this.hideUsername) == 'true' ? "IR 用家" : req.username
 
           console.log("changed login name to ", this.login)
 
@@ -199,8 +193,9 @@ export class TabController{
 
         this.localStorageService.set('hideUsername',req.hidden)
 
+        this.hideUsername = String(req.hidden) == "true"
 
-        if (req.hidden) {
+        if (this.hideUsername) {
           // hide user name
           $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest("IR 用家"))
         }
