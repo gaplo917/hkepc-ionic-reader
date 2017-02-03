@@ -72,17 +72,17 @@
 
       <!--Dynamic Topic-->
       <span ng-repeat="topic in vm.topics track by $index">
-        <div ng-if="::topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider" ng-bind="::topic.groupName">
+        <div ng-if="topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider" ng-bind="topic.groupName">
         </div>
         <ion-item
-            ng-if="::!topic.groupName"
+            ng-if="!topic.groupName"
             ng-show="vm.canShowSectionInIOSReview(topic.id)"
             ng-class-odd="'odd'" ng-class-even="'even'"
             class="item-remove-animate item-avatar item-icon-right "
             type="item-text-wrap"
-            href="#/tab/topics/{{::topic.id}}/page/1">
-          <img class="topic-icon" ng-src="{{::topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
-          <h2 ng-bind="::topic.name"></h2>
+            href="#/tab/topics/{{topic.id}}/page/1">
+          <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
+          <h2 ng-bind="topic.name"></h2>
           <i class="icon ion-chevron-right icon-accessory"></i>
           <small class="last-description" ng-bind="topic.description"></small>
         </ion-item>

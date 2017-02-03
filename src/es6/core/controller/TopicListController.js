@@ -33,7 +33,6 @@ export class TopicListController {
     this.apiService = apiService
     this.firstLogin = true
     this.q = $q
-    this.state = $state
 
     rx.Observable.interval(30000)
       .startWith(0)
@@ -83,12 +82,18 @@ export class TopicListController {
         this.isLoggedIn = isLoggedIn
 
         if(isLoggedIn && this.firstLogin) {
+          // auto refresh for logged in user
           this.loadList()
 
           // unset to false to prevent next loading
           this.firstLogin = false
         }
 
+        else if (!isLoggedIn && !this.firstLogin) {
+          // auto refresh for non logged in user
+          this.loadList()
+          this.firstLogin = true
+        }
       })
 
       this.authService.getUsername().subscribe(username => {
@@ -120,9 +125,6 @@ export class TopicListController {
         // save to local
         this.localStorageService.set('topics-cache-timestamp', moment().unix())
 
-        if(this.topics.length != topics.length){
-          this.state.go(this.state.currentState, {}, {reload:true})
-        }
         this.topics = topics
       })
       .subscribe()
