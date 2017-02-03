@@ -1,4 +1,4 @@
-<ion-view class="post-list-view" ng-init="vm.slidePages=[];">
+<ion-view class="post-list-view" >
   <ion-nav-buttons side="left">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
@@ -10,54 +10,63 @@
   </ion-nav-buttons>
   <div class="bar bar-subheader">
     <a class="button button-icon icon ion-bonfire"
-       ng-if="vm.topic.name && vm.hasStickyPost(vm.slidePages[vm.activeIndex].posts)"
        ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
        ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
     </a>
     <h2 class="title" ng-show="vm.totalPageNum">
-      第 {{vm.activeIndex + 1}} 頁 / 共 {{::vm.totalPageNum}} 頁
+      第 {{vm.pointingPage == 0 ? 1 : vm.currentPageNum}} 頁 / 共 {{::vm.totalPageNum}} 頁
     </h2>
     <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
   </div>
-  <ion-content>
-    <div class="spinner" ng-if="vm.showSpinner" >
+  <ion-content lazy-scroll on-swipe-right="vm.onBack()">
+    <div class="spinner" ng-if="vm.posts.length == 0" >
       <ion-spinner
           class="spinner"
           icon="android">
       </ion-spinner>
     </div>
 
-      <ion-slides  options="vm.sildeOptions" slider="vm.slider" >
-          <ion-slide-page ng-repeat="page in vm.slidePages track by $index ">
-              <ion-scroll style="padding-top:44px;width: 100%; height:100%"  direction="y">
-                      <ion-item
-                              ng-class-odd="'odd'" ng-class-even="'even'"
-                              class="item-icon-right item-text-wrap"
-                              ng-repeat="post in page.posts | limitTo: page.limit track by $index"
-                              ng-if="::post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
-                              ng-click="::vm.onGoToPost(post)"
-                              href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
-                          <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag"><small class="tag">#{{::post.tag}}</small></a></h2>
-                          <div>
-                              <i class="ion-bonfire" ng-show="::post.isSticky"></i>
-                              <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-                              <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-                              <span class="less-important-info ion-person"> {{::post.author.name}}</span>
-                              <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
-                          </div>
-                          <div>
-                              <span class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>
+      <div style="padding-top:44px;">
 
-                          </div>
+          <ion-item
+                  ng-class-odd="'odd'" ng-class-even="'even'"
+                  class="item-icon-right item-text-wrap"
+                  ng-repeat="post in vm.posts track by $index"
+                  ng-if="::(post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
+                  ng-click="::vm.onGoToPost(post)"
+                  href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
+                  id="post-{{::post.id}}"
+                  page="{{::post.pageNum}}"
+                  lastread
+          >
+              <h2 class="bigger-title">{{post.name}} <a ng-show="post.tag"><small class="tag">#{{post.tag}}</small></a></h2>
+              <div>
+                  <i class="ion-bonfire" ng-show="::post.isSticky"></i>
+                  <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
+                  <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
+                  <span class="less-important-info ion-person"> {{::post.author.name}}</span>
+                  <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
+              </div>
+              <div>
+                  <span class="less-important-info">{{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>
 
-                          <i class="icon ion-chevron-right icon-accessory"></i>
-                      </ion-item>
+              </div>
 
-              </ion-scroll>
+              <i class="icon ion-chevron-right icon-accessory"></i>
+          </ion-item>
 
-          </ion-slide-page>
-      </ion-slides>
+      </div>
+
+
+      <ion-infinite-scroll
+              class="ispinner text-center"
+              ng-if="vm.posts.length > 0"
+              on-infinite="vm.loadMore()"
+              spinner="android"
+              immediate-check="true"
+              distance="10%">
+      </ion-infinite-scroll>
 
   </ion-content>
 </ion-view>

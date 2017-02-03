@@ -29,6 +29,12 @@ module.exports = {
     latestNext: (searchId,page) => {
       return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
     },
+    search:() => {
+      return `${BASE_FORUM_URL}/search.php`
+    },
+    searchNext: (searchId, page) => {
+      return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+    },
     topics: (topicId,page,filter,orderby) => {
       return topicId == 'latest'
           ? `${BASE_FORUM_URL}/search.php?srchfrom=12000&searchsubmit=yes&page=${page}`

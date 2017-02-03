@@ -38,12 +38,13 @@ export default
 
           function isInView() {
             var clientHeight = $document[0].documentElement.clientHeight;
-            var clientWidth = $document[0].documentElement.clientWidth;
+            // var clientWidth = $document[0].documentElement.clientWidth;
             var imageRect = $element[0].getBoundingClientRect();
+
+            //console.log(`isInView height ${clientHeight}, width ${clientWidth}`,imageRect)
 
             // scroll to the half of the screen mean user if viewing
             return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
-              && (imageRect.left >= 0 && imageRect.left <= clientWidth);
           }
 
           // bind listener

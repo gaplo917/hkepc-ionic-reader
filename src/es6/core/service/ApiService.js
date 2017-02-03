@@ -123,4 +123,14 @@ export class ApiService {
     return this.composeApi(this.http.get(HKEPC.forum.checkPM()))
       .flatMapApiFromCheerioworker('checkPM')
   }
+
+  search(formhash, searchText) {
+    return this.composeApi(this.http.post(HKEPC.forum.search(), {
+      formhash: formhash,
+      srchtype: "title",
+      srchtxt: searchText,
+      searchsubmit: true
+    }))
+      .flatMapApiFromCheerioworker('search')
+  }
 }

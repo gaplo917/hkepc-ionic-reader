@@ -96,21 +96,29 @@ export class PostController{
       this.postId = $stateParams.postId
       this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
       this.focus = $stateParams.focus
+      this.page = $stateParams.page
 
-      // Last reading page position
-      this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
-        .map(data => data || {})
-        .subscribe(data => {
-          console.log("last page ", data)
-          const lastPage = data.page
-          const lastPostId = data.postId
+      // check to see if from a focus request
+      if(!this.focus && !this.page){
+        // if not , jump to last reading page position
+        this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
+          .map(data => data || {})
+          .subscribe(data => {
+            console.log("last page ", data)
+            const lastPage = data.page
+            const lastPostId = data.postId
 
-          this.page = lastPage || $stateParams.page
-          this.currentPage = this.page
-          this.focus = lastPostId || $stateParams.focus
+            this.page = lastPage
+            this.currentPage = this.page
+            this.focus = lastPostId
 
-          setTimeout(() => this.loadMessages(), 100)
-      })
+            setTimeout(() => this.loadMessages(), 100)
+          })
+      }
+      else {
+        setTimeout(() => this.loadMessages(), 100)
+      }
+
 
     })
 

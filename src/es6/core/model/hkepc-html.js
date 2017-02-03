@@ -117,7 +117,8 @@ export class HKEPCHtml extends GeneralHtml{
     return {
       username: this.source('#umenu > cite').text() || /* HKEPC 2.0 beta */this.source('header .userInfo span').text(),
       pmNotification: (this.source('#prompt_pm').text().match(/\d/g) || [] ) [0],
-      postNotification: (this.source('#prompt_threads').text().match(/\d/g) || [] )[0]
+      postNotification: (this.source('#prompt_threads').text().match(/\d/g) || [] )[0],
+      formhash: this.source('input[name=formhash]').attr('value')
     }
   }
 

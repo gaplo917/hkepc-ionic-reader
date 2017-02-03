@@ -20,6 +20,7 @@ module.exports = function (self) {
       data: html.getLoggedInUserInfo()
     })
 
+    console.log(html.getLoggedInUserInfo())
     switch(topic) {
       case 'topicList':
 
@@ -53,6 +54,14 @@ module.exports = function (self) {
         self.postMessage({
           topic: topic,
           data: Mapper.userProfileHtmlToUserProfile(html)
+        })
+        break
+
+      case 'search':
+
+        self.postMessage({
+          topic: topic,
+          data: Mapper.postListHtmlToPostListPage(html,1)
         })
         break
 

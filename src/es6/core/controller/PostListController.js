@@ -41,70 +41,10 @@ export class PostListController {
     this.topicId = $stateParams.topicId
     this.page = $stateParams.page
     this.categories = []
-    this.slidePages = []
     this.currentPageNum = this.page - 1
-    this.showSpinner = true
+    this.pointingPage = this.currentPageNum
     this.newPostModal = {}
-    this.activeIndex = 0
-
-    this.sildeOptions = {
-      loop: false,
-      speed: 400,
-      pagination: false
-    }
-
-    $scope.$on("$ionicSlides.sliderInitialized", (event, data) => {
-      // data.slider is the instance of Swiper
-      this.slider = data.slider;
-
-      this.slider.on("touchMove",(event,data) => {
-        if(this.slider.isBeginning){
-          console.log("this.slider.translate ",this.slider.translate )
-          console.log("this.slider.width / 7",this.slider.width / 7)
-
-          // magic value is produced by error
-          if(this.slider.translate > this.slider.width / 7){
-              this.swipeLeft()
-          }
-
-        }
-      })
-    })
-
-    $scope.$on("$ionicSlides.slideChangeStart", (event, data) => {
-      console.log('Slide change is beginning',data);
-
-
-      if(data.slider.activeIndex >= this.slidePages.length - 1){
-        // prefetch next page
-        this.loadMore().subscribe()
-
-      }
-
-      if(data.slider.activeIndex > this.activeIndex) {
-        // to next page
-        this.activeIndex += 1;
-        $scope.$apply()
-      }
-      else if(data.slider.activeIndex < this.activeIndex){
-        // to previous page
-        this.activeIndex -= 1;
-        $scope.$apply()
-      }
-
-    })
-
-    $scope.$on("$ionicSlides.slideChangeEnd", (event, data) => {
-      console.log('Slide change is end',data);
-
-      // note: the indexes are 0-based
-      this.activeIndex = data.slider.activeIndex;
-      this.previousIndex = data.slider.previousIndex;
-
-      $scope.$apply()
-
-    });
-
+    this.posts = []
 
     const newPostModal = this.scope.newPostModal = $scope.$new()
     newPostModal.id = "new-content"
@@ -262,12 +202,20 @@ export class PostListController {
       this.newPostModal.remove()
     })
 
+
+    $scope.$on('lastread', (event,{ page, id }) => {
+
+      console.log("received broadcast lastread",page, id)
+      this.pointingPage = page
+      $scope.$applyAsync()
+    })
+
     $scope.$on('$ionicView.loaded', (e) => {
 
       this.filter = undefined
       this.order = undefined
 
-      this.loadMore().subscribe()
+      this.loadMore()
 
     })
 
@@ -286,7 +234,7 @@ export class PostListController {
   }
 
   loadMore(cb){
-    const nextPage = this.currentPageNum + 1
+    const nextPage = parseInt(this.currentPageNum) + 1
 
     this.showSpinner = true
 
@@ -298,7 +246,6 @@ export class PostListController {
       searchId: this.searchId
     })
       .safeApply(this.scope, resp => {
-        console.log(resp)
 
         this.searchId = resp.searchId
         // only extract the number
@@ -308,64 +255,23 @@ export class PostListController {
 
         this.categories = resp.categories
 
-        const stickyPostCount = resp.posts.filter( post => post.isSticky).length
-        if(resp.posts.length == stickyPostCount){
-          // Better UX, if all post is sticky, just show it
-          this.showSticky = true
-        }
+        this.posts = this.posts.concat(resp.posts)
 
-        const page = {
-          posts: resp.posts,
-          num: resp.pageNum,
-        }
-
-        this.slidePages[this.activeIndex] = page
-
-        this.slidePages[this.activeIndex].limit = 2
-
-        this.rx.Observable.interval(150).take(20).subscribe( () => {
-          if(this.slidePages[this.activeIndex] && this.slidePages[this.activeIndex].limit < resp.posts.length){
-            this.slidePages[this.activeIndex].limit += this.showSticky ? 2 : stickyPostCount + 2
-            this.scope.$apply()
-          }
-        })
-
-        this.currentPageNum += 1
-
-        if(page.num + 1 <= resp.totalPageNum){
-          // push empty page to enable swipping
-          this.slidePages.push({})
-        }
-
+        this.currentPageNum = parseInt(this.currentPageNum) + 1
 
         this.topic = {
           id: this.topicId,
           name: resp.topicName
         }
 
-        this.showSpinner = false
+        this.scope.$broadcast('scroll.infiniteScrollComplete')
 
-        this.updateSlider()
-
-      })
-  }
-
-  updateSlider(){
-    if ( this.slider ){
-      this.slider.updateLoop();
-    }
+      }).subscribe()
   }
 
   reset(){
-    this.slidePages = []
-    this.ionicSlideBoxDelegate.slide(0,10)
     this.currentPageNum = 0
-    this.showSpinner = true
-
-    // reset slider
-    this.slider.activeIndex = 0
-    this.activeIndex = 0
-    this.updateSlider()
+    this.posts = []
 
   }
 
@@ -377,7 +283,7 @@ export class PostListController {
         this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
       }
     }
-    this.loadMore().subscribe()
+    this.loadMore()
   }
 
   goToSubTopic(index,subTopic){
