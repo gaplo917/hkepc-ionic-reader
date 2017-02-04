@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget android-packageName="com.gaplotech.hkepc_ionic_reader"
         ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader"
-        android-versionCode="1060000"
-        ios-CFBundleVersion="1600"
+        android-versionCode="1060001"
+        ios-CFBundleVersion="1601"
         version="1.6.0"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
