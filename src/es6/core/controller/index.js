@@ -1,5 +1,5 @@
 
-export * from './PostController'
+export * from './PostDetailController'
 export * from './PostListController'
 export * from './TopicListController'
 export * from './ChatController'

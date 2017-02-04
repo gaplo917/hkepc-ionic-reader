@@ -148,10 +148,10 @@ export class TabController{
 
                 const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
                 ? Controllers.ViewPostController.STATE
-                : Controllers.PostController.STATE
+                : Controllers.PostDetailController.STATE
 
                 const history = this.ionicHistory.viewHistory()
-                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostController.STATE )){
+                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostDetailController.STATE )){
                   this.ionicHistory.clearCache([history.currentView.stateId])
                 }
 

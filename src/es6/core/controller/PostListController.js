@@ -17,7 +17,7 @@ export class PostListController {
     url: '/topics/:topicId/page/:page?searchId=&searchText=',
     views: {
       'tab-topics': {
-        templateUrl: 'templates/topic-posts.html',
+        templateUrl: 'templates/post-list.html',
         controller: PostListController.NAME,
         controllerAs: 'vm'
       }
@@ -205,13 +205,13 @@ export class PostListController {
       this.newPostModal.remove()
     })
 
-
-    $scope.$on('lastread', (event,{ page, id }) => {
-
-      console.log("received broadcast lastread",page, id)
-      this.pointingPage = page
-      $scope.$applyAsync()
-    })
+    $scope.$eventToObservable('lastread')
+      .throttle(300)
+      .safeApply($scope, ([event,{ page, id }]) => {
+        console.log("received broadcast lastread",page, id)
+        this.pointingPage = page
+      })
+      .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
 
@@ -305,6 +305,7 @@ export class PostListController {
 
     this.doRefresh()
   }
+
 
   saveShowSticky(bool) {
     this.localStorageService.set('showSticky',bool)

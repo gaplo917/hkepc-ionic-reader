@@ -7,14 +7,14 @@ import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
-import {PostController} from "./PostController"
+import {PostDetailController} from "./PostDetailController"
 
 import * as Controllers from "./index"
 
 /**
  *  Just a Clone Controller for display in features tab
  */
-export class ViewPostController extends PostController {
+export class ViewPostController extends PostDetailController {
   static get STATE() { return 'tab.features-view-post'}
   static get NAME() { return 'ViewPostController'}
   static get CONFIG() { return {

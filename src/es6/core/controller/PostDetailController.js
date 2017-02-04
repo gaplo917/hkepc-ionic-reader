@@ -13,15 +13,15 @@ import { Clipboard } from 'ionic-native';
 
 const cheerio = require('cheerio')
 
-export class PostController{
+export class PostDetailController{
   static get STATE() { return 'tab.topics-posts-detail'}
-  static get NAME() { return 'PostController'}
+  static get NAME() { return 'PostDetailController'}
   static get CONFIG() { return {
     url: '/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
       'tab-topics': {
-        templateUrl: 'templates/post-detail.html',
-        controller: PostController.NAME,
+        templateUrl:  'templates/post-detail.html',
+        controller:   PostDetailController.NAME,
         controllerAs: 'vm'
       }
     }
@@ -72,19 +72,18 @@ export class PostController{
       // Execute action
     })
 
-    $scope.$on('lastread', (event,{ page, id }) => {
+    $scope.$eventToObservable('lastread')
+      .throttle(300)
+      .safeApply($scope, ([event,{ page, id }]) => {
+        console.log("received broadcast lastread",page, id)
+        this.currentPage = page
 
-      console.log("received broadcast lastread",page, id)
-      this.currentPage = page
-
-      $scope.$applyAsync()
-
-      this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
-        page: page,
-        postId: id.replace('message-','')
+        this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
+          page: page,
+          postId: id.replace('message-','')
+        })
       })
-
-    })
+      .subscribe()
 
     // to control the post is end
     this.end = false;
@@ -728,7 +727,7 @@ export class PostController{
   onBack(){
     const history = this.ionicHistory.viewHistory()
     console.log(history)
-    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostController.STATE) &&
+    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostDetailController.STATE) &&
         history.backView.stateParams.postId != history.currentView.stateParams.postId){
 
       this.ionicHistory.goBack()

@@ -20,7 +20,7 @@ export class ViewPostListController extends Controllers.PostListController {
     url: '/features/topics/:topicId/page/:page',
     views: {
       'tab-features': {
-        templateUrl: 'templates/topic-posts.html',
+        templateUrl: 'templates/post-list.html',
         controller: ViewPostListController.NAME,
         controllerAs: 'vm'
       }

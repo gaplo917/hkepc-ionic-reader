@@ -31,7 +31,7 @@ export default
 
           const deregistration = $scope.$on('lazyScrollEvent', () => {
             if (isInView()) {
-              console.log("isInView",$attributes.id,$attributes.page)
+              //console.log("isInView",$attributes.id,$attributes.page)
               $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
             }
           })
