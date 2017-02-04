@@ -14,7 +14,7 @@
        ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
     </a>
     <h2 class="title" ng-show="vm.totalPageNum">
-      第 {{vm.pointingPage == 0 ? 1 : vm.pointingPage}} 頁 / 共 {{::vm.totalPageNum}} 頁
+      第 {{vm.pointingPage == 0 ? 1 : vm.pointingPage}} 頁 / 共 {{vm.totalPageNum}} 頁
     </h2>
     <a ng-if="vm.topic.name" class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
