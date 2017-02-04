@@ -110,11 +110,11 @@ export class PostDetailController{
             this.currentPage = this.page
             this.focus = lastPostId
 
-            setTimeout(() => this.loadMessages(), 100)
+            this.loadMessages()
           })
       }
       else {
-        setTimeout(() => this.loadMessages(), 100)
+        this.loadMessages()
       }
 
 
