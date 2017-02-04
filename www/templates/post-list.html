@@ -40,13 +40,13 @@
                   page="{{::post.pageNum}}"
                   lastread
           >
-              <h2 class="bigger-title" compile="::post.name"></h2>
+              <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-show="post.tag"><small class="tag">#{{post.tag}}</small></a></h2>
               <div>
                   <i class="ion-bonfire" ng-show="::post.isSticky"></i>
                   <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
                   <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
                   <span class="less-important-info ion-person"> {{::post.author.name}}</span>
-                  <a ng-show="post.tag"><small class="tag">#{{post.tag}}</small></a>
+
                   <span class="fright less-important-info" >{{::post.count.reply}} / {{::post.count.view}}</span>
               </div>
               <div>
