@@ -98,12 +98,11 @@ export class PostDetailController{
       this.page = $stateParams.page
 
       // check to see if from a focus request
-      if(!this.focus && !this.page){
+      if(!this.focus){
         // if not , jump to last reading page position
         this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
           .map(data => data || {})
           .subscribe(data => {
-            console.log("last page ", data)
             const lastPage = data.page
             const lastPostId = data.postId
 
