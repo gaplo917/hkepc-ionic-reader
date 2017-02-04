@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Please enter hkepc-ir keystore password to proceed: ";
+read -s keystore_password;
+
 # build sass, js & minify
 while [ ! $# -eq 0 ]
 do
@@ -25,9 +28,9 @@ rm -rf ./platforms/android/build/outputs/apk/;
 
 ionic build --release android;
 
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hkepc-ir.keystore ./platforms/android/build/outputs/apk/android-x86-release-unsigned.apk hkepc-ir;
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $keystore_password -keystore hkepc-ir.keystore ./platforms/android/build/outputs/apk/android-x86-release-unsigned.apk hkepc-ir ;
 
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hkepc-ir.keystore ./platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk hkepc-ir;
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $keystore_password -keystore hkepc-ir.keystore ./platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk hkepc-ir;
 
 ~/Library/Android/sdk//build-tools/24.0.2/zipalign -v 4 ./platforms/android/build/outputs/apk/android-x86-release-unsigned.apk ./platforms/android/build/outputs/apk/android-x86-release.apk;
 
