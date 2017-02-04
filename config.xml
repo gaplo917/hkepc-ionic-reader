@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget android-packageName="com.gaplotech.hkepc_ionic_reader"
         ios-CFBundleIdentifier="com.gaplotech.hkepc-ionic-reader"
-        android-versionCode="1050301"
-        ios-CFBundleVersion="1531"
-        version="1.5.3"
+        android-versionCode="1060000"
+        ios-CFBundleVersion="1600"
+        version="1.6.0"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>HKEPC IR</name>
