@@ -49,7 +49,8 @@ export class ApiService {
         $rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest(
           data.username,
           data.pmNotification,
-          data.postNotification
+          data.postNotification,
+          data.formhash
         ))
       })
   }
@@ -86,9 +87,11 @@ export class ApiService {
   postListPage(opt){
     const {topicId, pageNum, filter, order, searchId} = opt
 
-    const request = (topicId == 'latest' && pageNum > 1)
+    const request = topicId == 'search'
       ? HKEPC.forum.latestNext(searchId, pageNum)
-      : HKEPC.forum.topics(topicId, pageNum, filter,order)
+      : (topicId == 'latest' && pageNum > 1)
+        ? HKEPC.forum.latestNext(searchId, pageNum)
+        : HKEPC.forum.topics(topicId, pageNum, filter,order)
 
     return this.composeApi(this.http.get(request))
       .flatMapApiFromCheerioworker('postListPage', { pageNum: pageNum })
@@ -125,12 +128,23 @@ export class ApiService {
   }
 
   search(formhash, searchText) {
-    return this.composeApi(this.http.post(HKEPC.forum.search(), {
-      formhash: formhash,
-      srchtype: "title",
-      srchtxt: searchText,
-      searchsubmit: true
-    }))
-      .flatMapApiFromCheerioworker('search')
+    const postUrl = HKEPC.forum.search()
+    const postData = [
+      `formhash=${encodeURIComponent(formhash)}`,
+      `srchtype=title`,
+      `srchtxt=${encodeURIComponent(searchText)}`,
+      `searchsubmit=true`,
+      "st=on",
+      "rchuname=",
+      "srchfilter=all",
+      "srchfrom=0",
+      "before=",
+      "orderby=lastpost",
+      "ascdesc=desc",
+      "srchfid[]=all",
+    ].join('&')
+
+    console.log(postData)
+    return this.composeApi(this.http.post(`${postUrl}?${postData}`)).flatMapApiFromCheerioworker('search')
   }
 }

@@ -1,0 +1,28 @@
+.search-view {
+  .app-icon {
+    margin-top: 40px;
+
+    width: 100%;
+
+    img{
+      display:block;
+      margin: auto;
+      border-radius: 100px;
+      height:100px;
+    }
+  }
+
+  .search-container{
+    padding-top: 20px;
+
+    button {
+      font-size:20px;
+      margin-top:-10px;
+      margin-bottom: -10px;
+      border:0;
+      border-radius: 0;
+      color:$text-color;
+      background-color: $default-button-bg-color;
+    }
+  }
+}

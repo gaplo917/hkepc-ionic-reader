@@ -88,6 +88,8 @@ export class TabController{
 
         const postNotification = req.postNotification
 
+        this.localStorageService.set('formhash',req.formhash)
+
         // send the login name to parent controller
         this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
 

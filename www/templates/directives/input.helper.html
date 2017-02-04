@@ -26,7 +26,7 @@
             ng-class="modal.showInputHelperAt == 4 ? 'active': ''">
       <i class="ion ion-images"></i>
     </button>
-    <button class="button" ng-if="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
+    <button class="button" ng-show="modal.showInputHelperAt >= 0" ng-click="modal.showInputHelperAt = undefined">
       <i class="ion ion-ios-close-empty"></i>
     </button>
   </div>
@@ -36,7 +36,7 @@
               ng-show="modal.showInputHelperAt >= 0"
               direction="y">
     <img class="gif"
-         ng-if="modal.showInputHelperAt == 0"
+         ng-show="modal.showInputHelperAt == 0"
          ng-repeat="gif in ::modal.gifs track by $index"
          ng-click="modal.addGifCodeToText(gif.code)"
          ng-src="http://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
@@ -54,7 +54,7 @@
 
     </div>
 
-    <div ng-if="modal.showInputHelperAt == 2">
+    <div ng-show="modal.showInputHelperAt == 2">
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
@@ -63,7 +63,7 @@
 
     </div>
 
-    <div ng-if="modal.showInputHelperAt == 3">
+    <div ng-show="modal.showInputHelperAt == 3">
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
@@ -74,18 +74,18 @@
 
     </div>
 
-    <div class="image-upload-control" ng-if="modal.showInputHelperAt == 4">
-      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
+    <div class="image-upload-control" ng-show="modal.showInputHelperAt == 4">
+      <textarea ng-show="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
 
-      <div ng-if="!imageUrl && !previewUploadImage" class="button button-full" ngf-select="prepareUpload($file)">
+      <div ng-show="!imageUrl && !previewUploadImage" class="button button-full" ngf-select="prepareUpload($file)">
         或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
       </div>
 
-      <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
+      <div ng-show="imageUrl || previewUploadImage" class="preview-image-url">
         <img ng-src="{{imageUrl || previewUploadImage}}" >
       </div>
 
-      <button ng-if="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
+      <button ng-show="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
         插入
       </button>
 
@@ -93,15 +93,15 @@
       <span class="image-error-suggestion"> {{imageErrSuggestion}} </span>
       <span class="image-upload-success"> {{imageUploadSuccess}} </span>
 
-      <button ng-if="previewUploadImage && imageErr" class="button button-full" ngf-select="prepareUpload($file)">
+      <button ng-show="previewUploadImage && imageErr" class="button button-full" ngf-select="prepareUpload($file)">
         重新選擇圖片
       </button>
 
-      <button ng-if="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
+      <button ng-show="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
         <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
       </button>
 
-      <button ng-if="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
+      <button ng-show="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
         再  <i class="ion ion-upload button-icon icon"></i> 另一張圖片
       </button>
     </div>

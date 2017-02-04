@@ -14,7 +14,7 @@ export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
   static get NAME() { return 'PostListController'}
   static get CONFIG() { return {
-    url: '/topics/:topicId/page/:page',
+    url: '/topics/:topicId/page/:page?searchId=&searchText=',
     views: {
       'tab-topics': {
         templateUrl: 'templates/topic-posts.html',
@@ -39,6 +39,9 @@ export class PostListController {
     this.rx = rx
 
     this.topicId = $stateParams.topicId
+    this.searchId = $stateParams.searchId
+    this.searchText = $stateParams.searchText
+
     this.page = $stateParams.page
     this.categories = []
     this.currentPageNum = this.page - 1
@@ -261,7 +264,11 @@ export class PostListController {
 
         this.topic = {
           id: this.topicId,
-          name: resp.topicName
+          name: this.topicId == 'search'
+            ? `${resp.topicName} ${this.searchText}`
+            : this.topicId == 'latest'
+              ? '最新帖子'
+              : resp.topicName
         }
 
         this.scope.$broadcast('scroll.infiniteScrollComplete')
@@ -315,7 +322,8 @@ export class PostListController {
 
   onBack(){
     const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == Controllers.TopicListController.STATE){
+    if(history.backView && (history.backView.stateName == Controllers.TopicListController.STATE
+      || history.backView.stateName == Controllers.SearchController.STATE)){
       this.ionicHistory.goBack()
     }
     else {

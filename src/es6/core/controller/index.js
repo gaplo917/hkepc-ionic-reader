@@ -16,7 +16,7 @@ export * from './MyPostController'
 export * from './MyReplyController'
 export * from './NewsController'
 export * from './IRListController'
-
+export * from './SearchController'
 
 // Just a clone
 export * from './ViewPostController'
