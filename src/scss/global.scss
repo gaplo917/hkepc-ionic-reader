@@ -231,3 +231,8 @@ textarea {
 .default-text-color {
   color: $text-color;
 }
+
+.search-highlight{
+  background-color: $highlight-background;
+  color: $highlight-text-color;
+}

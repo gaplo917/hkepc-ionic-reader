@@ -258,7 +258,10 @@ export class PostListController {
 
         this.categories = resp.categories
 
-        this.posts = this.posts.concat(resp.posts)
+        // better UX to highlight the searchText
+        this.posts = this.topicId == 'search'
+          ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
+          : this.posts.concat(resp.posts)
 
         this.currentPageNum = parseInt(this.currentPageNum) + 1
 
@@ -350,5 +353,116 @@ export class PostListController {
 
   swipeLeft(){
     this.onBack()
+  }
+
+  /**
+   *  Modified version from LikesController
+   */
+  highlightSearchText(posts, searchText){
+    const searchKeywordIndex = (str,keyword,indexArr = []) => {
+      const lastIndexPos = indexArr.length == 0 ? 0 : indexArr[indexArr.length - 1] + 1
+      const index = str.indexOf(keyword,lastIndexPos)
+      if(index == -1 || !str || !keyword){
+        return indexArr
+      } else {
+        return searchKeywordIndex(str,keyword,indexArr.concat([index]))
+      }
+    }
+
+    const searchBraceIndex = (str,indexArr = []) => {
+      return (searchKeywordIndex(str,'<').concat(searchKeywordIndex(str,'>'))).sort((a,b) => a - b)
+    }
+
+    const isIndexInBrace = (content,bracePos,index) => {
+      switch (bracePos.length){
+        case 0 :
+          return false
+        case 1 :
+          return false
+        default :
+          return (
+              content[bracePos[0]] == '<'
+              && content[bracePos[1]] == '>'
+              && index > bracePos[0]
+              && index < bracePos[1]
+            ) || isIndexInBrace(content,bracePos.slice(2),index)
+      }
+    }
+
+    const breakContent = (content,len, validIndexs,prevPos = 0,splits = []) => {
+      switch(validIndexs.length){
+        case 0:
+          // concat the rest of the content
+          return splits.concat([
+            content.slice(Math.min(prevPos,content.length)),
+          ])
+        default:
+          const contentIndex = validIndexs[0]
+          // break down into two part
+          const s = splits.concat([
+            content.slice(prevPos ,contentIndex),
+            content.slice(contentIndex,contentIndex + len),
+          ])
+          return breakContent(content,len,validIndexs.slice(1),contentIndex + len ,s)
+      }
+    }
+
+    const mergeAndInjectHightLightContent = (splits,hlContent = '') => {
+      switch (splits.length) {
+        case 0 :
+          return hlContent
+        case 1 :
+          return `${hlContent}${splits[0]}`
+        default :
+          const merged = `${hlContent}${splits[0]}<span class="search-highlight">${splits[1]}</span>`
+          return mergeAndInjectHightLightContent(splits.slice(2),merged)
+      }
+    }
+
+    const searchAndInjectHighlightBetweenKeyword = (content,keyword) => {
+      // find all brace for identify the html tag
+      const bracePos = searchBraceIndex(content)
+
+      // search the keyword position
+      const validIndex = searchKeywordIndex(content.toLowerCase(),keyword.toLowerCase())
+        .filter(index => !isIndexInBrace(content,bracePos,index))
+
+      return {
+        matches : validIndex.length,
+        hlContent : mergeAndInjectHightLightContent(breakContent(content,keyword.length,validIndex))
+      }
+    }
+
+    const searchMultipleKeyword = (keywordArr, post, result = { matches: 0 }) => {
+      switch (keywordArr.length) {
+        case 0 :
+          return result
+        default :
+          const hlm = Object.assign({},post)
+
+          const title = angular.element('<div/>').html(hlm.name).html()
+          const keyword = keywordArr[0]
+
+          const searchResult = {
+            name: searchAndInjectHighlightBetweenKeyword(title,keyword)
+          }
+
+          // set the name
+          hlm.name = searchResult.name.hlContent
+
+          result = {
+            matches : result.matches + searchResult.name.matches,
+            post: hlm
+          }
+
+          return searchMultipleKeyword(keywordArr.slice(1),hlm,result)
+      }
+    }
+
+    return posts.map(post => {
+      // map to a search result
+      return searchMultipleKeyword(searchText.split(' '),post)
+    }).map(e => e.post)
+
   }
 }

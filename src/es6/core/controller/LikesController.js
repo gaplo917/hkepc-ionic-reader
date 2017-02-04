@@ -130,7 +130,7 @@ export class LikesController{
         case 1 :
           return `${hlContent}${splits[0]}`
         default :
-          const merged = `${hlContent}${splits[0]}<span style="background-color: #FFEB3B;color: #000">${splits[1]}</span>`
+          const merged = `${hlContent}${splits[0]}<span class="search-highlight">${splits[1]}</span>`
           return mergeAndInjectHightLightContent(splits.slice(2),merged)
       }
     }
