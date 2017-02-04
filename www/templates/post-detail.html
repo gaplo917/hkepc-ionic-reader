@@ -12,7 +12,9 @@
   </ion-nav-buttons>
     <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
 
-    <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" style="padding-top:20px">
+    <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" style="padding-top:20px"
+                 delegate-handle="post-detail"
+    >
 
     <div class="text-center">
       <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
@@ -93,6 +95,9 @@
     <div class="text-center" ng-if="vm.end">
       <button class="button button-full"  ng-click="vm.forceLoadMore()">F5</button>
     </div>
+
+    <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
+    <div style="height:500px" ng-show="vm.messages.length < 2"></div>
   </ion-content>
 </ion-view>
 

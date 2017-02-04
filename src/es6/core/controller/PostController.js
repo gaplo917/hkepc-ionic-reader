@@ -40,7 +40,7 @@ export class PostController{
     this.ionicPopover = $ionicPopover
     this.ngToast = ngToast
     this.authService = AuthService
-    this.ionicScrollDelegate = $ionicScrollDelegate
+    this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('post-detail')
     this.LocalStorageService = LocalStorageService
     this.ionicActionSheet = $ionicActionSheet
     this.apiService = apiService

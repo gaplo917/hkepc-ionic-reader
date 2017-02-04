@@ -62,6 +62,7 @@ export class GeneralHtml{
       if(imgSrc && !imgSrc.endsWith('.gif')){
         this.source(e).attr('image-lazy-src',imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
+        this.source(e).attr('lazy-scroll-resize',"true")
         this.source(e).removeAttr('src')
         this.source(e).removeAttr('alt')
       }
