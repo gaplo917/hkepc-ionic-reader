@@ -103,8 +103,8 @@ export class PostDetailController{
         this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
           .map(data => data || {})
           .subscribe(data => {
-            const lastPage = data.page
-            const lastPostId = data.postId
+            const lastPage = data.page || $stateParams.page
+            const lastPostId = data.postId || $stateParams.focus
 
             this.page = lastPage
             this.currentPage = this.page
