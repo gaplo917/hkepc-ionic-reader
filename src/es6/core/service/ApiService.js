@@ -64,6 +64,7 @@ export class ApiService {
     return this.rx.Observable.fromPromise(httpPromise)
       .observeOn(this.rx.Scheduler.default)
       .subscribeOn(this.rx.Scheduler.default)
+      .filter(resp => resp.status > 0) // -1 status mean user is offline
       .do(
       resp => {
         // on api success, anything need to handle?
@@ -124,7 +125,6 @@ export class ApiService {
 
   checkPM(){
     return this.composeApi(this.http.get(HKEPC.forum.checkPM()))
-      .flatMapApiFromCheerioworker('checkPM')
   }
 
   search(formhash, searchText) {

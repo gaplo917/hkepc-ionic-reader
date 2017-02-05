@@ -47,6 +47,7 @@ export class PostListController {
     this.currentPageNum = this.page - 1
     this.pointingPage = this.currentPageNum
     this.newPostModal = {}
+    this.subTopicList = []
     this.posts = []
 
     const newPostModal = this.scope.newPostModal = $scope.$new()
@@ -254,7 +255,10 @@ export class PostListController {
         // only extract the number
         this.totalPageNum = resp.totalPageNum
 
-        this.subTopicList =  resp.subTopicList
+        // use exiting list if there is
+        this.subTopicList =  this.subTopicList.length == 0
+                              ? resp.subTopicList
+                              : this.subTopicList
 
         this.categories = resp.categories
 

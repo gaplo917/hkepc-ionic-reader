@@ -174,6 +174,7 @@ export default
 
           scope.url = undefined
           scope.urlText = undefined
+          scope.$apply()
         }
 
         modal.addTextStyleTagToText = function(tag) {
@@ -193,11 +194,12 @@ export default
 
           const nselectionStart = selectionStart + openTag.length
 
-          $timeout(() => {
+
+          scope.$apply(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },100)
+          })
 
         }
         modal.addFontSizeTagToText = function(size) {
@@ -213,12 +215,11 @@ export default
 
           const nselectionStart = selectionStart + openTag.length
 
-          $timeout(() => {
+          scope.$apply(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },100)
-
+          })
         }
 
         modal.addGifCodeToText = function(code) {
@@ -231,11 +232,11 @@ export default
 
           const nselectionStart = selectionStart + code.length + 1
 
-          $timeout(() => {
+          scope.$apply(() => {
             const elem = document.getElementById(selectorId)
             elem.focus()
             elem.setSelectionRange(nselectionStart,nselectionStart)
-          },100)
+          })
 
         }
 
@@ -247,6 +248,8 @@ export default
 
           scope.contentModel = `${splits[0]}[img]${imageUrl}[/img]${splits[1]}`
           scope.imageUrl = undefined
+
+          scope.$apply()
         }
       },
 

@@ -158,6 +158,12 @@ angular.module('starter', [
             content: `<i class="ion-network"> 找不到相關的內容！</i>`
           })
         }
+        else if (err.status == -1){
+          ngToast.danger({
+            dismissOnTimeout: true,
+            content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`
+          })
+        }
         else {
           ngToast.danger({
             dismissOnTimeout: true,

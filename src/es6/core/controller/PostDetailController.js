@@ -133,9 +133,11 @@ export class PostDetailController{
 
       this.registerUserProfileModal()
 
-      this.authService.getUsername().subscribe(username => {
-        this.currentUsername = username.trim()
-      })
+      this.authService.getUsername()
+        .filter(username => username != undefined)
+        .safeApply($scope, username => {
+          this.currentUsername = username
+        }).subscribe()
     })
 
 

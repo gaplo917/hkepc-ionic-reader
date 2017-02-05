@@ -61,13 +61,13 @@ export class TabController{
     // Try the credential on start app
     this.rx.Observable
         .concat(this.apiService.memberCenter(),this.apiService.checkPM())
-        .delay(2000)
+        .delay(10000)
         .subscribe()
 
     // schedule to check PM
-    this.rx.Observable.interval(1000 * 60)
-      .flatMap(() => this.apiService.checkPM())
+    this.rx.Observable.interval(60 * 1000)
       .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
+      .flatMap(() => apiService.checkPM())
       .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -76,7 +76,7 @@ export class TabController{
     })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
-      .filter(([event, req]) => req instanceof CommonInfoExtractRequest && req.username != "")
+      .filter(([event, req]) => req instanceof CommonInfoExtractRequest)
       .debounce(500)
       .subscribe( ([event, req]) =>{
         console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
@@ -117,12 +117,23 @@ export class TabController{
       .safeApply($scope, ([event,req]) => {
         console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`,req)
 
-        if(req.username) {
+        if(req.username != undefined && req.username != "") {
 
           this.isLoggedIn = true
           this.login = String(this.hideUsername) == 'true' ? "IR 用家" : req.username
 
           console.log("changed login name to ", this.login)
+
+        }
+        else {
+          this.login = undefined
+
+          if(this.isLoggedIn){
+            ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+            AuthService.logout()
+
+            this.isLoggedIn = false
+          }
 
         }
 
