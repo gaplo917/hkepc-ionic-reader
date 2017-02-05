@@ -43,9 +43,11 @@ export class TabController{
     this.isLoggedIn = false
 
     // cache the value
-    AuthService.isLoggedIn().subscribe(isLoggedIn => {
+    rx.Observable.combineLatest(AuthService.isLoggedIn(), AuthService.getUsername(), (isLoggedIn, username) => {
       this.isLoggedIn = isLoggedIn
-    })
+
+      this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
+    }).subscribe()
 
     this.localStorageService.get('theme').subscribe(data => {
       this.darkTheme = data == 'dark'
