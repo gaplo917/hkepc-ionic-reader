@@ -57,6 +57,10 @@
       "version": "3.9.2",
       "locator": "ios@3.9.2"
     },
-    "android"
+    {
+      "platform": "android",
+      "version": "5.2.2",
+      "locator": "android@5.2.2"
+    }
   ]
 }
