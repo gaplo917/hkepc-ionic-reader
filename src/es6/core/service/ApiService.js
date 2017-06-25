@@ -110,7 +110,7 @@ export class ApiService {
   }
 
   userProfile(uid) {
-    return this.composeApi(this.http.get(`http://www.hkepc.com/forum/space.php?uid=${uid}`))
+    return this.composeApi(this.http.get(HKEPC.forum.space(uid)))
       .flatMapApiFromCheerioworker('userProfile')
   }
 

@@ -65,7 +65,7 @@ export class MyPostController {
 
     this.refeshing = true
 
-    this.http.get(`http://www.hkepc.com/forum/my.php?item=threads&page=${this.page}`).then(resp => {
+    this.http.get(HKEPC.forum.myPost(this.page)).then(resp => {
 
       const html = new HKEPCHtml(cheerio.load(resp.data))
 

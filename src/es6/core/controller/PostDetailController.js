@@ -806,7 +806,8 @@ export class PostDetailController{
       },
       buttonClicked: (index) => {
         if(index == 0){
-          Clipboard.copy(`http://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.page}?delayRender=&focus=${message.id}`);
+          // TODO: refactor this url to config
+          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.page}?delayRender=&focus=${message.id}`);
           this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         }
         else if(index == 1){

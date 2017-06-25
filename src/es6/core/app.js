@@ -134,7 +134,7 @@ angular.module('starter', [
 
                 const proxy = proxyInDb || HKEPC.proxy
                 // rewrite the url with proxy
-                config.url = config.url.replace('http://',`${proxy}/`)
+                config.url = config.url.replace('https://',`${proxy}/`)
 
                 console.debug("proxied request", config.url)
               }

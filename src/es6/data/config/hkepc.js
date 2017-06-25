@@ -2,9 +2,9 @@
  * Created by Gaplo917 on 9/1/2016.
 */
 const PROXY_URL = 'https://ionic-reader.xyz'
-const BASE_URL = `http://www.hkepc.com`
+const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
-const IMAGE_URL = 'http://www.hkepc.com/forum'
+const IMAGE_URL = 'https://www.hkepc.com/forum'
 const VERSION = "v1.6.0"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
@@ -84,7 +84,10 @@ module.exports = {
     memberCenter: () => `${BASE_FORUM_URL}/memcp.php`,
     checkPM: () => `${BASE_FORUM_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
     settings:() => `${BASE_FORUM_URL}/memcp.php?action=profile&typeid=5`,
-    subscribeNewReply: (postId) => `${BASE_FORUM_URL}/my.php?item=attention&action=add&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`
+    subscribeNewReply: (postId) => `${BASE_FORUM_URL}/my.php?item=attention&action=add&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`,
+    space: (uid) => `${BASE_FORUM_URL}/space.php?uid=${uid}`,
+    myPost: (page) => `${BASE_FORUM_URL}/my.php?item=threads&page=${page}`,
+    myReply: (page) => `${BASE_FORUM_URL}/my.php?item=posts&page=${page}`,
   },
   auth:{
     id: 'cdb_sid',

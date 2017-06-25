@@ -10,7 +10,7 @@ module.exports = function (self) {
 
     const html = new HKEPCHtml(cheerio.load(data))
         .removeIframe()
-        .processImgUrl('http://www.hkepc.com/forum')
+        .processImgUrl('https://www.hkepc.com/forum')
         .processImageToLazy()
         .processEpcUrl(currentHash || "")
         .processExternalUrl()

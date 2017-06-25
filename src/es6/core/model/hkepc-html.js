@@ -9,9 +9,9 @@ export class HKEPCHtml extends GeneralHtml{
 
   constructor(cheerioSource) {
     super(cheerioSource);
-    this.BASE_URL = `http://www.hkepc.com`
+    this.BASE_URL = `https://www.hkepc.com`
     this.BASE_FORUM_URL = `${this.BASE_URL}/forum`
-    this.IMAGE_URL = 'http://www.hkepc.com/forum'
+    this.IMAGE_URL = 'https://www.hkepc.com/forum'
   }
 
   processEpcUrl(currentHash){

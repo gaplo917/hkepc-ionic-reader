@@ -214,7 +214,7 @@ export class LikesController{
       },
       buttonClicked: (index) => {
         if(index == 0){
-          Clipboard.copy(`http://hkepc.ionic-reader.xyz/#/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}?delayRender=&focus=${message.id}`);
+          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}?delayRender=&focus=${message.id}`);
         }
         else {
           Clipboard.copy(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
