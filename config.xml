@@ -88,7 +88,7 @@
     </platform>
     <engine name="android" spec="^6.2.2" />
     <plugin name="com.telerik.plugins.nativepagetransitions" spec="https://github.com/Telerik-Verified-Plugins/NativePageTransitions" />
-    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.1.0" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.3.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git" />
     <plugin name="cordova-plugin-statusbar" spec="~2.2.3" />
 </widget>
