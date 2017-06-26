@@ -6,18 +6,18 @@
     <div class="list" ng-show="!vm.isLoggedIn">
       <label class="item item-input">
         <span class="input-label">登入名稱</span>
-        <input type="text" placeholder="Username" ng-model="vm.user.username">
+        <input type="text" placeholder="請輸入登入名稱" ng-model="vm.user.username">
       </label>
       <label class="item item-input">
         <span class="input-label">登入密碼</span>
-        <input type="password" placeholder="Password" ng-model="vm.user.password">
+        <input type="password" placeholder="請輸入登入密碼" ng-model="vm.user.password">
       </label>
       <ion-checkbox ng-show="vm.isProxy()" ng-model="vm.agreeProxy">我同意使用 Proxy 傳送資料</ion-checkbox>
       <div class="padding" ng-show="vm.isProxy()">
         <button class="button button-block button-positive activated" ng-class="vm.user.username && vm.user.password && vm.agreeProxy ? '' : 'disabled'" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
       </div>
       <div class="padding" ng-show="!vm.isProxy()">
-        <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">我明白並登入</button>
+        <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
       </div>
     </div>
     <div class="list" ng-show="vm.isLoggedIn">
