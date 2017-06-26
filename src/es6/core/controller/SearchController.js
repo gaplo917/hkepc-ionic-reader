@@ -53,7 +53,7 @@ export class SearchController {
       this.lastSearchTimestamp = new Date().getTime()
 
       this.apiService.search(this.formhash , keyword).subscribe(resp => {
-        this.state.go(Controllers.PostListController.STATE, { page:1 , topicId: 'search', searchId: resp.searchId, searchText: keyword })
+        this.state.go(Controllers.PostListController.STATE, { page:1 , topicId: 'search', searchResp: JSON.stringify(resp), searchText: keyword })
         this.searching = false
 
       })

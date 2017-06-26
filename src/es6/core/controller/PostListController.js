@@ -14,7 +14,7 @@ export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
   static get NAME() { return 'PostListController'}
   static get CONFIG() { return {
-    url: '/topics/:topicId/page/:page?searchId=&searchText=',
+    url: '/topics/:topicId/page/:page?searchId=&searchText=&searchResp=',
     views: {
       'tab-topics': {
         templateUrl: 'templates/post-list.html',
@@ -41,6 +41,8 @@ export class PostListController {
     this.topicId = $stateParams.topicId
     this.searchId = $stateParams.searchId
     this.searchText = $stateParams.searchText
+    // passed from SearchController
+    this.searchResp = $stateParams.searchResp ? JSON.parse($stateParams.searchResp) : undefined
 
     this.page = $stateParams.page
     this.categories = []
@@ -49,6 +51,7 @@ export class PostListController {
     this.newPostModal = {}
     this.subTopicList = []
     this.posts = []
+    this.hasMoreData = true
 
     const newPostModal = this.scope.newPostModal = $scope.$new()
     newPostModal.id = "new-content"
@@ -238,49 +241,59 @@ export class PostListController {
   }
 
   loadMore(cb){
-    const nextPage = parseInt(this.currentPageNum) + 1
+    if(this.hasMoreData){
+      const nextPage = parseInt(this.currentPageNum) + 1
 
-    this.showSpinner = true
+      if(this.searchResp){
+        this.renderPostListResponse(this.searchResp)
+        this.searchResp = undefined
+      }
+      else {
+        this.apiService.postListPage({
+          topicId: this.topicId,
+          pageNum: nextPage,
+          filter : this.filter,
+          order: this.order,
+          searchId: this.searchId
+        })
+          .safeApply(this.scope, resp => {
+            this.renderPostListResponse(resp)
+          }).subscribe()
+      }
+    }
+  }
 
-    return this.apiService.postListPage({
-      topicId: this.topicId,
-      pageNum: nextPage,
-      filter : this.filter,
-      order: this.order,
-      searchId: this.searchId
-    })
-      .safeApply(this.scope, resp => {
+  renderPostListResponse(resp){
+    this.searchId = resp.searchId
+    // only extract the number
+    this.totalPageNum = resp.totalPageNum
 
-        this.searchId = resp.searchId
-        // only extract the number
-        this.totalPageNum = resp.totalPageNum
+    // use exiting list if there is
+    this.subTopicList =  this.subTopicList.length == 0
+      ? resp.subTopicList
+      : this.subTopicList
 
-        // use exiting list if there is
-        this.subTopicList =  this.subTopicList.length == 0
-                              ? resp.subTopicList
-                              : this.subTopicList
+    this.categories = resp.categories
 
-        this.categories = resp.categories
+    // better UX to highlight the searchText
+    this.posts = this.topicId == 'search'
+      ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
+      : this.posts.concat(resp.posts)
 
-        // better UX to highlight the searchText
-        this.posts = this.topicId == 'search'
-          ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
-          : this.posts.concat(resp.posts)
+    this.currentPageNum = parseInt(this.currentPageNum) + 1
 
-        this.currentPageNum = parseInt(this.currentPageNum) + 1
+    this.topic = {
+      id: this.topicId,
+      name: this.topicId == 'search'
+        ? `${resp.topicName} ${this.searchText}`
+        : this.topicId == 'latest'
+          ? '最新帖子'
+          : resp.topicName
+    }
 
-        this.topic = {
-          id: this.topicId,
-          name: this.topicId == 'search'
-            ? `${resp.topicName} ${this.searchText}`
-            : this.topicId == 'latest'
-              ? '最新帖子'
-              : resp.topicName
-        }
+    this.hasMoreData = this.currentPageNum < this.totalPageNum
 
-        this.scope.$broadcast('scroll.infiniteScrollComplete')
-
-      }).subscribe()
+    this.scope.$broadcast('scroll.infiniteScrollComplete')
   }
 
   reset(){
