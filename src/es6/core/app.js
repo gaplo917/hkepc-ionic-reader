@@ -45,7 +45,12 @@ angular.module('starter', [
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.overlaysWebView(true)
+      if(ionic.Platform.isAndroid()){
+        StatusBar.overlaysWebView(false)
+      }
+      else {
+        StatusBar.overlaysWebView(true)
+      }
 
       LocalStorageService.get('theme').subscribe(data => {
         const darkTheme = data == 'dark'
@@ -55,7 +60,9 @@ angular.module('starter', [
           StatusBar.styleDefault()
         }
       })
-
+    }
+    if(window.cordova && cordova.InAppBrowser){
+      window.open = cordova.InAppBrowser.open
     }
   })
 })
