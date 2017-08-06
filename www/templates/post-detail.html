@@ -75,7 +75,7 @@
             <i class="icon ion-ios-chatboxes-outline"></i>
             留言
           </a>
-          <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="!message.author.name == vm.currentUsername">
+          <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="message.author.name != vm.currentUsername">
             <i class="icon ion-ios-flag-outline"></i>
             舉報
           </a>
