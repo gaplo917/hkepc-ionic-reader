@@ -73,7 +73,7 @@ export class PostDetailController{
     })
 
     $scope.$eventToObservable('lastread')
-      .throttle(300)
+      .throttle(200)
       .safeApply($scope, ([event,{ page, id }]) => {
         console.log("received broadcast lastread",page, id)
         this.currentPage = page
@@ -95,7 +95,7 @@ export class PostDetailController{
       this.postId = $stateParams.postId
       this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
       this.focus = $stateParams.focus
-      this.page = $stateParams.page
+      this.currentPage = $stateParams.page
 
       // check to see if from a focus request
       if(!this.focus){
@@ -106,8 +106,7 @@ export class PostDetailController{
             const lastPage = data.page || $stateParams.page
             const lastPostId = data.postId || $stateParams.focus
 
-            this.page = lastPage
-            this.currentPage = this.page
+            this.currentPage = lastPage
             this.focus = lastPostId
 
             this.loadMessages()
@@ -122,22 +121,23 @@ export class PostDetailController{
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      // register reply modal
-      this.registerReplyModal()
-
-      // register report modal
-      this.registerReportModal()
-
-      //register edit message modal
-      this.registerEditMessageModal()
-
-      this.registerUserProfileModal()
-
+      // best effort to get it first
       this.authService.getUsername()
         .filter(username => username != undefined)
         .safeApply($scope, username => {
           this.currentUsername = username
         }).subscribe()
+
+       // register reply modal
+       this.registerReplyModal()
+
+       // register report modal
+       this.registerReportModal()
+
+       //register edit message modal
+       this.registerEditMessageModal()
+
+       this.registerUserProfileModal()
     })
 
 
@@ -154,7 +154,7 @@ export class PostDetailController{
   loadMore(){
     if(!this.end){
       //update the page count
-      this.page = parseInt(this.page) + 1
+      this.currentPage = parseInt(this.currentPage) + 1
 
       this.loadMessages()
     }
@@ -169,7 +169,7 @@ export class PostDetailController{
    *
    * @param style 'previous' or 'next'
    */
-  loadMessages(style = 'next', page = this.page){
+  loadMessages(style = 'next', page = this.currentPage){
 
     if(this.refreshing) return
 
@@ -198,8 +198,6 @@ export class PostDetailController{
 
         // delayRender == -1 => not from find message
         message.focused = this.delayRender != -1 && message.id == this.focus
-
-        message.author.isSelf = (message.author.name == this.currentUsername)
 
       })
 
@@ -250,14 +248,20 @@ export class PostDetailController{
             post: { page: page },
             type: 'POST_PAGE_DIVIDER'
           })
-          this.messages = this.messages.concat(post.messages)
+
+          const messageIds = this.messages.map(_ => _.id)
+          const filtered = post.messages.filter(msg => {
+            return messageIds.indexOf(msg.id) == -1
+          })
+
+          this.messages = this.messages.concat(filtered)
         }
       }
 
       this.refreshing = false
       this.loadingPrevious = false
       this.end = page >= this.totalPageNum
-      this.page = page
+      this.currentPage = page
 
       if(this.focus){
         this.$timeout(() => {
@@ -667,7 +671,7 @@ export class PostDetailController{
                 this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
 
                 // set the page to the message page
-                this.page = message.post.page
+                this.currentPage = message.post.page
 
                 this.doRefresh()
 
@@ -704,6 +708,15 @@ export class PostDetailController{
   openPageSliderPopover($event) {
     this.inputPage = this.currentPage
     this.pageSliderPopover.show($event)
+  }
+
+  doLoadPreviousPage(){
+    this.inputPage = this.currentPage == 1 ? 1 : this.currentPage - 1
+
+    this.$timeout(() => {
+      this.doJumpPage()
+    },200)
+
   }
 
   doJumpPage(){
@@ -807,11 +820,11 @@ export class PostDetailController{
       buttonClicked: (index) => {
         if(index == 0){
           // TODO: refactor this url to config
-          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.page}?delayRender=&focus=${message.id}`);
+          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.currentPage}?delayRender=&focus=${message.id}`);
           this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         }
         else if(index == 1){
-          Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.page));
+          Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.currentPage));
           this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         }
         else if(index == 2){

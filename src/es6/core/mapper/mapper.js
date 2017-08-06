@@ -185,7 +185,6 @@ export default class Mapper{
           image: avatarImageUrl,
           uid: URLUtils.getQueryVariable(avatarImageUrl,'uid'),
           name : postSource.find('.postauthor > .postinfo').text().trim(),
-          isSelf: false // default is false, mutate later
         }
       }
 

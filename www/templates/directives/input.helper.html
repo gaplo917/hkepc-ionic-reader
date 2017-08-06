@@ -90,7 +90,7 @@
       </button>
 
       <span class="image-error"> {{imageErr}} </span>
-      <span class="image-error-suggestion"> {{imageErrSuggestion}} </span>
+      <span class="image-error-suggestion" compile="::imageErrSuggestion"></span>
       <span class="image-upload-success"> {{imageUploadSuccess}} </span>
 
       <button ng-show="previewUploadImage && imageErr" class="button button-full" ngf-select="prepareUpload($file)">

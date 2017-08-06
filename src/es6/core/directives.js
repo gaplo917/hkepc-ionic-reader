@@ -110,7 +110,7 @@ export default
               if(fileSizeInKB >= 150){
 
                 scope.imageErr = `圖片(${fileSizeInKB} KB) 大於 HKEPC 限制(150KB)`
-                scope.imageErrSuggestion = `作者推薦：使用 Telegram 發送圖片給自己 (一般圖片都能被壓縮少於 150 KB) 或使用其它圖片壓縮軟件。`
+                scope.imageErrSuggestion = `iOS 用家：可使用 Apple 新收購的 Work Flow 配搭作者設計專用的 Script 壓縮圖片。<a href="" target="_system" onclick="window.open('https://blog.gaplotech.com/workflow-x-hkepc-ir/', '_system', 'location=yes'); return false;">查看此教學</a>`
               } else {
                 // image is valid to upload
                 scope.file = file

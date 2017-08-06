@@ -15,6 +15,11 @@
     <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" style="padding-top:20px"
                  delegate-handle="post-detail"
     >
+    <button class="button button-full"
+            ng-click="vm.doLoadPreviousPage()"
+            ng-show="vm.currentPage > 1 && !vm.loadingPrevious && vm.messages.length != 0">
+      加載上一頁
+    </button>
 
     <div class="text-center">
       <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
@@ -22,7 +27,6 @@
     <div class="spinner">
       <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
     </div>
-
 
     <div id="message-{{::message.id}}"
          page="{{::message.post.page}}"
@@ -71,11 +75,11 @@
             <i class="icon ion-ios-chatboxes-outline"></i>
             留言
           </a>
-          <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="::!message.author.isSelf">
+          <a class="tab-item card-button" ng-click="vm.onReport(message)" ng-if="!message.author.name == vm.currentUsername">
             <i class="icon ion-ios-flag-outline"></i>
             舉報
           </a>
-          <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="::message.author.isSelf">
+          <a class="tab-item card-button" ng-click="vm.onEdit(message)" ng-if="message.author.name == vm.currentUsername">
             <i class="icon ion-ios-compose-outline"></i>
             修改
           </a>
