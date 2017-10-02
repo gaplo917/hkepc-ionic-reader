@@ -5,7 +5,7 @@ const PROXY_URL = 'https://ionic-reader.xyz'
 const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
-const VERSION = "v1.7.1"
+const VERSION = "v1.0.0"
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 
@@ -96,7 +96,7 @@ module.exports = {
     formhash: 'formhash'
   },
   signature: (color) => {
-    return `[size=1][color=Silver]via HKEPC Ionic Reader ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
+    return `[size=1][color=Silver]via HKEPC IR Pro ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
   },
   data:{
     gifs:[

@@ -32,6 +32,7 @@ gulp.task('browserify', function () {
     // defining transforms here will avoid crashing your stream
     transform: [
       babelify.configure({
+        plugins: ["transform-object-rest-spread"],
         presets: ["es2015"]
       })
     ]

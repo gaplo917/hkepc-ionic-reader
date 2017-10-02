@@ -26,9 +26,9 @@ export class FeatureRouteController{
     }
   }}
 
-  constructor($scope,$rootScope, $http, AuthService,$state,$sce,ngToast,LocalStorageService){
+  constructor($scope,$rootScope, apiService, AuthService,$state,$sce,ngToast,LocalStorageService){
 
-    this.http = $http
+    this.apiService = apiService
     this.scope = $scope
     this.rootScope = $rootScope
     this.sce = $sce
@@ -80,19 +80,21 @@ export class FeatureRouteController{
 
   registerOnChangeForumStyle(){
 
-    this.http.get(HKEPC.forum.settings())
-      .then((resp) => {
+    this.apiService.settings()
+      .safeApply(this.scope, (resp) => {
         let $ = cheerio.load(resp.data)
         let form = $(`form[name='reg']`)
         let formSource = cheerio.load(form.html())
         const relativeUrl = form.attr('action')
         const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
 
-        const formInputs = formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i,elem) => {
+        const formInputs = {}
+
+        formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i,elem) => {
           const k = formSource(elem).attr('name')
           const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
 
-          return `${k}=${encodeURIComponent(v)}`
+          formInputs[k] = encodeURIComponent(v)
         }).get()
 
         $(`select[name='styleidnew'] option`).each((i,elem) => {
@@ -108,24 +110,22 @@ export class FeatureRouteController{
 
         this.onChangeForumStyle = (newStyle) => {
 
-          const postData = [
-            `styleidnew=${newStyle}`,
-            formInputs.join('&')
-          ].join('&')
-
           // Post to the server
-          this.http({
+          this.apiService.dynamicRequest({
             method: "POST",
             url : postUrl,
-            data : postData,
+            data : {
+              styleidnew: newStyle,
+              ...formInputs
+            },
             headers : {'Content-Type':'application/x-www-form-urlencoded'}
-          }).then((resp) => {
+          }).safeApply(this.scope, (resp) => {
 
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功更改！</i>`)
-          })
+          }).subscribe()
         }
 
-      })
+      }).subscribe()
   }
 
   onDarkTheme(bool){

@@ -4,10 +4,10 @@
 import * as HKEPC from '../../data/config/hkepc'
 import Mapper from "../mapper/mapper";
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import {HybridHttp} from "../bridge/HybridHttp"
 const work = require('webworkify');
 
 const cheerioWorker = work(require('../cheerio-worker'));
-
 
 export class ApiService {
   /**
@@ -22,7 +22,7 @@ export class ApiService {
   }
 
   constructor($http, rx, $rootScope,) {
-    this.http = $http
+    this.http = new HybridHttp($http,rx)
     this.rx = rx
     this.$rootScope = $rootScope
 
@@ -55,69 +55,55 @@ export class ApiService {
       })
   }
 
-  /**
-   * Use Rx to wrap Angular httpPromise for better data modeling
-   * @param httpPromise
-   * @returns {Observable<*>}
-   */
-  composeApi(httpPromise){
-    return this.rx.Observable.fromPromise(httpPromise)
-      .observeOn(this.rx.Scheduler.default)
-      .subscribeOn(this.rx.Scheduler.default)
-      .filter(resp => resp.status > 0) // -1 status mean user is offline
-      .do(
-      resp => {
-        // on api success, anything need to handle?
+  login(username, password){
+    return this.http.request({
+      method: 'POST',
+      url: HKEPC.forum.login(),
+      data: {
+        username: username,
+        password: password,
+        cookietime: 2592000
       },
-      error => {
-        // on api fail
-      },
-      completed => {
-        // on api completed
-        // force scope update to reflect UI changes
-        // this.$rootScope.$applyAsync()
-      }
-    )
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    })
+  }
+
+  logout(formhash) {
+    return this.http.request({
+      method: 'POST',
+      url: HKEPC.forum.logout(formhash)
+    })
   }
 
   topicList(){
-    if(WebViewJavascriptBridge){
-      return this.rx.Observable.create((observer) => {
-        WebViewJavascriptBridge.callHandler('ObjC Echo', {method: 'GET', url: HKEPC.forum.index() }, (responseData) => {
-          console.log("JS received response:", responseData)
-          observer.onNext({ data: responseData })
-          observer.onCompleted()
-          return function() {
-            console.log('disposed')
-          }
-        })
-      })
-        .flatMapApiFromCheerioworker('topicList')
-    }
-    else {
-      return this.composeApi(this.http.get(HKEPC.forum.index()))
-        .flatMapApiFromCheerioworker('topicList')
-    }
-
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.index()
+    }).flatMapApiFromCheerioworker('topicList')
   }
 
   postListPage(opt){
     const {topicId, pageNum, filter, order, searchId} = opt
 
-    const request = topicId == 'search'
+    const url = topicId == 'search'
       ? HKEPC.forum.latestNext(searchId, pageNum)
       : (topicId == 'latest' && pageNum > 1)
         ? HKEPC.forum.latestNext(searchId, pageNum)
         : HKEPC.forum.topics(topicId, pageNum, filter,order)
 
-    return this.composeApi(this.http.get(request))
-      .flatMapApiFromCheerioworker('postListPage', { pageNum: pageNum })
+    return this.http.request({
+      method: 'GET',
+      url: url
+    }).flatMapApiFromCheerioworker('postListPage', { pageNum: pageNum })
   }
 
   postDetails(opt){
     const {topicId, postId, page, orderType, filterOnlyAuthorId} = opt
 
-    return this.composeApi(this.http.get(HKEPC.forum.posts(topicId,postId,page,orderType,filterOnlyAuthorId)))
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.posts(topicId,postId,page,orderType,filterOnlyAuthorId)
+    })
       .flatMapApiFromCheerioworker('postDetails', {
         opt: opt,
         currentHash: window.location.hash
@@ -126,21 +112,33 @@ export class ApiService {
   }
 
   userProfile(uid) {
-    return this.composeApi(this.http.get(HKEPC.forum.space(uid)))
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.space(uid)
+    })
       .flatMapApiFromCheerioworker('userProfile')
   }
 
   subscribeNewReply(postId){
-    return this.composeApi(this.http.get(HKEPC.forum.subscribeNewReply(postId)))
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.subscribeNewReply(postId)
+    })
   }
 
   memberCenter(){
-    return this.composeApi(this.http.get(HKEPC.forum.memberCenter()))
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.memberCenter()
+    })
       .flatMapApiFromCheerioworker('memberCenter')
   }
 
   checkPM(){
-    return this.composeApi(this.http.get(HKEPC.forum.checkPM()))
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.checkPM()
+    })
   }
 
   search(formhash, searchText) {
@@ -161,6 +159,88 @@ export class ApiService {
     ].join('&')
 
     console.log(postData)
-    return this.composeApi(this.http.post(`${postUrl}?${postData}`)).flatMapApiFromCheerioworker('search')
+    return this.http.request({
+      method: 'POST',
+      url: `${postUrl}?${postData}`
+    })
+      .flatMapApiFromCheerioworker('search')
+  }
+
+  chatList(page){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.pmList(page)
+    })
+  }
+
+  chatDetails(senderId){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.pm(senderId)
+    })
+  }
+
+  postChatMessage(opt){
+    return this.http.request(opt)
+  }
+
+  settings(){
+    return this.http.request({
+      method : 'GET',
+      url: HKEPC.forum.settings()
+    })
+  }
+
+  dynamicRequest(opt){
+    return this.http.request(opt)
+  }
+
+  myPosts(page){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.myPost(page)
+    })
+  }
+
+  myReplies(page){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.myReply(page)
+    })
+  }
+
+  epcNews(page){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.news(page)
+    })
+  }
+
+  notifications(page){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.notifications(page)
+    })
+  }
+
+  preNewPost(topicId){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.newPost(topicId)
+    })
+  }
+
+  reportPage(topicId, postId, messageId){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.reportPage(topicId, postId, messageId)
+    })
+  }
+
+  replyPage(reply){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.replyPage(reply)
+    })
   }
 }

@@ -27,10 +27,10 @@ export class ChatDetailController{
       }
     }
   }}
-  constructor($scope, $http, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state){
+  constructor($scope, apiService, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state){
 
     this.scope = $scope
-    this.http = $http
+    this.apiService = apiService
     this.sce = $sce
     this.ionicScrollDelegate = $ionicScrollDelegate
     this.ngToast = ngToast
@@ -47,9 +47,9 @@ export class ChatDetailController{
   }
 
   loadMessages(){
-    this.http
-        .get(HKEPC.forum.pm(this.senderId))
-        .then((resp) => {
+    this.apiService
+        .chatDetails(this.senderId)
+        .safeApply(this.scope, (resp) => {
 
           const html = new GeneralHtml(cheerio.load(resp.data))
 
@@ -88,11 +88,13 @@ export class ChatDetailController{
 
             let formSource = cheerio.load($('#pmform').html())
 
-            const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+            const hiddenFormInputs = {}
+
+            formSource(`input[type='hidden']`).map((i,elem) => {
               const k = formSource(elem).attr('name')
               const v = formSource(elem).attr('value')
 
-              return `${k}=${encodeURIComponent(v)}`
+              hiddenFormInputs[k] = encodeURIComponent(v)
             }).get()
 
             const ionicReaderSign = HKEPC.signature()
@@ -100,18 +102,16 @@ export class ChatDetailController{
             // build the reply message
             const chatMessage = `${message}\n\n${ionicReaderSign}`
 
-            const postData = [
-              `message=${encodeURIComponent(chatMessage)}`,
-              hiddenFormInputs.join('&')
-            ].join('&')
-
             // Post to the server
-            this.http({
+            this.apiService.postChatMessage({
               method: "POST",
               url : postUrl,
-              data : postData,
+              data : {
+                message: chatMessage,
+               ...hiddenFormInputs
+              },
               headers : {'Content-Type':'application/x-www-form-urlencoded'}
-            }).then((resp) => {
+            }).safeApply(this.scope, (resp) => {
 
               const $ = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true})
 
@@ -131,10 +131,10 @@ export class ChatDetailController{
 
               delete this.input.message
 
-            })
+            }).subscribe()
           }
 
-        })
+        }).subscribe()
   }
 
   parseChat(chatHtml,isSelf) {

@@ -26,12 +26,12 @@ export class MyPostController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http,AuthService,ngToast) {
+  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,apiService,AuthService,ngToast) {
     this.historyService = HistoryService
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
-    this.http = $http
+    this.apiService = apiService
     this.ngToast = ngToast
 
     this.page = 1
@@ -65,7 +65,8 @@ export class MyPostController {
 
     this.refeshing = true
 
-    this.http.get(HKEPC.forum.myPost(this.page)).then(resp => {
+    this.apiService.myPosts(this.page)
+      .safeApply(this.scope, resp => {
 
       const html = new HKEPCHtml(cheerio.load(resp.data))
 
@@ -114,7 +115,7 @@ export class MyPostController {
 
       this.refeshing = false
       this.scope.$broadcast('scroll.infiniteScrollComplete')
-    })
+    }).subscribe()
   }
 
   onBack(){

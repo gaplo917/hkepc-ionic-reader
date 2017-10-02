@@ -22,10 +22,9 @@ export class TopicListController {
     }
   }}
 
-  constructor($scope,$http,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope,$q,$state) {
+  constructor($scope,LocalStorageService,AuthService,ngToast, apiService,rx,observeOnScope,$q,$state) {
 
     this.scope = $scope
-    this.http = $http
     this.rx = rx
     this.localStorageService = LocalStorageService
     this.authService = AuthService

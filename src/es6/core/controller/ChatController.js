@@ -22,9 +22,9 @@ export class ChatController{
       }
     }
   }}
-  constructor($scope, $http, AuthService,$state,ngToast,$ionicHistory,rx){
+  constructor($scope, apiService, AuthService,$state,ngToast,$ionicHistory,rx){
 
-    this.http = $http
+    this.apiService = apiService
     this.scope = $scope
     this.chats = []
     this.state = $state
@@ -59,9 +59,8 @@ export class ChatController{
   }
 
   loadChats(){
-    this.http
-        .get(HKEPC.forum.pmList(this.page))
-        .then((resp) => {
+    this.apiService.chatList(this.page)
+        .safeApply(this.scope, (resp) => {
 
           const html = new GeneralHtml(cheerio.load(resp.data))
 
@@ -114,9 +113,8 @@ export class ChatController{
 
           this.scope.$broadcast('scroll.infiniteScrollComplete')
 
-        },(err) => {
-          console.log(err)
         })
+        .subscribe()
   }
 
   loadMore(cb){

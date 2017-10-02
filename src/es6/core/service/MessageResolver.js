@@ -13,8 +13,8 @@ export class MessageResolver {
     return ($http,$q,$sce,MessageService) => new MessageResolver($http,$q,$sce,MessageService)
   }
 
-  constructor($http,$q,$sce,MessageService) {
-    this.http = $http
+  constructor(apiService,$q,$sce,MessageService) {
+    this.apiService = apiService
     this.q = $q
     this.sce = $sce
     this.messageService = MessageService
@@ -23,8 +23,11 @@ export class MessageResolver {
   resolve (url) {
     const deferred = this.q.defer();
 
-    this.http.get(url)
-        .then((resp) => {
+    this.apiService.dynamicRequest({
+      methos: 'GET',
+      url: url
+    })
+        .subscribe((resp) => {
           const html = new HKEPCHtml(cheerio.load(resp.data))
 
           const pageLinkHint = html.getCheerio()('.authorinfo a').attr('href')

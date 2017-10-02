@@ -25,9 +25,9 @@ export class NotificationController{
     }
   }}
 
-  constructor($scope, $http, AuthService,$state,$sce,ngToast,$ionicHistory){
+  constructor($scope, apiService, AuthService,$state,$sce,ngToast,$ionicHistory){
 
-    this.http = $http
+    this.apiService = apiService
     this.scope = $scope
     this.sce = $sce
     this.notifications = []
@@ -55,9 +55,8 @@ export class NotificationController{
   loadNotifications(){
     this.refreshing = true
 
-    this.http
-      .get(HKEPC.forum.notifications(this.page))
-      .then((resp) => {
+    this.apiService.notifications(this.page)
+      .safeApply(this.scope, (resp) => {
         const html = new HKEPCHtml(cheerio.load(resp.data))
 
         let $ = html
@@ -93,9 +92,7 @@ export class NotificationController{
         this.refreshing = false
         this.scope.$broadcast('scroll.infiniteScrollComplete')
 
-      },(err) => {
-        console.log(err)
-      })
+      }).subscribe()
   }
 
   findMessage(postId,messageId){

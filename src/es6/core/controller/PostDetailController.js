@@ -27,9 +27,8 @@ export class PostDetailController{
     }
   }}
 
-  constructor($scope,$http, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout) {
+  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout) {
     this.scope = $scope
-    this.http = $http
     this.rx = rx
     this.messageService = MessageService
     this.state = $state
@@ -400,9 +399,8 @@ export class PostDetailController{
       if(report.content){
         console.log(HKEPC.forum.reportPage(message.post.topicId,message.post.id,message.id))
         // get the form hash first
-        this.http
-            .get(HKEPC.forum.reportPage(message.post.topicId,message.post.id,message.id))
-            .then((resp) => {
+        this.apiService.reportPage(message.post.topicId,message.post.id,message.id)
+            .safeApply(this.scope, (resp) => {
               let $ = cheerio.load(resp.data)
               const relativeUrl = $('#postform').attr('action')
               const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
@@ -444,7 +442,7 @@ export class PostDetailController{
 
               })
 
-            })
+            }).subscribe()
       }
       else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 內容不能空白！</i>`)
@@ -496,9 +494,8 @@ export class PostDetailController{
         replyModal.reply = reply
 
         // get the form hash first
-        this.http
-          .get(HKEPC.forum.replyPage(reply))
-          .then(resp => {
+        this.apiService.replyPage(reply)
+          .safeApply(this.scope, resp => {
 
             let $ = cheerio.load(resp.data)
             const relativeUrl = $('#postform').attr('action')
@@ -535,11 +532,12 @@ export class PostDetailController{
             // the text showing the effects of reply / quote
             const preText = formSource('#e_textarea').text()
 
-            const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+            const hiddenFormInputs = {}
+            formSource(`input[type='hidden']`).map((i,elem) => {
               const k = formSource(elem).attr('name')
               const v = formSource(elem).attr('value')
 
-              return `${k}=${encodeURIComponent(v)}`
+              hiddenFormInputs[k] = encodeURIComponent(v)
             }).get()
 
 
@@ -553,19 +551,22 @@ export class PostDetailController{
               // build the reply message
               const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
-              const postData = [
-                `message=${encodeURIComponent(replyMessage)}`,
-                hiddenFormInputs.join('&'),
-                replyModal.images.map(_ => _.formData).join('&')
-              ].join('&')
+              const imageFormData = {}
+              replyModal.images.forEach(img => {
+                imageFormData[img.formData] = ""
+              })
 
               // Post to the server
-              this.http({
+              this.apiService.dynamicRequest({
                 method: "POST",
                 url : postUrl,
-                data : postData,
+                data : {
+                  message: replyMessage,
+                  ...hiddenFormInputs,
+                  ...imageFormData
+                },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).then((resp) => {
+              }).safeApply(this.scope, (resp) => {
 
                 this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
 
@@ -575,13 +576,13 @@ export class PostDetailController{
 
                 this.doRefresh()
 
-              })
+              }).subscribe()
 
 
             }
 
 
-          })
+          }).subscribe()
 
       }
 
@@ -645,28 +646,33 @@ export class PostDetailController{
             // register new function
             editMessageModal.doEdit = (subject,content) => {
               console.log(content)
-              const hiddenFormInputs = formSource(`input[type='hidden']`).map((i,elem) => {
+              const hiddenFormInputs = {}
+              formSource(`input[type='hidden']`).map((i,elem) => {
                 const k = formSource(elem).attr('name')
                 const v = formSource(elem).attr('value')
 
-                return `${k}=${encodeURIComponent(v)}`
+                hiddenFormInputs[k] = encodeURIComponent(v)
               }).get()
 
-              const postData = [
-                `editsubmit=true`,
-                `message=${encodeURIComponent(content)}`,
-                `subject=${encodeURIComponent(subject)}`,
-                hiddenFormInputs.join('&'),
-                editMessageModal.images.map(_ => _.formData).join('&')
-              ].join('&')
+              const imageFormData = {}
+
+              editMessageModal.images.forEach(img => {
+                imageFormData[img.formData] = ""
+              })
 
               // Post to the server
-              this.http({
+              this.apiService.dynamicRequest({
                 method: "POST",
                 url : postUrl,
-                data : postData,
+                data : {
+                  editsubmit: true,
+                  message: content,
+                  subject: subject,
+                  ...hiddenFormInputs,
+                  ...imageFormData
+                },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).then((resp) => {
+              }).safeApply(this.scope, (resp) => {
 
                 this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
 
@@ -677,7 +683,7 @@ export class PostDetailController{
 
                 this.editMessageModal.hide()
 
-              })
+              }).subscribe()
             }
 
           })
@@ -711,7 +717,8 @@ export class PostDetailController{
   }
 
   doLoadPreviousPage(){
-    this.inputPage = this.currentPage == 1 ? 1 : this.currentPage - 1
+    const minPageNum = Math.min(...this.messages.map(msg => msg.post.page))
+    this.inputPage = minPageNum == 1 ? 1 : minPageNum - 1
 
     this.$timeout(() => {
       this.doJumpPage()

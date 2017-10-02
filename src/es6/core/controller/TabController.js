@@ -26,14 +26,13 @@ export class TabController{
 
   }}
 
-  constructor($scope,$http,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService) {
+  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService) {
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
 
     this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
-    this.http = $http
     this.rx = rx
     this.state = $state
     this.authService = AuthService
@@ -52,6 +51,8 @@ export class TabController{
 
     this.localStorageService.get('theme').subscribe(data => {
       this.darkTheme = data == 'dark'
+
+      this.changeNativeTabColorIfNeeded()
     })
     this.localStorageService.get('fontSize').subscribe(data => {
       this.fontSize = data || "100"
@@ -256,6 +257,8 @@ export class TabController{
             StatusBar.styleDefault()
           }
         }
+
+        this.changeNativeTabColorIfNeeded()
       })
 
     $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
@@ -297,6 +300,15 @@ export class TabController{
   }
 
 
+  changeNativeTabColorIfNeeded(){
+    if(window.WebViewJavascriptBridge){
+      if(this.darkTheme){
+        window.WebViewJavascriptBridge.callHandler("DARK_THEME", { isDark: true })
+      } else {
+        window.WebViewJavascriptBridge.callHandler("DARK_THEME", { isDark: false })
+      }
+    }
+  }
 
   removeAndroidStyleCssClass(){
     const body = angular.element(document.querySelector('body'))[0]

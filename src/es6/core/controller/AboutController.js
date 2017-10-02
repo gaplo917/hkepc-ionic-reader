@@ -72,6 +72,6 @@ export class AboutController {
   };
 
   isProxy() {
-    return !URLUtils.isFileSys()
+    return URLUtils.isProxy()
   }
 }

@@ -23,9 +23,9 @@ export class NewsController{
       }
     }
   }}
-  constructor($scope, $http,$ionicHistory,ngToast,MessageService,$sanitize,$ionicActionSheet,$state,rx){
+  constructor($scope, apiService,$ionicHistory,ngToast,MessageService,$sanitize,$ionicActionSheet,$state,rx){
 
-    this.http = $http
+    this.apiService = apiService
     this.rx = rx
     this.scope = $scope
     this.chats = []
@@ -52,8 +52,7 @@ export class NewsController{
   loadNews(){
     this.refreshing = true
 
-    const source = this.rx.Observable
-        .fromPromise(this.http.get(HKEPC.forum.news(this.page)))
+    const source = this.apiService.epcNews(this.page)
         .map(resp => new HKEPCHtml(cheerio.load(resp.data)))
         .map(
             html => html.processImgUrl(HKEPC.imageUrl)

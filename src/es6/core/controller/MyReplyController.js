@@ -27,12 +27,12 @@ export class MyReplyController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,$http,$sce,AuthService,ngToast) {
+  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,apiService,$sce,AuthService,ngToast) {
     this.historyService = HistoryService
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
-    this.http = $http
+    this.apiService = apiService
     this.sce = $sce
     this.ngToast = ngToast
 
@@ -67,7 +67,8 @@ export class MyReplyController {
 
     this.refreshing = true
 
-    this.http.get(HKEPC.forum.myReply(this.page)).then(resp => {
+    this.apiService.myReplies()
+      .safeApply(this.scope, resp => {
 
       const html = new HKEPCHtml(cheerio.load(resp.data))
 
@@ -122,7 +123,7 @@ export class MyReplyController {
       this.refreshing = false
       this.scope.$broadcast('scroll.infiniteScrollComplete')
 
-    })
+    }).subscribe()
   }
 
   onBack(){

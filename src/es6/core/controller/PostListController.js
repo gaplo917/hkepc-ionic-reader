@@ -23,9 +23,8 @@ export class PostListController {
       }
     }
   }}
-  constructor($scope,$http,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
+  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
     this.scope = $scope
-    this.http = $http
     this.state = $state
     this.location = $location
     this.ionicScrollDelegate = $ionicScrollDelegate
@@ -75,8 +74,8 @@ export class PostListController {
     newPostModal.initialize = (topic) => {
       newPostModal.topic = topic
 
-      this.http.get(HKEPC.forum.newPost(this.topicId))
-        .then(resp => {
+      this.apiService.preNewPost(this.topicId)
+        .subscribe(resp => {
           let $ = cheerio.load(resp.data)
 
           const relativeUrl = $('#postform').attr('action')
@@ -118,11 +117,12 @@ export class PostListController {
 
             if(isValidInput && hasChoosenPostType){
 
-              const hiddenFormInputs = $(`input[type='hidden']`).map((i,elem) => {
+              const hiddenFormInputs = {}
+              $(`input[type='hidden']`).map((i,elem) => {
                 const k = $(elem).attr('name')
                 const v = $(elem).attr('value')
 
-                return `${k}=${encodeURIComponent(v)}`
+                hiddenFormInputs[k] = encodeURIComponent(v)
               }).get()
 
               console.log(hiddenFormInputs)
@@ -131,23 +131,19 @@ export class PostListController {
 
               const subject = post.title
               const replyMessage = `${post.content}\n\n${ionicReaderSign}`
-              const undefinedFilter = /.*=undefined$/i
-              const postData = [
-                `subject=${encodeURIComponent(subject)}`,
-                `message=${encodeURIComponent(replyMessage)}`,
-                `typeid=${post.category.id}`,
-                `handlekey=newthread`,
-                `topicsubmit=true`,
-                hiddenFormInputs.join('&'),
-                newPostModal.images.map(_ => _.formData).join('&')
-              ].filter(e => !undefinedFilter.test(e))
-                .join('&')
 
               //Post to the server
-              this.http({
+              this.apiService.dynamicRequest({
                 method: "POST",
                 url : postUrl,
-                data : postData,
+                data : {
+                  subject: subject,
+                  message: replyMessage,
+                  typeid: post.category.id,
+                  handlekey: "newthread",
+                  topicsubmit: true,
+                  ...hiddenFormInputs
+                },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
               }).then((resp) => {
 

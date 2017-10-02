@@ -19,9 +19,7 @@ export class LikesController{
       }
     }
   }}
-  constructor($scope, $http, AuthService,$state,ngToast,MessageService,$sanitize,$ionicActionSheet){
-
-    this.http = $http
+  constructor($scope, AuthService,$state,ngToast,MessageService,$sanitize,$ionicActionSheet){
     this.scope = $scope
     this.ngToast = ngToast
     this.pageSize = 5

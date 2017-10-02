@@ -45,19 +45,8 @@ angular.module('starter', [
 
 
   setupWebViewJavascriptBridge(function(bridge) {
-
-    /* Initialize your app here */
-
-    bridge.registerHandler('JS Echo', function(data, responseCallback) {
-      console.log("JS Echo called with:", data)
-
-      responseCallback({
-        fromJs: "helloworld"
-      })
+    bridge.registerHandler('SWITCH_TAB', function(data, responseCallback) {
       $rootScope.$emit(NativeSwitchTab.NAME, new NativeSwitchTab(data.tabIndex))
-    })
-    bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
-      console.log("JS received response:", responseData)
     })
   })
 

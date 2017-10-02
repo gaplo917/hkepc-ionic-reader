@@ -90,6 +90,6 @@ export class AccountController {
   }
 
   isProxy() {
-    return !URLUtils.isFileSys()
+    return URLUtils.isProxy()
   }
 }
