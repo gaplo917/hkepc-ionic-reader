@@ -55,6 +55,10 @@ export class ApiService {
       })
   }
 
+  dynamicRequest(opt){
+    return this.http.request(opt)
+  }
+
   login(username, password){
     return this.http.request({
       method: 'POST',
@@ -189,10 +193,6 @@ export class ApiService {
       method : 'GET',
       url: HKEPC.forum.settings()
     })
-  }
-
-  dynamicRequest(opt){
-    return this.http.request(opt)
   }
 
   myPosts(page){

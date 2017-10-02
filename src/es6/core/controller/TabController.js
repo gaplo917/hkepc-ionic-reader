@@ -145,45 +145,44 @@ export class TabController{
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
       .filter(([event,req]) => req instanceof FindMessageRequest)
-      .subscribe( ([event, req]) => {
+      .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
 
         this.messageModal.show()
         // reset the message first
         this.scope.messageModal.message = {}
 
-        MessageResolver.resolve(HKEPC.forum.findMessage(req.postId,req.messageId))
-            .then((data) => {
-
-              this.scope.messageModal.message = data.message
-
-              this.scope.messageModal.goToMessage = (msg) => {
-
-                this.messageModal.hide()
-
-                const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-                ? Controllers.ViewPostController.STATE
-                : Controllers.PostDetailController.STATE
-
-                const history = this.ionicHistory.viewHistory()
-                if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostDetailController.STATE )){
-                  this.ionicHistory.clearCache([history.currentView.stateId])
-                }
-
-                this.state.go(targetState,{
-                  topicId: msg.post.topicId,
-                  postId: msg.post.id,
-                  page: msg.post.page,
-                  delayRender: 0,
-                  focus: msg.id
-                })
-              }
-
-              this.scope.messageModal.hide = () => this.messageModal.hide()
-
-            })
-
     })
+      .flatMap(([event, req]) => MessageResolver.resolve(HKEPC.forum.findMessage(req.postId,req.messageId)))
+      .safeApply(this.scope, (data) => {
+        this.scope.messageModal.message = data.message
+
+        this.scope.messageModal.goToMessage = (msg) => {
+
+          this.messageModal.hide()
+
+          const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+            ? Controllers.ViewPostController.STATE
+            : Controllers.PostDetailController.STATE
+
+          const history = this.ionicHistory.viewHistory()
+          if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostDetailController.STATE )){
+            this.ionicHistory.clearCache([history.currentView.stateId])
+          }
+
+          this.state.go(targetState,{
+            topicId: msg.post.topicId,
+            postId: msg.post.id,
+            page: msg.post.page,
+            delayRender: 0,
+            focus: msg.id
+          })
+        }
+
+        this.scope.messageModal.hide = () => this.messageModal.hide()
+
+      })
+      .subscribe()
 
     $scope.$eventToObservable(PushHistoryRequest.NAME)
       .filter(([event,req]) => req instanceof PushHistoryRequest)
@@ -224,16 +223,16 @@ export class TabController{
 
     $rootScope.$eventToObservable(NativeChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof NativeChangeThemeRequest)
-      .subscribe( ([event, req]) => {
+      .safeApply(this.scope, ([event, req]) => {
         this.darkTheme = req.theme == 'dark'
-      })
+      }).subscribe()
 
     $rootScope.$eventToObservable(NativeChangeFontSizeRequest.NAME)
       .filter(([event,req]) => req instanceof NativeChangeFontSizeRequest)
-      .subscribe( ([event, req]) => {
+      .safeApply(this.scope, ([event, req]) => {
         this.fontSize = req.size
         this.ionicHistory.clearCache()
-      })
+      }).subscribe()
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof ChangeThemeRequest)

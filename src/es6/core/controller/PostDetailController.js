@@ -719,11 +719,16 @@ export class PostDetailController{
 
   doLoadPreviousPage(){
     const minPageNum = Math.min(...this.messages.map(msg => msg.post.page))
+    // scroll to top first
+    this.ionicScrollDelegate.scrollTo(0,0, true)
+
     this.inputPage = minPageNum == 1 ? 1 : minPageNum - 1
 
     this.$timeout(() => {
+      this.currentPage = minPageNum
+
       this.doJumpPage()
-    },200)
+    },400)
 
   }
 
