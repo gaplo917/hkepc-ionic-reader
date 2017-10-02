@@ -10,6 +10,7 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
 import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 import {HideUsernameRequest} from '../model/HideUsernameRequest'
+import {NativeSwitchTab} from '../bridge/NativeSwitchTab'
 
 import * as Controllers from './index'
 
@@ -76,6 +77,27 @@ export class TabController{
       // FIXME: ugly hack for dark theme, all style use ios style
       this.removeAndroidStyleCssClass()
     })
+
+    $rootScope.$eventToObservable(NativeSwitchTab.NAME)
+      .subscribe(([event, {tabIndex}]) => {
+        switch(parseInt(tabIndex)){
+          case 0:
+            window.location.hash = "#/tab/topics"
+            // this.state.go(Controllers.TopicListController.STATE)
+            break
+          case 1:
+            window.location.hash = "#/tab/likes"
+
+            // this.state.go(Controllers.LikesController.STATE)
+            break
+          case 2:
+            this.state.go(Controllers.FeatureRouteController.STATE)
+            break
+          case 3:
+            this.state.go(Controllers.AboutController.STATE)
+            break
+        }
+      })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
       .filter(([event, req]) => req instanceof CommonInfoExtractRequest)

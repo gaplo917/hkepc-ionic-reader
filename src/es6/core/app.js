@@ -4,14 +4,23 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
+import {NativeSwitchTab} from './bridge/NativeSwitchTab'
 const moment = require('moment')
 require('moment/locale/zh-tw');
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
 
-// Ionic Starter App
-
+function setupWebViewJavascriptBridge(callback) {
+  if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+  if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+  window.WVJBCallbacks = [callback];
+  var WVJBIframe = document.createElement('iframe');
+  WVJBIframe.style.display = 'none';
+  WVJBIframe.src = 'https://__bridge_loaded__';
+  document.documentElement.appendChild(WVJBIframe);
+  setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+}
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -31,8 +40,27 @@ angular.module('starter', [
   'ngFileUpload',
   'monospaced.elastic'
 ])
-.run(function($rootScope) {
+.run(function($rootScope,ngToast) {
   window.moment = moment
+
+
+  setupWebViewJavascriptBridge(function(bridge) {
+
+    /* Initialize your app here */
+
+    bridge.registerHandler('JS Echo', function(data, responseCallback) {
+      console.log("JS Echo called with:", data)
+
+      responseCallback({
+        fromJs: "helloworld"
+      })
+      $rootScope.$emit(NativeSwitchTab.NAME, new NativeSwitchTab(data.tabIndex))
+    })
+    bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
+      console.log("JS received response:", responseData)
+    })
+  })
+
 })
 .run(function($ionicPlatform,LocalStorageService) {
   $ionicPlatform.ready(function() {
@@ -64,6 +92,7 @@ angular.module('starter', [
     if(window.cordova && cordova.InAppBrowser){
       window.open = cordova.InAppBrowser.open
     }
+
   })
 })
 .config(function ($analyticsProvider) {

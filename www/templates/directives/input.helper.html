@@ -74,18 +74,18 @@
 
     </div>
 
-    <div class="image-upload-control" ng-show="isTab(4)">
-      <textarea ng-show="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
+    <div class="image-upload-control" ng-if="isTab(4)">
+      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
 
-      <div ng-show="!imageUrl && !previewUploadImage" class="button button-full" ngf-select="prepareUpload($file)">
+      <div type="file" ng-if="!imageUrl && !previewUploadImage" ngf-no-object-url="true" class="button button-full" ngf-select="prepareUpload($file)">
         或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
       </div>
 
-      <div ng-show="imageUrl || previewUploadImage" class="preview-image-url">
+      <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
         <img ng-src="{{imageUrl || previewUploadImage}}" >
       </div>
 
-      <button ng-show="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
+      <button ng-if="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
         插入
       </button>
 
@@ -93,21 +93,21 @@
       <span class="image-error-suggestion" compile="::imageErrSuggestion"></span>
       <span class="image-upload-success"> {{imageUploadSuccess}} </span>
 
-      <button ng-show="previewUploadImage && imageErr" class="button button-full" ngf-select="prepareUpload($file)">
+      <button type="file" ng-if="previewUploadImage && imageErr" ngf-no-object-url="true" class="button button-full" ngf-select="prepareUpload($file)">
         重新選擇圖片
       </button>
 
-      <button ng-show="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
+      <button ng-if="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
         <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
       </button>
 
-      <button ng-show="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
+      <button ng-if="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
         再  <i class="ion ion-upload button-icon icon"></i> 另一張圖片
       </button>
     </div>
 
       <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
-      <div style="height:1000px" ng-show="modal.showInputHelperAt == undefined"></div>
+      <div style="height:1000px" ng-if="modal.showInputHelperAt == undefined"></div>
   </ion-scroll>
 
 </div>

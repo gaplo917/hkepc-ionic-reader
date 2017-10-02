@@ -1,4 +1,3 @@
-import * as HKEPC from '../../data/config/hkepc'
 const cheerio = require('cheerio')
 import {GeneralHtml} from '../model/general-html'
 import {HKEPCHtml} from '../model/hkepc-html'

@@ -81,8 +81,24 @@ export class ApiService {
   }
 
   topicList(){
-    return this.composeApi(this.http.get(HKEPC.forum.index()))
-      .flatMapApiFromCheerioworker('topicList')
+    if(WebViewJavascriptBridge){
+      return this.rx.Observable.create((observer) => {
+        WebViewJavascriptBridge.callHandler('ObjC Echo', {method: 'GET', url: HKEPC.forum.index() }, (responseData) => {
+          console.log("JS received response:", responseData)
+          observer.onNext({ data: responseData })
+          observer.onCompleted()
+          return function() {
+            console.log('disposed')
+          }
+        })
+      })
+        .flatMapApiFromCheerioworker('topicList')
+    }
+    else {
+      return this.composeApi(this.http.get(HKEPC.forum.index()))
+        .flatMapApiFromCheerioworker('topicList')
+    }
+
   }
 
   postListPage(opt){
