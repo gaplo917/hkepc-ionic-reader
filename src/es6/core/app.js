@@ -4,7 +4,9 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
-import {NativeSwitchTab} from './bridge/NativeSwitchTab'
+import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
+import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
+
 const moment = require('moment')
 require('moment/locale/zh-tw');
 
@@ -40,13 +42,23 @@ angular.module('starter', [
   'ngFileUpload',
   'monospaced.elastic'
 ])
-.run(function($rootScope,ngToast) {
+.run(function($rootScope,ngToast, $window) {
   window.moment = moment
 
 
   setupWebViewJavascriptBridge(function(bridge) {
-    bridge.registerHandler('SWITCH_TAB', function(data, responseCallback) {
-      $rootScope.$emit(NativeSwitchTab.NAME, new NativeSwitchTab(data.tabIndex))
+
+    bridge.registerHandler('NATIVE_STORAGE_UPDATE', function(data, responseCallback) {
+      switch (data.key){
+        case "theme":
+          $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
+          break
+        case "fontSize":
+          $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
+          break
+        default:
+          break
+      }
     })
   })
 

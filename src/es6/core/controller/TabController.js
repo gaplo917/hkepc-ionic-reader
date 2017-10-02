@@ -10,7 +10,8 @@ import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
 import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 import {HideUsernameRequest} from '../model/HideUsernameRequest'
-import {NativeSwitchTab} from '../bridge/NativeSwitchTab'
+import {NativeChangeFontSizeRequest} from '../bridge/NativeChangeFontSizeRequest'
+import {NativeChangeThemeRequest} from '../bridge/NativeChangeThemeRequest'
 
 import * as Controllers from './index'
 
@@ -49,18 +50,17 @@ export class TabController{
       this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
     }).subscribe()
 
-    this.localStorageService.get('theme').subscribe(data => {
+    this.localStorageService.get('theme').safeApply(this.scope, data => {
       this.darkTheme = data == 'dark'
+    }).subscribe()
 
-      this.changeNativeTabColorIfNeeded()
-    })
-    this.localStorageService.get('fontSize').subscribe(data => {
+    this.localStorageService.get('fontSize').safeApply(this.scope, data => {
       this.fontSize = data || "100"
-    })
+    }).subscribe()
 
-    this.localStorageService.get('hideUsername').subscribe(data => {
+    this.localStorageService.get('hideUsername').safeApply(this.scope, data => {
       this.hideUsername = String(data) == "true"
-    })
+    }).subscribe()
 
     // Try the credential on start app
     this.rx.Observable
@@ -78,27 +78,6 @@ export class TabController{
       // FIXME: ugly hack for dark theme, all style use ios style
       this.removeAndroidStyleCssClass()
     })
-
-    $rootScope.$eventToObservable(NativeSwitchTab.NAME)
-      .subscribe(([event, {tabIndex}]) => {
-        switch(parseInt(tabIndex)){
-          case 0:
-            window.location.hash = "#/tab/topics"
-            // this.state.go(Controllers.TopicListController.STATE)
-            break
-          case 1:
-            window.location.hash = "#/tab/likes"
-
-            // this.state.go(Controllers.LikesController.STATE)
-            break
-          case 2:
-            this.state.go(Controllers.FeatureRouteController.STATE)
-            break
-          case 3:
-            this.state.go(Controllers.AboutController.STATE)
-            break
-        }
-      })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
       .filter(([event, req]) => req instanceof CommonInfoExtractRequest)
@@ -243,6 +222,19 @@ export class TabController{
         }
       }).subscribe()
 
+    $rootScope.$eventToObservable(NativeChangeThemeRequest.NAME)
+      .filter(([event,req]) => req instanceof NativeChangeThemeRequest)
+      .subscribe( ([event, req]) => {
+        this.darkTheme = req.theme == 'dark'
+      })
+
+    $rootScope.$eventToObservable(NativeChangeFontSizeRequest.NAME)
+      .filter(([event,req]) => req instanceof NativeChangeFontSizeRequest)
+      .subscribe( ([event, req]) => {
+        this.fontSize = req.size
+        this.ionicHistory.clearCache()
+      })
+
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof ChangeThemeRequest)
       .subscribe( ([event, req]) => {
@@ -257,8 +249,6 @@ export class TabController{
             StatusBar.styleDefault()
           }
         }
-
-        this.changeNativeTabColorIfNeeded()
       })
 
     $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
@@ -297,17 +287,6 @@ export class TabController{
       }
     })
 
-  }
-
-
-  changeNativeTabColorIfNeeded(){
-    if(window.WebViewJavascriptBridge){
-      if(this.darkTheme){
-        window.WebViewJavascriptBridge.callHandler("DARK_THEME", { isDark: true })
-      } else {
-        window.WebViewJavascriptBridge.callHandler("DARK_THEME", { isDark: false })
-      }
-    }
   }
 
   removeAndroidStyleCssClass(){

@@ -101,7 +101,7 @@ export class PostDetailController{
         // if not , jump to last reading page position
         this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
           .map(data => data || {})
-          .subscribe(data => {
+          .safeApply(this.scope, data => {
             const lastPage = data.page || $stateParams.page
             const lastPostId = data.postId || $stateParams.focus
 
@@ -110,6 +110,7 @@ export class PostDetailController{
 
             this.loadMessages()
           })
+          .subscribe()
       }
       else {
         this.loadMessages()

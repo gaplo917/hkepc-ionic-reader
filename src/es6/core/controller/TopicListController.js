@@ -77,7 +77,7 @@ export class TopicListController {
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
         this.isLoggedIn = isLoggedIn
 
         if(isLoggedIn && this.firstLogin) {
@@ -93,11 +93,11 @@ export class TopicListController {
           this.loadList()
           this.firstLogin = true
         }
-      })
+      }).subscribe()
 
-      this.authService.getUsername().subscribe(username => {
+      this.authService.getUsername().safeApply(this.scope, username => {
         this.username = username
-      })
+      }).subscribe()
 
     })
 
