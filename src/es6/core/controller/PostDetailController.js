@@ -9,7 +9,6 @@ import {FindMessageRequest} from "../model/FindMessageRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 
 import * as Controllers from "./index"
-import { Clipboard } from 'ionic-native';
 
 const cheerio = require('cheerio')
 
@@ -817,7 +816,6 @@ export class PostDetailController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-ios-copy-outline"></i> 複製 HKEPC IR Web 版連結' },
         { text: '<i class="icon ion-ios-copy-outline"></i> 複製 HKEPC 原始連結' },
         { text: `<i class="icon ion-ios-loop"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
         { text: `<i class="icon ion-ios-eye-outline"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
@@ -832,29 +830,24 @@ export class PostDetailController{
       },
       buttonClicked: (index) => {
         if(index == 0){
-          // TODO: refactor this url to config
-          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${this.topicId}/posts/${this.postId}/page/${this.currentPage}?delayRender=&focus=${message.id}`);
+          window.open(HKEPC.forum.posts(this.topicId,this.postId,this.currentPage))
           this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         }
         else if(index == 1){
-          Clipboard.copy(HKEPC.forum.posts(this.topicId,this.postId,this.currentPage));
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
-        }
-        else if(index == 2){
           this.reversePostOrder = !this.reversePostOrder
           if(this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
           else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
 
           this.doRefresh()
         }
-        else if(index == 3){
+        else if(index == 2){
           this.filterOnlyAuthorId = this.filterOnlyAuthorId == undefined ? message.author.uid : undefined
           if(this.filterOnlyAuthorId !== undefined) this.ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
           else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
 
           this.doRefresh()
         }
-        else if(index == 4){
+        else if(index == 3){
           this.apiService.subscribeNewReply(this.postId).subscribe(() => {
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
           })

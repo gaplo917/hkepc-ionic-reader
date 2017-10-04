@@ -79,15 +79,7 @@ export default
         const modal = scope.modal
 
         scope.selectTab = (index) => {
-          if (window.cordova
-            && window.cordova.plugins
-            && window.cordova.plugins.Keyboard
-            && cordova.plugins.Keyboard.isVisible) {
-            // do not trigger when keyboard is visible (critical blank page bug)
-          }
-          else {
-            modal.showInputHelperAt = index
-          }
+          modal.showInputHelperAt = index
         }
         scope.isTab = (index) => {
           return modal.showInputHelperAt == index

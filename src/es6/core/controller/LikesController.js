@@ -3,7 +3,6 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import {FindMessageRequest} from "../model/FindMessageRequest"
-import { Clipboard } from 'ionic-native';
 
 export class LikesController{
   static get STATE() { return 'tab.likes'}
@@ -200,8 +199,7 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC IR Web 版連結' },
-        { text: '<i class="icon ion-share balanced"></i> 複製 HKEPC 原始連結' },
+        { text: '<i class="icon ion-share balanced"></i>開啟 HKEPC 原始連結' },
       ],
       titleText: '分享連結',
       destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> 從我的最愛移除',
@@ -211,12 +209,7 @@ export class LikesController{
         return true
       },
       buttonClicked: (index) => {
-        if(index == 0){
-          Clipboard.copy(`https://hkepc.ionic-reader.xyz/#/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}?delayRender=&focus=${message.id}`);
-        }
-        else {
-          Clipboard.copy(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
-        }
+        window.open(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
         this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         return true;
       },
