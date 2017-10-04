@@ -64,7 +64,7 @@ navigation history that also transitions its views in and out.
     zoom : 150%;
   }
 </style>
-<style>
+<style ng-if="vm.isiOSNativeApp()">
     body {
         top: 22px;
     }

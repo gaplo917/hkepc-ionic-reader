@@ -126,17 +126,6 @@ export class PostDetailController{
         .safeApply($scope, username => {
           this.currentUsername = username
         }).subscribe()
-
-       // register reply modal
-       this.registerReplyModal()
-
-       // register report modal
-       this.registerReportModal()
-
-       //register edit message modal
-       this.registerEditMessageModal()
-
-       this.registerUserProfileModal()
     })
 
 
@@ -313,22 +302,23 @@ export class PostDetailController{
   onQuickReply(post){
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       if(isLoggedIn){
-        const replyModal = this.scope.replyModal
+        this.registerReplyModal().then(replyModal => {
+          const message = {
+            post: post
+          }
 
-        const message = {
-          post: post
-        }
+          const reply = {
+            id : undefined,
+            postId: post.id,
+            topicId: post.topicId,
+            type: 1 // default to use quote
+          }
 
-        const reply = {
-          id : undefined,
-          postId: post.id,
-          topicId: post.topicId,
-          type: 1 // default to use quote
-        }
+          replyModal.initialize(message, reply)
 
-        replyModal.initialize(message, reply)
+          replyModal.show()
 
-        replyModal.show()
+        })
 
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
@@ -340,18 +330,18 @@ export class PostDetailController{
   onReply(message){
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       if(isLoggedIn){
-        const replyModal = this.scope.replyModal
+        this.registerReplyModal().then(replyModal => {
+          const reply = {
+            id : message.id,
+            postId: message.post.id,
+            topicId: message.post.topicId,
+            type: 3 // default to use quote
+          }
 
-        const reply = {
-          id : message.id,
-          postId: message.post.id,
-          topicId: message.post.topicId,
-          type: 3 // default to use quote
-        }
+          replyModal.initialize(message, reply)
 
-        replyModal.initialize(message, reply)
-
-        replyModal.show()
+          replyModal.show()
+        })
 
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
@@ -364,13 +354,13 @@ export class PostDetailController{
   onReport(message){
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       if(isLoggedIn){
-        const reportModal = this.scope.reportModal
+        this.registerReportModal().then(reportModal => {
+          reportModal.message = message
 
-        reportModal.message = message
+          reportModal.report = {}
 
-        reportModal.report = {}
-
-        reportModal.show()
+          reportModal.show()
+        })
 
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
@@ -380,15 +370,18 @@ export class PostDetailController{
   }
 
   onEdit(message){
-    const editMessageModal = this.scope.editMessageModal
+    this.registerEditMessageModal().then((editMessageModal) => {
+      editMessageModal.initialize(message)
 
-    editMessageModal.initialize(message)
+      editMessageModal.show()
+    })
 
-    editMessageModal.show()
 
   }
 
   registerReportModal(){
+    if(this.scope.reportModal) return Promise.resolve(this.scope.reportModal)
+
     const reportModal = this.scope.reportModal = this.scope.$new()
     reportModal.show = () => this.reportModal.show()
     reportModal.hide = () => this.reportModal.hide()
@@ -451,17 +444,24 @@ export class PostDetailController{
 
     }
 
-    this.ionicModal.fromTemplateUrl('templates/modals/report-post.html', {
+    return this.ionicModal.fromTemplateUrl('templates/modals/report-post.html', {
       scope: reportModal
     }).then((modal) => {
       this.reportModal = modal
+      return Promise.resolve(reportModal)
     })
   }
 
+  /**
+   *
+   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
+   */
   registerUserProfileModal(){
+    if(this.scope.userProfileModal) return Promise.resolve(this.scope.userProfileModal)
+
     const userProfileModal = this.scope.userProfileModal = this.scope.$new()
 
-    this.ionicModal.fromTemplateUrl('templates/modals/user-profile.html', {
+    return this.ionicModal.fromTemplateUrl('templates/modals/user-profile.html', {
       scope: userProfileModal
     }).then(modal => {
       this.userProfileModal = modal
@@ -469,17 +469,23 @@ export class PostDetailController{
       userProfileModal.show = () => this.userProfileModal.show()
       userProfileModal.hide = () => this.userProfileModal.hide()
 
-
+      return Promise.resolve(userProfileModal)
     })
   }
 
+  /**
+   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
+   */
   registerReplyModal(){
+    // prevent duplicate init
+    if(this.scope.replyModal) return Promise.resolve(this.scope.replyModal)
 
-    const replyModal = this.scope.replyModal = this.scope.$new()
+    this.scope.replyModal = this.scope.$new()
 
+    const replyModal = this.scope.replyModal
     replyModal.id = "reply-content"
 
-    this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
+    return this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
       scope: replyModal
     }).then((modal) => {
       this.replyModal = modal
@@ -586,10 +592,16 @@ export class PostDetailController{
 
       }
 
+      return Promise.resolve(replyModal)
     })
   }
 
+  /**
+   *
+   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
+   */
   registerEditMessageModal(){
+    if(this.scope.editMessageModal) return Promise.resolve(this.scope.editMessageModal)
 
     const editMessageModal = this.scope.editMessageModal = this.scope.$new()
     editMessageModal.id = "edit-content"
@@ -600,9 +612,8 @@ export class PostDetailController{
 
       console.log("edit message",message)
 
-      this.http
-          .get(HKEPC.forum.editMessage(message.post.topicId,message.post.id,message.id))
-          .then((resp) => {
+      this.apiService.preEditMessage(message.post.topicId,message.post.id,message.id)
+          .safeApply(this.scope, (resp) => {
             let $ = cheerio.load(resp.data)
             const relativeUrl = $('#postform').attr('action')
             const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
@@ -686,29 +697,32 @@ export class PostDetailController{
               }).subscribe()
             }
 
-          })
+          }).subscribe()
     }
 
-    this.ionicModal.fromTemplateUrl('templates/modals/edit-post.html', {
+    return this.ionicModal.fromTemplateUrl('templates/modals/edit-post.html', {
       scope: editMessageModal
     }).then((modal) => {
       this.editMessageModal = modal
+
+      return Promise.resolve(editMessageModal)
     })
   }
   deregisterUserProfileModal(){
-    this.userProfileModal.remove()
+    this.userProfileModal && this.userProfileModal.remove()
+
   }
 
   deregisterEditModal(){
-    this.editMessageModal.remove()
+    this.editMessageModal && this.editMessageModal.remove()
   }
 
   deregisterReplyModal(){
-    this.replyModal.remove()
+    this.replyModal && this.replyModal.remove()
   }
 
   deregisterReportModal(){
-    this.reportModal.remove()
+    this.reportModal && this.reportModal.remove()
   }
 
   openPageSliderPopover($event) {

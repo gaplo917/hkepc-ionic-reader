@@ -294,4 +294,8 @@ export class TabController{
     body.className = body.className.replace('platform-android','')
   }
 
+  isiOSNativeApp(){
+    return window.WebViewJavascriptBridge ? true : false
+  }
+
 }

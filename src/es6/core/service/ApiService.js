@@ -230,6 +230,13 @@ export class ApiService {
     })
   }
 
+  preEditMessage(topicId, postId, messageId){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.editMessage(topicId, postId, messageId)
+    })
+  }
+
   reportPage(topicId, postId, messageId){
     return this.http.request({
       method: 'GET',
