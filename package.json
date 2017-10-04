@@ -1,8 +1,10 @@
 {
-  "name": "HKEPC IR Pro HTML",
+  "name": "hkepc-ir-pro-html",
   "version": "1.0.0",
   "description": "Using in Native App",
   "dependencies": {
+    "angulartics": "^1.4.0",
+    "angulartics-google-analytics": "^0.4.0",
     "cheerio": "^0.19.0",
     "moment": "^2.11.2",
     "uuid-v4": "^0.1.0",

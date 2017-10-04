@@ -6,6 +6,7 @@ import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
 import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
 import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
+require('angulartics')
 
 const moment = require('moment')
 require('moment/locale/zh-tw');
@@ -36,7 +37,7 @@ angular.module('starter', [
   'ngToast',
   'ionicLazyLoad',
   'angulartics',
-  'angulartics.google.analytics',
+  require('angulartics-google-analytics'),
   'LocalForageModule',
   'rx',
   'ngFileUpload',
