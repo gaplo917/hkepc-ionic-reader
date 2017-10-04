@@ -73,3 +73,4 @@ crashlytics-build.properties
 # Confidential
 *.keystore
 
+!/www/lib/ionic
