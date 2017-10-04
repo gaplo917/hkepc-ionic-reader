@@ -830,7 +830,7 @@ export class PostDetailController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-ios-copy-outline"></i> 複製 HKEPC 原始連結' },
+        { text: '<i class="icon ion-ios-copy-outline"></i> 開啟 HKEPC 原始連結' },
         { text: `<i class="icon ion-ios-loop"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
         { text: `<i class="icon ion-ios-eye-outline"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
         { text: `<i class="icon ion-ios-lightbulb-outline"></i> 關注此主題的新回覆` },
@@ -845,7 +845,6 @@ export class PostDetailController{
       buttonClicked: (index) => {
         if(index == 0){
           window.open(HKEPC.forum.posts(this.topicId,this.postId,this.currentPage))
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         }
         else if(index == 1){
           this.reversePostOrder = !this.reversePostOrder

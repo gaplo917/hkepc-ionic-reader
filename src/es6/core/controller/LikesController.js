@@ -210,7 +210,6 @@ export class LikesController{
       },
       buttonClicked: (index) => {
         window.open(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
-        this.ngToast.success(`<i class="ion-ios-checkmark"> 連結已複製到剪貼簿！</i>`)
         return true;
       },
       destructiveButtonClicked: (index) => {
