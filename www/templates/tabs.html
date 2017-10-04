@@ -65,35 +65,109 @@ navigation history that also transitions its views in and out.
   }
 </style>
 <style ng-if="vm.isiOSNativeApp()">
-    body {
-        top: 22px;
-    }
-    .bar.bar-header{
-        height: 66px;
-    }
-    .bar.bar-subheader{
-        top:66px;
-    }
-    .bar.bar-header .title {
-        top:22px;
-    }
-    .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 22px;
-    }
-    .has-header {
-        top: 66px;
+    /*iphone 5*/
+    @media screen and (device-aspect-ratio: 40/71) {
+        body {
+            top: 40px;
+        }
+        .bar.bar-header{
+            height: 88px;
+        }
+        .bar.bar-subheader{
+            top:88px;
+        }
+        .bar.bar-header .title {
+            top:40px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 40px;
+        }
+        .has-header {
+            top: 88px;
+        }
+
+        .tab-nav {
+            display: none;
+        }
+
+        .has-tabs, .bar-footer.has-tabs {
+            bottom: 0px;
+        }
+
+        .tab-bar-inset{
+            width: 100%;
+            height: 88px;
+        }
     }
 
-    .tab-nav {
-        display: none;
+    /*iphone 6*/
+    @media screen and (device-aspect-ratio: 375/667) {
+        body {
+            top: 22px;
+        }
+        .bar.bar-header{
+            height: 66px;
+        }
+        .bar.bar-subheader{
+            top:66px;
+        }
+        .bar.bar-header .title {
+            top:22px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 22px;
+        }
+        .has-header {
+            top: 66px;
+        }
+
+        .tab-nav {
+            display: none;
+        }
+
+        .has-tabs, .bar-footer.has-tabs {
+            bottom: 0px;
+        }
+
+        .tab-bar-inset{
+            width: 100%;
+            height: 44px;
+        }
     }
 
-    .has-tabs, .bar-footer.has-tabs {
-      bottom: 0px;
+    /*iphone 6plus*/
+    @media screen and (device-aspect-ratio: 16/9) {
+        body {
+            top: 22px;
+        }
+        .bar.bar-header{
+            height: 66px;
+        }
+        .bar.bar-subheader{
+            top:66px;
+        }
+        .bar.bar-header .title {
+            top:22px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 22px;
+        }
+        .has-header {
+            top: 66px;
+        }
+
+        .tab-nav {
+            display: none;
+        }
+
+        .has-tabs, .bar-footer.has-tabs {
+            bottom: 0px;
+        }
+
+        .tab-bar-inset{
+            width: 100%;
+            height: 44px;
+        }
     }
 
-    .tab-bar-inset{
-        width: 100%;
-        height: 44px;
-    }
 </style>
