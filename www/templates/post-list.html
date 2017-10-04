@@ -59,8 +59,6 @@
 
       </div>
 
-      <div class="tab-bar-inset"></div>
-
       <ion-infinite-scroll
               class="ispinner text-center"
               ng-if="vm.posts.length > 0 && vm.hasMoreData"
@@ -70,5 +68,6 @@
               distance="10%">
       </ion-infinite-scroll>
 
+      <div class="tab-bar-inset"></div>
   </ion-content>
 </ion-view>
