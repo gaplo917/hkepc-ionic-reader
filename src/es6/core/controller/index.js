@@ -21,5 +21,5 @@ export * from './SearchController'
 // Just a clone
 export * from './ViewPostController'
 export * from './ViewPostListController'
-
+export * from './LikesViewPostController'
 

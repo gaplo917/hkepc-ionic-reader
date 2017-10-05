@@ -35,7 +35,7 @@ export class ViewPostListController extends Controllers.PostListController {
     if(history.backView){
       this.ionicHistory.goBack()
     } else {
-      this.state.go(Controllers.TopicListController.STATE)
+      this.state.go(Controllers.FeatureRouteController.STATE)
     }
   }
 

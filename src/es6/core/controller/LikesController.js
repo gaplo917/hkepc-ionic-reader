@@ -211,7 +211,7 @@ export class LikesController{
         return true
       },
       buttonClicked: (index) => {
-        window.open(HKEPC.forum.posts(message.post.topicId,message.post.postId,message.post.page));
+        window.open(HKEPC.forum.findMessage(message.post.id, message.id));
         return true;
       },
       destructiveButtonClicked: (index) => {

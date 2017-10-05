@@ -18,7 +18,7 @@
     <div class="list card" ng-repeat="message in vm.messages track by message.id">
 
       <div class="item item-text-wrap item-divider">
-        <a style="color:white" href="#/tab/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}" compile="::message.post.title">
+        <a style="color:white" href="#/tab/likes/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}" compile="::message.post.title">
         </a>
         <span>#{{::message.pos}}</span>
       </div>

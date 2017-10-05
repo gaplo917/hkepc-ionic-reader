@@ -260,27 +260,6 @@ export class TabController{
       this.messageModal = modal
     })
 
-    this.localStorageService.get('agreeEULA',0).subscribe(data => {
-      if(!data && (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) ){
-        $ionicModal.fromTemplateUrl('templates/modals/EULA.html', {
-          scope: $scope.eulaModal,
-          backdropClickToClose: false
-        }).then((modal) => {
-          this.eulaModal = modal
-          this.eulaModal.show()
-
-          this.scope.eulaModal.disagree = () => {
-            alert("請自行離開！")
-          }
-
-          this.scope.eulaModal.agree = () => {
-            this.localStorageService.set('agreeEULA',1)
-            this.eulaModal.hide()
-          }
-        })
-      }
-    })
-
   }
 
   removeAndroidStyleCssClass(){

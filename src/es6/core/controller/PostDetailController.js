@@ -859,7 +859,7 @@ export class PostDetailController{
       },
       buttonClicked: (index) => {
         if(index == 0){
-          window.open(HKEPC.forum.posts(this.topicId,this.postId,this.currentPage))
+          window.open(HKEPC.forum.findMessage(message.post.id, message.id))
         }
         else if(index == 1){
           this.reversePostOrder = !this.reversePostOrder
