@@ -107,6 +107,10 @@
 
       blockquote {
         border-left: 5px solid $blockquote-color;
+        span.message-resolve {
+          color: $less-important-color;
+          padding-left: 5px;
+        }
       }
 
       font[size="7"]{
