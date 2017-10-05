@@ -239,28 +239,20 @@ export class TabController{
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof ChangeThemeRequest)
-      .subscribe( ([event, req]) => {
+      .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
         this.darkTheme = req.theme == 'dark'
         this.localStorageService.set('theme',req.theme)
-
-        if (window.StatusBar) {
-          if(this.darkTheme){
-            StatusBar.styleLightContent()
-          } else {
-            StatusBar.styleDefault()
-          }
-        }
-      })
+      }).subscribe()
 
     $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
       .filter(([event,req]) => req instanceof ChangeFontSizeRequest)
-      .subscribe( ([event, req]) => {
+      .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
         this.fontSize = req.size
         this.localStorageService.set('fontSize',req.size)
         this.ionicHistory.clearCache();
-      })
+      }).subscribe()
 
     $ionicModal.fromTemplateUrl('templates/modals/find-message.html', {
       scope: $scope.messageModal

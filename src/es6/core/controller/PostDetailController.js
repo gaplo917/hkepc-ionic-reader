@@ -121,12 +121,12 @@ export class PostDetailController{
           .subscribe()
       }
       else {
-        this.LocalStorageService.get('loadImageMethod').subscribe(loadImageMethod => {
+        this.LocalStorageService.get('loadImageMethod').safeApply(this.scope, loadImageMethod => {
           console.log("loadImageMethod from db", loadImageMethod)
           this.isAutoLoadImage = loadImageMethod !== 'block'
 
           this.loadMessages()
-        })
+        }).subscribe()
       }
 
 
@@ -315,7 +315,7 @@ export class PostDetailController{
   }
 
   onQuickReply(post){
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
         this.registerReplyModal().then(replyModal => {
           const message = {
@@ -338,12 +338,12 @@ export class PostDetailController{
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
-    })
+    }).subscribe()
 
   }
 
   onReply(message){
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
         this.registerReplyModal().then(replyModal => {
           const reply = {
@@ -361,13 +361,13 @@ export class PostDetailController{
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
-    })
+    }).subscribe()
 
 
   }
 
   onReport(message){
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
         this.registerReportModal().then(reportModal => {
           reportModal.message = message
@@ -380,7 +380,7 @@ export class PostDetailController{
       } else {
         this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
       }
-    })
+    }).subscribe()
 
   }
 
@@ -819,7 +819,7 @@ export class PostDetailController{
 
   onUserProfilePic(author){
 
-      this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
         if(isLoggedIn){
           this.registerUserProfileModal().then(userProfileModal => {
 
@@ -837,7 +837,7 @@ export class PostDetailController{
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
         }
-      })
+      }).subscribe()
 
   }
 
@@ -876,9 +876,9 @@ export class PostDetailController{
           this.doRefresh()
         }
         else if(index == 3){
-          this.apiService.subscribeNewReply(this.postId).subscribe(() => {
+          this.apiService.subscribeNewReply(this.postId).safeApply(this.scope, () => {
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
-          })
+          }).subscribe()
         }
 
         return true;

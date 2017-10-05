@@ -55,25 +55,6 @@ export class HistoryService {
       stat[today] = todayStat
 
       this.saveStat(stat)
-
-      //
-      // if(Object.keys(histories).length == 0){
-      //   this.save(today,[historyObj])
-      //
-      //   stat[today] = {
-      //     count : 1
-      //   }
-      //   this.saveStat(stat)
-      // }
-      // else{
-      //   histories.unshift(historyObj)
-      //
-      //   stat[today].count += 1
-      //
-      //   this.save(today,histories.slice(0, Math.min(histories.length,1000)))
-      //   this.saveStat(stat)
-      // }
-
     })
 
   }

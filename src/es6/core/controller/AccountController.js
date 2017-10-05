@@ -32,17 +32,17 @@ export class AccountController {
     this.ionicHistory = $ionicHistory
     this.isLoggedIn = false
 
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
       this.isLoggedIn = isLoggedIn
-    })
+    }).subscribe()
 
-    LocalStorageService.get('proxy').subscribe(data => {
+    LocalStorageService.get('proxy').safeApply($scope, data => {
       this.proxy = data || HKEPC.proxy
-    })
+    }).subscribe()
 
-    LocalStorageService.getObject('authority').subscribe( data => {
-      this. user = data
-    })
+    LocalStorageService.getObject('authority').safeApply($scope, data => {
+      this.user = data
+    }).subscribe()
 
   }
 

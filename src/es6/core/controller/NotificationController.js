@@ -40,14 +40,14 @@ export class NotificationController{
 
     $scope.$on('$ionicView.loaded', (e) => {
 
-      AuthService.isLoggedIn().subscribe(isLoggedIn => {
+      AuthService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
         if (isLoggedIn) {
           this.loadNotifications()
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 帖子消息需要會員權限，請先登入！</i>`)
           $state.go(Controllers.AccountController.STATE)
         }
-      })
+      }).subscribe()
 
     })
   }

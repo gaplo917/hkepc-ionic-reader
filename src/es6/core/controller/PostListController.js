@@ -100,10 +100,10 @@ export class PostListController {
     $scope.$on('$ionicView.enter', (e) => {
       console.log("enter PostListController")
       // stringify and compare to string value
-      this.localStorageService.get('showSticky',true).subscribe(data => {
+      this.localStorageService.get('showSticky',true).safeApply($scope, data => {
         console.log("showSticky",data)
         this.showSticky = String(data) == 'true'
-      })
+      }).subscribe()
 
     })
 
@@ -299,7 +299,7 @@ export class PostListController {
                   ...hiddenFormInputs
                 },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).then((resp) => {
+              }).safeApply(this.scope, (resp) => {
 
                 this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
 
@@ -307,7 +307,7 @@ export class PostListController {
 
                 this.doRefresh()
 
-              })
+              }).subscribe()
 
             } else if(hasChoosenPostType) {
               this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)

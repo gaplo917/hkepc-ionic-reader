@@ -48,14 +48,14 @@ export class MyPostController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      AuthService.isLoggedIn().subscribe(isLoggedIn => {
+      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
         if (isLoggedIn) {
           this.loadMyPosts()
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
           $state.go(Controllers.AccountController.STATE)
         }
-      })
+      }).subscribe()
     })
 
 

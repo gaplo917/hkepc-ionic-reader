@@ -37,21 +37,21 @@ export class FeatureRouteController{
     this.localStorageService = LocalStorageService
     this.isLoggedIn = false
 
-    this.localStorageService.get('loadImageMethod').subscribe(loadImageMethod => {
+    this.localStorageService.get('loadImageMethod').safeApply($scope, loadImageMethod => {
       this.isAutoLoadImage = loadImageMethod !== 'block'
-    })
+    }).subscribe()
 
-    this.localStorageService.get('theme').subscribe(data => {
+    this.localStorageService.get('theme').safeApply($scope, data => {
       this.darkTheme = data == 'dark'
-    })
+    }).subscribe()
 
-    this.localStorageService.get('fontSize').subscribe(data => {
+    this.localStorageService.get('fontSize').safeApply($scope, data => {
       this.fontSize = data || "100"
-    })
+    }).subscribe()
 
-    this.localStorageService.get('hideUsername').subscribe(data => {
+    this.localStorageService.get('hideUsername').safeApply($scope, data => {
         this.hideUsername = String(data) == 'true'
-    })
+    }).subscribe()
 
 
     this.authService = AuthService
@@ -72,12 +72,12 @@ export class FeatureRouteController{
       })
 
 
-      this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
         this.isLoggedIn = isLoggedIn
         if(isLoggedIn) {
           this.registerOnChangeForumStyle()
         }
-      })
+      }).subscribe()
 
 
     })

@@ -23,6 +23,7 @@ export class SearchController {
   }}
   constructor($scope,$ionicHistory,$state,ngToast,apiService, rx, LocalStorageService) {
 
+    this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.state = $state
     this.localStorageService = LocalStorageService
@@ -52,11 +53,20 @@ export class SearchController {
       this.searching = true
       this.lastSearchTimestamp = new Date().getTime()
 
-      this.apiService.search(this.formhash , keyword).subscribe(resp => {
-        this.state.go(Controllers.PostListController.STATE, { page:1 , topicId: 'search', searchResp: JSON.stringify(resp), searchText: keyword })
+      this.apiService.search(this.formhash , keyword).safeApply(this.scope, resp => {
+        this.state.go(
+          Controllers.PostListController.STATE,
+          {
+            page:1 ,
+            topicId: 'search',
+            searchResp: JSON.stringify(resp),
+            searchText: keyword
+          }
+        )
+
         this.searching = false
 
-      })
+      }).subscribe()
     }
     else {
       this.ngToast.danger({

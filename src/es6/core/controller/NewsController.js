@@ -76,7 +76,7 @@ export class NewsController{
 
     // render the post
     this.postTaskSubscription = postTasks
-        .subscribe(
+        .safeApply(this.scope,(
             postObj => {
 
               const elem = postObj.elem,
@@ -137,7 +137,7 @@ export class NewsController{
               this.refreshing = false
               this.scope.$broadcast('scroll.infiniteScrollComplete')
             }
-        )
+        )).subscribe()
 
   }
 
