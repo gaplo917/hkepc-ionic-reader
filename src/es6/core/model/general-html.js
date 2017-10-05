@@ -8,6 +8,13 @@ const DEFAULT_IMAGE_PLACEHOLDER = "img/default-placeholder.png"
 const DEFAULT_AVATAR_PLACEHOLDER = "img/default-avatar.png"
 
 export class GeneralHtml{
+  // copied from cloudflare script
+  static decodeCloudflareEmailProtection(e, t = 0, r, n) {
+    for (r = '', n = '0x' + e.substr(t, 2) | 0, t += 2; t < e.length; t += 2) {
+      r += String.fromCharCode('0x' + e.substr(t, 2) ^ n);
+    }
+    return r
+  }
 
   constructor(cheerioSource) {
     this.source = cheerioSource
@@ -15,6 +22,16 @@ export class GeneralHtml{
     // remove all the script tags
     this.removeScripts()
     this.removeIframe()
+    this.handleCloudflareEmailProtection()
+  }
+
+  handleCloudflareEmailProtection() {
+
+    this.source('.__cf_email__').each((i,e) => {
+      const obfElement = this.source(e)
+      const dataCFEmail = obfElement.attr('data-cfemail')
+      obfElement.replaceWith(GeneralHtml.decodeCloudflareEmailProtection(dataCFEmail))
+    })
   }
 
   removeScripts(){
