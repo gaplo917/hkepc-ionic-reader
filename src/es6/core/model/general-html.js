@@ -85,6 +85,7 @@ export class GeneralHtml{
       if(imgSrc && !imgSrc.endsWith('.gif')){
         this.source(e).attr('image-lazy-src', imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
+        this.source(e).attr('image-lazy-loader',"lines")
         this.source(e).attr('lazy-scroll-resize',"true")
         this.source(e).removeAttr('src')
         this.source(e).removeAttr('alt')
@@ -92,7 +93,8 @@ export class GeneralHtml{
       }
 
       if(!isAutoLoadImage && !imgSrc.endsWith('.gif')){
-        this.source(e).attr('image-lazy-src', DEFAULT_IMAGE_PLACEHOLDER)
+        this.source(e).removeAttr('image-lazy-src')
+        this.source(e).attr('src', DEFAULT_IMAGE_PLACEHOLDER)
         this.source(e).attr('ng-click',`vm.loadLazyImage('${uid}', '${imgSrc}')`)
       }
 

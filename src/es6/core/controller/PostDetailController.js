@@ -892,11 +892,11 @@ export class PostDetailController{
 
   loadLazyImage(uid, imageSrc) {
     const image = document.getElementById(uid)
-    if(image.src === imageSrc){
+    if(image.getAttribute('src') === imageSrc){
       window.open(imageSrc, '_system', 'location=yes')
     }
     else {
-      image.src = imageSrc
+      image.setAttribute('src', imageSrc)
     }
   }
 

@@ -2,6 +2,10 @@
 .card-view {
   background-color: $card-holder-bg-color;
 
+  .image-loader-container {
+    border:0;
+  }
+
   .on-more-button {
     color: $text-color;
     position: absolute;
