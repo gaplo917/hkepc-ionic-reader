@@ -62,17 +62,23 @@ export class TabController{
       this.hideUsername = String(data) == "true"
     }).subscribe()
 
-    // Try the credential on start app
-    this.rx.Observable
+    if(window.WebViewJavascriptBridge){
+      // TODO: polling the pm
+    }
+    else {
+      // Try the credential on start app
+      this.rx.Observable
         .concat(this.apiService.memberCenter(),this.apiService.checkPM())
         .delay(10000)
         .subscribe()
 
-    // schedule to check PM
-    this.rx.Observable.interval(60 * 1000)
-      .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
-      .flatMap(() => apiService.checkPM())
-      .subscribe()
+      // schedule to check PM
+      this.rx.Observable.interval(60 * 1000)
+        .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
+        .flatMap(() => apiService.checkPM())
+        .subscribe()
+    }
+
 
     $scope.$on('$ionicView.loaded', (e) => {
       // FIXME: ugly hack for dark theme, all style use ios style
