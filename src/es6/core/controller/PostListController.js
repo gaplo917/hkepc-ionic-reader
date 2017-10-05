@@ -75,8 +75,9 @@ export class PostListController {
 
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
-      this.subTopicListPopover.remove()
-      this.newPostModal.remove()
+      this.filterOrderPopover && this.filterOrderPopover.remove()
+      this.subTopicListPopover && this.subTopicListPopover.remove()
+      this.newPostModal && this.newPostModal.remove()
     })
 
     $scope.$eventToObservable('lastread')

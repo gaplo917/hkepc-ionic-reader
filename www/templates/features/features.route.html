@@ -1,177 +1,200 @@
 <ion-view class="feature-view">
-  <ion-nav-title>
-    功能
-  </ion-nav-title>
-  <div class="spinner">
-    <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
-  </div>
-  <ion-content>
-
-    <div class="list card">
-
-      <a href="#/tab/features/account" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-person-stalker inner-icon" style="background-color: #795548;"></i>
-        </div>
-
-        <div style="margin-left:10px">帳號管理</div>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
-
+    <ion-nav-title>
+        功能
+    </ion-nav-title>
+    <div class="spinner">
+        <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
     </div>
+    <ion-content>
 
-    <div class="list card">
+        <div class="list card">
 
-      <a href="#/tab/features/chats" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-email inner-icon" style="background-color: #2196F3;"></i>
+            <a href="#/tab/features/account" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-person-stalker inner-icon" style="background-color: #795548;"></i>
+                </div>
+
+                <div style="margin-left:10px">帳號管理</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
+
         </div>
 
-        <div style="margin-left:10px">私人訊息</div>
-        <span ng-show="vm.notification.pm > 0" class="fright badge badge-assertive" >{{vm.notification.pm}}</span>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
+        <div class="list card">
 
-      <a href="#/tab/features/notifications" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-paper inner-icon" style="background-color: #43A047;"></i>
-        </div>
-        <div style="margin-left:10px">帖子消息</div>
-        <span ng-show="vm.notification.post > 0" class="fright badge badge-assertive">{{vm.notification.post}}</span>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
+            <a href="#/tab/features/chats" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-email inner-icon" style="background-color: #2196F3;"></i>
+                </div>
 
-    </div>
+                <div style="margin-left:10px">私人訊息</div>
+                <span ng-show="vm.notification.pm > 0"
+                      class="fright badge badge-assertive">{{vm.notification.pm}}</span>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
 
-    <div class="list card">
+            <a href="#/tab/features/notifications" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-paper inner-icon" style="background-color: #43A047;"></i>
+                </div>
+                <div style="margin-left:10px">帖子消息</div>
+                <span ng-show="vm.notification.post > 0"
+                      class="fright badge badge-assertive">{{vm.notification.post}}</span>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
 
-      <a href="#/tab/features/mypost" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-box inner-icon" style="background-color: #3F51B5;"></i>
-        </div>
-        <div style="margin-left:10px">我的帖子</div>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
-
-      <a href="#/tab/features/myreply" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-undo inner-icon" style="background-color: #00BCD4;"></i>
-        </div>
-        <div style="margin-left:10px">我的回覆</div>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
-
-      <a class="feature-route item item-icon-left" ng-click="vm.onDev()">
-        <div class="icon">
-          <i class="ion-ios-lightbulb inner-icon" style="background-color: #EF6C00;"></i>
-        </div>
-        <div style="margin-left:10px">我的關注</div>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
-
-    </div>
-
-    <div class="list card">
-
-      <a href="#/tab/features/history" class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-clock inner-icon" style="background-color: #283593;"></i>
         </div>
 
-        <div style="margin-left:10px">瀏覧紀錄</div>
-        <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-      </a>
+        <div class="list card">
 
-    </div>
+            <a href="#/tab/features/mypost" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-box inner-icon" style="background-color: #3F51B5;"></i>
+                </div>
+                <div style="margin-left:10px">我的帖子</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
 
-    <div class="list card">
+            <a href="#/tab/features/myreply" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-undo inner-icon" style="background-color: #00BCD4;"></i>
+                </div>
+                <div style="margin-left:10px">我的回覆</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
 
-      <div class="feature-route item item-icon-left">
-        <div class="icon">
-          <i class="ion-ios-color-wand inner-icon" style="background-color: #212121;"></i>
+            <a class="feature-route item item-icon-left" ng-click="vm.onDev()">
+                <div class="icon">
+                    <i class="ion-ios-lightbulb inner-icon" style="background-color: #EF6C00;"></i>
+                </div>
+                <div style="margin-left:10px">我的關注</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
+
         </div>
 
-        <div style="margin-left:10px;line-height: 2;" >黑底模式
-          <label class="toggle toggle-assertive fright">
-            <input type="checkbox" ng-change="vm.onDarkTheme(vm.darkTheme)" ng-model="vm.darkTheme">
-            <div class="track">
-              <div class="handle"></div>
+        <div class="list card">
+
+            <a href="#/tab/features/history" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-clock inner-icon" style="background-color: #283593;"></i>
+                </div>
+
+                <div style="margin-left:10px">瀏覧紀錄</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
+
+        </div>
+
+        <div class="list card">
+
+            <div class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-images inner-icon" style="background-color: #212121;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">自動載入圖片
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-change="vm.onIsAutoLoadImage(vm.isAutoLoadImage)" ng-model="vm.isAutoLoadImage">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+
             </div>
-          </label>
+
         </div>
 
-      </div>
+        <div class="list card">
 
-    </div>
+            <div class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-color-wand inner-icon" style="background-color: #212121;"></i>
+                </div>
 
-  <div class="list card">
+                <div style="margin-left:10px;line-height: 2;">黑底模式
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-change="vm.onDarkTheme(vm.darkTheme)" ng-model="vm.darkTheme">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
 
-      <div class="feature-route item item-icon-left">
-          <div class="icon">
-              <i class="ion-eye-disabled inner-icon" style="background-color: #43A047;"></i>
-          </div>
+            </div>
 
-          <div style="margin-left:10px;line-height: 2;" >隱藏名稱
-              <label class="toggle toggle-assertive fright">
-                  <input type="checkbox" ng-change="vm.onHideUsername(vm.hideUsername)" ng-model="vm.hideUsername">
-                  <div class="track">
-                      <div class="handle"></div>
-                  </div>
-              </label>
-          </div>
-
-      </div>
-
-  </div>
-
-    <div class="list card">
-
-      <div class="feature-route item item-icon-left selectable">
-        <div class="icon">
-          <i class=" inner-icon" style="background-color: #212121;">A</i>
         </div>
 
-        <div style="margin-left:10px;line-height: 2;" >字型大小
-          <div class="fright">
-            <select ng-model="vm.fontSize" ng-change="vm.onResizeFont(vm.fontSize)">
-              <option value="50">人類極限</option>
-              <option value="70">極小</option>
-              <option value="80">小</option>
-              <option value="90">較小</option>
-              <option value="100">標準</option>
-              <option value="125">大</option>
-              <option value="150">極大</option>
-            </select>
-          </div>
+        <div class="list card">
+
+            <div class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-eye-disabled inner-icon" style="background-color: #43A047;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">隱藏名稱
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-change="vm.onHideUsername(vm.hideUsername)"
+                               ng-model="vm.hideUsername">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
+        <div class="list card">
 
-    </div>
+            <div class="feature-route item item-icon-left selectable">
+                <div class="icon">
+                    <i class=" inner-icon" style="background-color: #212121;">A</i>
+                </div>
 
-    <div class="list card" ng-show="vm.isLoggedIn">
+                <div style="margin-left:10px;line-height: 2;">字型大小
+                    <div class="fright">
+                        <select ng-model="vm.fontSize" ng-change="vm.onResizeFont(vm.fontSize)">
+                            <option value="50">人類極限</option>
+                            <option value="70">極小</option>
+                            <option value="80">小</option>
+                            <option value="90">較小</option>
+                            <option value="100">標準</option>
+                            <option value="125">大</option>
+                            <option value="150">極大</option>
+                        </select>
+                    </div>
+                </div>
 
-      <div class="feature-route item item-icon-left selectable">
-        <div class="icon">
-          <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
+            </div>
+
         </div>
 
-        <div style="margin-left:10px;line-height: 3;" >論壇風格設定
-          <div class="fright ">
-            <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
-              <option value="">使用默認</option>
-              <option value="23">HKEPC（傳統介面)</option>
-              <option value="28">HKEPC</option>
-              <option value="29">HKEPC 2.0（beta）</option>
-            </select>
-          </div>
-          <p class="forum-style-warning" ng-show="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
+        <div class="list card" ng-show="vm.isLoggedIn">
+
+            <div class="feature-route item item-icon-left selectable">
+                <div class="icon">
+                    <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 3;">論壇風格設定
+                    <div class="fright ">
+                        <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
+                            <option value="">使用默認</option>
+                            <option value="23">HKEPC（傳統介面)</option>
+                            <option value="28">HKEPC</option>
+                            <option value="29">HKEPC 2.0（beta）</option>
+                        </select>
+                    </div>
+                    <p class="forum-style-warning" ng-show="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
-
-    </div>
-
-    <div style="height:100px"></div>
-  </ion-content>
+        <div style="height:100px"></div>
+    </ion-content>
 </ion-view>

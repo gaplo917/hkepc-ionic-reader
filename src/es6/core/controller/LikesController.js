@@ -30,16 +30,18 @@ export class LikesController{
 
     $scope.$on('$ionicView.enter', (e) => {
       // get the whole list from db
-      MessageService.getAllLikedPost().subscribe(posts => {
-        this.wholeMessages = Object.assign([],posts).reverse()
-        this.messages = this.wholeMessages.slice(0,this.pageSize)
-        this.totalPageNum = Math.ceil(this.wholeMessages.length / this.pageSize)
-
-      })
-
-
+      this.doRefresh()
     })
 
+  }
+
+  doRefresh(){
+    this.messageService.getAllLikedPost().safeApply(this.scope, posts => {
+      this.wholeMessages = Object.assign([],posts).reverse()
+      this.messages = this.wholeMessages.slice(0,this.pageSize)
+      this.totalPageNum = Math.ceil(this.wholeMessages.length / this.pageSize)
+
+    }).subscribe()
   }
 
   loadMore(){

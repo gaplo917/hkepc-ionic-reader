@@ -2,6 +2,10 @@
  * Created by Gaplo917 on 10/1/2016.
  */
 import * as URLUtils from '../../utils/url'
+const uuid = require('uuid-v4');
+
+const DEFAULT_IMAGE_PLACEHOLDER = "img/default-placeholder.png"
+const DEFAULT_AVATAR_PLACEHOLDER = "img/default-avatar.png"
 
 export class GeneralHtml{
 
@@ -54,17 +58,29 @@ export class GeneralHtml{
     return this
   }
 
-  processImageToLazy(){
+  processImageToLazy(isAutoLoadImage = true){
     this.source('img').each((i,e) => {
       const imgSrc = this.source(e).attr('src')
+      const uid = uuid()
       this.source(e).attr('raw-src',imgSrc)
+      this.source(e).attr('id', uid)
 
       if(imgSrc && !imgSrc.endsWith('.gif')){
-        this.source(e).attr('image-lazy-src',imgSrc)
+        this.source(e).attr('image-lazy-src', imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
         this.source(e).attr('lazy-scroll-resize',"true")
         this.source(e).removeAttr('src')
         this.source(e).removeAttr('alt')
+        this.source(e).attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
+      }
+
+      if(!isAutoLoadImage && !imgSrc.endsWith('.gif')){
+        this.source(e).attr('image-lazy-src', DEFAULT_IMAGE_PLACEHOLDER)
+        this.source(e).attr('ng-click',`vm.loadLazyImage('${uid}', '${imgSrc}')`)
+      }
+
+      if(!isAutoLoadImage && imgSrc.indexOf("avatar") >= 0){
+        this.source(e).attr('image-lazy-src', DEFAULT_AVATAR_PLACEHOLDER)
       }
     })
 
@@ -77,7 +93,7 @@ export class GeneralHtml{
 
       const url = this.source(e).attr('href')
 
-      if(url && !url.startsWith('#')){
+      if(url && !url.startsWith('#') && url.indexOf(DEFAULT_IMAGE_PLACEHOLDER) === -1){
         // remove action attr on img
         this.source(e).removeAttr('onload')
         this.source(e).removeAttr('onclick')

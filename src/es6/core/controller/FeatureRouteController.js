@@ -37,9 +37,14 @@ export class FeatureRouteController{
     this.localStorageService = LocalStorageService
     this.isLoggedIn = false
 
+    this.localStorageService.get('loadImageMethod').subscribe(loadImageMethod => {
+      this.isAutoLoadImage = loadImageMethod !== 'block'
+    })
+
     this.localStorageService.get('theme').subscribe(data => {
       this.darkTheme = data == 'dark'
     })
+
     this.localStorageService.get('fontSize').subscribe(data => {
       this.fontSize = data || "100"
     })
@@ -142,6 +147,12 @@ export class FeatureRouteController{
       dismissOnTimeout: false,
       content:`<i class="ion-ios-time"> 功能待開發中! <br/> 如你希望作者能盡快加入此功能，可考慮捐款支持作者。</i>`
     })
+  }
+
+  onIsAutoLoadImage(isAutoLoadImage){
+    const loadImageMethod = isAutoLoadImage ? 'auto' : 'block'
+
+    this.localStorageService.set('loadImageMethod', loadImageMethod)
   }
 
   onHideUsername(hidden){

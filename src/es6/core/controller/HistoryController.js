@@ -28,9 +28,9 @@ export class HistoryController {
 
     $scope.$on('$ionicView.enter', (e) => {
 
-      this.historyService.getHistoryStat().subscribe(stat => {
+      this.historyService.getHistoryStat().safeApply($scope, stat => {
         this.historyStat = stat
-      })
+      }).subscribe()
 
     })
   }

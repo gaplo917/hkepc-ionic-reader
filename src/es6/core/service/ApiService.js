@@ -102,7 +102,7 @@ export class ApiService {
   }
 
   postDetails(opt){
-    const {topicId, postId, page, orderType, filterOnlyAuthorId} = opt
+    const {topicId, postId, page, orderType, filterOnlyAuthorId, isAutoLoadImage} = opt
 
     return this.http.request({
       method: 'GET',
@@ -110,7 +110,8 @@ export class ApiService {
     })
       .flatMapApiFromCheerioworker('postDetails', {
         opt: opt,
-        currentHash: window.location.hash
+        currentHash: window.location.hash,
+        isAutoLoadImage
       })
 
   }

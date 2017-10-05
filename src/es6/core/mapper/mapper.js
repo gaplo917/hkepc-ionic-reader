@@ -160,12 +160,15 @@ export default class Mapper{
       const content = new HKEPCHtml(
         cheerio.load(postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
           postSource.find('.postcontent > .defaultpost > .postmessage').html())
-      ).processImageToLazy()
-        .getCheerio()
+      ).getCheerio()
 
       const rank = postSource.find('.postauthor > p > img').attr('alt')
 
-      const avatarImageUrl = postSource.find('.postauthor .avatar img').attr('raw-src')
+      const avatarImage = postSource.find('.postauthor .avatar img')
+      const rawAvatarImageUrl = avatarImage.attr('raw-src')
+
+      // processed by general html (isAutoLoadImage features)
+      const avatarImageUrl = avatarImage.attr('image-lazy-src')
 
       return {
         id: postSource.find('table').attr('id').replace('pid',''),
@@ -182,7 +185,7 @@ export default class Mapper{
         author:{
           rank: rank ? rank.replace('Rank: ','') : 0,
           image: avatarImageUrl,
-          uid: URLUtils.getQueryVariable(avatarImageUrl,'uid'),
+          uid: URLUtils.getQueryVariable(rawAvatarImageUrl,'uid'),
           name : postSource.find('.postauthor > .postinfo').text().trim(),
         }
       }

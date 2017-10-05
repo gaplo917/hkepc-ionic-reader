@@ -29,9 +29,9 @@ export class HistoryDetailController {
     this.dateStr = $stateParams.dateStr
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.historyService.getHistoryAt(this.dateStr).subscribe(histories => {
+      this.historyService.getHistoryAt(this.dateStr).safeApply($scope,histories => {
         this.histories = histories
-      })
+      }).subscribe()
 
     })
 

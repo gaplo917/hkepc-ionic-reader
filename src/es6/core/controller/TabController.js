@@ -128,6 +128,9 @@ export class TabController{
 
           console.log("changed login name to ", this.login)
 
+          // useful for Native App handling
+          this.localStorageService.set('tabLoginName', this.login)
+
         }
         else {
           this.login = undefined

@@ -55,7 +55,9 @@
       <!--Really the Post-->
       <div ng-if="message.type == 'POST_MESSAGE'">
         <div class="item item-avatar">
-          <img ng-src="{{::message.author.image}}" ng-click="vm.onUserProfilePic(message.author)">
+          <img ng-src="{{::message.author.image}}"
+               ng-click="vm.onUserProfilePic(message.author)"
+          >
           <button class="button button-icon ion-android-more-vertical on-more-button" ng-click="vm.onMore(message)"></button>
           <h2 ng-bind="::message.author.name" ng-click="vm.onUserProfilePic(message.author)"></h2>
           <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0"><small>Banned</small></i>

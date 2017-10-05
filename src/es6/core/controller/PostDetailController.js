@@ -44,7 +44,7 @@ export class PostDetailController{
     this.apiService = apiService
     this.authService = AuthService
     this.$timeout = $timeout
-
+    this.isAutoLoadImage = true
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
@@ -98,21 +98,35 @@ export class PostDetailController{
       // check to see if from a focus request
       if(!this.focus){
         // if not , jump to last reading page position
-        this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`)
-          .map(data => data || {})
-          .safeApply(this.scope, data => {
-            const lastPage = data.page || $stateParams.page
-            const lastPostId = data.postId || $stateParams.focus
+        this.rx.Observable.combineLatest(
+          this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`),
+          this.LocalStorageService.get('loadImageMethod'),
+          (lastPosition, loadImageMethod) => {
+            return {lastPosition, loadImageMethod}
+          }
+        )
+          .safeApply(this.scope, ({_lastPosition, loadImageMethod}) => {
+            console.log("loadImageMethod from db", loadImageMethod)
+
+            const lastPosition = _lastPosition || {}
+            const lastPage = lastPosition.page || $stateParams.page
+            const lastPostId = lastPosition.postId || $stateParams.focus
 
             this.currentPage = lastPage
             this.focus = lastPostId
+            this.isAutoLoadImage = loadImageMethod !== 'block'
 
             this.loadMessages()
           })
           .subscribe()
       }
       else {
-        this.loadMessages()
+        this.LocalStorageService.get('loadImageMethod').subscribe(loadImageMethod => {
+          console.log("loadImageMethod from db", loadImageMethod)
+          this.isAutoLoadImage = loadImageMethod !== 'block'
+
+          this.loadMessages()
+        })
       }
 
 
@@ -170,7 +184,8 @@ export class PostDetailController{
       postId: this.postId,
       page: page,
       orderType: this.reversePostOrder ? 1 : 0,
-      filterOnlyAuthorId: this.filterOnlyAuthorId
+      filterOnlyAuthorId: this.filterOnlyAuthorId,
+      isAutoLoadImage: this.isAutoLoadImage
     }).safeApply(this.scope, post => {
       console.debug(post)
 
@@ -806,18 +821,18 @@ export class PostDetailController{
 
       this.authService.isLoggedIn().subscribe(isLoggedIn => {
         if(isLoggedIn){
-          const userProfileModal = this.scope.userProfileModal
+          this.registerUserProfileModal().then(userProfileModal => {
 
-          userProfileModal.show()
-          userProfileModal.author = author
-          userProfileModal.content = undefined
-
-
-          this.apiService.userProfile(author.uid).safeApply(this.scope.userProfileModal, data => {
+            userProfileModal.show()
             userProfileModal.author = author
-            userProfileModal.content = data.content
-          }).subscribe()
+            userProfileModal.content = undefined
 
+
+            this.apiService.userProfile(author.uid).safeApply(this.scope.userProfileModal, data => {
+              userProfileModal.author = author
+              userProfileModal.content = data.content
+            }).subscribe()
+          })
 
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
@@ -873,5 +888,19 @@ export class PostDetailController{
       }
     })
 
+  }
+
+  loadLazyImage(uid, imageSrc) {
+    const image = document.getElementById(uid)
+    if(image.src === imageSrc){
+      window.open(imageSrc, '_system', 'location=yes')
+    }
+    else {
+      image.src = imageSrc
+    }
+  }
+
+  openImage(uid, imageSrc) {
+    window.open(imageSrc, '_system', 'location=yes')
   }
 }

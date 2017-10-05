@@ -6,12 +6,12 @@ import Mapper from "./mapper/mapper";
 
 module.exports = function (self) {
   self.addEventListener('message',function (ev){
-    const {topic, data, currentHash} = ev.data
+    const {topic, data, currentHash, isAutoLoadImage} = ev.data
 
     const html = new HKEPCHtml(cheerio.load(data))
         .removeIframe()
         .processImgUrl('https://www.hkepc.com/forum')
-        .processImageToLazy()
+        .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
         .processEpcUrl(currentHash || "")
         .processExternalUrl()
 
@@ -45,7 +45,7 @@ module.exports = function (self) {
         const opt = ev.data.opt
         self.postMessage({
           topic: topic,
-          data: Mapper.postHtmlToPost(html,opt)
+          data: Mapper.postHtmlToPost(html, { ...opt, isAutoLoadImage })
         })
 
         break
