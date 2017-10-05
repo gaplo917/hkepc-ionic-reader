@@ -161,6 +161,7 @@ export default class Mapper{
         cheerio.load(postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
           postSource.find('.postcontent > .defaultpost > .postmessage').html())
       ).getCheerio()
+
       content('blockquote').attr('ng-click', content('blockquote a').attr('ng-click'))
       content('blockquote img').html('<span class="message-resolve">點擊查看原文</span>')
 

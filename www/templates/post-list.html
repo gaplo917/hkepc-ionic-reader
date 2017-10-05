@@ -10,6 +10,7 @@
   </ion-nav-buttons>
   <div class="bar bar-subheader">
     <a class="button button-icon icon ion-bonfire"
+       ng-if="vm.topicId != 'search' && vm.topicId != 'latest'"
        ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
        ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
     </a>
