@@ -31,19 +31,23 @@ export class AccountController {
     this.version = HKEPC.version
     this.ionicHistory = $ionicHistory
     this.isLoggedIn = false
+    this.isReady = false
 
-    this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
-      this.isLoggedIn = isLoggedIn
-    }).subscribe()
+    $scope.$on('$ionicView.loaded', (e) => {
 
-    LocalStorageService.get('proxy').safeApply($scope, data => {
-      this.proxy = data || HKEPC.proxy
-    }).subscribe()
+      this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
+        this.isLoggedIn = isLoggedIn
+        this.isReady = true
+      }).subscribe()
 
-    LocalStorageService.getObject('authority').safeApply($scope, data => {
-      this.user = data
-    }).subscribe()
+      LocalStorageService.get('proxy').safeApply($scope, data => {
+        this.proxy = data || HKEPC.proxy
+      }).subscribe()
 
+      LocalStorageService.getObject('authority').safeApply($scope, data => {
+        this.user = data
+      }).subscribe()
+    })
   }
 
   login(username,password){
