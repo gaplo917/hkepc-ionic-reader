@@ -43,9 +43,8 @@ angular.module('starter', [
   'ngFileUpload',
   'monospaced.elastic'
 ])
-.run(function($rootScope,ngToast, $window) {
+.run(function($rootScope,ngToast, $window, $ionicScrollDelegate) {
   window.moment = moment
-
 
   setupWebViewJavascriptBridge(function(bridge) {
 
@@ -61,6 +60,11 @@ angular.module('starter', [
           break
       }
     })
+
+    bridge.registerHandler('STATUS_BAR_DID_TAP', (data) => {
+      $ionicScrollDelegate.scrollTo(0,0,true)
+    })
+
   })
 
 })
