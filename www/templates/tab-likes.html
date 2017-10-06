@@ -12,7 +12,7 @@
         <input placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
       </label>
     </div>
-    <div class="text-center" ng-show="vm.messages.length == 0">
+    <div class="text-center" ng-if="vm.messages.length == 0">
       <h4 class="title">沒有任何我的最愛！</h4>
     </div>
     <div class="list card" ng-repeat="message in vm.messages track by message.id">
@@ -43,7 +43,7 @@
         immediate-check="false"
         distance="7%">
     </ion-infinite-scroll>
-    <div class="text-center" ng-show="vm.end">
+    <div class="text-center" ng-if="vm.end">
       <h4 class="title">完</h4>
     </div>
 
