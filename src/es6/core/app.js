@@ -118,8 +118,7 @@ angular.module('starter', [
   $ionicConfigProvider.backButton.text("")
   $ionicConfigProvider.backButton.previousTitleText(false)
 
-  // focus on content
-  $ionicConfigProvider.views.transition('none')
+  $ionicConfigProvider.views.transition('ios')
 }])
 .provider('HKEPC_PROXY',[function(){
 
