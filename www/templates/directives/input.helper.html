@@ -75,7 +75,7 @@
     </div>
 
     <div class="image-upload-control" ng-if="isTab(4)">
-      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" msd-elastic="\n" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
+      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
 
       <div type="file" ng-if="!imageUrl && !previewUploadImage" ngf-no-object-url="true" class="button button-full" ngf-select="prepareUpload($file)">
         或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC

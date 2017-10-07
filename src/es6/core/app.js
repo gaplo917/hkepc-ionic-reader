@@ -41,7 +41,6 @@ angular.module('starter', [
   'LocalForageModule',
   'rx',
   'ngFileUpload',
-  'monospaced.elastic'
 ])
 .run(function($rootScope,ngToast, $window, $ionicScrollDelegate) {
   window.moment = moment
