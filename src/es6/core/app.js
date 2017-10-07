@@ -38,7 +38,9 @@ if(isiOSNative()){
   })
 }
 else {
-  initAngular()
+  setTimeout(() => {
+    initAngular()
+  },0)
 }
 
 function initAngular(){
@@ -100,7 +102,7 @@ function initAngular(){
           $ionicConfig.views.transition('ios')
         }
         else {
-          $ionicConfig.views.transition('none')
+          $ionicConfig.views.transition('ios')
         }
       })
     })
