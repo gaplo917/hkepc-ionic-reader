@@ -133,6 +133,7 @@ export class PostDetailController{
     })
 
     $scope.$on('$ionicView.enter', (e) => {
+      console.log("PostDetailsController enter")
 
       // best effort to get it first
       this.authService.getUsername()

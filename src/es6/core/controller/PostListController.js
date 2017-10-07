@@ -89,6 +89,10 @@ export class PostListController {
       .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
+      this.localStorageService.get('showSticky',true).safeApply($scope, data => {
+        console.log("showSticky",data)
+        this.showSticky = String(data) == 'true'
+      }).subscribe()
 
       this.filter = undefined
       this.order = undefined
@@ -98,12 +102,6 @@ export class PostListController {
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      console.log("enter PostListController")
-      // stringify and compare to string value
-      this.localStorageService.get('showSticky',true).safeApply($scope, data => {
-        console.log("showSticky",data)
-        this.showSticky = String(data) == 'true'
-      }).subscribe()
 
     })
 

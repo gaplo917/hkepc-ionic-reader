@@ -28,7 +28,7 @@ export class LikesController{
     this.ionicActionSheet = $ionicActionSheet
     this.messageService = MessageService
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
       // get the whole list from db
       this.doRefresh()
     })
