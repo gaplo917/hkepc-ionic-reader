@@ -14,7 +14,7 @@
     <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
   </div>
 
-  <ion-content has-bouncing="true" class="has-header has-footer">
+  <ion-content has-bouncing="true" class="has-header has-footer" lazy-scroll>
 
     <div ng-repeat="message in vm.messages" class="message-wrapper">
 
@@ -41,7 +41,7 @@
 
         <div class="chat-bubble right">
 
-          <div class="message" ng-bind-html="::message.content" >
+          <div class="message" compile="::message.content" >
           </div>
 
           <div class="message-detail">

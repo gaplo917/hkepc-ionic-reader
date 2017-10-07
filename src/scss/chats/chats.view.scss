@@ -56,6 +56,25 @@
 
   .message {
     font-size: $font-size-base;
+
+    img:not([src$=".gif"]){
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width:100%;
+      max-width: 400px;
+      margin-top:5px;
+      text-align: center;
+    }
+
+    img[src$=".gif"]{
+      height:auto;
+      max-width: 100%;
+      width:auto!important;
+      background-color: #fff;
+      border-radius: 20px;
+    }
+
   }
 
   .message-detail {

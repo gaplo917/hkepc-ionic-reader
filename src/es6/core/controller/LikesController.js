@@ -222,4 +222,18 @@ export class LikesController{
     });
 
   }
+
+  loadLazyImage(uid, imageSrc) {
+    const image = document.getElementById(uid)
+    if(image.getAttribute('src') === imageSrc){
+      window.open(imageSrc, '_system', 'location=yes')
+    }
+    else {
+      image.setAttribute('src', imageSrc)
+    }
+  }
+
+  openImage(uid, imageSrc) {
+    window.open(imageSrc, '_system', 'location=yes')
+  }
 }

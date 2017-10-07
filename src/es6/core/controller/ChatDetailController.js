@@ -56,6 +56,7 @@ export class ChatDetailController{
           let $ = html
               .removeIframe()
               .processImgUrl(HKEPC.baseForumUrl)
+              .processImageToLazy()
               .processExternalUrl()
               .getCheerio()
 
@@ -140,7 +141,7 @@ export class ChatDetailController{
   parseChat(chatHtml,isSelf) {
     let chatSource = cheerio.load(chatHtml)
 
-    const avatarUrl = chatSource('.avatar img').attr('src')
+    const avatarUrl = chatSource('.avatar img').attr('raw-src')
     const text = chatSource('.summary').html()
     const username = chatSource('.cite cite').text()
 
@@ -179,4 +180,19 @@ export class ChatDetailController{
       this.state.go(Controllers.ChatController.STATE)
     }
   }
+
+  loadLazyImage(uid, imageSrc) {
+    const image = document.getElementById(uid)
+    if(image.getAttribute('src') === imageSrc){
+      window.open(imageSrc, '_system', 'location=yes')
+    }
+    else {
+      image.setAttribute('src', imageSrc)
+    }
+  }
+
+  openImage(uid, imageSrc) {
+    window.open(imageSrc, '_system', 'location=yes')
+  }
+
 }
