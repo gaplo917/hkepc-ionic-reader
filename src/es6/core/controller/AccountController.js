@@ -77,7 +77,7 @@ export class AccountController {
     this.authService.logout()
 
     // send the login name to parent controller
-    this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest() )
+    this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(undefined, true) )
 
     this.ionicHistory.clearCache()
 

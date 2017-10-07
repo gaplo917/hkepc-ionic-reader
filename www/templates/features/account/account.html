@@ -17,7 +17,9 @@
         <button class="button button-block button-positive activated" ng-class="vm.user.username && vm.user.password && vm.agreeProxy ? '' : 'disabled'" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
       </div>
       <div ng-if="!vm.isProxy()">
-        <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
+        <div class="padding">
+          <button class="button button-block button-positive activated" ng-click="vm.login(vm.user.username,vm.user.password)">登入</button>
+        </div>
       </div>
     </div>
     <div class="list" ng-if="vm.isReady && vm.isLoggedIn">
