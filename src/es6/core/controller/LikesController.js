@@ -201,6 +201,7 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
+        { text: '<i class="icon ion-ios-redo balanced"></i>開啟' },
         { text: '<i class="icon ion-share balanced"></i>開啟 HKEPC 原始連結' },
       ],
       titleText: '分享連結',
@@ -211,7 +212,12 @@ export class LikesController{
         return true
       },
       buttonClicked: (index) => {
-        window.open(HKEPC.forum.findMessage(message.post.id, message.id));
+        if(index === 0){
+          window.location.href = `#/tab/likes/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}`
+        }
+        else {
+          window.open(HKEPC.forum.findMessage(message.post.id, message.id));
+        }
         return true;
       },
       destructiveButtonClicked: (index) => {
