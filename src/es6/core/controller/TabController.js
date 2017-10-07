@@ -29,6 +29,8 @@ export class TabController{
   }}
 
   constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService) {
+    console.debug(`[${TabController.NAME}] init`)
+
     this.scope = $scope
     this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
@@ -189,7 +191,6 @@ export class TabController{
           })
         }
 
-        this.scope.messageModal.hide = () => this.messageModal.hide()
 
       })
       .subscribe()
@@ -265,6 +266,8 @@ export class TabController{
       scope: $scope.messageModal
     }).then((modal) => {
       this.messageModal = modal
+
+      this.scope.messageModal.hide = () => this.messageModal.hide()
     })
 
   }

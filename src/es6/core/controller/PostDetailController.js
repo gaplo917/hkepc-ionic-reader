@@ -776,6 +776,7 @@ export class PostDetailController{
   }
 
   findMessage(postId,messageId){
+    console.log(`findMessage(${postId},${messageId})`)
     this.scope.$emit(FindMessageRequest.NAME,new FindMessageRequest(postId,messageId))
   }
 

@@ -33,6 +33,7 @@ function setupWebViewJavascriptBridge(callback) {
 
 if(isiOSNative()){
   setupWebViewJavascriptBridge(bridge => {
+    console.log("web view javascript bridge ready")
     Bridge.instance = bridge
     initAngular()
   })
@@ -44,6 +45,7 @@ else {
 }
 
 function initAngular(){
+  console.log("init angular...")
   angular.module('starter', [
     'ionic',
     'starter.controllers',
@@ -81,31 +83,33 @@ function initAngular(){
     })
     .run(function($ionicPlatform,LocalStorageService,$ionicConfig) {
       $ionicPlatform.ready(function() {
-
-        $ionicConfig.scrolling.jsScrolling(false)
-        $ionicConfig.views.forwardCache(false)
-        $ionicConfig.views.maxCache(3)
-        $ionicConfig.spinner.icon('android')
-        $ionicConfig.tabs.style('standard')
-        $ionicConfig.tabs.position('bottom')
-        $ionicConfig.views.swipeBackEnabled(false)
-        $ionicConfig.navBar.alignTitle('center')
-
-        // always load all templates to prevent white screen
-        $ionicConfig.templates.maxPrefetch(5)
-
-        $ionicConfig.backButton.icon("ion-ios-arrow-thin-left")
-        $ionicConfig.backButton.text("")
-        $ionicConfig.backButton.previousTitleText(false)
-
-        if(isiOSNative()){
-          $ionicConfig.views.transition('ios')
-        }
-        else {
-          $ionicConfig.views.transition('ios')
-        }
       })
     })
+    .config(['$ionicConfigProvider',function($ionicConfigProvider){
+
+      $ionicConfigProvider.scrolling.jsScrolling(false)
+      $ionicConfigProvider.views.forwardCache(false)
+      $ionicConfigProvider.views.maxCache(3)
+      $ionicConfigProvider.spinner.icon('android')
+      $ionicConfigProvider.tabs.style('standard')
+      $ionicConfigProvider.tabs.position('bottom')
+      $ionicConfigProvider.views.swipeBackEnabled(false)
+      $ionicConfigProvider.navBar.alignTitle('center')
+
+      // always load all templates to prevent white screen
+      $ionicConfigProvider.templates.maxPrefetch(5)
+
+      $ionicConfigProvider.backButton.icon("ion-ios-arrow-thin-left")
+      $ionicConfigProvider.backButton.text("")
+      $ionicConfigProvider.backButton.previousTitleText(false)
+
+      if (isiOSNative()){
+        $ionicConfigProvider.views.transition('ios')
+      }
+      else {
+        $ionicConfigProvider.views.transition('none')
+      }
+    }])
     .config(function ($analyticsProvider) {
       // turn off automatic tracking
       $analyticsProvider.virtualPageviews(true)
