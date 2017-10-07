@@ -31,214 +31,217 @@ function setupWebViewJavascriptBridge(callback) {
   setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
 
-angular.module('starter', [
-  'ionic',
-  'starter.controllers',
-  'starter.services',
-  'starter.directives',
-  'ngToast',
-  'ionicLazyLoad',
-  'angulartics',
-  require('angulartics-google-analytics'),
-  'LocalForageModule',
-  'rx',
-  'ngFileUpload',
-])
-.run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig) {
-  window.moment = moment
+if(isiOSNative()){
+  setupWebViewJavascriptBridge(bridge => {
+    Bridge.instance = bridge
+    initAngular()
+  })
+}
+else {
+  initAngular()
+}
 
-  if(isiOSNative()){
-    setupWebViewJavascriptBridge(function(bridge) {
-      Bridge.instance = bridge
+function initAngular(){
+  angular.module('starter', [
+    'ionic',
+    'starter.controllers',
+    'starter.services',
+    'starter.directives',
+    'ngToast',
+    'ionicLazyLoad',
+    'angulartics',
+    require('angulartics-google-analytics'),
+    'LocalForageModule',
+    'rx',
+    'ngFileUpload',
+  ])
+    .run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig) {
+      window.moment = moment
+      if(isiOSNative()) {
 
-      Bridge.registerHandler(Channel.nativeStorageUpdated, function(data, responseCallback) {
-        switch (data.key){
-          case "theme":
-            $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
-            break
-          case "fontSize":
-            $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
-            break
-          default:
-            break
+        Bridge.registerHandler(Channel.nativeStorageUpdated, function (data, responseCallback) {
+          switch (data.key) {
+            case "theme":
+              $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
+              break
+            case "fontSize":
+              $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
+              break
+            default:
+              break
+          }
+        })
+
+        Bridge.registerHandler(Channel.statusBarDidTap, (data) => {
+          $ionicScrollDelegate.scrollTo(0, 0, true)
+        })
+      }
+    })
+    .run(function($ionicPlatform,LocalStorageService,$ionicConfig) {
+      $ionicPlatform.ready(function() {
+
+        $ionicConfig.scrolling.jsScrolling(false)
+        $ionicConfig.views.forwardCache(false)
+        $ionicConfig.views.maxCache(3)
+        $ionicConfig.spinner.icon('android')
+        $ionicConfig.tabs.style('standard')
+        $ionicConfig.tabs.position('bottom')
+        $ionicConfig.views.swipeBackEnabled(false)
+        $ionicConfig.navBar.alignTitle('center')
+
+        // always load all templates to prevent white screen
+        $ionicConfig.templates.maxPrefetch(5)
+
+        $ionicConfig.backButton.icon("ion-ios-arrow-thin-left")
+        $ionicConfig.backButton.text("")
+        $ionicConfig.backButton.previousTitleText(false)
+
+        if(isiOSNative()){
+          $ionicConfig.views.transition('ios')
+        }
+        else {
+          $ionicConfig.views.transition('none')
         }
       })
+    })
+    .config(function ($analyticsProvider) {
+      // turn off automatic tracking
+      $analyticsProvider.virtualPageviews(true)
+    })
+    .config(function($stateProvider, $urlRouterProvider) {
 
-      Bridge.registerHandler(Channel.statusBarDidTap, (data) => {
-        $ionicScrollDelegate.scrollTo(0,0,true)
-      })
+      const stateProvider =  $stateProvider
+
+      for(let key of Object.keys(Controllers)){
+        const controller = Controllers[key]
+        stateProvider.state(controller.STATE,controller.CONFIG)
+      }
+
+      // if none of the above states are matched, use this as the fallback
+      $urlRouterProvider.otherwise('/tab/topics');
 
     })
-  }
-  else {
-    // TODO: Android bridge ?
-  }
+    .config(['$httpProvider', function($httpProvider) {
+      if (isiOSNative()){
+        // Native App No Need
+      }
+      else {
+        // true if ionic is run in ios/android to allow use of cookies
+        if(isProxied){
+          $httpProvider.defaults.withCredentials = false
+        } else {
+          $httpProvider.defaults.withCredentials = true
+        }
 
+        // always use async is a good practice
+        $httpProvider.useApplyAsync(true)
+      }
 
-})
-.run(function($ionicPlatform,LocalStorageService,$ionicConfig) {
-  $ionicPlatform.ready(function() {
+    }])
+    .provider('HKEPC_PROXY',[function(){
+      if (isiOSNative()){
+        // Native App No Need
+        this.$get = () => {}
+      }
+      else {
+        this.$get = (rx, $q, ngToast, LocalStorageService) =>{
+          return {
+            request: function(config) {
+              var deferred = $q.defer()
 
-    $ionicConfig.scrolling.jsScrolling(false)
-    $ionicConfig.views.forwardCache(false)
-    $ionicConfig.views.maxCache(3)
-    $ionicConfig.spinner.icon('android')
-    $ionicConfig.tabs.style('standard')
-    $ionicConfig.tabs.position('bottom')
-    $ionicConfig.views.swipeBackEnabled(false)
-    $ionicConfig.navBar.alignTitle('center')
+              rx.Observable.combineLatest(
+                LocalStorageService.get('proxy',HKEPC.proxy),
+                LocalStorageService.get(HKEPC.auth.id),
+                LocalStorageService.get(HKEPC.auth.token),
+                (proxyInDb, authId, token) => {
+                  return {
+                    proxyInDb: proxyInDb,
+                    authId: authId,
+                    token: token
+                  }
+                }).subscribe(({proxyInDb, authId, token}) => {
+                if(isProxied) {
+                  // we need to proxy all the request to prevent CORS
 
-    // always load all templates to prevent white screen
-    $ionicConfig.templates.maxPrefetch(5)
+                  if(config.url.indexOf(HKEPC.baseUrl) >= 0){
 
-    $ionicConfig.backButton.icon("ion-ios-arrow-thin-left")
-    $ionicConfig.backButton.text("")
-    $ionicConfig.backButton.previousTitleText(false)
+                    const proxy = proxyInDb || HKEPC.proxy
+                    // rewrite the url with proxy
+                    config.url = config.url.replace('https://',`${proxy}/`)
 
-    if(isiOSNative()){
-      $ionicConfig.views.transition('ios')
-    }
-    else {
-      $ionicConfig.views.transition('none')
-    }
-  })
-})
-.config(function ($analyticsProvider) {
-  // turn off automatic tracking
-  $analyticsProvider.virtualPageviews(true)
-})
-.config(function($stateProvider, $urlRouterProvider) {
+                    console.debug("proxied request", config.url)
+                  }
+                  config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
 
- const stateProvider =  $stateProvider
+                }
+                config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
 
-  for(let key of Object.keys(Controllers)){
-    const controller = Controllers[key]
-    stateProvider.state(controller.STATE,controller.CONFIG)
-  }
+                deferred.resolve(config)
+              }, (err) => {
+                deferred.resolve(config)
+              })
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/topics');
+              return deferred.promise
+            },
+            responseError: function(err){
 
-})
-.config(['$httpProvider', function($httpProvider) {
-  if (isiOSNative()){
-    // Native App No Need
-  }
-  else {
-    // true if ionic is run in ios/android to allow use of cookies
-    if(isProxied){
-      $httpProvider.defaults.withCredentials = false
-    } else {
-      $httpProvider.defaults.withCredentials = true
-    }
-
-    // always use async is a good practice
-    $httpProvider.useApplyAsync(true)
-  }
-
-}])
-.provider('HKEPC_PROXY',[function(){
-  if (isiOSNative()){
-    // Native App No Need
-    this.$get = () => {}
-  }
-  else {
-    this.$get = (rx, $q, ngToast, LocalStorageService) =>{
-      return {
-        request: function(config) {
-          var deferred = $q.defer()
-
-          rx.Observable.combineLatest(
-            LocalStorageService.get('proxy',HKEPC.proxy),
-            LocalStorageService.get(HKEPC.auth.id),
-            LocalStorageService.get(HKEPC.auth.token),
-            (proxyInDb, authId, token) => {
-              return {
-                proxyInDb: proxyInDb,
-                authId: authId,
-                token: token
+              if(err.status == 404){
+                ngToast.danger({
+                  dismissOnTimeout: false,
+                  content: `<i class="ion-network"> 找不到相關的內容！</i>`
+                })
               }
-            }).subscribe(({proxyInDb, authId, token}) => {
-            if(isProxied) {
-              // we need to proxy all the request to prevent CORS
-
-              if(config.url.indexOf(HKEPC.baseUrl) >= 0){
-
-                const proxy = proxyInDb || HKEPC.proxy
-                // rewrite the url with proxy
-                config.url = config.url.replace('https://',`${proxy}/`)
-
-                console.debug("proxied request", config.url)
+              else if (err.status == -1){
+                ngToast.danger({
+                  dismissOnTimeout: true,
+                  content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`
+                })
               }
-              config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
+              else {
+                ngToast.danger({
+                  dismissOnTimeout: true,
+                  content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、Proxy 伺服器出現異常</i>`
+                })
+              }
 
+              console.log('$http Error',JSON.stringify(err))
+              return err
             }
-            config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
-
-            deferred.resolve(config)
-          }, (err) => {
-            deferred.resolve(config)
-          })
-
-          return deferred.promise
-        },
-        responseError: function(err){
-
-          if(err.status == 404){
-            ngToast.danger({
-              dismissOnTimeout: false,
-              content: `<i class="ion-network"> 找不到相關的內容！</i>`
-            })
           }
-          else if (err.status == -1){
-            ngToast.danger({
-              dismissOnTimeout: true,
-              content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`
-            })
-          }
-          else {
-            ngToast.danger({
-              dismissOnTimeout: true,
-              content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、Proxy 伺服器出現異常</i>`
-            })
-          }
-
-          console.log('$http Error',JSON.stringify(err))
-          return err
         }
       }
-    }
-  }
 
-}])
-.config(function($httpProvider) {
-  if (isiOSNative()){
-    // Native App No Need
-  }
-  else {
-    $httpProvider.interceptors.push('HKEPC_PROXY')
-  }
-})
-.config(['ngToastProvider', function(ngToast) {
-  ngToast.configure({
-    timeout:'2000',
-    verticalPosition: 'top',
-    horizontalPosition: 'right',
-    animation: "slide"
-  })
-}])
-.config(['$localForageProvider', function($localForageProvider){
-  if (isiOSNative()){
-    // Native App No Need
-  }
-  else {
-    $localForageProvider.config({
-      name        : 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
-      version     : 1.0, // version of the database, you shouldn't have to use this
-      storeName   : 'keyvaluepairs', // name of the table
-      description : 'Simple persistant storage'
+    }])
+    .config(function($httpProvider) {
+      if (isiOSNative()){
+        // Native App No Need
+      }
+      else {
+        $httpProvider.interceptors.push('HKEPC_PROXY')
+      }
     })
-  }
+    .config(['ngToastProvider', function(ngToast) {
+      ngToast.configure({
+        timeout:'2000',
+        verticalPosition: 'top',
+        horizontalPosition: 'right',
+        animation: "slide"
+      })
+    }])
+    .config(['$localForageProvider', function($localForageProvider){
+      if (isiOSNative()){
+        // Native App No Need
+      }
+      else {
+        $localForageProvider.config({
+          name        : 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
+          version     : 1.0, // version of the database, you shouldn't have to use this
+          storeName   : 'keyvaluepairs', // name of the table
+          description : 'Simple persistant storage'
+        })
+      }
 
-}])
+    }])
 
+  angular.bootstrap(document, ['starter'])
+}

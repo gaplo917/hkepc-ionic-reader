@@ -63,7 +63,7 @@ export class TabController{
       this.hideUsername = String(data) == "true"
     }).subscribe()
 
-    if(Channel.bridge){
+    if(Bridge.isAvailable()){
       // TODO: polling the pm
     }
     else {
