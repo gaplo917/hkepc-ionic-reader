@@ -163,7 +163,8 @@ export default class Mapper{
       ).getCheerio()
 
       content('blockquote').attr('ng-click', content('blockquote a').attr('ng-click'))
-      content('blockquote img').html('<span class="message-resolve">點擊查看原文</span>')
+      content('blockquote a').attr('ng-click','')
+      content('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
 
       const rank = postSource.find('.postauthor > p > img').attr('alt')
 

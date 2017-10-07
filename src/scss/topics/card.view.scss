@@ -111,11 +111,10 @@
 
       blockquote {
         border-left: 5px solid $blockquote-color;
-        span.message-resolve {
+        .message-resolve {
           color: $less-important-color;
-          padding-left: 5px;
         }
-        a {
+        a, .message-resolve {
           text-decoration: none;
         }
       }
