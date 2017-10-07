@@ -1,6 +1,7 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
  */
+import { Bridge, Channel } from "../bridge/index";
 
 const cache = new Map()
 
@@ -17,9 +18,9 @@ export class LocalStorageService {
   }
   set(key, value) {
 
-    if(window.WebViewJavascriptBridge){
+    if(Bridge.isAvailable()){
       return this.rx.Observable.create((observer) => {
-        window.WebViewJavascriptBridge.callHandler('NATIVE_STORAGE', {
+        Bridge.callHandler(Channel.nativeStorage, {
           action: "SET",
           key: key,
           value: value
@@ -41,11 +42,11 @@ export class LocalStorageService {
   }
   
   get(key, defaultValue) {
-    if(window.WebViewJavascriptBridge){
+    if(Bridge.isAvailable()){
       const subject = new this.rx.Subject()
       return this.rx.Observable.create((observer) => {
 
-        window.WebViewJavascriptBridge.callHandler('NATIVE_STORAGE', {
+        Bridge.callHandler(Channel.nativeStorage, {
           action: "GET",
           key: key
         }, (responseData) => {
@@ -70,10 +71,10 @@ export class LocalStorageService {
   }
   
   setObject(key, value) {
-    if(window.WebViewJavascriptBridge){
+    if(Bridge.isAvailable()){
 
       return this.rx.Observable.create((observer) => {
-        window.WebViewJavascriptBridge.callHandler('NATIVE_STORAGE', {
+        Bridge.callHandler(Channel.nativeStorage, {
           action: "SET",
           key: key,
           value: JSON.stringify(value)
@@ -95,10 +96,10 @@ export class LocalStorageService {
   }
   
   getObject(key) {
-    if(window.WebViewJavascriptBridge){
+    if(Bridge.isAvailable()){
       return this.rx.Observable.create((observer) => {
 
-        window.WebViewJavascriptBridge.callHandler('NATIVE_STORAGE', {
+        Bridge.callHandler(Channel.nativeStorage, {
           action: "GET",
           key: key
         }, (responseData) => {

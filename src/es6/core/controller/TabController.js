@@ -12,6 +12,7 @@ import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 import {HideUsernameRequest} from '../model/HideUsernameRequest'
 import {NativeChangeFontSizeRequest} from '../bridge/NativeChangeFontSizeRequest'
 import {NativeChangeThemeRequest} from '../bridge/NativeChangeThemeRequest'
+import {Bridge, Channel} from '../bridge/index'
 
 import * as Controllers from './index'
 
@@ -62,7 +63,7 @@ export class TabController{
       this.hideUsername = String(data) == "true"
     }).subscribe()
 
-    if(window.WebViewJavascriptBridge){
+    if(Channel.bridge){
       // TODO: polling the pm
     }
     else {
@@ -275,7 +276,7 @@ export class TabController{
   }
 
   isiOSNativeApp(){
-    return window.WebViewJavascriptBridge ? true : false
+    return Bridge.isAvailable()
   }
 
 }

@@ -4,8 +4,10 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
+
 import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
 import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
+import {Bridge, Channel} from "./bridge/index";
 require('angulartics')
 
 const moment = require('moment')
@@ -13,6 +15,10 @@ require('moment/locale/zh-tw');
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()
+
+function isiOSNative(){
+  return window.webkit && window.webkit.messageHandlers &&  window.webkit.messageHandlers.isIRNative
+}
 
 function setupWebViewJavascriptBridge(callback) {
   if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
@@ -24,11 +30,7 @@ function setupWebViewJavascriptBridge(callback) {
   document.documentElement.appendChild(WVJBIframe);
   setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
+
 angular.module('starter', [
   'ionic',
   'starter.controllers',
@@ -42,34 +44,63 @@ angular.module('starter', [
   'rx',
   'ngFileUpload',
 ])
-.run(function($rootScope,ngToast, $window, $ionicScrollDelegate) {
+.run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig) {
   window.moment = moment
 
-  setupWebViewJavascriptBridge(function(bridge) {
+  if(isiOSNative()){
+    setupWebViewJavascriptBridge(function(bridge) {
+      Bridge.instance = bridge
 
-    bridge.registerHandler('NATIVE_STORAGE_UPDATE', function(data, responseCallback) {
-      switch (data.key){
-        case "theme":
-          $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
-          break
-        case "fontSize":
-          $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
-          break
-        default:
-          break
-      }
+      Bridge.registerHandler(Channel.nativeStorageUpdated, function(data, responseCallback) {
+        switch (data.key){
+          case "theme":
+            $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
+            break
+          case "fontSize":
+            $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
+            break
+          default:
+            break
+        }
+      })
+
+      Bridge.registerHandler(Channel.statusBarDidTap, (data) => {
+        $ionicScrollDelegate.scrollTo(0,0,true)
+      })
+
     })
+  }
+  else {
+    // TODO: Android bridge ?
+  }
 
-    bridge.registerHandler('STATUS_BAR_DID_TAP', (data) => {
-      $ionicScrollDelegate.scrollTo(0,0,true)
-    })
-
-  })
 
 })
-.run(function($ionicPlatform,LocalStorageService) {
+.run(function($ionicPlatform,LocalStorageService,$ionicConfig) {
   $ionicPlatform.ready(function() {
 
+    $ionicConfig.scrolling.jsScrolling(false)
+    $ionicConfig.views.forwardCache(false)
+    $ionicConfig.views.maxCache(3)
+    $ionicConfig.spinner.icon('android')
+    $ionicConfig.tabs.style('standard')
+    $ionicConfig.tabs.position('bottom')
+    $ionicConfig.views.swipeBackEnabled(false)
+    $ionicConfig.navBar.alignTitle('center')
+
+    // always load all templates to prevent white screen
+    $ionicConfig.templates.maxPrefetch(5)
+
+    $ionicConfig.backButton.icon("ion-ios-arrow-thin-left")
+    $ionicConfig.backButton.text("")
+    $ionicConfig.backButton.previousTitleText(false)
+
+    if(isiOSNative()){
+      $ionicConfig.views.transition('ios')
+    }
+    else {
+      $ionicConfig.views.transition('none')
+    }
   })
 })
 .config(function ($analyticsProvider) {
@@ -90,7 +121,7 @@ angular.module('starter', [
 
 })
 .config(['$httpProvider', function($httpProvider) {
-  if (window.WebViewJavascriptBridge){
+  if (isiOSNative()){
     // Native App No Need
   }
   else {
@@ -106,34 +137,10 @@ angular.module('starter', [
   }
 
 }])
-.config(['$ionicConfigProvider',function($ionicConfigProvider){
-
-  $ionicConfigProvider.scrolling.jsScrolling(false)
-  $ionicConfigProvider.views.forwardCache(false)
-  $ionicConfigProvider.views.maxCache(3)
-  $ionicConfigProvider.spinner.icon('android')
-  $ionicConfigProvider.tabs.style('standard')
-  $ionicConfigProvider.tabs.position('bottom')
-  $ionicConfigProvider.views.swipeBackEnabled(false)
-  $ionicConfigProvider.navBar.alignTitle('center')
-
-  // always load all templates to prevent white screen
-  $ionicConfigProvider.templates.maxPrefetch(5)
-
-  $ionicConfigProvider.backButton.icon("ion-ios-arrow-thin-left")
-  $ionicConfigProvider.backButton.text("")
-  $ionicConfigProvider.backButton.previousTitleText(false)
-
-  if (window.WebViewJavascriptBridge){
-      $ionicConfigProvider.views.transition('ios')
-  }
-  else {
-    $ionicConfigProvider.views.transition('none')
-  }
-}])
 .provider('HKEPC_PROXY',[function(){
-  if (window.WebViewJavascriptBridge){
+  if (isiOSNative()){
     // Native App No Need
+    this.$get = () => {}
   }
   else {
     this.$get = (rx, $q, ngToast, LocalStorageService) =>{
@@ -205,7 +212,7 @@ angular.module('starter', [
 
 }])
 .config(function($httpProvider) {
-  if (window.WebViewJavascriptBridge){
+  if (isiOSNative()){
     // Native App No Need
   }
   else {
@@ -221,7 +228,7 @@ angular.module('starter', [
   })
 }])
 .config(['$localForageProvider', function($localForageProvider){
-  if (window.WebViewJavascriptBridge){
+  if (isiOSNative()){
     // Native App No Need
   }
   else {

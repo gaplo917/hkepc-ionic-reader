@@ -1,6 +1,7 @@
 /**
  * Created by Gaplo917 on 2/10/2017.
  */
+import { Bridge, Channel } from "./index";
 
 export class HybridHttp {
   constructor($http, rx){
@@ -9,9 +10,9 @@ export class HybridHttp {
   }
 
   request(opt){
-    if(window.WebViewJavascriptBridge){
+    if(Bridge.isAvailable()){
       return this.rx.Observable.create((observer) => {
-        window.WebViewJavascriptBridge.callHandler('API_RPOXY', opt, (responseData) => {
+        Bridge.callHandler(Channel.apiProxy, opt, (responseData) => {
           observer.onNext(responseData)
           observer.onCompleted()
           return () => {}
