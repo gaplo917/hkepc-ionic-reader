@@ -124,7 +124,12 @@ angular.module('starter', [
   $ionicConfigProvider.backButton.text("")
   $ionicConfigProvider.backButton.previousTitleText(false)
 
-  $ionicConfigProvider.views.transition('ios')
+  if (window.WebViewJavascriptBridge){
+      $ionicConfigProvider.views.transition('ios')
+  }
+  else {
+    $ionicConfigProvider.views.transition('none')
+  }
 }])
 .provider('HKEPC_PROXY',[function(){
   if (window.WebViewJavascriptBridge){
