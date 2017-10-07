@@ -162,6 +162,7 @@ export default class Mapper{
           postSource.find('.postcontent > .defaultpost > .postmessage').html())
       ).getCheerio()
 
+      content('#threadtitle').remove()
       content('.useraction').remove()
       content('blockquote').attr('ng-click', content('blockquote a').attr('ng-click'))
       content('blockquote a').attr('ng-click','')
