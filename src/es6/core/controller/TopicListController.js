@@ -33,18 +33,6 @@ export class TopicListController {
     this.firstLogin = true
     this.q = $q
 
-    rx.Observable.interval(30000)
-      .startWith(0)
-      .flatMap(() => this.localStorageService.get('topics-cache-timestamp'))
-      .safeApply($scope, data => {
-        if(data){
-          this.cacheTimestamp = moment(data * 1000).fromNow()
-          console.log(this.cacheTimestamp)
-
-        }
-      }).subscribe()
-
-
     observeOnScope($scope, 'vm.topics')
       .delay(1000) // delay for saving topics
       .subscribe(({newValue, oldValue}) => {
@@ -97,6 +85,15 @@ export class TopicListController {
 
       this.authService.getUsername().safeApply(this.scope, username => {
         this.username = username
+      }).subscribe()
+
+      this.localStorageService.get('topics-cache-timestamp')
+      .safeApply($scope, data => {
+        if(data){
+          this.cacheTimestamp = moment(data * 1000).fromNow()
+          console.log(this.cacheTimestamp)
+
+        }
       }).subscribe()
 
     })
