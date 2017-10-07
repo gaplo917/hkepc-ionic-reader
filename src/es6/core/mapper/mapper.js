@@ -162,6 +162,7 @@ export default class Mapper{
           postSource.find('.postcontent > .defaultpost > .postmessage').html())
       ).getCheerio()
 
+      content('.useraction').remove()
       content('blockquote').attr('ng-click', content('blockquote a').attr('ng-click'))
       content('blockquote a').attr('ng-click','')
       content('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
