@@ -71,15 +71,18 @@ export class PostDetailController{
     })
 
     $scope.$eventToObservable('lastread')
-      .throttle(200)
-      .safeApply($scope, ([event,{ page, id }]) => {
+      .throttle(500)
+      .doOnNext(([event,{ page, id }]) => {
         console.log("received broadcast lastread",page, id)
-        this.currentPage = page
-
         this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
           page: page,
           postId: id.replace('message-','')
         })
+      })
+      .map(([event,{ page, id }]) => page)
+      .distinctUntilChanged()
+      .safeApply($scope, page => {
+        this.currentPage = page
       })
       .subscribe()
 

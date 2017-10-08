@@ -6,6 +6,7 @@ const uuid = require('uuid-v4');
 
 const DEFAULT_IMAGE_PLACEHOLDER = "img/default-placeholder.png"
 const DEFAULT_AVATAR_PLACEHOLDER = "img/default-avatar.png"
+const DEFAULT_DEAD_IMAGE_PLACEHOLDER = "img/default-dead-placeholder.png"
 
 export class GeneralHtml{
   // copied from cloudflare script
@@ -81,12 +82,12 @@ export class GeneralHtml{
       const uid = uuid()
       this.source(e).attr('raw-src',imgSrc)
       this.source(e).attr('id', uid)
+      this.source(e).attr('onError', `this.onerror=null;this.src='${DEFAULT_DEAD_IMAGE_PLACEHOLDER}';`)
 
       if(imgSrc && !imgSrc.endsWith('.gif')){
         this.source(e).attr('image-lazy-src', imgSrc)
         this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
         this.source(e).attr('image-lazy-loader',"lines")
-        this.source(e).attr('lazy-scroll-resize',"true")
         this.source(e).removeAttr('src')
         this.source(e).removeAttr('alt')
         this.source(e).attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
