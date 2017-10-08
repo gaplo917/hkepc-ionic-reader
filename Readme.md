@@ -17,9 +17,6 @@
 
 
 # Run
-		// build the .js .scss files
-		sh build.sh  
-		
 		// run in web
 		gulp run
 		
