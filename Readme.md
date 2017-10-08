@@ -26,6 +26,8 @@
 
 * 好多好有用嘅功能一早已經係 HTML 版本做好咗，若果要係 React Native 度重製，保守估計要花起碼半年工餘時間先可以做到超越 HKEPC IR 嘅 RN 版本。但個人認為若果用戶用緊 (iPhone 6S/ LG G6) 之後嘅手機，流暢未必會感覺得到有大轉變。唔信？ [Download 黎試下](https://itunes.apple.com/hk/app/hkepc-ir/id1081423513?mt=8)
 
+> 其實阿 Gap 已經一早已經做咗一個 POC 出黎 https://github.com/gaplo917/HKEPC-React-Native-Reader 兩版 UI ，不過入面寫緊嘅唔算正統 React，因為當時想嘗試用新做法 React + ReactiveX(rxjs) 去做 State Modeling 而唔用 Redux，有興趣可以 Clone/Fork 黎玩下／繼續落去。
+
 # 而家個 Project 即係咩 Status?
 而家 2.x Branch 已經完全移除 Ionic CLI、Cordova，只係繼續用 `ionic.css`, `ionic.js`, `ionic-angular.js`，並作為一個 Submodules Project 比 Native Project 用。
 
