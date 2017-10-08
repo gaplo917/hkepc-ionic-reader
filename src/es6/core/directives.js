@@ -3,7 +3,7 @@
  */
 
 import * as HKEPC from '../data/config/hkepc'
-
+import { Bridge, Channel } from './bridge/index'
 
 /**
  * Register the directives
@@ -79,10 +79,32 @@ export default
         const modal = scope.modal
 
         scope.selectTab = (index) => {
-          modal.showInputHelperAt = index
+          if(index === 4 && Bridge.isAvailable()){
+            Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
+              const selectorId = modal.id
+              const content = document.getElementById(selectorId).value
+
+              const attachImageCodes = attachmentIds.map(id => {
+                return `[attachimg]${id}[/attachimg]`
+              }).join('\n')
+
+              attachmentIds.forEach(attactmentId => {
+                scope.onImageUpload({
+                  formData:`attachnew[${attactmentId}][description]=`,
+                  id: attactmentId
+                })
+              })
+
+              scope.contentModel = `${content} \n${attachImageCodes}`
+              scope.$apply()
+            })
+          }
+          else {
+            modal.showInputHelperAt = index
+          }
         }
         scope.isTab = (index) => {
-          return modal.showInputHelperAt == index
+          return modal.showInputHelperAt === index
         }
         scope.isSelectedTab = () => {
           return modal.showInputHelperAt >= 0

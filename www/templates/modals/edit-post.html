@@ -6,8 +6,18 @@
     <button class="button" ng-click="doEdit(edit.subject,edit.content, images)">修改</button>
   </ion-header-bar>
   <ion-content>
-    <ion-list >
 
+      <!--TODO: Refactor to scss-->
+      <div style="overflow: auto;white-space: nowrap;">
+          <div style="width:100px;height: 100px;display: inline-block;"
+               ng-repeat="eImage in existingImages track by $index"
+               ng-click="confirmDeleteImage(eImage)"
+          >
+              <img style="height: 100px; padding:10px;" ng-src="{{eImage.src}}">
+              <span style="text-align: center;display: block;"> {{eImage.id}}</span>
+          </div>
+      </div>
+    <ion-list >
     <input-helper modal='this' content-model='edit.content' on-image-upload="onImageUpload"></input-helper>
 
     <div class="row" ng-show="edit.subject">

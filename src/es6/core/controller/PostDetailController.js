@@ -7,7 +7,7 @@ import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
-
+import * as _ from 'lodash'
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')
@@ -26,7 +26,7 @@ export class PostDetailController{
     }
   }}
 
-  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout) {
+  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout, $ionicPopup) {
     this.scope = $scope
     this.rx = rx
     this.messageService = MessageService
@@ -36,6 +36,7 @@ export class PostDetailController{
     this.ionicHistory = $ionicHistory
     this.ionicModal = $ionicModal
     this.ionicPopover = $ionicPopover
+    this.ionicPopup = $ionicPopup
     this.ngToast = ngToast
     this.authService = AuthService
     this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('post-detail')
@@ -624,8 +625,28 @@ export class PostDetailController{
 
     const editMessageModal = this.scope.editMessageModal = this.scope.$new()
     editMessageModal.id = "edit-content"
+    editMessageModal.deleteImageIds = []
     editMessageModal.show = () => this.editMessageModal.show()
     editMessageModal.hide = () => this.editMessageModal.hide()
+    editMessageModal.confirmDeleteImage = (existingImage) => {
+      this.ionicPopup.confirm({
+        title: '確認要刪除圖片？', // String. The title of the popup.
+        cssClass: '', // String, The custom CSS class name
+        subTitle: '', // String (optional). The sub-title of the popup.
+        cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
+        cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
+        okText: '刪除', // String (default: 'OK'). The text of the OK button.
+        okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
+      }).then(isDelete => {
+        console.log(`isDelete ${isDelete} ->`,existingImage)
+        if(isDelete){
+          const id = existingImage.id
+          editMessageModal.deleteImageIds.push(id)
+          editMessageModal.existingImages = editMessageModal.existingImages.filter(eImage => eImage.id !== id)
+          this.scope.$apply()
+        }
+      })
+    }
     editMessageModal.initialize = (message) => {
       editMessageModal.message = message
 
@@ -641,6 +662,21 @@ export class PostDetailController{
 
 // ---------- Upload image preparation ----------------------------------------------
             let imgattachform = $('#imgattachform')
+            let existingImages = $('img').map((i, e) => {
+              const img = $(e)
+              const src = img.attr('src')
+              const rawId = img.attr('id')
+              const isAttachment = _.startsWith(src, "//forum.hkepc.net")
+              const id = _.replace(rawId, 'image_', '')
+              return {
+                src: src,
+                id: id,
+                isAttachment: isAttachment
+              }
+            }).get()
+             .filter(existingImage => existingImage.isAttachment)
+
+            console.log("existingImages", existingImages)
             let attachFormSource = cheerio.load(imgattachform.html())
 
             const hiddenAttachFormInputs = {}
@@ -656,6 +692,7 @@ export class PostDetailController{
 
             // assign hiddenAttachFormInputs to modal
             editMessageModal.hiddenAttachFormInputs = hiddenAttachFormInputs
+            editMessageModal.existingImages = existingImages
             editMessageModal.images = []
 
             editMessageModal.onImageUpload = (image) => {
@@ -685,9 +722,16 @@ export class PostDetailController{
               }).get()
 
               const imageFormData = {}
+              const deleteImageFormData = {}
 
+              // attache Image logic
               editMessageModal.images.forEach(img => {
                 imageFormData[img.formData] = ""
+              })
+
+              // delete image logic
+              editMessageModal.deleteImageIds.forEach((id,i) => {
+                deleteImageFormData[`attachdel[${i}]`] = id
               })
 
               // Post to the server
@@ -699,7 +743,8 @@ export class PostDetailController{
                   message: content,
                   subject: subject,
                   ...hiddenFormInputs,
-                  ...imageFormData
+                  ...imageFormData,
+                  ...deleteImageFormData
                 },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
               }).safeApply(this.scope, (resp) => {

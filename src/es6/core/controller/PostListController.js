@@ -279,6 +279,11 @@ export class PostListController {
 
               console.log(hiddenFormInputs)
 
+              const imageFormData = {}
+              newPostModal.images.forEach(img => {
+                imageFormData[img.formData] = ""
+              })
+
               const ionicReaderSign = HKEPC.signature()
 
               const subject = post.title
@@ -294,7 +299,8 @@ export class PostListController {
                   typeid: post.category.id,
                   handlekey: "newthread",
                   topicsubmit: true,
-                  ...hiddenFormInputs
+                  ...hiddenFormInputs,
+                  ...imageFormData
                 },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
               }).safeApply(this.scope, (resp) => {
