@@ -1,16 +1,9 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import {XMLUtils} from '../../utils/xml'
-import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
-import * as _ from "lodash";
 
-const cheerio = require('cheerio')
 
 export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
@@ -25,14 +18,12 @@ export class PostListController {
       }
     }
   }}
-  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
+  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
     this.scope = $scope
     this.state = $state
     this.location = $location
     this.ionicScrollDelegate = $ionicScrollDelegate
-    this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.ionicHistory = $ionicHistory
-    this.ionicSlideBoxDelegate = $ionicSlideBoxDelegate
     this.localStorageService = LocalStorageService
     this.ngToast = ngToast
     this.q = $q
@@ -91,7 +82,7 @@ export class PostListController {
     $scope.$on('$ionicView.loaded', (e) => {
       this.localStorageService.get('showSticky',true).safeApply($scope, data => {
         console.log("showSticky",data)
-        this.showSticky = String(data) == 'true'
+        this.showSticky = String(data) === 'true'
       }).subscribe()
 
       this.filter = undefined
@@ -138,14 +129,14 @@ export class PostListController {
     this.totalPageNum = resp.totalPageNum
 
     // use exiting list if there is
-    this.subTopicList =  this.subTopicList.length == 0
+    this.subTopicList =  this.subTopicList.length === 0
       ? resp.subTopicList
       : this.subTopicList
 
     this.categories = resp.categories
 
     // better UX to highlight the searchText
-    this.posts = this.topicId == 'search'
+    this.posts = this.topicId === 'search'
       ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
       : this.posts.concat(resp.posts)
 
@@ -153,9 +144,9 @@ export class PostListController {
 
     this.topic = {
       id: this.topicId,
-      name: this.topicId == 'search'
+      name: this.topicId === 'search'
         ? `${resp.topicName} ${this.searchText}`
-        : this.topicId == 'latest'
+        : this.topicId === 'latest'
           ? '最新帖子'
           : resp.topicName
     }
@@ -251,9 +242,9 @@ export class PostListController {
    */
   highlightSearchText(posts, searchText){
     const searchKeywordIndex = (str,keyword,indexArr = []) => {
-      const lastIndexPos = indexArr.length == 0 ? 0 : indexArr[indexArr.length - 1] + 1
+      const lastIndexPos = indexArr.length === 0 ? 0 : indexArr[indexArr.length - 1] + 1
       const index = str.indexOf(keyword,lastIndexPos)
-      if(index == -1 || !str || !keyword){
+      if(index === -1 || !str || !keyword){
         return indexArr
       } else {
         return searchKeywordIndex(str,keyword,indexArr.concat([index]))
@@ -272,8 +263,8 @@ export class PostListController {
           return false
         default :
           return (
-              content[bracePos[0]] == '<'
-              && content[bracePos[1]] == '>'
+              content[bracePos[0]] === '<'
+              && content[bracePos[1]] === '>'
               && index > bracePos[0]
               && index < bracePos[1]
             ) || isIndexInBrace(content,bracePos.slice(2),index)

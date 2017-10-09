@@ -26,8 +26,8 @@ export class ViewPostListController extends Controllers.PostListController {
       }
     }
   }}
-  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
-    super($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicSlideBoxDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx)
+  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
+    super($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx)
   }
 
   onBack(){
