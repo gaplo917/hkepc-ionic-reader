@@ -61,7 +61,11 @@ export class PostDetailController{
 
     //Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
-
+      this.pageSliderPopover.remove()
+      if(this.postTaskSubscription) this.postTaskSubscription.dispose()
+      this.deregisterReportModal()
+      this.deregisterEditModal()
+      this.deregisterUserProfileModal()
     })
     // Execute action on hide popover
     $scope.$on('popover.hidden', () => {
@@ -135,27 +139,15 @@ export class PostDetailController{
       }
 
 
-    })
-
-    $scope.$on('$ionicView.enter', (e) => {
-      console.log("PostDetailsController enter")
-
       // best effort to get it first
       this.authService.getUsername()
         .filter(username => username != undefined)
         .safeApply($scope, username => {
           this.currentUsername = username
         }).subscribe()
+
     })
 
-
-    $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.pageSliderPopover.remove()
-      if(this.postTaskSubscription) this.postTaskSubscription.dispose()
-      this.deregisterReportModal()
-      this.deregisterEditModal()
-      this.deregisterUserProfileModal()
-    })
   }
 
   loadMore(){

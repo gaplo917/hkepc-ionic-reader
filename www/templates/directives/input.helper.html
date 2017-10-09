@@ -36,12 +36,12 @@
               ng-show="isSelectedTab()"
               direction="y">
     <img class="gif"
-         ng-show="isTab(0)"
+         ng-if="isTab(0)"
          ng-repeat="gif in ::modal.gifs track by $index"
          ng-click="modal.addGifCodeToText(gif.code)"
          ng-src="https://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
 
-    <div ng-show="isTab(1)">
+    <div ng-if="isTab(1)">
       <label class="item item-input">
         <input type="text" placeholder="請輸入鏈接的地址" ng-model="url">
       </label>
@@ -54,7 +54,7 @@
 
     </div>
 
-    <div ng-show="isTab(2)">
+    <div ng-if="isTab(2)">
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
       <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
@@ -63,7 +63,7 @@
 
     </div>
 
-    <div ng-show="isTab(3)">
+    <div ng-if="isTab(3)">
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
       <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>

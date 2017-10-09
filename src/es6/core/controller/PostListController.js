@@ -174,7 +174,7 @@ export class PostListController {
   doRefresh(){
     this.reset()
     if(this.filter) {
-      const category = this.categories.find(e => e.id == this.filter)
+      const category = this.categories.find(c => c.id === this.filter)
       if(category){
         this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
       }
@@ -210,7 +210,6 @@ export class PostListController {
 
   doFilterOrder($event){
     this.filterOrderPopover.show($event)
-    this.scope.$apply()
   }
 
   onBack(){
