@@ -3,10 +3,12 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
+import {XMLUtils} from '../../utils/xml'
 import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
+import * as _ from "lodash";
 
 const cheerio = require('cheerio')
 
@@ -263,11 +265,8 @@ export class PostListController {
             console.log('do publist new post')
 
             const isValidInput = post.title && post.content
-            const hasChoosenPostType =
-                    (post.category.id && newPostModal.categories.length > 0) ||
-                    newPostModal.categories.length == 0
 
-            if(isValidInput && hasChoosenPostType){
+            if(isValidInput){
 
               const hiddenFormInputs = {}
               $(`input[type='hidden']`).map((i,elem) => {
@@ -296,7 +295,7 @@ export class PostListController {
                 data : {
                   subject: subject,
                   message: replyMessage,
-                  typeid: post.category.id,
+                  //typeid: _.get(post, 'category.id', undefined),
                   handlekey: "newthread",
                   topicsubmit: true,
                   ...hiddenFormInputs,
@@ -304,19 +303,23 @@ export class PostListController {
                 },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
               }).safeApply(this.scope, (resp) => {
+                const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
+                const isNewPostSuccess = _.includes(responseText, '主題已經發佈')
 
-                this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
+                if(isNewPostSuccess){
+                  this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
 
-                newPostModal.hide()
+                  newPostModal.hide()
 
-                this.doRefresh()
-
+                  this.doRefresh()
+                }
+                else {
+                  this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
+                }
               }).subscribe()
 
-            } else if(hasChoosenPostType) {
-              this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
             } else {
-              this.ngToast.danger(`<i class="ion-alert-circled"> 必須選擇新帖分類！</i>`)
+              this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
             }
           }
 
@@ -354,12 +357,15 @@ export class PostListController {
   }
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    if(history.backView && (history.backView.stateName == Controllers.TopicListController.STATE
-      || history.backView.stateName == Controllers.SearchController.STATE)){
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
-    }
-    else {
+    } else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true,
+        historyRoot: true
+
+      })
       this.state.go(Controllers.TopicListController.STATE)
     }
   }

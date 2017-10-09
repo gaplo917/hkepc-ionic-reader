@@ -34,10 +34,13 @@ export class LikesViewPostController extends PostDetailController {
 
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateParams && history.backView.stateParams.postId != history.currentView.stateParams.postId){
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
     } else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      })
       this.state.go(Controllers.LikesController.STATE)
     }
   }

@@ -173,10 +173,13 @@ export class ChatDetailController{
   }
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == Controllers.ChatController.STATE){
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
     } else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      })
       this.state.go(Controllers.ChatController.STATE)
     }
   }

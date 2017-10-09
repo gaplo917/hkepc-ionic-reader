@@ -175,12 +175,14 @@ export class TabController{
 
           const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
             ? Controllers.ViewPostController.STATE
-            : Controllers.PostDetailController.STATE
+            : window.location.hash.indexOf(Controllers.LikesViewPostController.CONFIG.url) > 0
+              ? Controllers.LikesViewPostController.STATE
+              : Controllers.PostDetailController.STATE
 
-          const history = this.ionicHistory.viewHistory()
-          if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostDetailController.STATE )){
-            this.ionicHistory.clearCache([history.currentView.stateId])
-          }
+          // const history = this.ionicHistory.viewHistory()
+          // if(history.currentView && (history.currentView.stateName == Controllers.ViewPostController.STATE || history.currentView.stateName == Controllers.PostDetailController.STATE )){
+          //   this.ionicHistory.clearCache([history.currentView.stateId])
+          // }
 
           this.state.go(targetState,{
             topicId: msg.post.topicId,

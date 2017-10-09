@@ -78,11 +78,13 @@ export class SearchController {
   }
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    if(history.backView && history.backView.stateName == Controllers.TopicListController.STATE){
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
-    }
-    else {
+    } else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      })
       this.state.go(Controllers.TopicListController.STATE)
     }
   }

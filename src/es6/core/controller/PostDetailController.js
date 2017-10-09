@@ -4,6 +4,7 @@
 //import * as cheerio from 'cheerio';
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
+import {XMLUtils} from '../../utils/xml'
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
@@ -301,10 +302,6 @@ export class PostDetailController{
       message.liked = true
     }
 
-  }
-
-  onSwipeRight(){
-    this.ionicHistory.goBack();
   }
 
   reset(){
@@ -703,6 +700,7 @@ export class PostDetailController{
 // ---------- End of Upload image preparation -----------------------------------------------
 
             let formSource = cheerio.load($('#postform').html())
+            const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
 
             // the text showing the effects of reply / quote
             editMessageModal.edit = {
@@ -742,21 +740,29 @@ export class PostDetailController{
                   editsubmit: true,
                   message: content,
                   subject: subject,
+                  typeid: subTopicTypeId,
                   ...hiddenFormInputs,
                   ...imageFormData,
                   ...deleteImageFormData
                 },
                 headers : {'Content-Type':'application/x-www-form-urlencoded'}
               }).safeApply(this.scope, (resp) => {
+                const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
+                const isEditSuccess = _.includes(responseText, '成功')
+                if(isEditSuccess){
 
-                this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
+                  this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
 
-                // set the page to the message page
-                this.currentPage = message.post.page
+                  // set the page to the message page
+                  this.currentPage = message.post.page
 
-                this.doRefresh()
+                  this.doRefresh()
 
-                this.editMessageModal.hide()
+                  this.editMessageModal.hide()
+                }
+                else {
+                  this.ngToast.danger(`<i class="ion-ios-close"> 修改失敗！HKEPC 傳回:「${responseText}」</i>`)
+                }
 
               }).subscribe()
             }
@@ -830,18 +836,17 @@ export class PostDetailController{
 
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    console.log(history)
-    if(history.backView && (history.backView.stateName == Controllers.PostListController.STATE || history.backView.stateName == Controllers.PostDetailController.STATE) &&
-        history.backView.stateParams.postId != history.currentView.stateParams.postId){
-
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
 
-    }
-    else if(history.backView && history.backView.stateName == Controllers.IRListController.STATE){
-      this.ionicHistory.goBack()
     }
     else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true,
+        historyRoot: true
+
+      })
       this.state.go(Controllers.PostListController.STATE,{
         topicId: this.topicId,
         page: 1

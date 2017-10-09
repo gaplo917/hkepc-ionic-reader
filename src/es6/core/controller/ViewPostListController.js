@@ -31,10 +31,13 @@ export class ViewPostListController extends Controllers.PostListController {
   }
 
   onBack(){
-    const history = this.ionicHistory.viewHistory()
-    if(history.backView){
+    if(this.ionicHistory.viewHistory().currentView.index !== 0){
       this.ionicHistory.goBack()
     } else {
+      this.ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      })
       this.state.go(Controllers.FeatureRouteController.STATE)
     }
   }
