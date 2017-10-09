@@ -169,7 +169,7 @@ textarea {
 .button:hover {
   color:$default-button-font-color;
 }
-.button-full {
+.button-full, .button-default {
   background-color:$default-button-bg-color;
   color: $default-button-font-color;
   border:0px;
@@ -235,4 +235,14 @@ textarea {
 .search-highlight{
   background-color: $highlight-background;
   color: $highlight-text-color;
+}
+
+.popup-container.active .popup {
+  background-color: $bg-color;
+  .popup-head {
+    border-bottom: 1px solid $border-color;
+  }
+  .popup-title{
+    color: $text-color;
+  }
 }
