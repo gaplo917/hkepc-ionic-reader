@@ -45,7 +45,7 @@ module.exports = function (self) {
         const opt = ev.data.opt
         self.postMessage({
           topic: topic,
-          data: Mapper.postHtmlToPost(html, { ...opt, isAutoLoadImage })
+          data: Mapper.postHtmlToPost(html, opt)
         })
 
         break

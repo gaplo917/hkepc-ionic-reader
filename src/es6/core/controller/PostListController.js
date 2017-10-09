@@ -51,7 +51,6 @@ export class PostListController {
     this.categories = []
     this.currentPageNum = this.page - 1
     this.pointingPage = this.currentPageNum
-    this.newPostModal = null
     this.subTopicList = []
     this.posts = []
     this.hasMoreData = true
@@ -79,7 +78,6 @@ export class PostListController {
     $scope.$on('$destroy', () => {
       this.filterOrderPopover && this.filterOrderPopover.remove()
       this.subTopicListPopover && this.subTopicListPopover.remove()
-      this.newPostModal && this.newPostModal.remove()
     })
 
     $scope.$eventToObservable('lastread')
@@ -202,158 +200,17 @@ export class PostListController {
     this.localStorageService.set('showSticky',bool)
   }
 
-  getNewPostModel(){
-    // prevent duplicate init
-    if(this.scope.newPostModal) return Promise.resolve(this.scope.newPostModal)
-
-    this.scope.newPostModal = this.scope.$new()
-    const newPostModal = this.scope.newPostModal
-    newPostModal.id = "new-content"
-    newPostModal.post = {}
-
-    newPostModal.hide = () => this.newPostModal.hide()
-    newPostModal.show = () => {
-      newPostModal.categories = this.categories
-      this.newPostModal.show()
-    }
-    newPostModal.openCategoryPopover = ($event) => {
-      newPostModal.categoryPopover.show($event)
-    }
-
-    newPostModal.selectCategory = (category) => {
-      newPostModal.categoryPopover.hide()
-      newPostModal.post.category = category
-    }
-
-    newPostModal.initialize = (topic) => {
-      newPostModal.topic = topic
-
-      this.apiService.preNewPost(this.topicId)
-        .subscribe(resp => {
-          let $ = cheerio.load(resp.data)
-
-          const relativeUrl = $('#postform').attr('action')
-          const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
-
-          // ---------- Upload image preparation ----------------------------------------------
-          let imgattachform = $('#imgattachform')
-          let attachFormSource = cheerio.load(imgattachform.html())
-
-          const hiddenAttachFormInputs = {}
-
-          hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-          attachFormSource(`input[type='hidden']`).map((i,elem) => {
-            const k = attachFormSource(elem).attr('name')
-            const v = attachFormSource(elem).attr('value')
-
-            return hiddenAttachFormInputs[k] = encodeURIComponent(v)
-          }).get()
-
-          // assign hiddenAttachFormInputs to modal
-          newPostModal.hiddenAttachFormInputs = hiddenAttachFormInputs
-          newPostModal.images = []
-
-          newPostModal.onImageUpload = (image) => {
-            console.log("onImageUplod",image)
-            newPostModal.images.push(image)
-          }
-
-          // ---------- End of Upload image preparation -----------------------------------------------
-
-          newPostModal.doPublishNewPost = (post) => {
-            console.log('do publist new post')
-
-            const isValidInput = post.title && post.content
-
-            if(isValidInput){
-
-              const hiddenFormInputs = {}
-              $(`input[type='hidden']`).map((i,elem) => {
-                const k = $(elem).attr('name')
-                const v = $(elem).attr('value')
-
-                hiddenFormInputs[k] = encodeURIComponent(v)
-              }).get()
-
-              console.log(hiddenFormInputs)
-
-              const imageFormData = {}
-              newPostModal.images.forEach(img => {
-                imageFormData[img.formData] = ""
-              })
-
-              const ionicReaderSign = HKEPC.signature()
-
-              const subject = post.title
-              const replyMessage = `${post.content}\n\n${ionicReaderSign}`
-
-              //Post to the server
-              this.apiService.dynamicRequest({
-                method: "POST",
-                url : postUrl,
-                data : {
-                  subject: subject,
-                  message: replyMessage,
-                  //typeid: _.get(post, 'category.id', undefined),
-                  handlekey: "newthread",
-                  topicsubmit: true,
-                  ...hiddenFormInputs,
-                  ...imageFormData
-                },
-                headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).safeApply(this.scope, (resp) => {
-                const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
-                const isNewPostSuccess = _.includes(responseText, '主題已經發佈')
-
-                if(isNewPostSuccess){
-                  this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
-
-                  newPostModal.hide()
-
-                  this.doRefresh()
-                }
-                else {
-                  this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
-                }
-              }).subscribe()
-
-            } else {
-              this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
-            }
-          }
-
-
-        })
-    }
-
-
-    return this.$ionicModal.fromTemplateUrl('templates/modals/new-post.html', {
-      scope: newPostModal
-    }).then((modal) => {
-      this.newPostModal = modal
-
-      this.$ionicPopover.fromTemplateUrl('templates/modals/categories.html', {
-        scope: newPostModal
-      }).then((popover) => {
-        newPostModal.categoryPopover = popover;
-      })
-
-      return Promise.resolve(newPostModal)
-    })
-
-  }
-
   doNewPost(topic){
-    this.getNewPostModel().then((newPostModal) => {
-      newPostModal.initialize(topic)
-      newPostModal.show()
+    this.state.go(Controllers.WriteNewPostController.STATE, {
+      topicId: this.topicId,
+      topic: JSON.stringify(topic),
+      categories: JSON.stringify(this.categories)
     })
-
-
   }
+
   doFilterOrder($event){
     this.filterOrderPopover.show($event)
+    this.scope.$apply()
   }
 
   onBack(){

@@ -81,22 +81,17 @@ export default
         scope.selectTab = (index) => {
           if(index === 4 && Bridge.isAvailable()){
             Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
-              const selectorId = modal.id
-              const content = document.getElementById(selectorId).value
-
-              const attachImageCodes = attachmentIds.map(id => {
-                return `[attachimg]${id}[/attachimg]`
-              }).join('\n')
 
               attachmentIds.forEach(attactmentId => {
-                scope.onImageUpload({
+                modal.onImageUpload({
                   formData:`attachnew[${attactmentId}][description]=`,
                   id: attactmentId
                 })
               })
 
-              scope.contentModel = `${content} \n${attachImageCodes}`
-              scope.$apply()
+              $timeout(() => {
+                scope.$apply()
+              })
             })
           }
           else {
@@ -157,18 +152,12 @@ export default
             //DISCUZUPLOAD|0|1948831|1
             const attactmentId = resp.data.split('|')[2]
 
-            const selectorId = modal.id
-            const content = document.getElementById(selectorId).value
-
-            const attachImageCode = `[attachimg]${attactmentId}[/attachimg]`
-            scope.contentModel = `${content} \n${attachImageCode}`
-
-            scope.onImageUpload({
+            modal.onImageUpload({
               formData:`attachnew[${attactmentId}][description]=`,
               id: attactmentId
             })
 
-            scope.imageUploadSuccess = `上傳成功，已插入 ${attachImageCode}。如你喜歡此功能，可到 關於 > 想支持作者? 內捐款支持！`
+            scope.imageUploadSuccess = `上傳成功，已插入 ${attachImageCode}！`
 
             // release the file
             scope.file = undefined
@@ -205,7 +194,10 @@ export default
 
           scope.url = undefined
           scope.urlText = undefined
-          scope.$apply()
+          $timeout(() => {
+            scope.$apply()
+          })
+
         }
 
         modal.addTextStyleTagToText = function(tag) {
@@ -225,12 +217,14 @@ export default
 
           const nselectionStart = selectionStart + openTag.length
 
-
-          scope.$apply(() => {
-            const elem = document.getElementById(selectorId)
-            elem.focus()
-            elem.setSelectionRange(nselectionStart,nselectionStart)
+          $timeout(() => {
+            scope.$apply(() => {
+              const elem = document.getElementById(selectorId)
+              elem.focus()
+              elem.setSelectionRange(nselectionStart,nselectionStart)
+            })
           })
+
 
         }
         modal.addFontSizeTagToText = function(size) {
@@ -245,12 +239,14 @@ export default
           scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
 
           const nselectionStart = selectionStart + openTag.length
-
-          scope.$apply(() => {
-            const elem = document.getElementById(selectorId)
-            elem.focus()
-            elem.setSelectionRange(nselectionStart,nselectionStart)
+          $timeout(() => {
+            scope.$apply(() => {
+              const elem = document.getElementById(selectorId)
+              elem.focus()
+              elem.setSelectionRange(nselectionStart,nselectionStart)
+            })
           })
+
         }
 
         modal.addGifCodeToText = function(code) {
@@ -262,12 +258,14 @@ export default
           scope.contentModel = `${splits[0]} ${code} ${splits[1]}`
 
           const nselectionStart = selectionStart + code.length + 1
-
-          scope.$apply(() => {
-            const elem = document.getElementById(selectorId)
-            elem.focus()
-            elem.setSelectionRange(nselectionStart,nselectionStart)
+          $timeout(() => {
+            scope.$apply(() => {
+              const elem = document.getElementById(selectorId)
+              elem.focus()
+              elem.setSelectionRange(nselectionStart,nselectionStart)
+            })
           })
+
 
         }
 
@@ -280,7 +278,9 @@ export default
           scope.contentModel = `${splits[0]}[img]${imageUrl}[/img]${splits[1]}`
           scope.imageUrl = undefined
 
-          scope.$apply()
+          $timeout(() => {
+            scope.$apply()
+          })
         }
       },
 

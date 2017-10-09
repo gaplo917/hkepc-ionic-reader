@@ -152,7 +152,6 @@ export class PostDetailController{
     $scope.$on('$ionicView.beforeLeave', (e) => {
       this.pageSliderPopover.remove()
       if(this.postTaskSubscription) this.postTaskSubscription.dispose()
-      this.deregisterReplyModal()
       this.deregisterReportModal()
       this.deregisterEditModal()
       this.deregisterUserProfileModal()
@@ -316,48 +315,23 @@ export class PostDetailController{
     this.loadMessages()
   }
 
-  onQuickReply(post){
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
-      if(isLoggedIn){
-        this.registerReplyModal().then(replyModal => {
-          const message = {
-            post: post
-          }
-
-          const reply = {
-            id : undefined,
-            postId: post.id,
-            topicId: post.topicId,
-            type: 1 // default to use quote
-          }
-
-          replyModal.initialize(message, reply)
-
-          replyModal.show()
-
-        })
-
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
-      }
-    }).subscribe()
-
-  }
-
   onReply(message){
     this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
-        this.registerReplyModal().then(replyModal => {
-          const reply = {
-            id : message.id,
-            postId: message.post.id,
-            topicId: message.post.topicId,
-            type: 3 // default to use quote
-          }
 
-          replyModal.initialize(message, reply)
+        const reply = {
+          id : message.id,
+          postId: message.post.id,
+          topicId: message.post.topicId,
+          type: 3 // default to use quote
+        }
 
-          replyModal.show()
+        this.state.go(Controllers.WriteReplyPostController.STATE, {
+          topicId: this.topicId,
+          postId: this.postId,
+          page: this.currentPage,
+          message: JSON.stringify(message),
+          reply: JSON.stringify(reply)
         })
 
       } else {
@@ -487,129 +461,6 @@ export class PostDetailController{
       userProfileModal.hide = () => this.userProfileModal.hide()
 
       return Promise.resolve(userProfileModal)
-    })
-  }
-
-  /**
-   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
-   */
-  registerReplyModal(){
-    // prevent duplicate init
-    if(this.scope.replyModal) return Promise.resolve(this.scope.replyModal)
-
-    this.scope.replyModal = this.scope.$new()
-
-    const replyModal = this.scope.replyModal
-    replyModal.id = "reply-content"
-
-    return this.ionicModal.fromTemplateUrl('templates/modals/reply-post.html', {
-      scope: replyModal
-    }).then((modal) => {
-      this.replyModal = modal
-
-      replyModal.show = () => this.replyModal.show()
-      replyModal.hide = () => this.replyModal.hide()
-
-      replyModal.initialize = (message, reply) => {
-
-        replyModal.message = message
-
-        replyModal.reply = reply
-
-        // get the form hash first
-        this.apiService.replyPage(reply)
-          .safeApply(this.scope, resp => {
-
-            let $ = cheerio.load(resp.data)
-            const relativeUrl = $('#postform').attr('action')
-            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
-
-// ---------- Upload image preparation ----------------------------------------------
-            let imgattachform = $('#imgattachform')
-            let attachFormSource = cheerio.load(imgattachform.html())
-
-            const hiddenAttachFormInputs = {}
-
-            hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-            attachFormSource(`input[type='hidden']`).map((i,elem) => {
-              const k = attachFormSource(elem).attr('name')
-              const v = attachFormSource(elem).attr('value')
-
-              return hiddenAttachFormInputs[k] = encodeURIComponent(v)
-            }).get()
-
-            // assign hiddenAttachFormInputs to modal
-            replyModal.hiddenAttachFormInputs = hiddenAttachFormInputs
-            replyModal.images = []
-
-            replyModal.onImageUpload = (image) => {
-              console.log("onImageUplod",image)
-              replyModal.images.push(image)
-            }
-
-// ---------- End of Upload image preparation -----------------------------------------
-
-            let formSource = cheerio.load($('#postform').html())
-
-            // the text showing the effects of reply / quote
-            const preText = formSource('#e_textarea').text()
-
-            const hiddenFormInputs = {}
-            formSource(`input[type='hidden']`).map((i,elem) => {
-              const k = formSource(elem).attr('name')
-              const v = formSource(elem).attr('value')
-
-              hiddenFormInputs[k] = encodeURIComponent(v)
-            }).get()
-
-
-            const ionicReaderSign = HKEPC.signature()
-
-            // register new function
-            replyModal.doReply = (reply) => {
-
-              console.log(JSON.stringify(reply))
-
-              // build the reply message
-              const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
-
-              const imageFormData = {}
-              replyModal.images.forEach(img => {
-                imageFormData[img.formData] = ""
-              })
-
-              // Post to the server
-              this.apiService.dynamicRequest({
-                method: "POST",
-                url : postUrl,
-                data : {
-                  message: replyMessage,
-                  ...hiddenFormInputs,
-                  ...imageFormData
-                },
-                headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).safeApply(this.scope, (resp) => {
-
-                this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
-
-                this.replyModal.hide()
-
-                this.end = false;
-
-                this.doRefresh()
-
-              }).subscribe()
-
-
-            }
-
-
-          }).subscribe()
-
-      }
-
-      return Promise.resolve(replyModal)
     })
   }
 
@@ -785,10 +636,6 @@ export class PostDetailController{
 
   deregisterEditModal(){
     this.editMessageModal && this.editMessageModal.remove()
-  }
-
-  deregisterReplyModal(){
-    this.replyModal && this.replyModal.remove()
   }
 
   deregisterReportModal(){
