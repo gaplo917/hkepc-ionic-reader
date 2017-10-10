@@ -174,7 +174,7 @@ export class TabController{
           this.messageModal.hide()
 
           const targetState = window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-            ? Controllers.ViewPostController.STATE
+            ? Controllers.FeatureViewPostController.STATE
             : window.location.hash.indexOf(Controllers.LikesViewPostController.CONFIG.url) > 0
               ? Controllers.LikesViewPostController.STATE
               : Controllers.PostDetailController.STATE

@@ -2,72 +2,64 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
-import {PostListRefreshRequest} from "../model/PostListRefreshRequest"
+import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 
 const cheerio = require('cheerio')
 
-export class WriteNewPostController {
-  static get STATE() { return 'tab.topics-posts-new'}
-  static get NAME() { return 'WriteNewPostController'}
+export class EditPostController {
+  static get STATE() { return 'tab.topics-posts-edit'}
+  static get NAME() { return 'EditPostController'}
   static get CONFIG() { return {
-    url: '/topics/:topicId/newPost?categories=&topic=',
+    url: '/topics/:topicId/posts/:postId/page/:page/edit?message=',
     cache: false,
     views: {
       'tab-topics': {
-        templateUrl: 'templates/write-new-post.html',
-        controller: WriteNewPostController.NAME,
+        templateUrl: 'templates/edit-post.html',
+        controller: EditPostController.NAME,
         controllerAs: 'vm'
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,$ionicPopover,ngToast, apiService, $ionicPopup, $rootScope) {
-    this.id = "new-content"
-    this.post = { content: "" }
-    this.topicId = $stateParams.topicId
+  
+
+
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope) {
+    this.id = "edit-content"
     this.apiService = apiService
     this.scope = $scope
-    this.rootScope = $rootScope
     this.ngToast = ngToast
     this.state = $state
     this.ionicHistory = $ionicHistory
-    this.topic = JSON.parse($stateParams.topic)
-    this.categories = JSON.parse($stateParams.categories)
+    this.rootScope = $rootScope
+    this.topicId = $stateParams.topicId
+    this.postId = $stateParams.postId
+    this.page = $stateParams.page
+
+    this.message = JSON.parse($stateParams.message)
 
     this.deleteImageIds = []
     this.attachImageIds = []
     this.existingImages = []
     this.ionicPopup = $ionicPopup
 
-    console.log("write new post ", this.topic)
-    console.log("write new post ", this.categories)
-
-
-    $ionicPopover.fromTemplateUrl('templates/modals/categories.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.categoryPopover = popover;
-    })
-
     this.preFetchContent().subscribe()
   }
-
+  
   onImageUploadSuccess(attachmentIds){
     this.ngToast.success(`<i class="ion-ios-checkmark"> 成功新增圖片${attachmentIds.join(',')}！</i>`)
     this.preFetchContent().subscribe()
   }
-
+  
+  
   preFetchContent(){
-
-    return this.apiService.preNewPost(this.topicId)
-      .safeApply(this.scope, resp => {
+    return this.apiService.preEditMessage(this.message.post.topicId,this.message.post.id,this.message.id)
+      .safeApply(this.scope, (resp) => {
         let $ = cheerio.load(resp.data)
-
         const relativeUrl = $('#postform').attr('action')
-        this.postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+        this.postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
         // ---------- Upload image preparation ----------------------------------------------
         let imgattachform = $('#imgattachform')
-
         let existingImages = $('img').map((i, e) => {
           const img = $(e)
           const src = img.attr('src')
@@ -82,13 +74,14 @@ export class WriteNewPostController {
         }).get()
           .filter(existingImage => existingImage.isAttachment)
 
+        console.log("existingImages", existingImages)
         let attachFormSource = cheerio.load(imgattachform.html())
 
         const hiddenAttachFormInputs = {}
 
         hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
 
-        attachFormSource(`input[type='hidden']`).map((i, elem) => {
+        attachFormSource(`input[type='hidden']`).map((i,elem) => {
           const k = attachFormSource(elem).attr('name')
           const v = attachFormSource(elem).attr('value')
 
@@ -98,80 +91,83 @@ export class WriteNewPostController {
         // assign hiddenAttachFormInputs to modal
         this.hiddenAttachFormInputs = hiddenAttachFormInputs
         this.existingImages = existingImages
+
         // ---------- End of Upload image preparation -----------------------------------------------
 
+        let formSource = cheerio.load($('#postform').html())
+        const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
+
+
         const hiddenFormInputs = {}
-        $(`input[type='hidden']`).map((i,elem) => {
-          const k = $(elem).attr('name')
-          const v = $(elem).attr('value')
+        formSource(`input[type='hidden']`).map((i,elem) => {
+          const k = formSource(elem).attr('name')
+          const v = formSource(elem).attr('value')
 
           hiddenFormInputs[k] = encodeURIComponent(v)
         }).get()
 
         this.hiddenFormInputs = hiddenFormInputs
+        this.subTopicTypeId = subTopicTypeId
+
+        // the text showing the effects of reply / quote
+        this.edit = {
+          subject: formSource('#subject').attr('value'),
+          content :formSource('#e_textarea').text()
+        }
+
       })
   }
 
-  doPublishNewPost(post){
-      const postUrl = this.postUrl
-      console.log('do publist new post')
+  doEdit(subject,content){
+    console.log(content)
+    const postUrl = this.postUrl
+    const hiddenFormInputs = this.hiddenFormInputs
+    const subTopicTypeId = this.subTopicTypeId
+    const imageFormData = {}
+    const deleteImageFormData = {}
 
-      const isValidInput = post.title && post.content
+    // attach Image logic
+    this.attachImageIds.forEach(id => {
+      imageFormData[`attachnew[${id}][description]=`] = ""
+    })
 
-      if(isValidInput){
+    // delete image logic
+    this.deleteImageIds.forEach((id,i) => {
+      deleteImageFormData[`attachdel[${i}]`] = id
+    })
 
-        const hiddenFormInputs = this.hiddenFormInputs
+    // Post to the server
+    this.apiService.dynamicRequest({
+      method: "POST",
+      url : postUrl,
+      data : {
+        editsubmit: true,
+        message: content,
+        subject: subject,
+        typeid: subTopicTypeId,
+        ...hiddenFormInputs,
+        ...imageFormData,
+        ...deleteImageFormData
+      },
+      headers : {'Content-Type':'application/x-www-form-urlencoded'}
+    }).safeApply(this.scope, (resp) => {
+      const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
+      const isEditSuccess = _.includes(responseText, '成功')
+      if(isEditSuccess){
 
-        const imageFormData = {}
-        const deleteImageFormData = {}
+        this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
 
-        // attach Image logic
-        this.attachImageIds.forEach(id => {
-          imageFormData[`attachnew[${id}][description]=`] = ""
-        })
+        // set the page to the message page
+        this.currentPage = this.message.post.page
 
-        // delete image logic
-        this.deleteImageIds.forEach((id,i) => {
-          deleteImageFormData[`attachdel[${i}]`] = id
-        })
-
-        const ionicReaderSign = HKEPC.signature()
-
-        const subject = post.title
-        const replyMessage = `${post.content}\n\n${ionicReaderSign}`
-
-        //Post to the server
-        this.apiService.dynamicRequest({
-          method: "POST",
-          url : postUrl,
-          data : {
-            subject: subject,
-            message: replyMessage,
-            typeid: _.get(post, 'category.id', undefined),
-            handlekey: "newthread",
-            topicsubmit: true,
-            ...hiddenFormInputs,
-            ...imageFormData,
-            ...deleteImageFormData
-          },
-          headers : {'Content-Type':'application/x-www-form-urlencoded'}
-        }).safeApply(this.scope, (resp) => {
-          const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
-          const isNewPostSuccess = _.includes(responseText, '主題已經發佈')
-
-          if(isNewPostSuccess){
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
-            this.rootScope.$emit(PostListRefreshRequest.NAME)
-            this.onBack()
-          }
-          else {
-            this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
-          }
-        }).subscribe()
-
-      } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
+        this.rootScope.$emit(PostDetailRefreshRequest.NAME)
+        this.onBack()
       }
+      else {
+        this.ngToast.danger(`<i class="ion-ios-close"> 修改失敗！HKEPC 傳回:「${responseText}」</i>`)
+      }
+
+    }).subscribe()
   }
 
   addImageToContent(existingImage){
@@ -181,7 +177,7 @@ export class WriteNewPostController {
     const content = document.getElementById(selectorId).value
     const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
 
-    this.post.content = `${splits[0]}[attachimg]${attachmentId}[/attachimg]${splits[1]}`
+    this.edit.content = `${splits[0]}[attachimg]${attachmentId}[/attachimg]${splits[1]}`
     this.attachImageIds.push(attachmentId)
   }
 
@@ -207,20 +203,11 @@ export class WriteNewPostController {
 
         this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
 
-        this.post.content = _.replace(this.post.content, id ,'')
-        this.post.content = _.replace(this.post.content, '[attachimg][/attachimg]' ,'')
+        this.edit.content = _.replace(this.edit.content, id ,'')
+        this.edit.content = _.replace(this.edit.content, '[attachimg][/attachimg]' ,'')
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
-  }
-
-  openCategoryPopover($event){
-    this.categoryPopover.show($event)
-  }
-
-  selectCategory(category){
-    this.categoryPopover.hide()
-    this.post.category = category
   }
 
   onBack(){
@@ -233,7 +220,11 @@ export class WriteNewPostController {
         historyRoot: true
 
       })
-      this.state.go(Controllers.TopicListController.STATE)
+      this.state.go(Controllers.PostDetailController.STATE, {
+        topicId: this.topicId,
+        postId: this.postId,
+        page: this.page
+      })
     }
   }
 

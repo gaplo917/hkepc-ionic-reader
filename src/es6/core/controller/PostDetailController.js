@@ -7,6 +7,8 @@ import * as URLUtils from '../../utils/url'
 import {XMLUtils} from '../../utils/xml'
 import {HKEPCHtml} from "../model/hkepc-html"
 import {FindMessageRequest} from "../model/FindMessageRequest"
+import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
+
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as _ from 'lodash'
 import * as Controllers from "./index"
@@ -27,7 +29,7 @@ export class PostDetailController{
     }
   }}
 
-  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout, $ionicPopup) {
+  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout, $ionicPopup, $rootScope) {
     this.scope = $scope
     this.rx = rx
     this.messageService = MessageService
@@ -64,7 +66,6 @@ export class PostDetailController{
       this.pageSliderPopover.remove()
       if(this.postTaskSubscription) this.postTaskSubscription.dispose()
       this.deregisterReportModal()
-      this.deregisterEditModal()
       this.deregisterUserProfileModal()
     })
     // Execute action on hide popover
@@ -80,9 +81,13 @@ export class PostDetailController{
       .throttle(500)
       .doOnNext(([event,{ page, id }]) => {
         console.log("received broadcast lastread",page, id)
+        const postId = id.replace('message-','')
+
+        this.lastFocus = postId
+
         this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
           page: page,
-          postId: id.replace('message-','')
+          postId: postId
         })
       })
       .map(([event,{ page, id }]) => page)
@@ -114,12 +119,12 @@ export class PostDetailController{
             return {lastPosition, loadImageMethod}
           }
         )
-          .safeApply(this.scope, ({_lastPosition, loadImageMethod}) => {
+          .safeApply(this.scope, ({lastPosition, loadImageMethod}) => {
             console.log("loadImageMethod from db", loadImageMethod)
 
-            const lastPosition = _lastPosition || {}
-            const lastPage = lastPosition.page || $stateParams.page
-            const lastPostId = lastPosition.postId || $stateParams.focus
+            const _lastPosition = lastPosition || {}
+            const lastPage = _lastPosition.page || $stateParams.page
+            const lastPostId = _lastPosition.postId || $stateParams.focus
 
             this.currentPage = lastPage
             this.focus = lastPostId
@@ -148,6 +153,15 @@ export class PostDetailController{
 
     })
 
+    $scope.$on('$ionicView.enter', (e) => {
+
+    })
+
+    $rootScope.$eventToObservable(PostDetailRefreshRequest.NAME)
+      .subscribe(() => {
+        this.focus = this.lastFocus
+        this.doRefresh()
+      })
   }
 
   loadMore(){
@@ -311,6 +325,12 @@ export class PostDetailController{
     this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
 
+        const targetState = window.location.hash.indexOf(Controllers.LikesController.CONFIG.url) > 0
+          ? Controllers.LikesWriteReplyPostController.STATE
+          : window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+            ? Controllers.FeatureWriteReplyPostController.STATE
+            : Controllers.WriteReplyPostController.STATE
+
         const reply = {
           id : message.id,
           postId: message.post.id,
@@ -318,7 +338,7 @@ export class PostDetailController{
           type: 3 // default to use quote
         }
 
-        this.state.go(Controllers.WriteReplyPostController.STATE, {
+        this.state.go(targetState, {
           topicId: this.topicId,
           postId: this.postId,
           page: this.currentPage,
@@ -353,13 +373,19 @@ export class PostDetailController{
   }
 
   onEdit(message){
-    this.registerEditMessageModal().then((editMessageModal) => {
-      editMessageModal.initialize(message)
 
-      editMessageModal.show()
+    const targetState = window.location.hash.indexOf(Controllers.LikesController.CONFIG.url) > 0
+      ? Controllers.LikesEditPostController.STATE
+      : window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+        ? Controllers.FeatureEditPostController.STATE
+        : Controllers.EditPostController.STATE
+
+    this.state.go(targetState, {
+      topicId: this.topicId,
+      postId: this.postId,
+      page: this.currentPage,
+      message: JSON.stringify(message),
     })
-
-
   }
 
   registerReportModal(){
@@ -456,178 +482,9 @@ export class PostDetailController{
     })
   }
 
-  /**
-   *
-   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
-   */
-  registerEditMessageModal(){
-    if(this.scope.editMessageModal) return Promise.resolve(this.scope.editMessageModal)
-
-    const editMessageModal = this.scope.editMessageModal = this.scope.$new()
-    editMessageModal.id = "edit-content"
-    editMessageModal.deleteImageIds = []
-    editMessageModal.show = () => this.editMessageModal.show()
-    editMessageModal.hide = () => this.editMessageModal.hide()
-    editMessageModal.confirmDeleteImage = (existingImage) => {
-      this.ionicPopup.confirm({
-        title: '確認要刪除圖片？', // String. The title of the popup.
-        cssClass: '', // String, The custom CSS class name
-        subTitle: '', // String (optional). The sub-title of the popup.
-        cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
-        cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
-        okText: '刪除', // String (default: 'OK'). The text of the OK button.
-        okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
-      }).then(isDelete => {
-        console.log(`isDelete ${isDelete} ->`,existingImage)
-        if(isDelete){
-          const id = existingImage.id
-          editMessageModal.deleteImageIds.push(id)
-          editMessageModal.existingImages = editMessageModal.existingImages.filter(eImage => eImage.id !== id)
-          this.scope.$apply()
-        }
-      })
-    }
-    editMessageModal.initialize = (message) => {
-      editMessageModal.message = message
-
-      console.log("edit message",message)
-
-      this.apiService.preEditMessage(message.post.topicId,message.post.id,message.id)
-          .safeApply(this.scope, (resp) => {
-            let $ = cheerio.load(resp.data)
-            const relativeUrl = $('#postform').attr('action')
-            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
-
-            console.log(postUrl)
-
-// ---------- Upload image preparation ----------------------------------------------
-            let imgattachform = $('#imgattachform')
-            let existingImages = $('img').map((i, e) => {
-              const img = $(e)
-              const src = img.attr('src')
-              const rawId = img.attr('id')
-              const isAttachment = _.startsWith(src, "//forum.hkepc.net")
-              const id = _.replace(rawId, 'image_', '')
-              return {
-                src: src,
-                id: id,
-                isAttachment: isAttachment
-              }
-            }).get()
-             .filter(existingImage => existingImage.isAttachment)
-
-            console.log("existingImages", existingImages)
-            let attachFormSource = cheerio.load(imgattachform.html())
-
-            const hiddenAttachFormInputs = {}
-
-            hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-            attachFormSource(`input[type='hidden']`).map((i,elem) => {
-              const k = attachFormSource(elem).attr('name')
-              const v = attachFormSource(elem).attr('value')
-
-              return hiddenAttachFormInputs[k] = encodeURIComponent(v)
-            }).get()
-
-            // assign hiddenAttachFormInputs to modal
-            editMessageModal.hiddenAttachFormInputs = hiddenAttachFormInputs
-            editMessageModal.existingImages = existingImages
-            editMessageModal.images = []
-
-            editMessageModal.onImageUpload = (image) => {
-              console.log("onImageUplod",image)
-              editMessageModal.images.push(image)
-            }
-
-// ---------- End of Upload image preparation -----------------------------------------------
-
-            let formSource = cheerio.load($('#postform').html())
-            const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
-
-            // the text showing the effects of reply / quote
-            editMessageModal.edit = {
-              subject: formSource('#subject').attr('value'),
-              content :formSource('#e_textarea').text()
-            }
-
-            // register new function
-            editMessageModal.doEdit = (subject,content) => {
-              console.log(content)
-              const hiddenFormInputs = {}
-              formSource(`input[type='hidden']`).map((i,elem) => {
-                const k = formSource(elem).attr('name')
-                const v = formSource(elem).attr('value')
-
-                hiddenFormInputs[k] = encodeURIComponent(v)
-              }).get()
-
-              const imageFormData = {}
-              const deleteImageFormData = {}
-
-              // attache Image logic
-              editMessageModal.images.forEach(img => {
-                imageFormData[img.formData] = ""
-              })
-
-              // delete image logic
-              editMessageModal.deleteImageIds.forEach((id,i) => {
-                deleteImageFormData[`attachdel[${i}]`] = id
-              })
-
-              // Post to the server
-              this.apiService.dynamicRequest({
-                method: "POST",
-                url : postUrl,
-                data : {
-                  editsubmit: true,
-                  message: content,
-                  subject: subject,
-                  typeid: subTopicTypeId,
-                  ...hiddenFormInputs,
-                  ...imageFormData,
-                  ...deleteImageFormData
-                },
-                headers : {'Content-Type':'application/x-www-form-urlencoded'}
-              }).safeApply(this.scope, (resp) => {
-                const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
-                const isEditSuccess = _.includes(responseText, '成功')
-                if(isEditSuccess){
-
-                  this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
-
-                  // set the page to the message page
-                  this.currentPage = message.post.page
-
-                  this.doRefresh()
-
-                  this.editMessageModal.hide()
-                }
-                else {
-                  this.ngToast.danger(`<i class="ion-ios-close"> 修改失敗！HKEPC 傳回:「${responseText}」</i>`)
-                }
-
-              }).subscribe()
-            }
-
-          }).subscribe()
-    }
-
-    return this.ionicModal.fromTemplateUrl('templates/modals/edit-post.html', {
-      scope: editMessageModal
-    }).then((modal) => {
-      this.editMessageModal = modal
-
-      return Promise.resolve(editMessageModal)
-    })
-  }
   deregisterUserProfileModal(){
     this.userProfileModal && this.userProfileModal.remove()
 
-  }
-
-  deregisterEditModal(){
-    this.editMessageModal && this.editMessageModal.remove()
   }
 
   deregisterReportModal(){

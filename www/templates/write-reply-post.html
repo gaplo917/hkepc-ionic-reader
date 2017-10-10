@@ -9,6 +9,20 @@
         <button class="button-default" ng-click="vm.doReply(vm.reply)">發佈</button>
     </ion-nav-buttons>
     <ion-content>
+        <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top" >
+            點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
+        </div>
+        <!--TODO: Refactor to scss-->
+        <div style="overflow: auto;white-space: nowrap;">
+            <div style="width:100px;height: 100px;display: inline-block;"
+                 ng-repeat="eImage in vm.existingImages track by $index"
+                 on-long-press="vm.confirmDeleteImage(eImage)"
+                 on-short-press="vm.addImageToContent(eImage)"
+            >
+                <img style="height: 100px; padding:10px;" ng-src="{{eImage.src}}">
+                <span class="less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
+            </div>
+        </div>
         <ion-list>
             <div class="item item-divider" style="text-align: center;">
                 回覆類別

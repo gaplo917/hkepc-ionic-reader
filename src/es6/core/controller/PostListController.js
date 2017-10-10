@@ -2,6 +2,7 @@
  * Created by Gaplo917 on 11/1/2016.
  */
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
+import {PostListRefreshRequest} from '../model/PostListRefreshRequest'
 import * as Controllers from './index'
 
 
@@ -18,7 +19,7 @@ export class PostListController {
       }
     }
   }}
-  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx) {
+  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx, $rootScope) {
     this.scope = $scope
     this.state = $state
     this.location = $location
@@ -98,6 +99,11 @@ export class PostListController {
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
     })
+
+    $rootScope.$eventToObservable(PostListRefreshRequest.NAME)
+      .subscribe(() => {
+        this.doRefresh()
+      })
   }
 
   loadMore(cb){
@@ -192,6 +198,7 @@ export class PostListController {
   }
 
   doNewPost(topic){
+
     this.state.go(Controllers.WriteNewPostController.STATE, {
       topicId: this.topicId,
       topic: JSON.stringify(topic),

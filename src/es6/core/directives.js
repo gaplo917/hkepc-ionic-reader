@@ -82,12 +82,7 @@ export default
           if(index === 4 && Bridge.isAvailable()){
             Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
 
-              attachmentIds.forEach(attactmentId => {
-                modal.onImageUpload({
-                  formData:`attachnew[${attactmentId}][description]=`,
-                  id: attactmentId
-                })
-              })
+              modal.onImageUploadSuccess(attachmentIds)
 
               $timeout(() => {
                 scope.$apply()
@@ -221,7 +216,9 @@ export default
             scope.$apply(() => {
               const elem = document.getElementById(selectorId)
               elem.focus()
-              elem.setSelectionRange(nselectionStart,nselectionStart)
+              $timeout(() => {
+                elem.setSelectionRange(nselectionStart,nselectionStart)
+              },200)
             })
           })
 
@@ -243,7 +240,10 @@ export default
             scope.$apply(() => {
               const elem = document.getElementById(selectorId)
               elem.focus()
-              elem.setSelectionRange(nselectionStart,nselectionStart)
+
+              $timeout(() => {
+                elem.setSelectionRange(nselectionStart,nselectionStart)
+              },200)
             })
           })
 
@@ -256,17 +256,6 @@ export default
           const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
 
           scope.contentModel = `${splits[0]} ${code} ${splits[1]}`
-
-          const nselectionStart = selectionStart + code.length + 1
-          $timeout(() => {
-            scope.$apply(() => {
-              const elem = document.getElementById(selectorId)
-              elem.focus()
-              elem.setSelectionRange(nselectionStart,nselectionStart)
-            })
-          })
-
-
         }
 
         modal.addImageUrlToText = function(imageUrl) {
@@ -286,4 +275,51 @@ export default
 
       templateUrl: 'templates/directives/input.helper.html'
     }
+  })
+  // Customize from https://gist.github.com/BobNisco/9885852
+  .directive('onLongPress', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function($scope, $elm, $attrs) {
+        $elm.bind('touchstart', function(evt) {
+          // Locally scoped variable that will keep track of the long press
+          $scope.longPress = true;
+
+          // We'll set a timeout for 600 ms for a long press
+          $timeout(function() {
+            if ($scope.longPress) {
+              // If the touchend event hasn't fired,
+              // apply the function given in on the element's on-long-press attribute
+              $scope.$apply(function() {
+                $scope.$eval($attrs.onLongPress)
+              });
+
+              $scope.triggeredLongPress = true
+            }
+          }, 600);
+        });
+
+        $elm.bind('touchend', function(evt) {
+          if(!$scope.triggeredLongPress){
+            // no long press is triggered, show try to trigger short press
+            if ($attrs.onShortPress){
+              $scope.$apply(function() {
+                $scope.$eval($attrs.onShortPress)
+              });
+            }
+
+          }
+
+          $scope.triggeredLongPress = false
+          // Prevent the onLongPress event from firing
+          $scope.longPress = false;
+          // If there is an on-touch-end function attached to this element, apply it
+          if ($attrs.onTouchEnd) {
+            $scope.$apply(function() {
+              $scope.$eval($attrs.onTouchEnd)
+            });
+          }
+        });
+      }
+    };
   })

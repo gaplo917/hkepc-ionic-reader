@@ -19,9 +19,8 @@ export * from './IRListController'
 export * from './SearchController'
 export * from './WriteNewPostController'
 export * from './WriteReplyPostController'
+export * from './EditPostController'
 
 // Just a clone
-export * from './ViewPostController'
-export * from './ViewPostListController'
-export * from './LikesViewPostController'
+export * from './Clones'
 

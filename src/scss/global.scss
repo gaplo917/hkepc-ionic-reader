@@ -207,6 +207,11 @@ textarea {
   font-size: 14px;
 }
 
+.super-less-important-info {
+  color: $less-important-color;
+  font-size: 10px;
+}
+
 @media (min-width: 680px) {
   .modal {
     top: 0;

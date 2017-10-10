@@ -2,6 +2,7 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
+import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 
 const cheerio = require('cheerio')
 
@@ -19,7 +20,7 @@ export class WriteReplyPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService) {
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope) {
     this.id = "reply-content"
     this.message = JSON.parse($stateParams.message)
     this.reply = JSON.parse($stateParams.reply)
@@ -32,19 +33,23 @@ export class WriteReplyPostController {
     this.apiService = apiService
     this.ngToast = ngToast
     this.ionicHistory = $ionicHistory
+    this.ionicPopup = $ionicPopup
+    this.rootScope = $rootScope
     this.state = $state
-    this.images = []
+    this.deleteImageIds = []
+    this.attachImageIds = []
+    this.existingImages = []
 
     // fetch the epc data for native App
-    this.preReplyFetchContent().subscribe()
-  }
-  onImageUpload(image) {
-    console.log("onImageUplod", image)
-    this.reply.content = `${this.reply.content}\n[attachimg]${image.id}[/attachimg]`
-    this.images.push(image)
+    this.preFetchContent().subscribe()
   }
 
-  preReplyFetchContent(){
+  onImageUploadSuccess(attachmentIds){
+    this.ngToast.success(`<i class="ion-ios-checkmark"> 成功新增圖片${attachmentIds.join(',')}！</i>`)
+    this.preFetchContent().subscribe()
+  }
+  
+  preFetchContent(){
 
     // useful for determine none|reply|quote type
     return this.apiService.replyPage(this.reply)
@@ -54,6 +59,21 @@ export class WriteReplyPostController {
 
         // ---------- Upload image preparation ----------------------------------------------
         let imgattachform = $('#imgattachform')
+
+        let existingImages = $('img').map((i, e) => {
+          const img = $(e)
+          const src = img.attr('src')
+          const rawId = img.attr('id')
+          const isAttachment = _.startsWith(src, "//forum.hkepc.net")
+          const id = _.replace(rawId, 'image_', '')
+          return {
+            src: src,
+            id: id,
+            isAttachment: isAttachment
+          }
+        }).get()
+          .filter(existingImage => existingImage.isAttachment)
+
         let attachFormSource = cheerio.load(imgattachform.html())
 
         const hiddenAttachFormInputs = {}
@@ -69,6 +89,7 @@ export class WriteReplyPostController {
 
         // assign hiddenAttachFormInputs to modal
         this.hiddenAttachFormInputs = hiddenAttachFormInputs
+        this.existingImages = existingImages
 
         // ---------- End of Upload image preparation -----------------------------------------
 
@@ -97,7 +118,7 @@ export class WriteReplyPostController {
   doReply(reply){
     console.log(JSON.stringify(reply))
 
-    this.preReplyFetchContent()
+    this.preFetchContent()
       .flatMap(() => {
         const postUrl = this.postUrl
         const preText = this.preText
@@ -108,8 +129,16 @@ export class WriteReplyPostController {
         const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
 
         const imageFormData = {}
-        this.images.forEach(img => {
-          imageFormData[img.formData] = ""
+        const deleteImageFormData = {}
+
+        // attach Image logic
+        this.attachImageIds.forEach(id => {
+          imageFormData[`attachnew[${id}][description]=`] = ""
+        })
+
+        // delete image logic
+        this.deleteImageIds.forEach((id,i) => {
+          deleteImageFormData[`attachdel[${i}]`] = id
         })
 
         // Post to the server
@@ -119,7 +148,8 @@ export class WriteReplyPostController {
           data:    {
             message: replyMessage,
             ...hiddenFormInputs,
-            ...imageFormData
+            ...imageFormData,
+            ...deleteImageFormData
           },
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
@@ -130,6 +160,7 @@ export class WriteReplyPostController {
 
         if(isReplySuccess){
           this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
+          this.rootScope.$emit(PostDetailRefreshRequest.NAME)
           this.onBack()
         }
         else {
@@ -140,8 +171,51 @@ export class WriteReplyPostController {
 
   }
 
+
+  addImageToContent(existingImage){
+    const attachmentId = existingImage.id
+    const selectorId = this.id
+    const selectionStart = document.getElementById(selectorId).selectionStart
+    const content = document.getElementById(selectorId).value
+    const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
+
+    this.reply.content = `${splits[0]}[attachimg]${attachmentId}[/attachimg]${splits[1]}`
+    this.attachImageIds.push(attachmentId)
+  }
+
+  confirmDeleteImage(existingImage){
+    this.ionicPopup.confirm({
+      title: '確認要刪除圖片？', // String. The title of the popup.
+      cssClass: '', // String, The custom CSS class name
+      subTitle: '', // String (optional). The sub-title of the popup.
+      cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
+      cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
+      okText: '刪除', // String (default: 'OK'). The text of the OK button.
+      okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
+    }).then(isDelete => {
+      console.log(`isDelete ${isDelete} ->`,existingImage)
+      if(isDelete){
+        const id = existingImage.id
+
+        // add to delete array
+        this.deleteImageIds.push(id)
+
+        //remove attachment id from array
+        this.attachImageIds = this.attachImageIds.filter(imgId => imgId !== id)
+
+        this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
+
+        this.reply.content = _.replace(this.reply.content, id ,'')
+        this.reply.content = _.replace(this.reply.content, '[attachimg][/attachimg]' ,'')
+        setTimeout(() => this.scope.$apply(), 0)
+      }
+    })
+  }
+
   onBack(){
     if(this.ionicHistory.viewHistory().currentView.index !== 0){
+      this.ionicHistory.backView().stateParams.abc = "123"
+
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
