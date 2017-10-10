@@ -43,7 +43,7 @@ export class TabController{
     this.historyService = HistoryService
     this.ionicHistory = $ionicHistory
     this.apiService = apiService
-
+    this.darkTheme = null
     this.isLoggedIn = false
 
     // cache the value
