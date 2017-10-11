@@ -42,10 +42,10 @@
         </ion-item>
 
         <ion-item
-                          ng-show='vm.isLoggedIn'
-                          class="odd item-remove-animate item-avatar item-icon-right "
-                          type="item-text-wrap"
-                          href="#/tab/topics/search">
+            ng-show='vm.isLoggedIn'
+            class="even item-remove-animate item-avatar item-icon-right "
+            type="item-text-wrap"
+            href="#/tab/topics/search">
           <i class="ion-ios-search-strong icon"
              style="position: absolute;
                     top: 16px;
@@ -62,9 +62,10 @@
         </ion-item>
           
         <ion-item
-            ng-show='vm.isLoggedIn && vm.canShowSectionInIOSReview(-1)'
+            ng-show='vm.isLoggedIn'
             class="odd item-remove-animate item-avatar item-icon-right "
             type="item-text-wrap"
+            href=""
             ng-click="vm.onIRSection()">
           <img class="topic-icon" ng-src="img/Icon.png"/>
           <h2>IR 專區</h2>
