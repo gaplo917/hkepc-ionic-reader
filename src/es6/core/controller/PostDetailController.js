@@ -321,6 +321,44 @@ export class PostDetailController{
     this.loadMessages()
   }
 
+  onQuickReply(post){
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+      if(isLoggedIn){
+
+        const targetState = window.location.hash.indexOf(Controllers.LikesController.CONFIG.url) > 0
+          ? Controllers.LikesWriteReplyPostController.STATE
+          : window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
+            ? Controllers.FeatureWriteReplyPostController.STATE
+            : Controllers.WriteReplyPostController.STATE
+
+        const reply = {
+          id : null,
+          postId: this.postId,
+          topicId: post.topicId,
+          type: 1 // default to use quote
+        }
+
+        const message = {
+          post:{
+            id: this.postId,
+            topicId: this.topicId,
+            title: post.title,
+          },
+        }
+
+        this.state.go(targetState, {
+          topicId: this.topicId,
+          postId: this.postId,
+          page: this.currentPage,
+          message: JSON.stringify(message),
+          reply: JSON.stringify(reply)
+        })
+
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+      }
+    }).subscribe()
+  }
   onReply(message){
     this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
