@@ -18,11 +18,11 @@ export class ApiService {
   }
 
   static get DI() {
-    return ($http,rx,$rootScope) => new ApiService($http,rx,$rootScope)
+    return ($http,rx,$rootScope,ngToast) => new ApiService($http,rx,$rootScope,ngToast)
   }
 
-  constructor($http, rx, $rootScope,) {
-    this.http = new HybridHttp($http,rx)
+  constructor($http, rx, $rootScope,ngToast) {
+    this.http = new HybridHttp($http,rx,ngToast)
     this.rx = rx
     this.$rootScope = $rootScope
 
