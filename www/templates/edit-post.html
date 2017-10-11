@@ -23,7 +23,6 @@
               <span class="super-less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
           </div>
       </div>
-      <ion-list >
           <input-helper modal='vm' content-model='vm.edit.content' on-image-upload="vm.onImageUpload"></input-helper>
 
           <div class="row" ng-show="vm.edit.subject">
@@ -37,10 +36,10 @@
           <textarea id="edit-content"
                     placeholder="請輸入文字"
                     ng-model="vm.edit.content"
-                    style="width: 100%;height: 200px; padding: 20px 20px 0 20px;"
+                    style="width: 100%;height: 50%; padding: 20px 20px 0 20px;"
           ></textarea>
 
-          <div class="tab-bar-inset"></div>
+      <div class="tab-bar-inset"></div>
 
   </ion-content>
 </ion-view>
