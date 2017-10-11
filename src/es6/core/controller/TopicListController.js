@@ -154,7 +154,8 @@ export class TopicListController {
     if(this.isiOSNativeApp()){
       this.state.go(Controllers.PostDetailController.STATE, {
         topicId: 202,
-        postId: 2295363
+        postId: 2295363,
+        page: 1
       })
     }
     else {
