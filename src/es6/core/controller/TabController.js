@@ -12,6 +12,8 @@ import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
 import {HideUsernameRequest} from '../model/HideUsernameRequest'
 import {NativeChangeFontSizeRequest} from '../bridge/NativeChangeFontSizeRequest'
 import {NativeChangeThemeRequest} from '../bridge/NativeChangeThemeRequest'
+import {NativeHideUsernameRequest} from '../bridge/NativeHideUsernameRequest'
+
 import {Bridge, Channel} from '../bridge/index'
 
 import * as Controllers from './index'
@@ -66,7 +68,13 @@ export class TabController{
     }).subscribe()
 
     if(Bridge.isAvailable()){
-      // TODO: polling the pm
+      // polling the pm, only one of the tab do
+      if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
+        this.rx.Observable.interval(60 * 1000)
+          .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
+          .flatMap(() => apiService.checkPM())
+          .subscribe()
+      }
     }
     else {
       // Try the credential on start app
@@ -245,6 +253,12 @@ export class TabController{
       .safeApply(this.scope, ([event, req]) => {
         this.fontSize = req.size
         this.ionicHistory.clearCache()
+      }).subscribe()
+
+    $rootScope.$eventToObservable(NativeHideUsernameRequest.NAME)
+      .filter(([event,req]) => req instanceof NativeHideUsernameRequest)
+      .safeApply(this.scope, ([event, req]) => {
+        this.hideUsername = req.hideUsername
       }).subscribe()
 
     $scope.$eventToObservable(ChangeThemeRequest.NAME)

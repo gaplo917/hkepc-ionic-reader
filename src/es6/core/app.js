@@ -7,6 +7,8 @@ import * as URLUtils from '../utils/url'
 
 import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
 import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
+import {NativeHideUsernameRequest} from './bridge/NativeHideUsernameRequest'
+
 import {Bridge, Channel} from "./bridge/index";
 require('angulartics')
 
@@ -70,6 +72,9 @@ function initAngular(){
               break
             case "fontSize":
               $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
+              break
+            case "hideUsername":
+              $rootScope.$emit(NativeHideUsernameRequest.NAME, new NativeHideUsernameRequest(data.value))
               break
             default:
               break
