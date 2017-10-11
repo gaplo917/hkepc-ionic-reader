@@ -39,7 +39,7 @@
          ng-if="isTab(0)"
          ng-repeat="gif in ::modal.gifs track by $index"
          ng-click="modal.addGifCodeToText(gif.code)"
-         ng-src="https://www.hkepc.com/forum/images/smilies/default/{{gif.url}}"/>
+         src="img/gifs/{{gif.url}}"/>
 
     <div ng-if="isTab(1)">
       <label class="item item-input">
