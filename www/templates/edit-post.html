@@ -8,19 +8,19 @@
   <ion-nav-buttons side="right">
       <button class="button-default" ng-click="vm.doEdit(vm.edit.subject, vm.edit.content, vm.images)">修改</button>
   </ion-nav-buttons>
-  <ion-content>
-      <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top" >
+  <ion-content on-swipe-right="vm.onBack()">
+      <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center" >
           點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
       </div>
       <!--TODO: Refactor to scss-->
       <div style="overflow: auto;white-space: nowrap;">
-          <div style="width:100px;height: 100px;display: inline-block;"
+          <div style="width:70px;height: 70px;display: inline-block;"
                ng-repeat="eImage in vm.existingImages track by $index"
                on-long-press="vm.confirmDeleteImage(eImage)"
                on-short-press="vm.addImageToContent(eImage)"
           >
-              <img style="height: 100px; padding:10px;" ng-src="{{eImage.src}}">
-              <span class="less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
+              <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
+              <span class="super-less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
           </div>
       </div>
       <ion-list >

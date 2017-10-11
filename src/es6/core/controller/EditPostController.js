@@ -177,7 +177,7 @@ export class EditPostController {
     const content = document.getElementById(selectorId).value
     const splits = [content.slice(0,selectionStart),content.slice(selectionStart)]
 
-    this.edit.content = `${splits[0]}[attachimg]${attachmentId}[/attachimg]${splits[1]}`
+    this.edit.content = `${splits[0]}[attachimg]${attachmentId}[/attachimg]\n${splits[1]}`
     this.attachImageIds.push(attachmentId)
   }
 

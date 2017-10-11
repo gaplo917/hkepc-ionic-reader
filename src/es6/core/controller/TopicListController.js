@@ -1,12 +1,9 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import {Bridge} from "../bridge/Bridge";
+import * as Controllers from "./index"
 
-const cheerio = require('cheerio')
 
 export class TopicListController {
   static get STATE() { return 'tab.topics'}
@@ -32,6 +29,7 @@ export class TopicListController {
     this.apiService = apiService
     this.firstLogin = true
     this.q = $q
+    this.state = $state
 
     observeOnScope($scope, 'vm.topics')
       .delay(1000) // delay for saving topics
@@ -148,4 +146,19 @@ export class TopicListController {
     return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
   }
 
+  isiOSNativeApp(){
+    return Bridge.isAvailable()
+  }
+
+  onIRSection(){
+    if(this.isiOSNativeApp()){
+      this.state.go(Controllers.PostDetailController.STATE, {
+        topicId: 202,
+        postId: 2295363
+      })
+    }
+    else {
+      this.state.go(Controllers.IRListController.STATE)
+    }
+  }
 }

@@ -8,7 +8,7 @@
   <ion-nav-buttons side="right">
       <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
   </ion-nav-buttons>
-  <ion-content>
+  <ion-content on-swipe-right="vm.onBack()">
 
       <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top" >
           點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
