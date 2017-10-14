@@ -1195,6 +1195,13 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * @description Navigates the app to the back view, if a back view exists.
      */
     goBack: function(backCount) {
+      // FIXME: Work arround for native app @Gap
+      if(window.WebViewJavascriptBridge){
+        window.WebViewJavascriptBridge.callHandler('BACK', {
+          from: window.location.hash
+        })
+        return /* Native app goBack controlled by webview*/
+      }
       if (isDefined(backCount) && backCount !== -1) {
         if (backCount > -1) return;
 
@@ -1939,8 +1946,9 @@ IonicModule
           setStyles(leavingEle, (1 - 0.1 * step), step * -33, -1);
 
         } else if (direction == 'back') {
-          setStyles(enteringEle, (1 - 0.1 * (1 - step)), (1 - step) * -33, -1);
-          setStyles(leavingEle, 1, step * 100, 1 - step);
+          // FIXME: Work arround for native app @Gap
+          setStyles(enteringEle, 1, 0, 0);
+          setStyles(leavingEle, 0, 0, 0);
 
         } else {
           // swap, enter, exit
@@ -1948,7 +1956,8 @@ IonicModule
           setStyles(leavingEle, 0, 0, -1);
         }
       },
-      shouldAnimate: shouldAnimate && (direction == 'forward' || direction == 'back')
+      // FIXME: Work arround for native app @Gap
+      shouldAnimate: shouldAnimate && (direction == 'forward')
     };
 
     return d;
@@ -1990,15 +1999,17 @@ IonicModule
         var enteringHeaderCtrl = enteringHeaderBar.controller();
         var leavingHeaderCtrl = leavingHeaderBar && leavingHeaderBar.controller();
         if (d.direction == 'back') {
-          leave(enteringHeaderCtrl, leavingHeaderCtrl, 1 - step);
-          enter(leavingHeaderCtrl, enteringHeaderCtrl, 1 - step);
+          // FIXME: Work arround for native app @Gap
+          leave(enteringHeaderCtrl, leavingHeaderCtrl, 0);
+          enter(leavingHeaderCtrl, enteringHeaderCtrl, 0);
         } else {
           enter(enteringHeaderCtrl, leavingHeaderCtrl, step);
           leave(leavingHeaderCtrl, enteringHeaderCtrl, step);
         }
       },
       direction: direction,
-      shouldAnimate: shouldAnimate && (direction == 'forward' || direction == 'back')
+      // FIXME: Work arround for native app @Gap
+      shouldAnimate: shouldAnimate && (direction == 'forward')
     };
 
     return d;

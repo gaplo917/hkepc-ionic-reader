@@ -1,4 +1,4 @@
-<ion-view class="chats-list-view" view-title="短消息" on-swipe-right="$ionicGoBack()">
+<ion-view class="chats-list-view" view-title="短消息" on-swipe-right="vm.onBack()">
   <div class="spinner">
     <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
   </div>

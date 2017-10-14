@@ -6,7 +6,7 @@
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
     </button>
   </ion-nav-buttons>
-  <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" >
+  <ion-content lazy-scroll on-swipe-right="vm.onBack()" >
     <div class="spinner">
       <ion-spinner class="spinner" icon="android" ng-show="vm.myreplies.length == 0"></ion-spinner>
     </div>

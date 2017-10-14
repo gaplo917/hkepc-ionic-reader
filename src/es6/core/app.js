@@ -94,7 +94,7 @@ function initAngular(){
 
       $ionicConfigProvider.scrolling.jsScrolling(false)
       $ionicConfigProvider.views.forwardCache(false)
-      $ionicConfigProvider.views.maxCache(3)
+      $ionicConfigProvider.views.maxCache(4)
       $ionicConfigProvider.spinner.icon('android')
       $ionicConfigProvider.tabs.style('standard')
       $ionicConfigProvider.tabs.position('bottom')

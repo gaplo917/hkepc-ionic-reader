@@ -20,7 +20,7 @@
   </ion-nav-buttons>
     <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
 
-    <ion-content lazy-scroll on-swipe-right="$ionicGoBack()" style="padding-top:20px"
+    <ion-content lazy-scroll on-swipe-right="vm.onBack()" style="padding-top:20px"
                  delegate-handle="post-detail"
     >
 
