@@ -86,8 +86,8 @@ export class GeneralHtml{
 
       if(imgSrc && !imgSrc.endsWith('.gif')){
         this.source(e).attr('image-lazy-src', imgSrc)
-        this.source(e).attr('image-lazy-distance-from-bottom-to-load',"400")
-        this.source(e).attr('image-lazy-loader',"lines")
+        this.source(e).attr('image-lazy-distance-from-bottom-to-load',"0")
+        this.source(e).attr('image-lazy-loader',"android")
         this.source(e).removeAttr('src')
         this.source(e).removeAttr('alt')
         this.source(e).attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
