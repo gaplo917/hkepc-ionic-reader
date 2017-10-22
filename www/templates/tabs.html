@@ -29,41 +29,6 @@ navigation history that also transitions its views in and out.
 </ion-tabs>
 <link ng-if="vm.darkTheme === false" href="css/ionic.app.css" rel="stylesheet">
 <link ng-if="vm.darkTheme === true" href="css/ionic.app.dark.css" rel="stylesheet">
-<style ng-if="vm.fontSize == 50">
- html {
-   zoom : 50%;
- }
-</style>
-<style ng-if="vm.fontSize == 70">
-  html {
-    zoom : 70%;
-  }
-</style>
-<style ng-if="vm.fontSize == 80">
-  html {
-    zoom : 80%;
-  }
-</style>
-<style ng-if="vm.fontSize == 90">
-  html {
-    zoom : 90%;
-  }
-</style>
-<style ng-if="vm.fontSize == 100">
-  html {
-    zoom : 100%;
-  }
-</style>
-<style ng-if="vm.fontSize == 125">
-  html {
-    zoom : 125%;
-  }
-</style>
-<style ng-if="vm.fontSize == 150">
-  html {
-    zoom : 150%;
-  }
-</style>
 <style ng-if="vm.isiOSNativeApp()">
 
     /*iphone 5*/
@@ -71,6 +36,21 @@ navigation history that also transitions its views in and out.
     and (device-width : 320px)
     and (device-height : 568px)
     and (-webkit-device-pixel-ratio : 2) {
+        .bar.bar-header{
+            height: 66px;
+        }
+        .bar.bar-subheader{
+            top:66px;
+        }
+        .bar.bar-header .title {
+            top:20px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 20px;
+        }
+        .has-header {
+            top: 66px;
+        }
         .tab-nav {
             display: none;
         }
@@ -81,7 +61,11 @@ navigation history that also transitions its views in and out.
 
         .tab-bar-inset{
             width: 100%;
-            height: 44px;
+            height: 7.8vh;
+        }
+
+        .action-sheet-wrapper {
+            bottom: 7.8vh;
         }
     }
 
@@ -90,6 +74,21 @@ navigation history that also transitions its views in and out.
     and (device-width : 375px)
     and (device-height : 667px)
     and (-webkit-device-pixel-ratio : 2) {
+        .bar.bar-header{
+            height: 64px;
+        }
+        .bar.bar-subheader{
+            top: 64px;
+        }
+        .bar.bar-header .title {
+            top: 20px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 20px;
+        }
+        .has-header {
+            top: 64px;
+        }
 
         .tab-nav {
             display: none;
@@ -101,11 +100,11 @@ navigation history that also transitions its views in and out.
 
         .tab-bar-inset{
             width: 100%;
-            height: 44px;
+            height: 6.6vh;
         }
 
         .action-sheet-wrapper {
-            bottom: 44px;
+            bottom: 6.6vh;
         }
     }
     /*iphone 6plus Zoom */
@@ -113,6 +112,21 @@ navigation history that also transitions its views in and out.
     and (device-width : 375px)
     and (device-height : 667px)
     and (-webkit-device-pixel-ratio : 3) {
+        .bar.bar-header{
+            height: 64px;
+        }
+        .bar.bar-subheader{
+            top: 64px;
+        }
+        .bar.bar-header .title {
+            top: 20px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 20px;
+        }
+        .has-header {
+            top: 64px;
+        }
 
         .tab-nav {
             display: none;
@@ -124,11 +138,11 @@ navigation history that also transitions its views in and out.
 
         .tab-bar-inset{
             width: 100%;
-            height: 44px;
+            height: 6.6vh;
         }
 
         .action-sheet-wrapper {
-            bottom: 44px;
+            bottom: 6.6vh;
         }
     }
     /*iphone 6plus Standard*/
@@ -136,6 +150,21 @@ navigation history that also transitions its views in and out.
     and (device-width : 414px)
     and (device-height : 736px)
     and (-webkit-device-pixel-ratio : 3) {
+        .bar.bar-header{
+            height: 64px;
+        }
+        .bar.bar-subheader{
+            top: 64px;
+        }
+        .bar.bar-header .title {
+            top: 20px;
+        }
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+            margin-top: 20px;
+        }
+        .has-header {
+            top: 64px;
+        }
         .tab-nav {
             display: none;
         }
@@ -146,11 +175,11 @@ navigation history that also transitions its views in and out.
 
         .tab-bar-inset{
             width: 100%;
-            height: 44px;
+            height: 6vh;
         }
 
         .action-sheet-wrapper {
-            bottom: 44px;
+            bottom: 6vh;
         }
     }
 
@@ -160,22 +189,22 @@ navigation history that also transitions its views in and out.
     and (device-height : 812px)
     and (-webkit-device-pixel-ratio : 3) {
         body {
-            top: 66px;
+            top: 64px;
         }
         .bar.bar-header{
-            height: 66px;
+            height: 64px;
         }
         .bar.bar-subheader{
-            top:66px;
+            top:64px;
         }
         .bar.bar-header .title {
-            top:22px;
+            top:20px;
         }
         .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 22px;
+            margin-top: 20px;
         }
         .has-header {
-            top: 66px;
+            top: 64px;
         }
 
         .tab-nav {
@@ -188,11 +217,11 @@ navigation history that also transitions its views in and out.
 
         .tab-bar-inset{
             width: 100%;
-            height: 78px;
+            height: 9.6vh;
         }
 
         .action-sheet-wrapper {
-            bottom: 78px;
+            bottom: 9.6vh;
         }
     }
     /*ipad 1024*768*/

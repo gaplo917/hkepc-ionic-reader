@@ -30,7 +30,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService) {
+  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope) {
     console.debug(`[${TabController.NAME}] init`)
 
     this.scope = $scope
@@ -47,6 +47,11 @@ export class TabController{
     this.apiService = apiService
     this.darkTheme = null
     this.isLoggedIn = false
+
+    observeOnScope($scope, 'vm.fontSize').subscribe(({oldValue, newValue}) => {
+      const viewport = document.querySelector("meta[name=viewport]")
+      viewport.setAttribute('content', `initial-scale=${this.fontSize/100}, maximum-scale=${this.fontSize/100}, user-scalable=no, width=device-width`)
+    })
 
     // cache the value
     rx.Observable.combineLatest(AuthService.isLoggedIn(), AuthService.getUsername(), (isLoggedIn, username) => {
