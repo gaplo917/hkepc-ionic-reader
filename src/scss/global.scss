@@ -5,7 +5,7 @@ html {
 // word break
 * {
   word-break: break-all;
-  -webkit-text-size-adjust: auto!important;
+  -webkit-text-size-adjust: none!important;
 }
 
 // shortcut for image center
