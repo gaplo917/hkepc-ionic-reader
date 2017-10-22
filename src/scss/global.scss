@@ -8,6 +8,12 @@ html {
   -webkit-text-size-adjust: none!important;
 }
 
+input,textarea {
+  /* Exception for input areas */
+  -webkit-touch-callout: default !important;
+  -webkit-user-select: text !important;
+}
+
 // shortcut for image center
 .center {
   margin-left: auto;
