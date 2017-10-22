@@ -161,8 +161,13 @@ export class WriteNewPostController {
 
           if(isNewPostSuccess){
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
-            this.rootScope.$emit(PostListRefreshRequest.NAME)
+
             this.onBack()
+
+            // proper delay for the back
+            setTimeout(() => {
+              this.rootScope.$emit(PostListRefreshRequest.NAME)
+            },300)
           }
           else {
             this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)

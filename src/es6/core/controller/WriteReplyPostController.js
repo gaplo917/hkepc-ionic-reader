@@ -160,8 +160,13 @@ export class WriteReplyPostController {
 
         if(isReplySuccess){
           this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
-          this.rootScope.$emit(PostDetailRefreshRequest.NAME)
+
           this.onBack()
+
+          // proper delay for the back
+          setTimeout(() => {
+            this.rootScope.$emit(PostDetailRefreshRequest.NAME)
+          },300)
         }
         else {
           this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
