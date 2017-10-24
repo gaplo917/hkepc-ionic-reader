@@ -1,4 +1,7 @@
 .about-view {
+  div.description {
+    padding: 20px;
+  }
   .item, a, div ,p {
     background-color: $bg-color;
     color: $text-color;

@@ -19,6 +19,7 @@ export * from './SearchController'
 export * from './WriteNewPostController'
 export * from './WriteReplyPostController'
 export * from './EditPostController'
+export * from './VersionController'
 
 // Just a clone
 export * from './Clones'

@@ -19,13 +19,15 @@ export class AboutController {
     }
   }}
 
-  constructor($scope, $http, LocalStorageService,$ionicPopup) {
+  constructor($scope, $http, LocalStorageService,$ionicPopup, ngToast) {
 
     this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
     this.ionicPopup = $ionicPopup
     this.version = HKEPC.version
+    this.ngToast = ngToast
+
     LocalStorageService.get('proxy').safeApply($scope, data => {
       this.proxy = data || HKEPC.proxy
     }).subscribe()
@@ -73,5 +75,9 @@ export class AboutController {
 
   isProxy() {
     return URLUtils.isProxy()
+  }
+
+  userGroup(){
+    this.ngToast.info(`<i class="ion-ios-timer-outline"> 快將推出！</i>`)
   }
 }

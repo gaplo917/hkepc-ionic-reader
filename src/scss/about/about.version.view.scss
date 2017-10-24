@@ -1,0 +1,26 @@
+.about-version-view {
+  ion-content {
+    background-color: $bg-color;
+    color: $text-color;
+    padding: 10px 10px 0 10px;
+
+    pre {
+      background-color: darken($bg-color,5%);
+      color: $text-color;
+      padding: 10px
+    }
+    ol, ul {
+      list-style: initial !important;
+      padding:5px 20px 20px 20px;
+    }
+    ul li {
+      list-style-position: outside;
+    }
+
+    hr {
+      margin: 10px -30px;
+      border-color: $border-color;
+    }
+  }
+
+}
