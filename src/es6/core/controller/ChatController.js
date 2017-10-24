@@ -65,7 +65,7 @@ export class ChatController{
           const html = new GeneralHtml(cheerio.load(resp.data))
 
           let $ = html
-              .removeIframe()
+              .removeAds()
               .processImgUrl(HKEPC.baseForumUrl)
               .getCheerio()
 

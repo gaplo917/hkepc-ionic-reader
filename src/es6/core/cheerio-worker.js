@@ -9,7 +9,7 @@ module.exports = function (self) {
     const {topic, data, currentHash, isAutoLoadImage} = ev.data
 
     const html = new HKEPCHtml(cheerio.load(data))
-        .removeIframe()
+        .removeAds()
         .processImgUrl('https://www.hkepc.com/forum')
         .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
         .processEpcUrl(currentHash || "")

@@ -32,7 +32,7 @@ export class MessageResolver {
         const pageLinkHint = html.getCheerio()('.authorinfo a').attr('href')
 
         let $ = html
-            .removeIframe()
+            .removeAds()
             .processImgUrl(HKEPC.baseForumUrl)
             .processEpcUrl(window.location.hash)
             .processExternalUrl()

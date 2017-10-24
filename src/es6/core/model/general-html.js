@@ -22,7 +22,7 @@ export class GeneralHtml{
 
     // remove all the script tags
     this.removeScripts()
-    this.removeIframe()
+    this.removeAds()
     this.handleCloudflareEmailProtection()
   }
 
@@ -41,8 +41,8 @@ export class GeneralHtml{
     return this
   }
 
-  removeIframe(){
-    this.source('iframe').remove()
+  removeAds(){
+    this.source('.adv').remove()
 
     return this
   }

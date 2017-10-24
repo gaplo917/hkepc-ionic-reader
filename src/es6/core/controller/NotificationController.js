@@ -60,7 +60,7 @@ export class NotificationController{
         const html = new HKEPCHtml(cheerio.load(resp.data))
 
         let $ = html
-            .removeIframe()
+            .removeAds()
             .processEpcUrl(window.location.hash)
             .processExternalUrl()
             .processImgUrl(HKEPC.baseForumUrl)
