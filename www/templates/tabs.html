@@ -31,33 +31,34 @@ navigation history that also transitions its views in and out.
 <link ng-if="vm.darkTheme === true" href="css/ionic.app.dark.css" rel="stylesheet">
 <style ng-if="vm.isiOSNativeApp()">
 
+    .bar.bar-header{
+        height: 59px;
+    }
+    .bar.bar-subheader{
+        top: 59px;
+    }
+    .bar.bar-header .title {
+        top: 15px;
+    }
+    .bar.bar-header > .buttons, .bar.bar-header > .button {
+        margin-top: 15px;
+    }
+    .has-header {
+        top: 59px;
+    }
+
+    .tab-nav {
+        display: none;
+    }
+
+    .has-tabs, .bar-footer.has-tabs {
+        bottom: 0px;
+    }
     /*iphone 5*/
     @media only screen
     and (device-width : 320px)
     and (device-height : 568px)
     and (-webkit-device-pixel-ratio : 2) {
-        .bar.bar-header{
-            height: 66px;
-        }
-        .bar.bar-subheader{
-            top:66px;
-        }
-        .bar.bar-header .title {
-            top:20px;
-        }
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 20px;
-        }
-        .has-header {
-            top: 66px;
-        }
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
 
         .tab-bar-inset{
             width: 100%;
@@ -74,31 +75,8 @@ navigation history that also transitions its views in and out.
     and (device-width : 375px)
     and (device-height : 667px)
     and (-webkit-device-pixel-ratio : 2) {
-        .bar.bar-header{
-            height: 64px;
-        }
-        .bar.bar-subheader{
-            top: 64px;
-        }
-        .bar.bar-header .title {
-            top: 20px;
-        }
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 20px;
-        }
-        .has-header {
-            top: 64px;
-        }
 
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
-
-        .tab-bar-inset{
+        .tab-bar-inset {
             width: 100%;
             height: 6.6vh;
         }
@@ -112,29 +90,6 @@ navigation history that also transitions its views in and out.
     and (device-width : 375px)
     and (device-height : 667px)
     and (-webkit-device-pixel-ratio : 3) {
-        .bar.bar-header{
-            height: 59px;
-        }
-        .bar.bar-subheader{
-            top: 59px;
-        }
-        .bar.bar-header .title {
-            top: 20px;
-        }
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 20px;
-        }
-        .has-header {
-            top: 59px;
-        }
-
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
 
         .tab-bar-inset{
             width: 100%;
@@ -150,28 +105,6 @@ navigation history that also transitions its views in and out.
     and (device-width : 414px)
     and (device-height : 736px)
     and (-webkit-device-pixel-ratio : 3) {
-        .bar.bar-header{
-            height: 64px;
-        }
-        .bar.bar-subheader{
-            top: 64px;
-        }
-        .bar.bar-header .title {
-            top: 20px;
-        }
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 20px;
-        }
-        .has-header {
-            top: 64px;
-        }
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
 
         .tab-bar-inset{
             width: 100%;
@@ -226,23 +159,15 @@ navigation history that also transitions its views in and out.
     }
     /*ipad 1024*768*/
     @media only screen
-    and (min-device-width : 768px)
-    and (max-device-width : 1024px)  {
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
-
+    and (device-width: 768px)
+    and (device-height : 1024px)  {
         .tab-bar-inset{
             width: 100%;
-            height: 44px;
+            height: 7.7vh;
         }
 
         .action-sheet-wrapper {
-            bottom: 44px;
+            bottom: 7.7vh;
         }
     }
 
