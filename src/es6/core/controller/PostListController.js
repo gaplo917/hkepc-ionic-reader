@@ -4,7 +4,7 @@
 import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import {PostListRefreshRequest} from '../model/PostListRefreshRequest'
 import * as Controllers from './index'
-
+import * as _ from "lodash"
 
 export class PostListController {
   static get STATE() { return 'tab.topics-posts'}
@@ -144,7 +144,7 @@ export class PostListController {
     // better UX to highlight the searchText
     this.posts = this.topicId === 'search'
       ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
-      : this.posts.concat(resp.posts)
+      : this.posts.concat(resp.posts.filter(p => !_.includes(this.posts, p.id)))
 
     this.currentPageNum = parseInt(this.currentPageNum) + 1
 
