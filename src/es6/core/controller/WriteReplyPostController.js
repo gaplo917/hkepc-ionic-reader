@@ -166,7 +166,7 @@ export class WriteReplyPostController {
           // proper delay for the back
           setTimeout(() => {
             this.rootScope.$emit(PostDetailRefreshRequest.NAME)
-          },300)
+          },1000)
         }
         else {
           this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)

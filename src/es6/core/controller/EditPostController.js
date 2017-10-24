@@ -165,7 +165,7 @@ export class EditPostController {
         // proper delay for the back
         setTimeout(() => {
           this.rootScope.$emit(PostDetailRefreshRequest.NAME)
-        },300)
+        },1000)
       }
       else {
         this.ngToast.danger(`<i class="ion-ios-close"> 修改失敗！HKEPC 傳回:「${responseText}」</i>`)
