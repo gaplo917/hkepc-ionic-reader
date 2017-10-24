@@ -29,7 +29,7 @@ export class PostDetailController{
     }
   }}
 
-  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout, $ionicPopup, $rootScope) {
+  constructor($scope, $stateParams,$sce,$state,$location,MessageService,$ionicHistory,$ionicModal,$ionicPopover,ngToast,AuthService,$ionicScrollDelegate,LocalStorageService,$ionicActionSheet,apiService,rx,$timeout, $ionicPopup, $rootScope, $compile) {
     this.scope = $scope
     this.rx = rx
     this.messageService = MessageService
@@ -48,6 +48,7 @@ export class PostDetailController{
     this.apiService = apiService
     this.authService = AuthService
     this.$timeout = $timeout
+    this.compile = $compile
     this.isAutoLoadImage = true
 
     this.messages = []
@@ -681,11 +682,38 @@ export class PostDetailController{
 
   loadLazyImage(uid, imageSrc) {
     const image = document.getElementById(uid)
+    const $element = angular.element(image)
+
     if(image.getAttribute('src') === imageSrc){
       window.open(imageSrc, '_system', 'location=yes')
     }
     else {
-      image.setAttribute('src', imageSrc)
+      // hide the image
+      image.setAttribute('style', "display: none")
+      const loader = this.compile(`
+          <div class='image-loader-container'>
+              <ion-spinner class='image-loader' icon='${image.getAttribute('image-lazy-loader')}'/>
+          </div>
+      `)(this.scope)
+
+      $element.after(loader)
+
+      const bgImg = new Image()
+
+      bgImg.onload = function () {
+        loader.remove()
+        image.setAttribute('src', imageSrc)
+        image.removeAttribute('style')
+      }
+      bgImg.onerror = function () {
+        loader.remove()
+        image.removeAttribute('style')
+        // reproduce the error state
+        image.onerror()
+      }
+
+      bgImg.src = imageSrc
+
     }
   }
 
