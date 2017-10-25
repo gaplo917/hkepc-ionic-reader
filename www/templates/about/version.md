@@ -13,14 +13,14 @@ IR v2.0.0  (又命名為 IR Pro) 正式推出，
 
 重點內容：
 * 完全移除 Cordova 並自行架設 Native Bridge 重制及新增原生功能，提升使用體驗 
-* 解除 WKWebView 的技術限制，所有用戶現無需使用 IR 專用 Proxy 連接 HKEPC 
+* 解除 WKWebView 的技術限制，所有 iOS 用戶現無需使用 IR 專用 Proxy 連接 HKEPC 
 * 優化效能並提升瀏覽速度接近 40%*
 * 提升開 App 速度達 100%*
 * 更改營運模式為 Freemium
 
 新增功能：
-* 加入「一鍵壓縮上傳圖片到 HKEPC」功能
-* 加入「由邊緣左至右拖拉到上一頁」原生功能
+* 加入「一鍵壓縮上傳圖片到 HKEPC」功能 (Native App)
+* 加入「由邊緣左至右拖拉到上一頁」原生功能 (iOS)
 * 加入「自動加載圖片」選項（IR Silver 限定）
 * 加入「移除簽名功能」選項（IR Silver 限定）
 * 加入「移除帖子圖片」功能
