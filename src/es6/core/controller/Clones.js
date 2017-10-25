@@ -51,8 +51,8 @@ export class FeatureWriteReplyPostController extends Controllers.WriteReplyPostC
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope) {
-    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope)
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile)
   }
 }
 
@@ -75,8 +75,8 @@ export class FeatureEditPostController extends Controllers.EditPostController{
     }
   }
 
-  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope) {
-    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope)
+  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile)
   }
 }
 
@@ -132,8 +132,8 @@ export class LikesWriteReplyPostController extends Controllers.WriteReplyPostCon
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope) {
-    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope)
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile)
   }
 }
 
@@ -156,7 +156,7 @@ export class LikesEditPostController extends Controllers.EditPostController{
     }
   }
 
-  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope) {
-    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope)
+  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile)
   }
 }

@@ -97,10 +97,11 @@ export class PostListController {
 
     })
 
-    $scope.$on('$ionicView.beforeLeave', (e) => {
+    $scope.$on('$ionicView.unloaded', (e) => {
+      this.refreshSubscription.unsubscribe()
     })
 
-    $rootScope.$eventToObservable(PostListRefreshRequest.NAME)
+    this.refreshSubscription = $rootScope.$eventToObservable(PostListRefreshRequest.NAME)
       .subscribe(() => {
         this.doRefresh()
       })

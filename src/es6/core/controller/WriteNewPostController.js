@@ -3,6 +3,7 @@ import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostListRefreshRequest} from "../model/PostListRefreshRequest"
+import swal from 'sweetalert'
 
 const cheerio = require('cheerio')
 
@@ -20,7 +21,7 @@ export class WriteNewPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,$ionicPopover,ngToast, apiService, $ionicPopup, $rootScope) {
+  constructor($scope,$state,$stateParams,$ionicHistory,$ionicPopover,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
     this.id = "new-content"
     this.post = { content: "" }
     this.topicId = $stateParams.topicId
@@ -32,6 +33,7 @@ export class WriteNewPostController {
     this.ionicHistory = $ionicHistory
     this.topic = JSON.parse($stateParams.topic)
     this.categories = JSON.parse($stateParams.categories)
+    this.compile = $compile
 
     this.deleteImageIds = []
     this.attachImageIds = []
@@ -140,6 +142,20 @@ export class WriteNewPostController {
         const subject = post.title
         const replyMessage = `${post.content}\n\n${ionicReaderSign}`
 
+        swal({
+          content: (() => {
+            return this.compile(`
+              <div>
+                  <ion-spinner class='image-loader' icon='android'/>
+                  <div class="text-center">傳送到 HKEPC 伺服器中</div>
+              </div>
+            `)(this.scope)[0]
+          })(),
+          closeOnEsc: false,
+          closeOnClickOutside: false,
+          buttons: false
+        })
+
         //Post to the server
         this.apiService.dynamicRequest({
           method: "POST",
@@ -160,17 +176,21 @@ export class WriteNewPostController {
           const isNewPostSuccess = _.includes(responseText, '主題已經發佈')
 
           if(isNewPostSuccess){
+            swal.close()
+
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
 
             this.onBack()
 
-            // proper delay for the back
-            setTimeout(() => {
-              this.rootScope.$emit(PostListRefreshRequest.NAME)
-            },1000)
+            this.rootScope.$emit(PostListRefreshRequest.NAME)
           }
           else {
-            this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
+            swal({
+              title: "發佈失敗",
+              text: `HKEPC 傳回:「${responseText}`,
+              icon: "error",
+              button: "確定",
+            })
           }
         }).subscribe()
 

@@ -3,6 +3,7 @@ import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
+import swal from 'sweetalert'
 
 const cheerio = require('cheerio')
 
@@ -20,7 +21,7 @@ export class WriteReplyPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope) {
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
     this.id = "reply-content"
     this.message = JSON.parse($stateParams.message)
     this.reply = JSON.parse($stateParams.reply)
@@ -28,6 +29,7 @@ export class WriteReplyPostController {
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
     this.page = $stateParams.page
+    this.compile = $compile
 
     this.scope = $scope
     this.apiService = apiService
@@ -118,6 +120,20 @@ export class WriteReplyPostController {
   doReply(reply){
     console.log(JSON.stringify(reply))
 
+    swal({
+      content: (() => {
+        return this.compile(`
+          <div>
+              <ion-spinner class='image-loader' icon='android'/>
+              <div class="text-center">傳送到 HKEPC 伺服器中</div>
+          </div>
+        `)(this.scope)[0]
+      })(),
+      closeOnEsc: false,
+      closeOnClickOutside: false,
+      buttons: false
+    })
+
     this.preFetchContent()
       .flatMap(() => {
         const postUrl = this.postUrl
@@ -159,17 +175,20 @@ export class WriteReplyPostController {
         const isReplySuccess = _.includes(responseText, '回覆已經發佈')
 
         if(isReplySuccess){
+          swal.close()
           this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
 
           this.onBack()
 
-          // proper delay for the back
-          setTimeout(() => {
-            this.rootScope.$emit(PostDetailRefreshRequest.NAME)
-          },1000)
+          this.rootScope.$emit(PostDetailRefreshRequest.NAME)
         }
         else {
-          this.ngToast.danger(`<i class="ion-ios-close"> 發佈失敗！HKEPC 傳回:「${responseText}」</i>`)
+          swal({
+            title: "發佈失敗",
+            text: `HKEPC 傳回:「${responseText}`,
+            icon: "error",
+            button: "確定",
+          })
         }
 
       }).subscribe()
