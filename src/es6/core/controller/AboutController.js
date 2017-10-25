@@ -3,7 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-import {LoginTabUpdateRequest}  from '../model/LoginTabUpdateRequest'
+import {Bridge, Channel} from "../bridge/index";
 
 export class AboutController {
   static get STATE() { return 'tab.about'}
@@ -77,7 +77,13 @@ export class AboutController {
     return URLUtils.isProxy()
   }
 
-  userGroup(){
-    this.ngToast.info(`<i class="ion-ios-timer-outline"> 快將推出！</i>`)
+  onIAP(){
+    if(Bridge.isAvailable()){
+      Bridge.callHandler(Channel.iap)
+    }
+    else {
+      this.ngToast.info(`<i class="ion-ios-timer-outline">請使用 iOS 或 Android App 訂閱</i>`)
+    }
+
   }
 }
