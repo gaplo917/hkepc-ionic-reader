@@ -49,8 +49,10 @@ export class TabController{
     this.isLoggedIn = false
 
     observeOnScope($scope, 'vm.fontSize').subscribe(({oldValue, newValue}) => {
+      const width = this.fontSize <= 100 ? 'device-width' : window.innerWidth * 100 / this.fontSize
       const viewport = document.querySelector("meta[name=viewport]")
-      viewport.setAttribute('content', `initial-scale=${this.fontSize/100}, maximum-scale=${this.fontSize/100}, user-scalable=no, width=device-width`)
+      viewport.setAttribute('content', `initial-scale=${this.fontSize/100}, maximum-scale=${this.fontSize/100}, user-scalable=no, width=${width}`)
+
     })
 
     // cache the value
