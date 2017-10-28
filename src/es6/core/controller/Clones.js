@@ -37,49 +37,6 @@ export class FeatureViewPostController extends Controllers.PostDetailController 
 
 }
 
-export class FeatureWriteReplyPostController extends Controllers.WriteReplyPostController {
-  static get STATE() { return 'tab.features-posts-detail-reply'}
-  static get NAME() { return 'FeatureWriteReplyPostController'}
-  static get CONFIG() { return {
-    url: '/features/topics/:topicId/posts/:postId/page/:page/reply?message=&reply=',
-    cache: false,
-    views: {
-      'tab-features': {
-        templateUrl: 'templates/write-reply-post.html',
-        controller: FeatureWriteReplyPostController.NAME,
-        controllerAs: 'vm'
-      },
-    }
-  }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
-    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile)
-  }
-}
-
-export class FeatureEditPostController extends Controllers.EditPostController{
-  static get STATE() { return 'tab.features-posts-edit'}
-
-  static get NAME() { return 'FeatureEditPostController'}
-
-  static get CONFIG() {
-    return {
-      url:   '/features/topics/:topicId/posts/:postId/page/:page/edit?message=',
-      cache: false,
-      views: {
-        'tab-features': {
-          templateUrl:  'templates/edit-post.html',
-          controller:   FeatureEditPostController.NAME,
-          controllerAs: 'vm'
-        },
-      }
-    }
-  }
-
-  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile) {
-    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile)
-  }
-}
-
 /**
  *  Likes Tab
  */
@@ -115,48 +72,4 @@ export class LikesViewPostController extends Controllers.PostDetailController {
   }
 
 
-}
-
-
-export class LikesWriteReplyPostController extends Controllers.WriteReplyPostController {
-  static get STATE() { return 'tab.likes-posts-detail-reply'}
-  static get NAME() { return 'FeatureWriteReplyPostController'}
-  static get CONFIG() { return {
-    url: '/likes/topics/:topicId/posts/:postId/page/:page/reply?message=&reply=',
-    cache: false,
-    views: {
-      'tab-likes': {
-        templateUrl: 'templates/write-reply-post.html',
-        controller: LikesWriteReplyPostController.NAME,
-        controllerAs: 'vm'
-      },
-    }
-  }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
-    super($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile)
-  }
-}
-
-export class LikesEditPostController extends Controllers.EditPostController{
-  static get STATE() { return 'tab.likes-posts-edit'}
-
-  static get NAME() { return 'LikesEditPostController'}
-
-  static get CONFIG() {
-    return {
-      url:   '/likes/topics/:topicId/posts/:postId/page/:page/edit?message=',
-      cache: false,
-      views: {
-        'tab-likes': {
-          templateUrl:  'templates/edit-post.html',
-          controller:   LikesEditPostController.NAME,
-          controllerAs: 'vm'
-        },
-      }
-    }
-  }
-
-  constructor($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile) {
-    super($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile)
-  }
 }

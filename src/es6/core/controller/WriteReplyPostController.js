@@ -179,8 +179,6 @@ export class WriteReplyPostController {
           this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
 
           this.onBack()
-
-          this.rootScope.$emit(PostDetailRefreshRequest.NAME)
         }
         else {
           swal({

@@ -181,8 +181,6 @@ export class WriteNewPostController {
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
 
             this.onBack()
-
-            this.rootScope.$emit(PostListRefreshRequest.NAME)
           }
           else {
             swal({

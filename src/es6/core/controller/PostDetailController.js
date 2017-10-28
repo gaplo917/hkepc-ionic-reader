@@ -363,13 +363,6 @@ export class PostDetailController{
   onReply(message){
     this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
-
-        const targetState = window.location.hash.indexOf(Controllers.LikesController.CONFIG.url) > 0
-          ? Controllers.LikesWriteReplyPostController.STATE
-          : window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-            ? Controllers.FeatureWriteReplyPostController.STATE
-            : Controllers.WriteReplyPostController.STATE
-
         const reply = {
           id : message.id,
           postId: message.post.id,
@@ -377,7 +370,7 @@ export class PostDetailController{
           type: 3 // default to use quote
         }
 
-        this.state.go(targetState, {
+        this.state.go(Controllers.WriteReplyPostController.STATE, {
           topicId: this.topicId,
           postId: this.postId,
           page: this.currentPage,
@@ -413,13 +406,7 @@ export class PostDetailController{
 
   onEdit(message){
 
-    const targetState = window.location.hash.indexOf(Controllers.LikesController.CONFIG.url) > 0
-      ? Controllers.LikesEditPostController.STATE
-      : window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0
-        ? Controllers.FeatureEditPostController.STATE
-        : Controllers.EditPostController.STATE
-
-    this.state.go(targetState, {
+    this.state.go(Controllers.EditPostController.STATE, {
       topicId: this.topicId,
       postId: this.postId,
       page: this.currentPage,

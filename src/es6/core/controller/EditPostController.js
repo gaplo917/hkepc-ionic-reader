@@ -179,8 +179,6 @@ export class EditPostController {
         this.currentPage = this.message.post.page
 
         this.onBack()
-
-        this.rootScope.$emit(PostDetailRefreshRequest.NAME)
       }
       else {
         swal({
