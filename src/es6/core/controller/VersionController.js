@@ -18,7 +18,7 @@ export class VersionController {
     this.state = $state
     this.ionicHistory = $ionicHistory
     const converter = new showdown.Converter()
-    $http.get('/templates/about/version.md').then(resp => {
+    $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.md').then(resp => {
       this.content = converter.makeHtml(resp.data)
     })
   }
