@@ -1942,8 +1942,9 @@ IonicModule
     var d = {
       run: function(step) {
         if (direction == 'forward') {
-          setStyles(enteringEle, 1, (1 - step) * 99, 1 - step); // starting at 98% prevents a flicker
-          setStyles(leavingEle, (1 - 0.1 * step), step * -33, -1);
+          // FIXME: Work arround for native app @Gap
+          setStyles(enteringEle, 1, 0, -1); // starting at 98% prevents a flicker
+          setStyles(leavingEle, 0, 0, -1);
 
         } else if (direction == 'back') {
           // FIXME: Work arround for native app @Gap
@@ -1957,7 +1958,7 @@ IonicModule
         }
       },
       // FIXME: Work arround for native app @Gap
-      shouldAnimate: shouldAnimate && (direction == 'forward')
+      shouldAnimate: false
     };
 
     return d;
@@ -2003,13 +2004,14 @@ IonicModule
           leave(enteringHeaderCtrl, leavingHeaderCtrl, 0);
           enter(leavingHeaderCtrl, enteringHeaderCtrl, 0);
         } else {
-          enter(enteringHeaderCtrl, leavingHeaderCtrl, step);
-          leave(leavingHeaderCtrl, enteringHeaderCtrl, step);
+          // FIXME: Work arround for native app @Gap
+          enter(enteringHeaderCtrl, leavingHeaderCtrl, 1);
+          leave(leavingHeaderCtrl, enteringHeaderCtrl, 1);
         }
       },
       direction: direction,
       // FIXME: Work arround for native app @Gap
-      shouldAnimate: shouldAnimate && (direction == 'forward')
+      shouldAnimate: false
     };
 
     return d;
