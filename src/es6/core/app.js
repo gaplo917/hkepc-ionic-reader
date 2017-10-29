@@ -4,6 +4,7 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
+const uuid = require('uuid-v4');
 
 import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
 import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
@@ -20,6 +21,10 @@ const isProxied = URLUtils.isProxy()
 
 function isiOSNative(){
   return window.webkit && window.webkit.messageHandlers &&  window.webkit.messageHandlers.isIRNative
+}
+
+function isAndroidNative(){
+  return window.Android
 }
 
 function setupWebViewJavascriptBridge(callback) {
@@ -39,6 +44,84 @@ if(isiOSNative()){
     Bridge.instance = bridge
     initAngular()
   })
+}
+else if (isAndroidNative()){
+  console.log("Android webview bridge is ready", window.Android)
+
+  let port = null;
+  onmessage = function (e) {
+    console.log("Native trigger ready", e)
+
+    // ensure only run once
+    if(!e.ports[0] || port !== null) return
+
+    port = e.ports[0]
+
+    const messagesFromNative = new Rx.Subject()
+
+    port.onmessage = function(f) {
+      try {
+        const jsObj = JSON.parse(f.data)
+        console.log(`receieve data from native `, jsObj)
+        messagesFromNative.onNext(jsObj)
+
+      } catch (e){
+        console.warn(`message from native encounter parsing error "${f.data}"`, e)
+      }
+    }
+
+    Bridge.instance = {
+      // call native
+      callHandler: (channel, opt, cb) => {
+        const uid = uuid()
+
+        port.postMessage(JSON.stringify({
+          uid: uid,
+          channel: channel,
+          data: JSON.stringify(opt)
+        }))
+
+        if(typeof cb === "function"){
+          // caller expected a reply
+          messagesFromNative
+            .asObservable()
+            .filter(msg => msg.channel === channel && msg.uid === uid)
+            .timeout(30 * 1000)
+            .take(1)
+            .subscribe((msg) => {
+              // TODO: Should do Optimization
+              try {
+                const jsObj = JSON.parse(msg.data)
+                cb(jsObj)
+              } catch (e){
+                cb(msg.data)
+              }
+            }, (err) => { console.warn(err) })
+        }
+      },
+      // receive native message
+      registerHandler: (channel, cb) => {
+        messagesFromNative
+          .filter(msg => msg.channel === channel)
+          .subscribe((msg) => {
+            // create a response call back
+            const responseCb = (data) => {
+              port.postMessage(JSON.stringify({
+                uid: msg.uid,
+                channel: msg.channel,
+                data: JSON.stringify(data)
+              }))
+            }
+
+            if(typeof cb === "function") cb(msg.data, responseCb)
+          })
+      }
+    }
+
+    initAngular()
+  }
+
+
 }
 else {
   setTimeout(() => {
@@ -108,7 +191,7 @@ function initAngular(){
       $ionicConfigProvider.backButton.text("")
       $ionicConfigProvider.backButton.previousTitleText(false)
 
-      if (isiOSNative()){
+      if (isiOSNative() || isAndroidNative()){
         $ionicConfigProvider.views.transition('ios')
       }
       else {

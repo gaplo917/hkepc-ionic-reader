@@ -155,14 +155,7 @@ export class PostDetailController{
     })
 
     $scope.$on('$ionicView.unloaded', (e) => {
-      this.refreshSubscription.unsubscribe()
     })
-
-    this.refreshSubscription = $rootScope.$eventToObservable(PostDetailRefreshRequest.NAME)
-      .subscribe(() => {
-        this.focus = this.lastFocus
-        this.doRefresh()
-      })
   }
 
   loadMore(){

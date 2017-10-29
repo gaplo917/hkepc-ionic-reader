@@ -301,8 +301,12 @@ export class TabController{
     body.className = body.className.replace('platform-android','')
   }
 
-  isiOSNativeApp(){
-    return Bridge.isAvailable()
+  isiOSNative(){
+    return window.webkit && window.webkit.messageHandlers &&  window.webkit.messageHandlers.isIRNative
+  }
+
+  isAndroidNative(){
+    return window.Android
   }
 
 }
