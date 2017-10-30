@@ -126,6 +126,10 @@ export class TopicListController {
 
 
   doRefresh(){
+    // refresh to load list
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    }).subscribe()
 
     this.reset()
 
@@ -146,15 +150,18 @@ export class TopicListController {
     return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
   }
 
-  isiOSNativeApp(){
-    return Bridge.isAvailable()
-  }
-
   onIRSection(){
-    if(this.isiOSNativeApp()){
+    if(window.isiOSNative()){
       this.state.go(Controllers.PostDetailController.STATE, {
         topicId: 202,
         postId: 2295363,
+        page: 1
+      })
+    }
+    else if(window.isAndroidNative()){
+      this.state.go(Controllers.PostDetailController.STATE, {
+        topicId: 180,
+        postId: 2266086,
         page: 1
       })
     }

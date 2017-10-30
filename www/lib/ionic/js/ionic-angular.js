@@ -1196,8 +1196,8 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      */
     goBack: function(backCount) {
       // FIXME: Work arround for native app @Gap
-      if(window.WebViewJavascriptBridge){
-        window.WebViewJavascriptBridge.callHandler('BACK', {
+      if(window.Bridge){
+        window.Bridge.callHandler('BACK', {
           from: window.location.hash
         })
         return /* Native app goBack controlled by webview*/

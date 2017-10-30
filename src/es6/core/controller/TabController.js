@@ -301,12 +301,4 @@ export class TabController{
     body.className = body.className.replace('platform-android','')
   }
 
-  isiOSNative(){
-    return window.webkit && window.webkit.messageHandlers &&  window.webkit.messageHandlers.isIRNative
-  }
-
-  isAndroidNative(){
-    return window.Android
-  }
-
 }

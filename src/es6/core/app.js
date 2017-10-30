@@ -42,6 +42,8 @@ if(isiOSNative()){
   setupWebViewJavascriptBridge(bridge => {
     console.log("web view javascript bridge ready")
     Bridge.instance = bridge
+
+    window.Bridge = Bridge.instance
     initAngular()
   })
 }
@@ -118,6 +120,8 @@ else if (isAndroidNative()){
       }
     }
 
+    window.Bridge = Bridge.instance
+
     initAngular()
   }
 
@@ -146,6 +150,12 @@ function initAngular(){
   ])
     .run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig) {
       window.moment = moment
+      // export the global
+      window.isiOSNative = isiOSNative
+      window.isAndroidNative = isAndroidNative
+      $rootScope.isiOSNative = isiOSNative
+      $rootScope.isAndroidNative = isAndroidNative
+
       if(isiOSNative()) {
 
         Bridge.registerHandler(Channel.nativeStorageUpdated, function (data, responseCallback) {
@@ -183,6 +193,7 @@ function initAngular(){
       $ionicConfigProvider.tabs.position('bottom')
       $ionicConfigProvider.views.swipeBackEnabled(false)
       $ionicConfigProvider.navBar.alignTitle('center')
+      $ionicConfigProvider.views.transition('ios')
 
       // always load all templates to prevent white screen
       $ionicConfigProvider.templates.maxPrefetch(5)
@@ -191,12 +202,6 @@ function initAngular(){
       $ionicConfigProvider.backButton.text("")
       $ionicConfigProvider.backButton.previousTitleText(false)
 
-      if (isiOSNative() || isAndroidNative()){
-        $ionicConfigProvider.views.transition('ios')
-      }
-      else {
-        $ionicConfigProvider.views.transition('none')
-      }
     }])
     .config(function ($analyticsProvider) {
       // turn off automatic tracking
@@ -216,7 +221,7 @@ function initAngular(){
 
     })
     .config(['$httpProvider', function($httpProvider) {
-      if (isiOSNative()){
+      if (isiOSNative()|| isAndroidNative()){
         // Native App No Need
       }
       else {
@@ -233,7 +238,7 @@ function initAngular(){
 
     }])
     .provider('HKEPC_PROXY',[function(){
-      if (isiOSNative()){
+      if (isiOSNative() || isAndroidNative()){
         // Native App No Need
         this.$get = () => {}
       }
@@ -307,7 +312,7 @@ function initAngular(){
 
     }])
     .config(function($httpProvider) {
-      if (isiOSNative()){
+      if (isiOSNative() || isAndroidNative()){
         // Native App No Need
       }
       else {
@@ -323,7 +328,7 @@ function initAngular(){
       })
     }])
     .config(['$localForageProvider', function($localForageProvider){
-      if (isiOSNative()){
+      if (isiOSNative() || isAndroidNative()){
         // Native App No Need
       }
       else {

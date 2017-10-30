@@ -1,6 +1,9 @@
 // Bridge wrapper
 // Designed for wrapping both iOS & Android bridge
 export class Bridge {
+  static get instance(){
+    return Bridge._instance
+  }
 
   static set instance(bridge){
     Bridge._instance = bridge
