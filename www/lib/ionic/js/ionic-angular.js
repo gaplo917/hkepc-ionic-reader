@@ -1197,6 +1197,9 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
     goBack: function(backCount) {
       // FIXME: Designed for native app @Gap
       if(window.Bridge){
+        if(window.Bridge.isAndroidNative()){
+          this.clearHistory()
+        }
         window.Bridge.callHandler('BACK', {
           from: window.location.hash
         })

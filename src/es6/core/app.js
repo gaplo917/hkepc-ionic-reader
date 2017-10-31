@@ -41,7 +41,10 @@ function setupWebViewJavascriptBridge(callback) {
 if(isiOSNative()){
   setupWebViewJavascriptBridge(bridge => {
     console.log("web view javascript bridge ready")
-    Bridge.instance = bridge
+    Bridge.instance = {
+      ...bridge,
+      platform: 'ios'
+    }
 
     window.Bridge = Bridge.instance
     initAngular()
@@ -73,6 +76,7 @@ else if (isAndroidNative()){
     }
 
     Bridge.instance = {
+      platform: 'android',
       // call native
       callHandler: (channel, opt, cb) => {
         const uid = uuid()

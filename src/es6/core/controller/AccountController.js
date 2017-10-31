@@ -11,6 +11,7 @@ export class AccountController {
   static get NAME() { return 'AccountController'}
   static get CONFIG() { return {
     url: '/features/account',
+    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/features/account/account.html',
@@ -67,8 +68,10 @@ export class AccountController {
 
       this.ionicHistory.clearCache()
 
-      // back to previous page
-      this.onBack()
+      requestAnimationFrame(() => {
+        // back to main topic list
+        this.state.go(Controllers.TopicListController.STATE)
+      })
     })
 
   }
