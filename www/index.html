@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+    <link rel="apple-touch-icon" sizes="128x128" href="img/Icon.png">
+    <title>HKEPC IR Pro</title>
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
@@ -43,7 +44,7 @@
         <ion-nav-view></ion-nav-view>
       </ion-side-menu-content>
 
-      <ion-side-menu side="left">
+      <ion-side-menu side="left" ng-if="!isiOSNative() && !isAndroidNative()">
         <header class="bar bar-header bar-stable">
         </header>
 
@@ -66,6 +67,7 @@
       <ion-side-menu>
 
     </ion-side-menus>
+
 
     <!--
       The nav bar that will be updated as we navigate between views.
