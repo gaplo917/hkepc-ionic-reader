@@ -3,21 +3,6 @@
   ion-content {
     background-color: $bg-color;
   }
-  /* allows the bar-footer to be elastic /*
-  /* optionally set a max-height */
-  /* maxlength on the textarea will prevent /*
-  /* it from getting too large also */
-  .bar-footer {
-    overflow: visible !important;
-    height:100px;
-    max-height: 200px;
-    textarea {
-      resize: none;
-      height: 60px;
-      max-height: 80px;
-      width:100%;
-    }
-  }
 
   /* fixes an ios bug bear */
   button.ion-android-send {

@@ -8,6 +8,7 @@ import {XMLUtils} from '../../utils/xml'
 import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
+import swal from 'sweetalert'
 
 const cheerio = require('cheerio')
 const moment = require('moment')
@@ -126,11 +127,11 @@ export class ChatDetailController{
               } else {
 
                 // hotfix for cannot show message
-                setTimeout(() => this.doRefresh(), 1000)
+                setTimeout(() => {
+                  requestAnimationFrame(() => this.doRefresh())
+                }, 1000)
 
               }
-
-              delete this.input.message
 
             }).subscribe()
           }
@@ -148,6 +149,14 @@ export class ChatDetailController{
     chatSource('cite').remove()
 
     const date = chatSource('.cite').text()
+    let mDate
+    try {
+      mDate = moment(date,'YYYY-M-D hh:mm').fromNow()
+    } catch(e){
+      console.warn("date format not correct",e)
+      mDate = "幾秒前"
+    }
+
     const id = URLUtils.getQueryVariable(avatarUrl,'uid')
     return {
       id: id,
@@ -156,7 +165,7 @@ export class ChatDetailController{
           text
       ),
       username: username,
-      date : moment(date,'YYYY-M-D hh:mm').fromNow(),
+      date : mDate,
       isSelf: isSelf
     }
   }
@@ -182,6 +191,35 @@ export class ChatDetailController{
       })
       this.state.go(Controllers.ChatController.STATE)
     }
+  }
+
+  onNewMessage(){
+    // FIXME: Not a good way. just a work arround
+    const uid = uuid()
+    swal({
+      title: `發訊息給 ${this.sender.username}`,
+      content: {
+        element: "textarea",
+        attributes: {
+          id: uid,
+          rows: 5,
+          autofocus: true
+        },
+      },
+      buttons: ["取消", "發送"],
+    })
+      .then((value) => {
+        if(value){
+          const inputText = document.getElementById(uid).value
+          if(inputText){
+            this.onSendMessage(this.sender, inputText)
+          }
+          else {
+            this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
+          }
+        }
+
+      });
   }
 
   loadLazyImage(uid, imageSrc) {

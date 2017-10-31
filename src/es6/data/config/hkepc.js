@@ -88,6 +88,7 @@ module.exports = {
     space: (uid) => `${BASE_FORUM_URL}/space.php?uid=${uid}`,
     myPost: (page) => `${BASE_FORUM_URL}/my.php?item=threads&page=${page}`,
     myReply: (page) => `${BASE_FORUM_URL}/my.php?item=posts&page=${page}`,
+    preSendPm: (uid) => `${BASE_FORUM_URL}/pm.php?action=new&uid=${uid}&infloat=yes&handlekey=sendpm&inajax=1&ajaxtarget=fwin_content_sendpm`,
   },
   auth:{
     id: 'cdb_sid',

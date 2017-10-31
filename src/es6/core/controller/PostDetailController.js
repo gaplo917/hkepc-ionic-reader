@@ -12,8 +12,10 @@ import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as _ from 'lodash'
 import * as Controllers from "./index"
+import swal from 'sweetalert'
 
 const cheerio = require('cheerio')
+const uuid = require('uuid-v4');
 
 export class PostDetailController{
   static get STATE() { return 'tab.topics-posts-detail'}
@@ -590,7 +592,97 @@ export class PostDetailController{
             userProfileModal.show()
             userProfileModal.author = author
             userProfileModal.content = undefined
+            userProfileModal.sendPm = () => {
+              // FIXME: Not a good way. just a work arround
+              const uid = uuid()
+              swal({
+                title: `發訊息給 ${author.name}`,
+                content: {
+                  element: "textarea",
+                  attributes: {
+                    id: uid,
+                    rows: 5,
+                    autofocus: true
+                  },
+                },
+                buttons: ["取消", "發送"],
+              })
+                .then((value) => {
+                  if(value){
+                    const inputText = document.getElementById(uid).value
+                    if(!inputText){
+                      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
+                      return
+                    }
 
+                    swal({
+                      content: (() => {
+                        return this.compile(`
+                          <div>
+                              <ion-spinner class='image-loader' icon='android'/>
+                              <div class="text-center">傳送到 HKEPC 伺服器中</div>
+                          </div>
+                        `)(this.scope)[0]
+                      })(),
+                      closeOnEsc: false,
+                      closeOnClickOutside: false,
+                      buttons: false
+                    })
+                    this.apiService.preSendPm(author.uid)
+                      .flatMap((resp) => {
+                        const xml = cheerio.load(resp.data,{xmlMode:true})
+                        const rawHtml = _.replace(
+                          _.replace(xml('root').html(), '<![CDATA[','',)
+                        ,']]>', '')
+                        const $ = cheerio.load(rawHtml)
+                        const relativeUrl = $('#sendpmform').attr('action')
+                        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+                        let formSource = cheerio.load($('#sendpmform').html())
+
+                        const hiddenFormInputs = {}
+                        formSource(`input[type='hidden']`).map((i,elem) => {
+                          const k = formSource(elem).attr('name')
+                          const v = formSource(elem).attr('value')
+
+                          hiddenFormInputs[k] = encodeURIComponent(v)
+                        }).get()
+
+                        return this.apiService.dynamicRequest({
+                          method: "POST",
+                          url : postUrl,
+                          data : {
+                            msgto: author.name,
+                            message: inputText,
+                            ...hiddenFormInputs,
+                          },
+                          headers : {'Content-Type':'application/x-www-form-urlencoded'}
+                        })
+                      })
+                      .safeApply(this.scope, (resp) => {
+                        const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
+                        const isSuccess = _.includes(responseText, '成功')
+                        if(isSuccess){
+                          swal({
+                            title: "發送成功",
+                            icon: "success",
+                            button: "確定",
+                          })
+                        }
+                        else {
+                          swal({
+                            title: "發送失敗",
+                            text: `HKEPC 傳回:「${responseText}`,
+                            icon: "error",
+                            button: "確定",
+                          })
+                        }
+                      })
+                      .subscribe()
+
+                  }
+
+                });
+            }
 
             this.apiService.userProfile(author.uid).safeApply(this.scope.userProfileModal, data => {
               userProfileModal.author = author

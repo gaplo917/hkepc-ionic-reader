@@ -251,4 +251,11 @@ export class ApiService {
       url: HKEPC.forum.replyPage(reply)
     })
   }
+
+  preSendPm(uid){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.preSendPm(uid)
+    })
+  }
 }
