@@ -637,6 +637,7 @@ export class PostDetailController{
                     placeholder:"請輸入內容..."
                   },
                 },
+                className: "message",
                 buttons: ["取消", "發送"],
               })
                 .then((value) => {

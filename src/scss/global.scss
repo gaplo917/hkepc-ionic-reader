@@ -266,3 +266,7 @@ textarea {
 .swal-button--confirm {
   background-color: $epc-color;
 }
+
+.swal-modal.message {
+  vertical-align: top;
+}
