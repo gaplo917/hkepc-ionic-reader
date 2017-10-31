@@ -17,7 +17,7 @@ export class MyPostController {
     return {
       url: '/features/mypost',
       views: {
-        'tab-features': {
+        'main': {
           templateUrl: 'templates/features/mypost/my.post.html',
           controller: MyPostController.NAME,
           controllerAs: 'vm'

@@ -14,7 +14,7 @@ export class SearchController {
   static get CONFIG() { return {
     url: '/topics/search',
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/search.html',
         controller: SearchController.NAME,
         controllerAs: 'vm'

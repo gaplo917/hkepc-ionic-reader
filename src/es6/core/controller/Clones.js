@@ -9,7 +9,7 @@ export class FeatureViewPostController extends Controllers.PostDetailController 
   static get CONFIG() { return {
     url: '/features/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/post-detail.html',
         controller: FeatureViewPostController.NAME,
         controllerAs: 'vm'
@@ -46,7 +46,7 @@ export class LikesViewPostController extends Controllers.PostDetailController {
   static get CONFIG() { return {
     url: '/likes/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
-      'tab-likes': {
+      'main': {
         templateUrl: 'templates/post-detail.html',
         controller: LikesViewPostController.NAME,
         controllerAs: 'vm'

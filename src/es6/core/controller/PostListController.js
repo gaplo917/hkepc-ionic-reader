@@ -12,7 +12,7 @@ export class PostListController {
   static get CONFIG() { return {
     url: '/topics/:topicId/page/:page?searchId=&searchText=&searchResp=',
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/post-list.html',
         controller: PostListController.NAME,
         controllerAs: 'vm'

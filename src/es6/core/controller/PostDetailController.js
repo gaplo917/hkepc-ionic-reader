@@ -21,7 +21,7 @@ export class PostDetailController{
   static get CONFIG() { return {
     url: '/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl:  'templates/post-detail.html',
         controller:   PostDetailController.NAME,
         controllerAs: 'vm'

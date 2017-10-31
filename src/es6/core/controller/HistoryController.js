@@ -12,7 +12,7 @@ export class HistoryController {
     return {
       url: '/features/history',
       views: {
-        'tab-features': {
+        'main': {
           templateUrl: 'templates/features/history/history.html',
           controller: HistoryController.NAME,
           controllerAs: 'vm'

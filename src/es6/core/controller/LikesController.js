@@ -11,7 +11,7 @@ export class LikesController{
     url: '/likes',
     cache: true,
     views: {
-      'tab-likes': {
+      'main': {
         templateUrl: 'templates/tab-likes.html',
         controller: LikesController.NAME,
         controllerAs: 'vm'

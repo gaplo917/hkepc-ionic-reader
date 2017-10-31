@@ -14,7 +14,7 @@ export class WriteNewPostController {
     url: '/topics/:topicId/newPost?categories=&topic=',
     cache: false,
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/write-new-post.html',
         controller: WriteNewPostController.NAME,
         controllerAs: 'vm'

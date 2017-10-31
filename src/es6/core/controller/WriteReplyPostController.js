@@ -14,7 +14,7 @@ export class WriteReplyPostController {
     url: '/topics/:topicId/posts/:postId/page/:page/reply?message=&reply=',
     cache: false,
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/write-reply-post.html',
         controller: WriteReplyPostController.NAME,
         controllerAs: 'vm'

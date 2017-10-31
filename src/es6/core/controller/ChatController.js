@@ -15,7 +15,7 @@ export class ChatController{
   static get CONFIG() { return {
     url: '/features/chats',
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/features/chats/chats.list.html',
         controller: ChatController.NAME,
         controllerAs: 'vm'

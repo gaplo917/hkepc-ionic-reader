@@ -13,7 +13,7 @@ export class EditPostController {
     url: '/topics/:topicId/posts/:postId/page/:page/edit?message=',
     cache: false,
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/edit-post.html',
         controller: EditPostController.NAME,
         controllerAs: 'vm'

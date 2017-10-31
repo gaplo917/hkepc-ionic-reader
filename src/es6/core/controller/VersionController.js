@@ -7,7 +7,7 @@ export class VersionController {
   static get CONFIG() { return {
     url: '/about/version',
     views: {
-      'tab-about': {
+      'main': {
         templateUrl: 'templates/about/version.html',
         controller: VersionController.NAME,
         controllerAs: 'vm'

@@ -416,6 +416,11 @@ window.ionic.version = '1.3.3';
     },
 
     cachedAttr: function(ele, key, value) {
+      // FIXME: Bottle neck for the cache whole view which IR don't need
+      // just allow nav-bar to cache to see whats will happend @Gap
+      if(key !== 'nav-bar') return
+
+
       ele = ele && ele.length && ele[0] || ele;
       if (ele && ele.setAttribute) {
         var dataKey = '$attr-' + key;
@@ -432,14 +437,15 @@ window.ionic.version = '1.3.3';
     },
 
     cachedStyles: function(ele, styles) {
-      ele = ele && ele.length && ele[0] || ele;
-      if (ele && ele.style) {
-        for (var prop in styles) {
-          if (ele['$style-' + prop] !== styles[prop]) {
-            ele.style[prop] = ele['$style-' + prop] = styles[prop];
-          }
-        }
-      }
+      // FIXME: Bottle neck just comment to see whats will happend @Gap
+      // ele = ele && ele.length && ele[0] || ele;
+      // if (ele && ele.style) {
+      //   for (var prop in styles) {
+      //     if (ele['$style-' + prop] !== styles[prop]) {
+      //       ele.style[prop] = ele['$style-' + prop] = styles[prop];
+      //     }
+      //   }
+      // }
     }
 
   };

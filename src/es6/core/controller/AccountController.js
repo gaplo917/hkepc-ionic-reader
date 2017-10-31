@@ -12,7 +12,7 @@ export class AccountController {
   static get CONFIG() { return {
     url: '/features/account',
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/features/account/account.html',
         controller: AccountController.NAME,
         controllerAs: 'vm'

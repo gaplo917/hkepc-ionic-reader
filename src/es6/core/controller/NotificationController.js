@@ -17,7 +17,7 @@ export class NotificationController{
     url: '/features/notifications',
     cache: false,
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/features/notification/notification.html',
         controller: NotificationController.NAME,
         controllerAs: 'vm'

@@ -18,7 +18,7 @@ export class FeatureRouteController{
   static get CONFIG() { return {
     url: '/features',
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/features/features.route.html',
         controller: FeatureRouteController.NAME,
         controllerAs: 'vm'

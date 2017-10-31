@@ -16,7 +16,7 @@ export class IRListController {
   static get CONFIG() { return {
     url: '/ir',
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/ir/index.html',
         controller: IRListController.NAME,
         controllerAs: 'vm'

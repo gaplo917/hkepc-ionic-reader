@@ -128,9 +128,9 @@ else if (isAndroidNative()){
 
 }
 else {
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     initAngular()
-  },0)
+  })
 }
 
 function initAngular(){
@@ -202,6 +202,9 @@ function initAngular(){
       $ionicConfigProvider.backButton.text("")
       $ionicConfigProvider.backButton.previousTitleText(false)
 
+      if(isAndroidNative()){
+        $ionicConfigProvider.templates.maxPrefetch(0)
+      }
     }])
     .config(function ($analyticsProvider) {
       // turn off automatic tracking

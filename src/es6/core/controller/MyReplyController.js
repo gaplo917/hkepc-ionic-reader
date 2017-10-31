@@ -18,7 +18,7 @@ export class MyReplyController {
     return {
       url: '/features/myreply',
       views: {
-        'tab-features': {
+        'main': {
           templateUrl: 'templates/features/myreply/my.reply.html',
           controller: MyReplyController.NAME,
           controllerAs: 'vm'

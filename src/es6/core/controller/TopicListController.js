@@ -11,7 +11,7 @@ export class TopicListController {
   static get CONFIG() { return {
     url: '/topics',
     views: {
-      'tab-topics': {
+      'main': {
         templateUrl: 'templates/tab-topics.html',
         controller: TopicListController.NAME,
         controllerAs: 'vm'

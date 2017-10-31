@@ -11,7 +11,7 @@ export class AboutController {
   static get CONFIG() { return {
     url: '/about',
     views: {
-      'tab-about': {
+      'main': {
         templateUrl: 'templates/tab-about.html',
         controller: AboutController.NAME,
         controllerAs: 'vm'

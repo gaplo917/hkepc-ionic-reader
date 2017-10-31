@@ -1195,44 +1195,17 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * @description Navigates the app to the back view, if a back view exists.
      */
     goBack: function(backCount) {
-      // FIXME: Work arround for native app @Gap
+      // FIXME: Designed for native app @Gap
       if(window.Bridge){
         window.Bridge.callHandler('BACK', {
           from: window.location.hash
         })
         return /* Native app goBack controlled by webview*/
       }
-      if (isDefined(backCount) && backCount !== -1) {
-        if (backCount > -1) return;
-
-        var currentHistory = viewHistory.histories[this.currentHistoryId()];
-        var newCursor = currentHistory.cursor + backCount + 1;
-        if (newCursor < 1) {
-          newCursor = 1;
-        }
-
-        currentHistory.cursor = newCursor;
-        setNavViews(currentHistory.stack[newCursor].viewId);
-
-        var cursor = newCursor - 1;
-        var clearStateIds = [];
-        var fwdView = getViewById(currentHistory.stack[cursor].forwardViewId);
-        while (fwdView) {
-          clearStateIds.push(fwdView.stateId || fwdView.viewId);
-          cursor++;
-          if (cursor >= currentHistory.stack.length) break;
-          fwdView = getViewById(currentHistory.stack[cursor].forwardViewId);
-        }
-
-        var self = this;
-        if (clearStateIds.length) {
-          $timeout(function() {
-            self.clearCache(clearStateIds);
-          }, 300);
-        }
+      else {
+        window.history.back()
+        return
       }
-
-      viewHistory.backView && viewHistory.backView.go();
     },
 
     /**
@@ -4741,6 +4714,7 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
           callback && callback();
         },
 
+        // optimazted for IR no transition
         transition: function(direction, enableBack, allowAnimate) {
           var deferred;
           var enteringData = getTransitionData(viewLocals, enteringEle, direction, enteringView);
@@ -4780,20 +4754,7 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
             viewTransition.run(0);
           }
 
-          if (renderEnd) {
-            // create a promise so we can keep track of when all transitions finish
-            // only required if this transition should complete
-            deferred = $q.defer();
-            transitionPromises.push(deferred.promise);
-          }
-
-          if (renderStart && renderEnd) {
-            // CSS "auto" transitioned, not manually transitioned
-            // wait a frame so the styles apply before auto transitioning
-            $timeout(function() {
-              ionic.requestAnimationFrame(onReflow);
-            });
-          } else if (!renderEnd) {
+          if (!renderEnd) {
             // just the start of a manual transition
             // but it will not render the end of the transition
             navViewAttr(enteringEle, 'entering');
@@ -4823,13 +4784,13 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
             onReflow();
           }
 
-
           function onReflow() {
             // remove that we're staging the entering element so it can auto transition
             navViewAttr(enteringEle, viewTransition.shouldAnimate ? 'entering' : VIEW_STATUS_ACTIVE);
             navViewAttr(leavingEle, viewTransition.shouldAnimate ? 'leaving' : VIEW_STATUS_CACHED);
 
             // start the auto transition and let the CSS take over
+            // FIXME: we don't need transition, focue on content @Gap
             viewTransition.run(1);
 
             // trigger auto transitions on the associated nav bars
@@ -6528,12 +6489,6 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
     $scope.$on('$ionicTabs.beforeLeave', onTabsLeave);
     $scope.$on('$ionicTabs.afterLeave', onTabsLeave);
     $scope.$on('$ionicTabs.leave', onTabsLeave);
-
-    ionic.Platform.ready(function() {
-      if ( ionic.Platform.isWebView() && ionic.Platform.isIOS() ) {
-          self.initSwipeBack();
-      }
-    });
 
     return viewData;
   };

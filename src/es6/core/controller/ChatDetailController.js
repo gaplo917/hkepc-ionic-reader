@@ -20,7 +20,7 @@ export class ChatDetailController{
     url: '/features/chats/:id',
     cache: false,
     views: {
-      'tab-features': {
+      'main': {
         templateUrl: 'templates/features/chats/chats.details.html',
         controller: ChatDetailController.NAME,
         controllerAs: 'vm'

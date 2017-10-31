@@ -12,7 +12,7 @@ export class HistoryDetailController {
     return {
       url: '/features/history/:dateStr',
       views: {
-        'tab-features': {
+        'main': {
           templateUrl: 'templates/features/history/history.details.html',
           controller: HistoryDetailController.NAME,
           controllerAs: 'vm'
