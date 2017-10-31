@@ -67,11 +67,6 @@ export class AccountController {
       this.user.password = undefined
 
       this.ionicHistory.clearCache()
-
-      requestAnimationFrame(() => {
-        // back to main topic list
-        this.state.go(Controllers.TopicListController.STATE)
-      })
     })
 
   }

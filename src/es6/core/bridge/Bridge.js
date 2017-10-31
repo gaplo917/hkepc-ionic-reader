@@ -22,11 +22,11 @@ export class Bridge {
   }
 
   static isAndroidNative(){
-    return Bridge._instance.platform === 'android'
+    return Bridge._instance && Bridge._instance.platform === 'android'
   }
 
   static isiOSNative(){
-    return Bridge._instance.platform === 'ios'
+    return Bridge._instance && Bridge._instance.platform === 'ios'
   }
 
 }

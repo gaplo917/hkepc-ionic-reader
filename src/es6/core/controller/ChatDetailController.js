@@ -197,7 +197,7 @@ export class ChatDetailController{
     // FIXME: Not a good way. just a work arround
     const uid = uuid()
     swal({
-      title: `發訊息給 ${this.sender.username}`,
+      title: `發訊息給${this.sender.username}`,
       content: {
         element: "textarea",
         attributes: {

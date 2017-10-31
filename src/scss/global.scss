@@ -145,7 +145,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
     border-bottom: 1px solid $border-color;
   }
 }
-.item-checkbox, .item-input, .item-radio, .popover{
+.item-checkbox, .item-input, .item-radio, .popover, .message{
   color:$text-color;
   //background-color: lighten($bg-color,10%);
 
@@ -266,7 +266,21 @@ textarea {
 .swal-button--confirm {
   background-color: $epc-color;
 }
-
+.swal-title {
+  color: $text-color;
+}
 .swal-modal.message {
+  color: $text-color;
+  background: $bg-color;
   vertical-align: top;
+}
+
+.item {
+  color: $text-color;
+  .item-content {
+    background-color: $bg-color;
+  }
+  &.active {
+    background-color: $activated-color;
+  }
 }

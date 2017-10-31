@@ -627,7 +627,7 @@ export class PostDetailController{
               // FIXME: Not a good way. just a work arround
               const uid = uuid()
               swal({
-                title: `發訊息給 ${author.name}`,
+                title: `發訊息給${author.name}`,
                 content: {
                   element: "textarea",
                   attributes: {
