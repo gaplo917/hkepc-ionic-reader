@@ -213,7 +213,7 @@ export class LikesController{
       },
       buttonClicked: (index) => {
         if(index === 0){
-          window.location.href = `#/tab/likes/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}`
+          window.location.href = `#/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}`
         }
         else {
           window.open(HKEPC.forum.findMessage(message.post.id, message.id));

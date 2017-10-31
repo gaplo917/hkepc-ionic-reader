@@ -36,11 +36,7 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).attr('pid',messageId)
         this.source(e).attr('ptid',postId)
 
-        if(currentHash.indexOf('/features') > 0){
-          this.source(e).attr('in-app-url',`#/tab/features/topics//posts/${postId}/page/1`)
-        } else {
-          this.source(e).attr('in-app-url',`#/tab/topics//posts/${postId}/page/1`)
-        }
+        this.source(e).attr('in-app-url',`#/tab/topics//posts/${postId}/page/1`)
 
         this.source(e).attr('ng-click',`vm.findMessage(${postId},${messageId})`)
 
@@ -50,12 +46,7 @@ export class HKEPCHtml extends GeneralHtml{
 
         this.source(e).removeAttr('target')
 
-        if(currentHash.indexOf('/features') > 0) {
-          this.source(e).attr('href',`#/tab/features/topics/${topicId}/page/1`)
-
-        } else {
-          this.source(e).attr('href',`#/tab/topics/${topicId}/page/1`)
-        }
+        this.source(e).attr('href',`#/tab/topics/${topicId}/page/1`)
       }
       else if(url && url.indexOf('viewthread.php?') >= 0){
         const postId = URLUtils.getQueryVariable(url,'tid')
@@ -63,11 +54,7 @@ export class HKEPCHtml extends GeneralHtml{
         this.source(e).removeAttr('target')
 
         // detect the tab
-        if(currentHash.indexOf('/features') > 0){
-          this.source(e).attr('href',`#/tab/features/topics//posts/${postId}/page/1`)
-        } else {
-          this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
-        }
+        this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
 
       }
       else if(url && url.indexOf('space.php?') >= 0){
