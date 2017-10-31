@@ -261,3 +261,8 @@ textarea {
     color: $text-color;
   }
 }
+
+// TODO: refactor Swal customization
+.swal-button--confirm {
+  background-color: $epc-color;
+}
