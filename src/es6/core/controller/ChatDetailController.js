@@ -203,7 +203,8 @@ export class ChatDetailController{
         attributes: {
           id: uid,
           rows: 5,
-          autofocus: true
+          autofocus: true,
+          placeholder:"請輸入內容..."
         },
       },
       buttons: ["取消", "發送"],

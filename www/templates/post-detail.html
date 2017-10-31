@@ -48,7 +48,7 @@
       <h5 ng-if="message.type == 'POST_PAGE_DIVIDER'"
           class="text-center"
       >
-        <div ng-if="message.content" compile="::message.content"></div>
+        <div ng-if="message.content" compile="message.content"></div>
         <div ng-if="!message.content">第 {{ ::message.post.page }} 頁 <i class="ion-android-arrow-down"></i></div>
       </h5>
 

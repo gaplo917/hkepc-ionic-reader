@@ -158,6 +158,18 @@ export class PostDetailController{
 
     $scope.$on('$ionicView.unloaded', (e) => {
     })
+
+    $scope.$on('$ionicView.beforeLeave', (e) => {
+      this.leaveView = true
+    })
+    $scope.$on('$ionicView.enter', (e) => {
+      if(this.leaveView){
+        this.loadMessages('silent')
+        this.leaveView = false
+      }
+    })
+
+
   }
 
   loadMore(){
@@ -250,8 +262,27 @@ export class PostDetailController{
           // focus one the finish loading previous message
           this.focus = nextFocusId
 
-        } else {
+        } else if (style === 'silent') {
 
+          // slient update the content only
+          for(let i = 0; i < this.messages.length; i ++){
+            for(let j = 0; j < post.messages.length; j ++){
+              if(this.messages[i].id == post.messages[j].id){
+                this.messages[i].content = post.messages[j].content
+              }
+            }
+          }
+
+          // maybe have new post, filter duplicate and concat new post to tail
+          const messageIds = this.messages.map(_ => _.id)
+          const filtered = post.messages.filter(msg => {
+            return messageIds.indexOf(msg.id) == -1
+          })
+
+          this.messages = this.messages.concat(filtered)
+        }
+        else {
+          // normal style (next)
           this.scope.$broadcast('scroll.infiniteScrollComplete')
 
           this.messages.push({
@@ -602,7 +633,8 @@ export class PostDetailController{
                   attributes: {
                     id: uid,
                     rows: 5,
-                    autofocus: true
+                    autofocus: true,
+                    placeholder:"請輸入內容..."
                   },
                 },
                 buttons: ["取消", "發送"],
