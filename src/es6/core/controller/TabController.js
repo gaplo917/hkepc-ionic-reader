@@ -192,7 +192,7 @@ export class TabController{
 
             this.messageModal.hide()
 
-            this.state.go(PostDetailController.STATE,{
+            this.state.go(Controllers.PostDetailController.STATE,{
               topicId: msg.post.topicId,
               postId: msg.post.id,
               page: msg.post.page,
