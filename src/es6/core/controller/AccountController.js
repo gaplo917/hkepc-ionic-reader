@@ -67,6 +67,10 @@ export class AccountController {
       this.user.password = undefined
 
       this.ionicHistory.clearCache()
+
+      requestAnimationFrame(() => {
+        this.onBack()
+      })
     })
 
   }

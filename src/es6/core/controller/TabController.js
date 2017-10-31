@@ -78,6 +78,7 @@ export class TabController{
       // polling the pm, only one of the tab do
       if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
         this.rx.Observable.interval(60 * 1000)
+          .startWith(1)
           .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
           .flatMap(() => apiService.checkPM())
           .subscribe()
@@ -86,6 +87,7 @@ export class TabController{
     else {
       // schedule to check PM
       this.rx.Observable.interval(60 * 1000)
+        .startWith(1)
         .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
         .flatMap(() => apiService.checkPM())
         .subscribe()

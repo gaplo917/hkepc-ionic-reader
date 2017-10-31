@@ -145,7 +145,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
     border-bottom: 1px solid $border-color;
   }
 }
-.item-checkbox, .item-input, .item-radio, .popover, .message{
+.item-checkbox, .item-input, .item-radio, .popover {
   color:$text-color;
   //background-color: lighten($bg-color,10%);
 
@@ -273,8 +273,14 @@ textarea {
   color: $text-color;
   background: $bg-color;
   vertical-align: top;
+
+  textarea {
+    color:$text-color;
+    background-color: lighten($bg-color,10%);
+  }
 }
 
+// side menu
 .item {
   color: $text-color;
   .item-content {
