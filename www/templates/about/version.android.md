@@ -1,4 +1,3 @@
-#更新日誌
 **31 Oct 2017 - Release v2.1.0 IR Pro**
 
 IR v2.1.0  (又命名為 IR Pro) 正式推出，
