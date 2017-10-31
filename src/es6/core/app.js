@@ -41,12 +41,10 @@ function setupWebViewJavascriptBridge(callback) {
 if(isiOSNative()){
   setupWebViewJavascriptBridge(bridge => {
     console.log("web view javascript bridge ready")
-    Bridge.instance = {
-      ...bridge,
-      platform: 'ios'
-    }
+    Bridge.instance = bridge
+    Bridge.instance.platform = 'ios'
 
-    window.Bridge = Bridge.instance
+    window.Bridge = Bridge
     initAngular()
   })
 }
@@ -124,7 +122,7 @@ else if (isAndroidNative()){
       }
     }
 
-    window.Bridge = Bridge.instance
+    window.Bridge = Bridge
 
     initAngular()
   }
