@@ -156,6 +156,12 @@ function initAngular(){
       $rootScope.isiOSNative = isiOSNative
       $rootScope.isAndroidNative = isAndroidNative
 
+      if(isAndroidNative()){
+        $rootScope.openNativeDrawer = () => {
+          window.Android.openDrawer()
+        }
+      }
+
       if(isiOSNative()) {
 
         Bridge.registerHandler(Channel.nativeStorageUpdated, function (data, responseCallback) {

@@ -17,6 +17,7 @@ export class FeatureRouteController{
   static get NAME() { return 'FeatureRouteController'}
   static get CONFIG() { return {
     url: '/features',
+    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/features/features.route.html',

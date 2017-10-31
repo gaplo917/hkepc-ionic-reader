@@ -30,7 +30,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope) {
+  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope, $ionicSideMenuDelegate) {
     console.debug(`[${TabController.NAME}] init`)
 
     this.scope = $scope
@@ -48,6 +48,9 @@ export class TabController{
     this.darkTheme = null
     this.isLoggedIn = false
 
+    $scope.toggleLeft = function() {
+      $ionicSideMenuDelegate.toggleLeft()
+    }
     requestAnimationFrame(() => {
       observeOnScope($scope, 'vm.fontSize').skip(1).subscribe(({oldValue, newValue}) => {
         const width = this.fontSize <= 100 ? 'device-width' : window.innerWidth * 100 / this.fontSize

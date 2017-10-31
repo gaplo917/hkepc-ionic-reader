@@ -9,7 +9,7 @@ export class LikesController{
   static get NAME() { return 'LikesController'}
   static get CONFIG() { return {
     url: '/likes',
-    cache: true,
+    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/tab-likes.html',
