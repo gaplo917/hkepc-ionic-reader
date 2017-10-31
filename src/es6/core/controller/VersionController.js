@@ -14,13 +14,22 @@ export class VersionController {
       }
     }
   }}
-  constructor($state,$ionicHistory, $http) {
+  constructor($state,$ionicHistory, $http, $rootScope) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     const converter = new showdown.Converter()
-    $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.md').then(resp => {
-      this.content = converter.makeHtml(resp.data)
-    })
+    if($rootScope.isAndroidNative()){
+      $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.android.md').then(resp => {
+        this.content = converter.makeHtml(resp.data)
+      })
+    }
+    else {
+
+      $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.md').then(resp => {
+        this.content = converter.makeHtml(resp.data)
+      })
+    }
+
   }
 
   onBack(){

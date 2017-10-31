@@ -1,18 +1,7 @@
-**30 Oct 2017 - Release v2.0.1 IR Pro**
+#更新日誌
+**31 Oct 2017 - Release v2.1.0 IR Pro**
 
-新增功能：
-* 移除實驗性的過場動畫
-* 加入「選取全部」功能
-
-修正問題:
-* 修正黑底模式進入 App 時出時白畫面
-* 修正修改／新增／回覆帖子時會出現跳錯版問題
-* 修正第一次不能拖拉邊緣到上一頁問題
-
-
-**25 Oct 2017 - Release v2.0.0 IR Pro**
-
-IR v2.0.0  (又命名為 IR Pro) 正式推出，
+IR v2.1.0  (又命名為 IR Pro) 正式推出，
 所有現有 IR 用家將會直接升級至 IR Pro App 並能繼續免費使用 IR v1.7.0 以前提供的所有功能及部份 IR Pro 的新功能。
 
 為慶祝 IR Pro 正式推出，由即日起至 2017 年 12 月 31 日，
@@ -24,15 +13,12 @@ IR v2.0.0  (又命名為 IR Pro) 正式推出，
 > 關於 > IR 用戶組別
 
 重點內容：
+* 針對性修改 Ionic 內核，優化效能並提升瀏覽速度接近 200%*
 * 完全移除 Cordova 並自行架設 Native Bridge 重制及新增原生功能，提升使用體驗 
 * 解除 WKWebView 的技術限制，所有 iOS 用戶現無需使用 IR 專用 Proxy 連接 HKEPC 
-* 優化效能並提升瀏覽速度接近 40%*
-* 提升開 App 速度達 100%*
 * 更改營運模式為 Freemium
 
 新增功能：
-* 加入「一鍵壓縮上傳圖片到 HKEPC」功能 (Native App)
-* 加入「由邊緣左至右拖拉到上一頁」原生功能 (iOS)
 * 加入「自動加載圖片」選項（IR Silver 限定）
 * 加入「移除簽名功能」選項（IR Silver 限定）
 * 加入「移除帖子圖片」功能
@@ -42,7 +28,6 @@ IR v2.0.0  (又命名為 IR Pro) 正式推出，
 * 加入過場效果
 * 加入分辨死圖功能（原先出現空白問題）
 * 支援 In App 播放 Youtube
-
 
 修正問題：
 * 修正 HKEPC 使用 Cloudflare Email Obfuscation 所產生的 `[email protected]` 問題
@@ -72,34 +57,24 @@ IR v2.0.0  (又命名為 IR Pro) 正式推出，
 
 ---
 
-**27 June 2017 - Release v1.7.0**
 
-* 允許旋轉頁面
-* 修正「搜尋帖子」部份時候獲不到結果，修正後完美等同 EPC Forum 内的搜尋
-* 修正選擇表情時有機會出時「空白」畫面的 Bug
-* 移除不必要的 UI
-* 加入溫馨提示
+**27 June 2017 - v1.7.0**
+
+修正「搜尋帖子」部份時候獲不到結果，修正後完美等同 EPC Forum 内的搜尋
+移除不必要的 UI
 
 ---
 
-**25 June 2017 - Release v1.6.1**
-* iOS 專用 Proxy Server <-> HKEPC Forum 升級為 Https 連線
-```
-概念圖：
-升級前： iOS User <-https-> Proxy <-http-> HKEPC Forum
-升級後： iOS User <-https-> Proxy <-https-> HKEPC Forum
-```
+**26 June 2017 - Release v1.6.1**
+
+修正 Status Bar 問題
+升級到 Crosswalk Web View plugin 2.3 提升效能
 
 ---
 
-**4 Feb 2017 - Release v.1.6.0**
-* 一體化 UI 設計，「帖子列表」由轉頁模式改為無限向下滑動模式
-* 加入搜尋帖子功能！！！
-* 加入自己 Highlight 搜尋後的關鍵字
-* 修正錯誤跳到帖子位置
-* 修正帖子不能正常滑動問題
-* 修正登出登入不能更新論壇版塊問題
-* 修正開帖會突然空白問題
+**26 June 2017 - Release v1.6.0**
+
+升級到 Https 連線 （EPC 提供的）
 
 ---
 
@@ -143,6 +118,7 @@ IR v2.0.0  (又命名為 IR Pro) 正式推出，
 * 修正最新貼子標題出現頁數
 
 ---
+
 
 **5 June 2016 - Release v1.3.3**
 * 加入瀏覧最新文章功能 (需登入）
