@@ -148,19 +148,13 @@ function initAngular(){
     'rx',
     'ngFileUpload',
   ])
-    .run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig) {
+    .run(function($rootScope,ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate) {
       window.moment = moment
       // export the global
       window.isiOSNative = isiOSNative
       window.isAndroidNative = isAndroidNative
       $rootScope.isiOSNative = isiOSNative
       $rootScope.isAndroidNative = isAndroidNative
-
-      if(isAndroidNative()){
-        $rootScope.openNativeDrawer = () => {
-          window.Android.openDrawer()
-        }
-      }
 
       if(isiOSNative()) {
 
@@ -183,6 +177,17 @@ function initAngular(){
         Bridge.registerHandler(Channel.statusBarDidTap, (data) => {
           $ionicScrollDelegate.scrollTo(0, 0, true)
         })
+      }
+      else if(isAndroidNative()){
+        $rootScope.openDrawer = () => {
+          window.Android.openDrawer()
+        }
+      }
+      else {
+        $rootScope.openDrawer = () => {
+          console.log(".toggleLeft()")
+          $ionicSideMenuDelegate.toggleLeft()
+        }
       }
     })
     .run(function($ionicPlatform,LocalStorageService,$ionicConfig) {

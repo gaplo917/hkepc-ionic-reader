@@ -2,12 +2,6 @@
     <ion-nav-title>
         功能
     </ion-nav-title>
-    <ion-nav-buttons side="left">
-      <button ng-if="::isAndroidNative()"
-              class="button button-icon icon ion-navicon"
-              ng-click="openNativeDrawer()">
-      </button>
-    </ion-nav-buttons>
     <div class="spinner">
         <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
     </div>

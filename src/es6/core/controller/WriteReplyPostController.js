@@ -236,8 +236,6 @@ export class WriteReplyPostController {
 
   onBack(){
     if(this.ionicHistory.viewHistory().currentView.index !== 0){
-      this.ionicHistory.backView().stateParams.abc = "123"
-
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
