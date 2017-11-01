@@ -2,9 +2,8 @@
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)">
       第 {{vm.currentPage}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
-  <ion-nav-buttons side="left">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
-    </button>
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <a ng-if="vm.currentPage > 1 && !vm.loadingPrevious && vm.messages.length != 0"
@@ -20,9 +19,7 @@
   </ion-nav-buttons>
     <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
 
-    <ion-content lazy-scroll on-swipe-right="vm.onBack()" style="padding-top:20px"
-                 delegate-handle="post-detail"
-    >
+    <ion-content lazy-scroll style="padding-top:20px" delegate-handle="post-detail">
 
     <div class="text-center">
       <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>

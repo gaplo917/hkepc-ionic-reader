@@ -77,12 +77,16 @@ export class AuthService {
                 this.localStorageService.set(HKEPC.auth.token,authValue)
                 this.localStorageService.set(HKEPC.auth.expire,expire)
 
-                this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
+                requestAnimationFrame(() => {
+                  this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
+                })
 
                 if(cb) cb(null,authority.username)
               }
             } else{
-              this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+              requestAnimationFrame(() => {
+                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+              })
               cb("Fail!")
             }
           } else {
@@ -92,17 +96,19 @@ export class AuthService {
 
             if(currentUsername){
               const expire = new Date().getTime() + 2592000000
-              const expireDate = new Date(expire)
               this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
               this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
               this.localStorageService.set(HKEPC.auth.expire,expire)
               this.localStorageService.set(HKEPC.auth.formhash,formhash)
 
-              this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
-
+              requestAnimationFrame(() => {
+                this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
+              })
               if(cb) cb(null,currentUsername)
             } else {
-              this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+              requestAnimationFrame(() => {
+                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+              })
               cb("Fail!")
             }
           }

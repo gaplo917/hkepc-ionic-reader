@@ -2,11 +2,10 @@
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
     第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
-  <ion-nav-buttons side="left">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
-    </button>
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
-  <ion-content lazy-scroll on-swipe-right="vm.onBack()" >
+  <ion-content lazy-scroll>
     <div class="spinner">
       <ion-spinner class="spinner" icon="android" ng-show="vm.myposts.length == 0"></ion-spinner>
     </div>

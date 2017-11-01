@@ -1,13 +1,13 @@
 <ion-view class="search-view">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
-    </ion-nav-buttons>
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
+  </ion-nav-buttons>
 
     <ion-nav-title>
         搜尋帖子
     </ion-nav-title>
 
-    <ion-content on-swipe-right="vm.onBack()">
+    <ion-content>
         <div class="spinner" ng-if="vm.searching" >
             <ion-spinner
                     class="spinner"

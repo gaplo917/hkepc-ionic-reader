@@ -1,12 +1,12 @@
-<ion-view class="notification-view" on-swipe-right="vm.onBack()">
+<ion-view class="notification-view">
   <ion-nav-title>
     提醒
   </ion-nav-title>
   <div class="spinner">
     <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
   </div>
-  <ion-nav-buttons side="left">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>

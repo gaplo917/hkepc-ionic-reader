@@ -1,7 +1,6 @@
-<ion-view class="chats-view" on-swipe-right="vm.onBack()">
-  <ion-nav-buttons side="left">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()">
-    </button>
+<ion-view class="chats-view">
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-paperplane-outline" ng-click="vm.onNewMessage()">

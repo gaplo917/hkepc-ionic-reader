@@ -1,5 +1,5 @@
 <ion-view class="post-list-view" >
-  <ion-nav-buttons side="left">
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
 
@@ -20,7 +20,7 @@
     <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest'" class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
   </div>
-  <ion-content lazy-scroll on-swipe-right="vm.onBack()">
+  <ion-content lazy-scroll>
     <div class="spinner" ng-if="vm.posts.length == 0" >
       <ion-spinner
           class="spinner"

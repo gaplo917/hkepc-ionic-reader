@@ -2,8 +2,8 @@
   <ion-nav-title>
       {{ vm.topic.name }}
   </ion-nav-title>
-  <ion-nav-buttons side="left">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="vm.onBack()"></button>
+  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
       <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
