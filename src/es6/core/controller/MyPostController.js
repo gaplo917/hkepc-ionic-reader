@@ -53,7 +53,6 @@ export class MyPostController {
           this.loadMyPosts()
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
-          $state.go(Controllers.AccountController.STATE)
         }
       }).subscribe()
     })
