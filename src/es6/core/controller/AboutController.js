@@ -10,7 +10,6 @@ export class AboutController {
   static get NAME() { return 'AboutController'}
   static get CONFIG() { return {
     url: '/about',
-    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/tab-about.html',

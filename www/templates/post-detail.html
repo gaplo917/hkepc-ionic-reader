@@ -2,8 +2,8 @@
   <ion-nav-title ng-click="vm.openPageSliderPopover($event)">
       第 {{vm.currentPage}} 頁 <i class="ion-android-arrow-dropdown"></i>
   </ion-nav-title>
-  <ion-nav-buttons side="left" ng-show="::isiOSNative()">
-    <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
+  <ion-nav-buttons side="left">
+    <button ng-if="::isiOSNative()" class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <a ng-if="vm.currentPage > 1 && !vm.loadingPrevious && vm.messages.length != 0"
