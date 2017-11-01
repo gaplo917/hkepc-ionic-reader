@@ -1,5 +1,5 @@
 <ion-view class="about-version-view" view-title="更新日誌">
-  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+  <ion-nav-buttons side="left" ng-show="::isiOSNative()">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
     <ion-content>

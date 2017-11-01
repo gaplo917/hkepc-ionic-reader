@@ -2,7 +2,7 @@
   <div class="spinner">
     <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
   </div>
-  <ion-nav-buttons side="left" ng-if="::isiOSNative()">
+  <ion-nav-buttons side="left" ng-show="::isiOSNative()">
     <button class="button button-icon ion-ios-arrow-thin-left" ng-click="::vm.onBack()"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
