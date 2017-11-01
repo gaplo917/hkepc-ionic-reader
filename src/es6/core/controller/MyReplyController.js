@@ -66,7 +66,7 @@ export class MyReplyController {
 
     this.refreshing = true
 
-    this.apiService.myReplies()
+    this.apiService.myReplies(this.page)
       .safeApply(this.scope, resp => {
 
       const html = new HKEPCHtml(cheerio.load(resp.data))
