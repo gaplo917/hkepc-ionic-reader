@@ -6,6 +6,7 @@ export class VersionController {
   static get NAME() { return 'VersionController'}
   static get CONFIG() { return {
     url: '/about/version',
+    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/about/version.html',
@@ -14,22 +15,14 @@ export class VersionController {
       }
     }
   }}
-  constructor($state,$ionicHistory, $http, $rootScope) {
+  constructor($scope, $state,$ionicHistory, $http, $rootScope, apiService) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     const converter = new showdown.Converter()
-    if($rootScope.isAndroidNative()){
-      $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.android.md').then(resp => {
-        this.content = converter.makeHtml(resp.data)
-      })
-    }
-    else {
 
-      $http.get('https://hkepc.ionic-reader.xyz/templates/about/version.md').then(resp => {
-        this.content = converter.makeHtml(resp.data)
-      })
-    }
-
+    apiService.version($rootScope.isAndroidNative()).safeApply($scope, resp => {
+      this.content = converter.makeHtml(resp.data)
+    }).subscribe()
   }
 
   onBack(){

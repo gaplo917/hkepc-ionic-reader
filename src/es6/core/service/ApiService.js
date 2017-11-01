@@ -258,4 +258,19 @@ export class ApiService {
       url: HKEPC.forum.preSendPm(uid)
     })
   }
+
+  version(isAndroid){
+    if(isAndroid){
+      return this.http.request({
+        method: 'GET',
+        url: 'https://hkepc.ionic-reader.xyz/templates/about/version.android.md'
+      })
+    }
+    else {
+      return this.http.request({
+        method: 'GET',
+        url: 'https://hkepc.ionic-reader.xyz/templates/about/version.md'
+      })
+    }
+  }
 }
