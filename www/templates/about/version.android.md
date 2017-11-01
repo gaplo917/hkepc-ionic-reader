@@ -1,3 +1,7 @@
+**1 Nov 2017 - Release v2.1.2 IR Pro**
+修正問題：
+* 不能正常登出
+
 **1 Nov 2017 - Release v2.1.0 IR Pro**
 
 IR v2.1.0  (又命名為 IR Pro) 正式推出，
