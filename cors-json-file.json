@@ -1,8 +1,8 @@
 [
 	{
-		"origin": ["http://example.appspot.com"],
+		"origin": ["*"],
 		"responseHeader": ["Content-Type"],
-		"method": ["GET", "HEAD", "DELETE"],
+		"method": ["*"],
 		"maxAgeSeconds": 3600
 	}
 ]
