@@ -85,12 +85,12 @@
                         留言
                     </a>
                     <a class="tab-item card-button" ng-click="vm.onReport(message)"
-                       ng-if="message.author.name != vm.currentUsername">
+                       ng-if="!message.isSelf">
                         <i class="icon ion-ios-flag-outline"></i>
                         舉報
                     </a>
                     <a class="tab-item card-button" ng-click="vm.onEdit(message)"
-                       ng-if="message.author.name == vm.currentUsername">
+                       ng-if="message.isSelf">
                         <i class="icon ion-ios-compose-outline"></i>
                         修改
                     </a>

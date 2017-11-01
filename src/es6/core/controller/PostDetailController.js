@@ -205,7 +205,16 @@ export class PostDetailController{
       orderType: this.reversePostOrder ? 1 : 0,
       filterOnlyAuthorId: this.filterOnlyAuthorId,
       isAutoLoadImage: this.isAutoLoadImage
-    }).safeApply(this.scope, post => {
+    })
+      .flatMap((post) => {
+        return this.authService.getUsername().map((username) => {
+          return {
+            post: post,
+            username: username
+          }
+        })
+      })
+      .safeApply(this.scope, ({post, username}) => {
       console.debug(post)
 
       this.post = post
@@ -217,6 +226,8 @@ export class PostDetailController{
         this.messageService.isLikedPost(message).subscribe(isLiked => {
           message.liked = isLiked
         })
+
+        message.isSelf = (username == message.author.name)
 
         // delayRender == -1 => not from find message
         message.focused = this.delayRender != -1 && message.id == this.focus
