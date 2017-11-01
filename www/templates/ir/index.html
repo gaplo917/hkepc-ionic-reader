@@ -1,63 +1,77 @@
-<ion-view class="ir-view" >
-  <ion-nav-title> IR 專區</ion-nav-title>
+<ion-view class="ir-view">
+    <ion-nav-title> IR 專區</ion-nav-title>
 
-  <ion-content>
-    <div class="spinner">
-      <ion-spinner
-          class="spinner"
-          icon="android"
-          ng-show="vm.showSpinner">
-      </ion-spinner>
-    </div>
+    <ion-content>
+        <div class="spinner">
+            <ion-spinner
+                class="spinner"
+                icon="android"
+                ng-show="vm.showSpinner">
+            </ion-spinner>
+        </div>
 
-      <style>
-          .zone-wrapper{
-              background: linear-gradient(to right, #263c3d, #000000);
-              height:120px;
-              width:100%;
-              position:relative;
-              border-bottom: 1px solid rgba(128,128,128,0.3)
-          }
-          .zone-wrapper > img {
-              width: auto; height: 120px; right:0; top:0; position:absolute; opacity: 0.4; z-index: 1
-          }
+        <style>
+            .zone-wrapper {
+                background: linear-gradient(to right, #263c3d, #000000);
+                height: 120px;
+                width: 100%;
+                position: relative;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.3)
+            }
 
-          .zone-wrapper > img:hover {
-              opacity: 1
-          }
+            .zone-wrapper > img {
+                width: auto;
+                height: 120px;
+                right: 0;
+                top: 0;
+                position: absolute;
+                opacity: 0.4;
+                z-index: 1
+            }
 
-          .zone-wrapper > .title {
-              color:white ;padding:20px; z-index: 5;position:absolute
-          }
+            .zone-wrapper > img:hover {
+                opacity: 1
+            }
 
-          .zone-wrapper > .caption {
-              color:white ; top:60px; left:30px; z-index: 5;position:absolute
-          }
-      </style>
-      <ion-scroll>
-          <a href="#/tab/topics/202/posts/2295363/page/1">
-              <div class="zone-wrapper">
+            .zone-wrapper > .title {
+                color: white;
+                padding: 20px;
+                z-index: 5;
+                position: absolute
+            }
 
-                  <h2 class="title" >iOS 專區</h2>
-                  <h5 class="caption" >iPhone iPad</h5>
-                  <img src="img/AppleLogo.png" alt="">
+            .zone-wrapper > .caption {
+                color: white;
+                top: 60px;
+                left: 30px;
+                z-index: 5;
+                position: absolute
+            }
+        </style>
+        <ion-scroll>
+            <a href="#/tab/topics/202/posts/2295363/page/1">
+                <div class="zone-wrapper">
 
-              </div>
-          </a>
+                    <h2 class="title">iOS 專區</h2>
+                    <h5 class="caption">iPhone iPad</h5>
+                    <img src="img/AppleLogo.png" alt="">
 
-          <a href="#/tab/topics/180/posts/2266086/page/1">
-              <div class="zone-wrapper">
+                </div>
+            </a>
 
-                  <h2 class="title"  >Android 專區</h2>
+            <a href="#/tab/topics/180/posts/2266086/page/1">
+                <div class="zone-wrapper">
 
-                  <h5 class="caption" >Kitkat - Nougat</h5>
-                  <img src="img/AndroidLogo.png" alt="">
+                    <h2 class="title">Android 專區</h2>
 
-              </div>
-          </a>
+                    <h5 class="caption">Kitkat - Nougat</h5>
+                    <img src="img/AndroidLogo.png" alt="">
+
+                </div>
+            </a>
 
 
-      </ion-scroll>
+        </ion-scroll>
 
-  </ion-content>
+    </ion-content>
 </ion-view>

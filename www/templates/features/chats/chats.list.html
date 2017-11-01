@@ -1,40 +1,40 @@
 <ion-view class="chats-list-view" view-title="短消息">
-  <div class="spinner">
-    <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
-  </div>
-  <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-  </ion-nav-buttons>
-  <ion-content>
-    <div class="spinner" ng-if="vm.chats.length == 0" >
-      <ion-spinner
-          class="spinner"
-          icon="android">
-      </ion-spinner>
+    <div class="spinner">
+        <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
     </div>
+    <ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="spinner" ng-if="vm.chats.length == 0">
+            <ion-spinner
+                class="spinner"
+                icon="android">
+            </ion-spinner>
+        </div>
 
-    <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right"
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                ng-repeat="chat in vm.chats track by $index"
-                ng-class="chat.isRead? '' : 'new-pm' "
-                ng-click="chat.isRead = true"
-                type="item-text-wrap"
-                href="#/tab/features/chats/{{::chat.id}}">
-        <img ng-src="{{::chat.avatarUrl}}">
-        <span style="float:right"><small>{{::chat.date}}</small></span>
-        <h2>{{::chat.username}}</h2>
-        <p>{{::chat.summary}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
-      <ion-infinite-scroll
-          class="ispinner text-center"
-          ng-if="vm.hasMoreData()"
-          on-infinite="vm.loadMore()"
-          spinner="android"
-          immediate-check="false"
-          distance="7%">
-      </ion-infinite-scroll>
-    </ion-list>
-  </ion-content>
+        <ion-list>
+            <ion-item class="item-remove-animate item-avatar item-icon-right"
+                      ng-class-odd="'odd'" ng-class-even="'even'"
+                      ng-repeat="chat in vm.chats track by $index"
+                      ng-class="chat.isRead? '' : 'new-pm' "
+                      ng-click="chat.isRead = true"
+                      type="item-text-wrap"
+                      href="#/tab/features/chats/{{::chat.id}}">
+                <img ng-src="{{::chat.avatarUrl}}">
+                <span style="float:right"><small>{{::chat.date}}</small></span>
+                <h2>{{::chat.username}}</h2>
+                <p>{{::chat.summary}}</p>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
+            <ion-infinite-scroll
+                class="ispinner text-center"
+                ng-if="vm.hasMoreData()"
+                on-infinite="vm.loadMore()"
+                spinner="android"
+                immediate-check="false"
+                distance="7%">
+            </ion-infinite-scroll>
+        </ion-list>
+    </ion-content>
 </ion-view>

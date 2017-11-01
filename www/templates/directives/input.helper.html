@@ -1,113 +1,117 @@
 <div class="input-helper">
-  <div class="row input-helper-control">
-    <button class="button"
-            ng-click="selectTab(0)"
-            ng-class="isTab(0) ? 'active': ''">
-      <img src="https://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif"
-           style="background-color:#fff;border-radius:100px;" alt=""/>
-    </button>
-    <button class="button"
-            ng-click="selectTab(1)"
-            ng-class="isTab(1) ? 'active': ''">
-      <i class="ion ion-link"></i>
-    </button>
-    <button class="button"
-            ng-click="selectTab(2)"
-            ng-class="isTab(2) ? 'active': ''">
-      <span class="bold">B</span>
-    </button>
-    <button class="button"
-            ng-click="selectTab(3)"
-            ng-class="isTab(3) ? 'active': ''">
-      <span class="bold">T</span>
-    </button>
-    <button class="button"
-            ng-click="selectTab(4)"
-            ng-class="isTab(4) ? 'active': ''">
-      <i class="ion ion-images"></i>
-    </button>
-    <button class="button" ng-show="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
-      <i class="ion ion-ios-close-empty"></i>
-    </button>
-  </div>
-
-  <ion-scroll class="asessory-view"
-              zooming="false"
-              ng-show="isSelectedTab()"
-              direction="y">
-    <img class="gif"
-         ng-if="isTab(0)"
-         ng-repeat="gif in ::modal.gifs track by $index"
-         ng-click="modal.addGifCodeToText(gif.code)"
-         src="img/gifs/{{gif.url}}"/>
-
-    <div ng-if="isTab(1)">
-      <label class="item item-input">
-        <input type="text" placeholder="請輸入鏈接的地址" ng-model="url">
-      </label>
-      <label class="item item-input">
-        <input type="text" placeholder="請輸入鏈接的文字" ng-model="urlText">
-      </label>
-      <button class="button button-full" ng-click="url && modal.addUrlToText(url,urlText)">
-        插入
-      </button>
-
+    <div class="row input-helper-control">
+        <button class="button"
+                ng-click="selectTab(0)"
+                ng-class="isTab(0) ? 'active': ''">
+            <img src="https://www.hkepc.com/forum/images/smilies/default/icon_tongue.gif"
+                 style="background-color:#fff;border-radius:100px;" alt=""/>
+        </button>
+        <button class="button"
+                ng-click="selectTab(1)"
+                ng-class="isTab(1) ? 'active': ''">
+            <i class="ion ion-link"></i>
+        </button>
+        <button class="button"
+                ng-click="selectTab(2)"
+                ng-class="isTab(2) ? 'active': ''">
+            <span class="bold">B</span>
+        </button>
+        <button class="button"
+                ng-click="selectTab(3)"
+                ng-class="isTab(3) ? 'active': ''">
+            <span class="bold">T</span>
+        </button>
+        <button class="button"
+                ng-click="selectTab(4)"
+                ng-class="isTab(4) ? 'active': ''">
+            <i class="ion ion-images"></i>
+        </button>
+        <button class="button" ng-show="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
+            <i class="ion ion-ios-close-empty"></i>
+        </button>
     </div>
 
-    <div ng-if="isTab(2)">
-      <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
-      <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
-      <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
-      <button class="flow-button" ng-click="modal.addTextStyleTagToText('s')">刪除</button>
-      <button class="flow-button" ng-click="modal.addTextStyleTagToText('hr')">分隔線</button>
+    <ion-scroll class="asessory-view"
+                zooming="false"
+                ng-show="isSelectedTab()"
+                direction="y">
+        <img class="gif"
+             ng-if="isTab(0)"
+             ng-repeat="gif in ::modal.gifs track by $index"
+             ng-click="modal.addGifCodeToText(gif.code)"
+             src="img/gifs/{{gif.url}}"/>
 
-    </div>
+        <div ng-if="isTab(1)">
+            <label class="item item-input">
+                <input type="text" placeholder="請輸入鏈接的地址" ng-model="url">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="請輸入鏈接的文字" ng-model="urlText">
+            </label>
+            <button class="button button-full" ng-click="url && modal.addUrlToText(url,urlText)">
+                插入
+            </button>
 
-    <div ng-if="isTab(3)">
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('4')">預設</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('5')">大</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('6')">較大</button>
-      <button class="flow-button" ng-click="modal.addFontSizeTagToText('7')">極大</button>
+        </div>
 
-    </div>
+        <div ng-if="isTab(2)">
+            <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
+            <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
+            <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
+            <button class="flow-button" ng-click="modal.addTextStyleTagToText('s')">刪除</button>
+            <button class="flow-button" ng-click="modal.addTextStyleTagToText('hr')">分隔線</button>
 
-    <div class="image-upload-control" ng-if="isTab(4)">
-      <textarea ng-if="!previewUploadImage" ng-model="imageUrl" placeholder="請輸入圖片地址" style="width: 100%; padding:20px"></textarea>
+        </div>
 
-      <div type="file" ng-if="!imageUrl && !previewUploadImage" ngf-no-object-url="true" class="button button-full" ngf-select="prepareUpload($file)">
-        或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
-      </div>
+        <div ng-if="isTab(3)">
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('4')">預設</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('5')">大</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('6')">較大</button>
+            <button class="flow-button" ng-click="modal.addFontSizeTagToText('7')">極大</button>
 
-      <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
-        <img ng-src="{{imageUrl || previewUploadImage}}" >
-      </div>
+        </div>
 
-      <button ng-if="imageUrl" class="button button-full" ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
-        插入
-      </button>
+        <div class="image-upload-control" ng-if="isTab(4)">
+            <textarea ng-if="!previewUploadImage" ng-model="imageUrl" placeholder="請輸入圖片地址"
+                      style="width: 100%; padding:20px"></textarea>
 
-      <span class="image-error"> {{imageErr}} </span>
-      <span class="image-error-suggestion" compile="::imageErrSuggestion"></span>
-      <span class="image-upload-success"> {{imageUploadSuccess}} </span>
+            <div type="file" ng-if="!imageUrl && !previewUploadImage" ngf-no-object-url="true"
+                 class="button button-full" ngf-select="prepareUpload($file)">
+                或選擇圖片 <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
+            </div>
 
-      <button type="file" ng-if="previewUploadImage && imageErr" ngf-no-object-url="true" class="button button-full" ngf-select="prepareUpload($file)">
-        重新選擇圖片
-      </button>
+            <div ng-if="imageUrl || previewUploadImage" class="preview-image-url">
+                <img ng-src="{{imageUrl || previewUploadImage}}">
+            </div>
 
-      <button ng-if="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
-        <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
-      </button>
+            <button ng-if="imageUrl" class="button button-full"
+                    ng-click="imageUrl && modal.addImageUrlToText(imageUrl)">
+                插入
+            </button>
 
-      <button ng-if="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
-        再  <i class="ion ion-upload button-icon icon"></i> 另一張圖片
-      </button>
-    </div>
+            <span class="image-error"> {{imageErr}} </span>
+            <span class="image-error-suggestion" compile="::imageErrSuggestion"></span>
+            <span class="image-upload-success"> {{imageUploadSuccess}} </span>
 
-      <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
-      <div style="height:1000px" ng-if="modal.showInputHelperAt == undefined"></div>
-  </ion-scroll>
+            <button type="file" ng-if="previewUploadImage && imageErr" ngf-no-object-url="true"
+                    class="button button-full" ngf-select="prepareUpload($file)">
+                重新選擇圖片
+            </button>
+
+            <button ng-if="previewUploadImage && !imageErr && file" class="button button-full" ng-click="upload()">
+                <i class="ion ion-upload button-icon icon"></i> 至 HKEPC
+            </button>
+
+            <button ng-if="imageUploadSuccess" class="button button-full" ng-click="resetUpload()">
+                再 <i class="ion ion-upload button-icon icon"></i> 另一張圖片
+            </button>
+        </div>
+
+        <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
+        <div style="height:1000px" ng-if="modal.showInputHelperAt == undefined"></div>
+    </ion-scroll>
 
 </div>

@@ -1,38 +1,38 @@
 <ion-view class="notification-view">
-  <ion-nav-title>
-    提醒
-  </ion-nav-title>
-  <div class="spinner">
-    <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
-  </div>
-  <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-  </ion-nav-buttons>
-  <ion-content>
-    <div class="spinner" ng-if="vm.notifications.length == 0" >
-      <ion-spinner
-          class="spinner"
-          icon="android">
-      </ion-spinner>
+    <ion-nav-title>
+        提醒
+    </ion-nav-title>
+    <div class="spinner">
+        <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
     </div>
+    <ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="spinner" ng-if="vm.notifications.length == 0">
+            <ion-spinner
+                class="spinner"
+                icon="android">
+            </ion-spinner>
+        </div>
 
-    <ion-list>
-      <ion-item class="item"
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                ng-repeat="notification in vm.notifications track by $index"
-                ng-class="notification.isRead? '' : 'new-notification' "
-                type="item-text-wrap">
-        <div class="fright">#{{$index + 1}}</div>
-        <div class="item-body" compile="::notification.content"></div>
-      </ion-item>
-      <ion-infinite-scroll
-          class="ispinner text-center"
-          ng-if="vm.hasMoreData()"
-          on-infinite="vm.loadMore()"
-          spinner="android"
-          immediate-check="false"
-          distance="7%">
-      </ion-infinite-scroll>
-    </ion-list>
-  </ion-content>
+        <ion-list>
+            <ion-item class="item"
+                      ng-class-odd="'odd'" ng-class-even="'even'"
+                      ng-repeat="notification in vm.notifications track by $index"
+                      ng-class="notification.isRead? '' : 'new-notification' "
+                      type="item-text-wrap">
+                <div class="fright">#{{$index + 1}}</div>
+                <div class="item-body" compile="::notification.content"></div>
+            </ion-item>
+            <ion-infinite-scroll
+                class="ispinner text-center"
+                ng-if="vm.hasMoreData()"
+                on-infinite="vm.loadMore()"
+                spinner="android"
+                immediate-check="false"
+                distance="7%">
+            </ion-infinite-scroll>
+        </ion-list>
+    </ion-content>
 </ion-view>

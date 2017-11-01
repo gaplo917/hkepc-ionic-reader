@@ -1,27 +1,27 @@
 <ion-view class="topics-view">
-  <ion-nav-title>論壇版塊
-    <span class="less-important-info">{{vm.cacheTimestamp}}</span>
-    <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
-  </ion-nav-title>
-  <ion-nav-buttons side="left">
-      <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
-  </ion-nav-buttons>
-  <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-  </ion-nav-buttons>
-  <ion-content on-touch="vm.onTouch()" on-release="vm.onRelease()">
-    <div class="spinner" ng-show="vm.topics.length == 0">
-      <ion-spinner class="spinner" icon="android"></ion-spinner>
-      <p class="reminder">如無法加載，請將 <i class="ion-ios-infinite"></i> 內的「論壇風格設定」設定為 HKEPC </p>
-    </div>
-    <!--For Better UX. Tell users to login to see all topics-->
-    <p ng-if='vm.topics.length > 0 && !vm.isLoggedIn' class="alert-warning" style="text-align: center; margin:0">
-      你需要登入 HKEPC 帳號才能瀏覽所有論壇版塊
-    </p>
+    <ion-nav-title>論壇版塊
+        <span class="less-important-info">{{vm.cacheTimestamp}}</span>
+        <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    </ion-nav-buttons>
+    <ion-content on-touch="vm.onTouch()" on-release="vm.onRelease()">
+        <div class="spinner" ng-show="vm.topics.length == 0">
+            <ion-spinner class="spinner" icon="android"></ion-spinner>
+            <p class="reminder">如無法加載，請將 <i class="ion-ios-infinite"></i> 內的「論壇風格設定」設定為 HKEPC </p>
+        </div>
+        <!--For Better UX. Tell users to login to see all topics-->
+        <p ng-if='vm.topics.length > 0 && !vm.isLoggedIn' class="alert-warning" style="text-align: center; margin:0">
+            你需要登入 HKEPC 帳號才能瀏覽所有論壇版塊
+        </p>
 
-    <ion-list ng-if="vm.topics.length > 0">
-      <!--Static Topic-->
-      <span>
+        <ion-list ng-if="vm.topics.length > 0">
+            <!--Static Topic-->
+            <span>
         <div class="item item-divider" ng-show='vm.isLoggedIn'>會員功能</div>
         <ion-item
             ng-show='vm.isLoggedIn'
@@ -78,9 +78,10 @@
       </span>
 
 
-      <!--Dynamic Topic-->
-      <span ng-repeat="topic in vm.topics track by $index">
-        <div ng-if="topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider" ng-bind="topic.groupName">
+            <!--Dynamic Topic-->
+            <span ng-repeat="topic in vm.topics track by $index">
+        <div ng-if="topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider"
+             ng-bind="topic.groupName">
         </div>
         <ion-item
             ng-if="!topic.groupName"
@@ -96,7 +97,7 @@
         </ion-item>
       </span>
 
-      <div class="tab-bar-inset"></div>
-    </ion-list>
-  </ion-content>
+            <div class="tab-bar-inset"></div>
+        </ion-list>
+    </ion-content>
 </ion-view>

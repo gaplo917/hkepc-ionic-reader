@@ -1,40 +1,41 @@
 <ion-view class="myreply-view">
-  <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
-    第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
-  </ion-nav-title>
-  <ion-content lazy-scroll>
-    <div class="spinner">
-      <ion-spinner class="spinner" icon="android" ng-show="vm.myreplies.length == 0"></ion-spinner>
-    </div>
-    <ion-list>
-      <ion-item class="item item-icon-right"
-                ng-repeat="myreply in vm.myreplies track by $index"
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                href=""
-                ng-click="::vm.findMessage(myreply.post.postId,myreply.post.messageId)">
-        <div class="item-text-wrap">
-          <h3>{{::myreply.brief}}</h3>
+    <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
+        第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
+    </ion-nav-title>
+    <ion-content lazy-scroll>
+        <div class="spinner">
+            <ion-spinner class="spinner" icon="android" ng-show="vm.myreplies.length == 0"></ion-spinner>
         </div>
+        <ion-list>
+            <ion-item class="item item-icon-right"
+                      ng-repeat="myreply in vm.myreplies track by $index"
+                      ng-class-odd="'odd'" ng-class-even="'even'"
+                      href=""
+                      ng-click="::vm.findMessage(myreply.post.postId,myreply.post.messageId)">
+                <div class="item-text-wrap">
+                    <h3>{{::myreply.brief}}</h3>
+                </div>
 
-        <div>
-          <span class="less-important-info" >{{::myreply.post.title}}</span>
-        </div>
-        <div>
-          <span class="less-important-info">#{{$index + 1}} <i class="ion-ios-locked" ng-show="::myreply.status == '關閉'"></i> {{::myreply.topic.title}}</span>
-          <span class="fright less-important-info">{{::myreply.timestamp}}</span>
-        </div>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
+                <div>
+                    <span class="less-important-info">{{::myreply.post.title}}</span>
+                </div>
+                <div>
+                    <span class="less-important-info">#{{$index + 1}} <i class="ion-ios-locked"
+                                                                         ng-show="::myreply.status == '關閉'"></i> {{::myreply.topic.title}}</span>
+                    <span class="fright less-important-info">{{::myreply.timestamp}}</span>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
 
-    </ion-list>
-    <ion-infinite-scroll
-        class="ispinner text-center"
-        ng-if="vm.hasMoreData()"
-        on-infinite="vm.loadMore()"
-        spinner="android"
-        immediate-check="false"
-        distance="7%">
-    </ion-infinite-scroll>
-  </ion-content>
+        </ion-list>
+        <ion-infinite-scroll
+            class="ispinner text-center"
+            ng-if="vm.hasMoreData()"
+            on-infinite="vm.loadMore()"
+            spinner="android"
+            immediate-check="false"
+            distance="7%">
+        </ion-infinite-scroll>
+    </ion-content>
 </ion-view>
 

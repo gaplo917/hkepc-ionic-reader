@@ -9,18 +9,22 @@ navigation history that also transitions its views in and out.
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === false" href="css/ionic.app.css" rel="stylesheet">
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === true" href="css/ionic.app.dark.css" rel="stylesheet">
 <style ng-if="isAndroidNative()">
-    .bar.bar-header{
+    .bar.bar-header {
         height: 59px;
     }
-    .bar.bar-subheader{
+
+    .bar.bar-subheader {
         top: 59px;
     }
+
     .bar.bar-header .title {
         top: 15px;
     }
+
     .bar.bar-header > .buttons, .bar.bar-header > .button {
         margin-top: 15px;
     }
+
     .has-header {
         top: 59px;
     }
@@ -32,28 +36,34 @@ navigation history that also transitions its views in and out.
     .has-tabs, .bar-footer.has-tabs {
         bottom: 0px;
     }
+
     .action-sheet-wrapper {
         bottom: 7.8vh;
     }
-    .tab-bar-inset{
+
+    .tab-bar-inset {
         width: 100%;
         height: 7.8vh;
     }
 </style>
 <style ng-if="isiOSNative()">
 
-    .bar.bar-header{
+    .bar.bar-header {
         height: 59px;
     }
-    .bar.bar-subheader{
+
+    .bar.bar-subheader {
         top: 59px;
     }
+
     .bar.bar-header .title {
         top: 15px;
     }
+
     .bar.bar-header > .buttons, .bar.bar-header > .button {
         margin-top: 15px;
     }
+
     .has-header {
         top: 59px;
     }
@@ -65,13 +75,14 @@ navigation history that also transitions its views in and out.
     .has-tabs, .bar-footer.has-tabs {
         bottom: 0px;
     }
+
     /*iphone 5*/
     @media only screen
-    and (device-width : 320px)
-    and (device-height : 568px)
-    and (-webkit-device-pixel-ratio : 2) {
+    and (device-width: 320px)
+    and (device-height: 568px)
+    and (-webkit-device-pixel-ratio: 2) {
 
-        .tab-bar-inset{
+        .tab-bar-inset {
             width: 100%;
             height: 7.8vh;
         }
@@ -83,9 +94,9 @@ navigation history that also transitions its views in and out.
 
     /*iphone 6*/
     @media only screen
-    and (device-width : 375px)
-    and (device-height : 667px)
-    and (-webkit-device-pixel-ratio : 2) {
+    and (device-width: 375px)
+    and (device-height: 667px)
+    and (-webkit-device-pixel-ratio: 2) {
 
         .tab-bar-inset {
             width: 100%;
@@ -96,13 +107,14 @@ navigation history that also transitions its views in and out.
             bottom: 6.6vh;
         }
     }
+
     /*iphone 6plus Zoom */
     @media only screen
-    and (device-width : 375px)
-    and (device-height : 667px)
-    and (-webkit-device-pixel-ratio : 3) {
+    and (device-width: 375px)
+    and (device-height: 667px)
+    and (-webkit-device-pixel-ratio: 3) {
 
-        .tab-bar-inset{
+        .tab-bar-inset {
             width: 100%;
             height: 6.6vh;
         }
@@ -111,13 +123,14 @@ navigation history that also transitions its views in and out.
             bottom: 6.6vh;
         }
     }
+
     /*iphone 6plus Standard*/
     @media only screen
-    and (device-width : 414px)
-    and (device-height : 736px)
-    and (-webkit-device-pixel-ratio : 3) {
+    and (device-width: 414px)
+    and (device-height: 736px)
+    and (-webkit-device-pixel-ratio: 3) {
 
-        .tab-bar-inset{
+        .tab-bar-inset {
             width: 100%;
             height: 6vh;
         }
@@ -129,24 +142,29 @@ navigation history that also transitions its views in and out.
 
     /*iPhone X*/
     @media only screen
-    and (device-width : 375px)
-    and (device-height : 812px)
-    and (-webkit-device-pixel-ratio : 3) {
+    and (device-width: 375px)
+    and (device-height: 812px)
+    and (-webkit-device-pixel-ratio: 3) {
         body {
             top: 74px;
         }
-        .bar.bar-header{
+
+        .bar.bar-header {
             height: 74px;
         }
-        .bar.bar-subheader{
-            top:74px;
+
+        .bar.bar-subheader {
+            top: 74px;
         }
+
         .bar.bar-header .title {
-            top:30px;
+            top: 30px;
         }
+
         .bar.bar-header > .buttons, .bar.bar-header > .button {
             margin-top: 30px;
         }
+
         .has-header {
             top: 74px;
         }
@@ -159,7 +177,7 @@ navigation history that also transitions its views in and out.
             bottom: 0px;
         }
 
-        .tab-bar-inset{
+        .tab-bar-inset {
             width: 100%;
             height: 9.6vh;
         }
@@ -168,11 +186,12 @@ navigation history that also transitions its views in and out.
             bottom: 9.6vh;
         }
     }
+
     /*ipad 1024*768*/
     @media only screen
     and (device-width: 768px)
-    and (device-height : 1024px)  {
-        .tab-bar-inset{
+    and (device-height: 1024px) {
+        .tab-bar-inset {
             width: 100%;
             height: 7.7vh;
         }
