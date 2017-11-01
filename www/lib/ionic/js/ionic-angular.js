@@ -4725,6 +4725,14 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
           enteringData.renderStart = renderStart;
           enteringData.renderEnd = renderEnd;
 
+          // Major fix for removing cache on ionic @Gap
+          if(enteringEle && enteringEle[0]){
+            enteringEle[0].classList.add('active-nav-view')
+          }
+          if(leavingEle && leavingEle[0]){
+            leavingEle[0].classList.remove('active-nav-view')
+          }
+
           cachedAttr(enteringEle.parent(), 'nav-view-transition', enteringData.transition);
           cachedAttr(enteringEle.parent(), 'nav-view-direction', enteringData.direction);
 
@@ -6584,38 +6592,7 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
 
 
   self.transitionEnd = function() {
-    var viewElements = $element.children();
-    var x, l, viewElement;
 
-    for (x = 0, l = viewElements.length; x < l; x++) {
-      viewElement = viewElements.eq(x);
-
-      if (viewElement.data(DATA_ELE_IDENTIFIER) === activeEleId) {
-        // this is the active element
-        navViewAttr(viewElement, VIEW_STATUS_ACTIVE);
-
-      } else if (navViewAttr(viewElement) === 'leaving' || navViewAttr(viewElement) === VIEW_STATUS_ACTIVE || navViewAttr(viewElement) === VIEW_STATUS_CACHED) {
-        // this is a leaving element or was the former active element, or is an cached element
-        if (viewElement.data(DATA_DESTROY_ELE) || viewElement.data(DATA_NO_CACHE)) {
-          // this element shouldn't stay cached
-          $ionicViewSwitcher.destroyViewEle(viewElement);
-
-        } else {
-          // keep in the DOM, mark as cached
-          navViewAttr(viewElement, VIEW_STATUS_CACHED);
-
-          // disconnect the leaving scope
-          ionic.Utils.disconnectScope(viewElement.scope());
-        }
-      }
-    }
-
-    navSwipeAttr('');
-
-    // ensure no scrolls have been left frozen
-    if (self.isSwipeFreeze) {
-      $ionicScrollDelegate.freezeAllScrolls(false);
-    }
   };
 
 
