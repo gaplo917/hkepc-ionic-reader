@@ -55,6 +55,24 @@ export class TabController{
 
     })
 
+    observeOnScope($scope, 'vm.darkTheme').subscribe(({oldValue, newValue}) => {
+      if($rootScope.isLegacyAndroid()){
+        $rootScope.darkTheme(newValue)
+      }
+    })
+
+    observeOnScope($scope, 'vm.notification').subscribe(({oldValue, newValue}) => {
+      if($rootScope.isLegacyAndroid()){
+        $rootScope.notification(JSON.stringify(newValue))
+      }
+    })
+
+    observeOnScope($scope, 'vm.login').subscribe(({oldValue, newValue}) => {
+      if($rootScope.isLegacyAndroid()){
+        $rootScope.username(newValue)
+      }
+    })
+
     // cache the value
     rx.Observable.combineLatest(AuthService.isLoggedIn(), AuthService.getUsername(), (isLoggedIn, username) => {
       this.isLoggedIn = isLoggedIn

@@ -27,6 +27,10 @@ function isAndroidNative(){
   return window.Android
 }
 
+function isLegacyAndroid(){
+  return window.LegacyAndroid
+}
+
 function setupWebViewJavascriptBridge(callback) {
   if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
   if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
@@ -155,8 +159,11 @@ function initAngular(){
       // export the global
       window.isiOSNative = isiOSNative
       window.isAndroidNative = isAndroidNative
+      window.isLegacyAndroid = isLegacyAndroid
+
       $rootScope.isiOSNative = isiOSNative
       $rootScope.isAndroidNative = isAndroidNative
+      $rootScope.isLegacyAndroid = isLegacyAndroid
 
       if(isiOSNative()) {
 
@@ -188,6 +195,23 @@ function initAngular(){
       else if(isAndroidNative()){
         $rootScope.openDrawer = () => {
           window.Android.openDrawer()
+        }
+      }
+      else if(isLegacyAndroid()){
+        $rootScope.openDrawer = () => {
+          window.LegacyAndroid.openDrawer()
+        }
+
+        $rootScope.darkTheme = (theme) => {
+          window.LegacyAndroid.darkTheme(theme)
+        }
+
+        $rootScope.notification = (jsonStr) => {
+          window.LegacyAndroid.notification(jsonStr)
+        }
+
+        $rootScope.username = (username) => {
+          window.LegacyAndroid.username(username)
         }
       }
       else {

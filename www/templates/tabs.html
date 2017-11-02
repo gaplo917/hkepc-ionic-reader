@@ -8,7 +8,7 @@ navigation history that also transitions its views in and out.
 
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === false" href="css/ionic.app.css" rel="stylesheet">
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === true" href="css/ionic.app.dark.css" rel="stylesheet">
-<style ng-if="isAndroidNative()">
+<style ng-if="isAndroidNative() || isLegacyAndroid()">
     .bar.bar-header {
         height: 59px;
     }
