@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link rel="apple-touch-icon" sizes="128x128" href="img/Icon.png">
+    <title>HKEPC IR Pro</title>
+    <!-- compiled css output -->
+    <link href="css/ionic.app.css" rel="stylesheet">
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="lib/ionic/js/ionic.js"></script>
+    <script src="lib/ionic/js/ionic-angular.js"></script>
+    <script src="lib/angular-animate/angular-animate.min.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="lib/ngToast/dist/ngToast.min.js"></script>
+    <script src="lib/ionic-image-lazy-load/ionic-image-lazy-load.js"></script>
+    <script src="lib/localforage/dist/localforage.min.js"></script>
+    <script src="lib/angular-localforage/dist/angular-localForage.min.js"></script>
+    <script src="lib/ng-file-upload/ng-file-upload-all.min.js"></script>
+
+    <!--RxJs + Angular-->
+    <script src="lib/rxjs/dist/rx.all.js"></script>
+    <script src="lib/rx-angular/dist/rx.angular.js"></script>
+
+    <!-- your app's js -->
+    <script src="lib/babel-polyfill/browser-polyfill.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+      window.ga = window.ga || function () {(ga.q = ga.q || []).push(arguments)};
+      ga.l = +new Date;
+      ga('create', 'UA-73114272-1', 'auto');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body class="ios">
+<toast></toast>
+<ion-side-menus>
+
+    <ion-side-menu-content>
+        <ion-nav-view></ion-nav-view>
+    </ion-side-menu-content>
+
+</ion-side-menus>
+
+
+<!--
+  The nav bar that will be updated as we navigate between views.
+-->
+<ion-nav-bar id="ion-nav-bar" class="bar-stable">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="onBack()"></button>
+    </ion-nav-buttons>
+</ion-nav-bar>
+<!--
+  The views will be rendered in the <ion-nav-view> directive below
+  Templates are in the /templates folder (but you could also
+  have templates inline in this html file if you'd like).
+-->
+</body>
+</html>
