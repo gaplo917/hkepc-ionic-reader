@@ -56,14 +56,12 @@ export class FeatureRouteController{
 
     this.authService = AuthService
 
-    this.cleanBadgeUpdateListener = $rootScope.$on(NotificationBadgeUpdateRequest.NAME,(e,req) => {
-      if(req instanceof NotificationBadgeUpdateRequest) {
-        console.debug(`[${FeatureRouteController.NAME}] Received NotificationBadgeUpdateRequest`)
-
-        console.log(req.notification)
+    $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+      .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
+      .safeApply($scope, ([event, req]) => {
         this.notification = req.notification
-      }
-    })
+      })
+      .subscribe()
 
     $scope.$on('$ionicView.enter', (e) => {
 
@@ -157,5 +155,12 @@ export class FeatureRouteController{
 
   onHideUsername(hidden){
     this.scope.$emit(HideUsernameRequest.NAME, new HideUsernameRequest(hidden))
+  }
+
+  doRefresh(){
+    this.registerOnChangeForumStyle()
+    this.apiService.checkPM()
+      .flatMap(() => this.apiService.memberCenter())
+      .subscribe()
   }
 }

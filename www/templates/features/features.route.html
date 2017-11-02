@@ -8,6 +8,9 @@
     <ion-nav-buttons side="left">
         <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
     </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+    </ion-nav-buttons>
     <ion-content>
 
         <div class="list card">
