@@ -1,8 +1,16 @@
-**2 Nov 2017 - Release v2.1.2 IR Pro**
+**2 Nov 2017 - Release v2.1.8 IR Pro**
+新增功能：
+* 支援 Android 5.0, 5.1 ! (部份功能）
+* 於「功能」頁面加入 Refresh 鍵
+
+修正問題：
+* 修正瀏灠 URL 時會出時黑屏或彈 App 問題
+
+**2 Nov 2017 - Release v2.1.5 IR Pro**
 修正問題：
 * 返回或轉頁面有機會出現去唔到問題
 
-**1 Nov 2017 - Release v2.1.2 IR Pro**
+**1 Nov 2017 - Release v2.1.1 IR Pro**
 修正問題：
 * 不能正常登出
 
