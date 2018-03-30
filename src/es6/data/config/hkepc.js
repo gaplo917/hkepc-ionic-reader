@@ -27,7 +27,11 @@ module.exports = {
   forum: {
     index: () => `${BASE_FORUM_URL}/index.php`,
     latestNext: (searchId,page) => {
-      return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+      if(searchId){
+        return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+      } else {
+        return `${BASE_FORUM_URL}/search.php?srchfrom=86400&&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+      }
     },
     latestPostNext: (searchId,page) => {
       if(searchId){
