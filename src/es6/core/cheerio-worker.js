@@ -42,14 +42,20 @@ module.exports = function (self) {
         break
 
       case 'postDetails':
-        const opt = ev.data.opt
         self.postMessage({
           topic: topic,
-          data: Mapper.postHtmlToPost(html, opt)
+          data: Mapper.postHtmlToPost(html, ev.data.opt)
         })
 
         break
 
+      case 'findMessage':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.postHtmlToFindMessageResult(html, ev.data.opt)
+        })
+
+        break
       case 'userProfile':
         self.postMessage({
           topic: topic,

@@ -217,5 +217,25 @@ export default class Mapper{
     }
 
   }
+  static postHtmlToFindMessageResult(html, opt) {
+    const {messageId, postId, page} = opt
 
+    const result = Mapper.postHtmlToPost(html, {postId, page})
+    const $ = html.getCheerio()
+    const pageNumArr = $('.pages strong')
+      .map((i,elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const currentPage = pageNumArr.length == 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    return {
+      currentPage: currentPage,
+      message: result.messages.filter(_ => parseInt(_.id) === parseInt(messageId))[0],
+    }
+  }
 }

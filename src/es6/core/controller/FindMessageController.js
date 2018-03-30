@@ -1,28 +1,58 @@
 import * as Controllers from './index'
-const showdown  = require('showdown')
 
-export class VersionController {
-  static get STATE() { return 'tab.about-version'}
-  static get NAME() { return 'VersionController'}
+export class FindMessageController {
+  static get STATE() { return 'tab.find-message'}
+  static get NAME() { return 'FindMessageController'}
   static get CONFIG() { return {
-    url: '/about/version',
-    cache: false,
+    url: '/findMessage?postId=&messageId=',
+    cache: true,
     views: {
       'main': {
-        templateUrl: 'templates/about/version.html',
-        controller: VersionController.NAME,
+        templateUrl: 'templates/find-message.html',
+        controller: FindMessageController.NAME,
         controllerAs: 'vm'
       }
     }
   }}
-  constructor($scope, $state,$ionicHistory, $http, $rootScope, apiService) {
+  constructor($scope, $state, $stateParams, $ionicHistory, apiService, $compile) {
     this.state = $state
     this.ionicHistory = $ionicHistory
-    const converter = new showdown.Converter()
+    this.scope = $scope
+    this.compile = $compile
 
-    apiService.version($rootScope.isAndroidNative()).safeApply($scope, resp => {
-      this.content = converter.makeHtml(resp.data)
-    }).subscribe()
+    const messageId = $stateParams.messageId
+    const postId = $stateParams.postId
+
+    apiService.findMessage({postId,messageId})
+      .safeApply(this.scope, ({currentPage, message}) => {
+        this.pageNumber = currentPage
+        this.message = message
+      })
+      .subscribe()
+  }
+
+  goToMessage() {
+    this.state.go(Controllers.PostDetailController.STATE,{
+      topicId: this.message.post.topicId,
+      postId: this.message.post.id,
+      page: this.pageNumber,
+      delayRender: 0,
+      focus: this.message.id
+    })
+  }
+
+  getTimes(i){
+    return new Array(parseInt(i))
+  }
+
+  relativeMomentize(dateStr){
+    const momentDate = moment(dateStr)
+
+    if(momentDate.diff(new Date(),'days') >= -3 ){
+      return momentDate.fromNow()
+    } else {
+      return dateStr
+    }
   }
 
   onBack(){
@@ -33,7 +63,6 @@ export class VersionController {
         disableAnimate: true,
         disableBack: true
       })
-      this.state.go(Controllers.AboutController.STATE)
     }
   }
 }

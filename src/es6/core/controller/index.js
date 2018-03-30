@@ -20,4 +20,5 @@ export * from './WriteNewPostController'
 export * from './WriteReplyPostController'
 export * from './EditPostController'
 export * from './VersionController'
+export * from './FindMessageController'
 

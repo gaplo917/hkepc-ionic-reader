@@ -1,30 +1,41 @@
-<ion-modal-view class="card-view">
-  <ion-header-bar class="bar-dark fix-buttons">
-    <i class="button ion ion-ios-close-empty" ng-click="hide()"></i>
-    <h1 class="title">回覆</h1>
-  </ion-header-bar>
-  <ion-content>
-    <div style="text-align:center">
-      <h4 class="title item-text-wrap" >{{message.post.title || '下載中'}}</h4>
-    </div>
-    <div class="spinner">
-      <ion-spinner class="spinner" icon="android" ng-show="!message"></ion-spinner>
-    </div>
-    <div class="list card" ng-show="message.content">
+<ion-view class="card-view" view-title="搜尋引用">
+    <ion-content>
+        <div style="text-align:center">
+            <h4 class="title item-text-wrap" >{{vm.message.post.title || '下載中'}}</h4>
+        </div>
+        <div class="spinner">
+            <ion-spinner class="spinner" icon="android" ng-show="!vm.message"></ion-spinner>
+        </div>
+        <div class="card" ng-if="vm.message">
+            <div class="item item-avatar">
+                <!--Profile pic-->
+                <img ng-src="{{::vm.message.author.image}}"
+                     ng-click="vm.onUserProfilePic(vm.message.author)">
 
-      <div class="item item-avatar">
-        <img ng-src="{{message.author.image}}">
-        <h2 ng-bind="message.author.name"></h2>
-        <p>{{message.createdAt}} <span style="float:right">#{{message.pos}}</span></p>
-      </div>
+                <!--User name-->
+                <h2 ng-click="vm.onUserProfilePic(vm.message.author)">
+                    <span class="less-important-info">#{{::vm.message.pos}}</span> {{::vm.message.author.name}}
+                </h2>
 
-      <div class="item item-body" ng-bind-html="message.content"></div>
+                <span class="super-less-important-info">
+                <!--When banned-->
+                <i class="ion-close-circled" style="color:red" ng-show="::vm.message.author.rank == 0">
+                    <small>Banned</small>
+                </i>
+                    <!--Normal User-->
+                <i ng-repeat="star in vm.getTimes(vm.message.author.rank) track by $index"
+                   class="ion-ios-star"
+                   style="color:#F9A825;"></i>
+                    <!--Post timestamp-->
+                <span style="margin-left:3px">{{::vm.relativeMomentize(vm.message.createdAt)}}</span>
+            </span>
+            </div>
+            <div class="item item-body" compile="vm.message.content"></div>
 
-      <div class="button button-full" ng-click="goToMessage(message)">前往帖子 <i class="ion-ios-arrow-right"></i></div>
+            <div class="button button-full" ng-click="vm.goToMessage()">前往帖子 <i class="ion-ios-arrow-right"></i></div>
 
-    </div>
+        </div>
 
-    <div class="tab-bar-inset"></div>
-  </ion-content>
-</ion-modal-view>
-
+        <div class="tab-bar-inset"></div>
+    </ion-content>
+</ion-view>

@@ -4,6 +4,5 @@
 export * from './LocalStorageService'
 export * from './MessageService'
 export * from './AuthService'
-export * from './MessageResolver'
 export * from './HistoryService'
 export * from './ApiService'

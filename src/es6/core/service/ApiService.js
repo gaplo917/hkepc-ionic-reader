@@ -119,6 +119,19 @@ export class ApiService {
 
   }
 
+  findMessage(opt){
+    const {postId, messageId, isAutoLoadImage} = opt
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.findMessage(postId,messageId)
+    })
+      .flatMapApiFromCheerioworker('findMessage', {
+        opt: opt,
+        currentHash: window.location.hash,
+        isAutoLoadImage
+      })
+  }
+
   userProfile(uid) {
     return this.http.request({
       method: 'GET',

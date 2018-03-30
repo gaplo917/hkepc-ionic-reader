@@ -54,9 +54,11 @@
             <!--Really the Post-->
             <div ng-if="message.type == 'POST_MESSAGE'">
                 <div class="item item-avatar">
+                    <!--Profile pic-->
                     <img ng-src="{{::message.author.image}}"
-                         ng-click="vm.onUserProfilePic(message.author)"
-                    >
+                         ng-click="vm.onUserProfilePic(message.author)">
+
+                    <!--Control buttons-->
                     <button class="button button-icon ion-ios-compose-outline on-more-button"
                             style="right: 105px;"
                             ng-if="message.isSelf"
@@ -71,21 +73,26 @@
                             ng-click="vm.like(message)"></button>
                     <button class="button button-icon ion-android-more-vertical on-more-button"
                             ng-click="vm.onMore(message)"></button>
+
+                    <!--User name-->
                     <h2 ng-click="vm.onUserProfilePic(message.author)">
                         <span class="less-important-info">#{{::message.pos}}</span> {{::message.author.name}}
                     </h2>
-                    <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0">
-                        <small>Banned</small>
-                    </i>
+
                     <span class="super-less-important-info">
-                      <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index"
-                         class="ion-ios-star"
-                         style="color:#F9A825;"></i>
-                      <span style="margin-left:3px">{{::vm.relativeMomentize(message.createdAt)}}</span>
+                        <!--When banned-->
+                        <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0">
+                            <small>Banned</small>
+                        </i>
+                        <!--Normal User-->
+                        <i ng-repeat="star in vm.getTimes(message.author.rank) track by $index"
+                           class="ion-ios-star"
+                           style="color:#F9A825;"></i>
+                        <!--Post timestamp-->
+                        <span style="margin-left:3px">{{::vm.relativeMomentize(message.createdAt)}}</span>
                     </span>
                 </div>
-                <div class="item item-body" compile="::message.content">
-                </div>
+                <div class="item item-body" compile="::message.content"></div>
             </div>
 
 

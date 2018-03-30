@@ -142,7 +142,7 @@ export class WriteReplyPostController {
         const ionicReaderSign = HKEPC.signature()
 
         // build the reply message
-        const replyMessage = `${preText}\n${reply.content}\n\n${ionicReaderSign}`
+        const replyMessage = `${preText}${reply.content}\n\n${ionicReaderSign}`
 
         const imageFormData = {}
         const deleteImageFormData = {}

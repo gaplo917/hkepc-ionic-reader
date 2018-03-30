@@ -30,11 +30,10 @@ export class TabController{
 
   }}
 
-  constructor($scope,$state,$rootScope,$ionicModal,MessageResolver,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope, $ionicSideMenuDelegate) {
+  constructor($scope,$state,$rootScope,$ionicModal,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope, $ionicSideMenuDelegate) {
     console.debug(`[${TabController.NAME}] init`)
 
     this.scope = $scope
-    this.scope.messageModal = $scope.$new()
     this.scope.eulaModal = $scope.$new()
 
     this.rootScope = $rootScope
@@ -186,29 +185,10 @@ export class TabController{
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
 
-        this.messageModal.show()
-        // reset the message first
-        this.scope.messageModal.message = {}
-
-      })
-      .flatMap(([event, req]) => MessageResolver.resolve(HKEPC.forum.findMessage(req.postId,req.messageId)))
-      .safeApply(this.scope, (data) => {
-        this.scope.messageModal.message = data.message
-
-        this.scope.messageModal.goToMessage = (msg) => {
-
-          this.messageModal.hide()
-
-          this.state.go(Controllers.PostDetailController.STATE,{
-            topicId: msg.post.topicId,
-            postId: msg.post.id,
-            page: msg.post.page,
-            delayRender: 0,
-            focus: msg.id
-          })
-        }
-
-
+        this.state.go(Controllers.FindMessageController.STATE, {
+          postId: req.postId,
+          messageId: req.messageId
+        })
       })
       .subscribe()
 
@@ -284,14 +264,6 @@ export class TabController{
         this.localStorageService.set('fontSize',req.size)
         this.ionicHistory.clearCache();
       }).subscribe()
-
-    $ionicModal.fromTemplateUrl('templates/modals/find-message.html', {
-      scope: $scope.messageModal
-    }).then((modal) => {
-      this.messageModal = modal
-
-      this.scope.messageModal.hide = () => this.messageModal.hide()
-    })
 
   }
 
