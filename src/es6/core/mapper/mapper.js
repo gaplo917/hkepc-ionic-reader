@@ -28,7 +28,7 @@ export default class Mapper{
         name: topicName,
         image: image,
         groupName: groupName,
-        description: description
+        description: description.replace("最後發表", " -")
       }
 
     }).get()

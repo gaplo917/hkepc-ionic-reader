@@ -394,6 +394,10 @@ export class PostDetailController{
   onReply(message){
     this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
       if(isLoggedIn){
+        if(this.isLock) {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 主題已被封鎖，無法回覆！</i>`)
+          return
+        }
         const reply = {
           id : message.id,
           postId: message.post.id,
@@ -749,6 +753,7 @@ export class PostDetailController{
         { text: `<i class="icon ion-ios-loop"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
         { text: `<i class="icon ion-ios-eye-outline"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
         { text: `<i class="icon ion-ios-lightbulb-outline"></i> 關注此主題的新回覆` },
+        { text: `<i class="icon ion-ios-flag-outline"></i> 舉報` },
       ],
       titleText: '更多功能',
       cancelText: '取消',
@@ -780,7 +785,9 @@ export class PostDetailController{
             this.ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
           }).subscribe()
         }
-
+        else if(index == 4){
+          this.onReport(message)
+        }
         return true;
       },
       destructiveButtonClicked: (index) => {

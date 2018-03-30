@@ -84,16 +84,19 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.index()
     }).flatMapApiFromCheerioworker('topicList')
+      .map(topics => topics.filter(_ => _.groupName || _.id))
   }
 
   postListPage(opt){
     const {topicId, pageNum, filter, order, searchId} = opt
 
-    const url = topicId == 'search'
+    const url = topicId === 'search'
       ? HKEPC.forum.latestNext(searchId, pageNum)
-      : (topicId == 'latest' && pageNum > 1)
+      : (topicId === 'latest' && pageNum > 1)
         ? HKEPC.forum.latestNext(searchId, pageNum)
-        : HKEPC.forum.topics(topicId, pageNum, filter,order)
+        : (topicId === 'latestPost')
+            ? HKEPC.forum.latestPostNext(searchId, pageNum)
+            : HKEPC.forum.topics(topicId, pageNum, filter,order)
 
     return this.http.request({
       method: 'GET',

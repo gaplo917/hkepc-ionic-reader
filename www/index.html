@@ -45,11 +45,11 @@
         <ion-nav-view></ion-nav-view>
     </ion-side-menu-content>
 
-    <ion-side-menu side="left" ng-if="!isiOSNative() && !isAndroidNative()">
+    <ion-side-menu side="left">
         <header class="bar bar-header bar-stable">
         </header>
 
-        <ion-content class="has-header">
+        <ion-content class="has-header side-menu">
             <ion-list>
                 <ion-item menu-close href="#/tab/topics" class="item-icon-left">
                     <div class="icon">
@@ -59,7 +59,7 @@
                 </ion-item>
                 <ion-item menu-close href="#/tab/likes" class="item-icon-left">
                     <div class="icon">
-                        <i class="ion-ios-heart inner-icon"></i>
+                        <i class="ion-ios-heart-outline inner-icon"></i>
                     </div>
                     我的最愛
                 </ion-item>
@@ -71,7 +71,7 @@
                 </ion-item>
                 <ion-item menu-close href="#/tab/about" class="item-icon-left">
                     <div class="icon">
-                        <i class="ion-ios-help inner-icon"></i>
+                        <i class="ion-ios-help-outline inner-icon"></i>
                     </div>
                     關於
                 </ion-item>

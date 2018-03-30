@@ -149,7 +149,9 @@ export class PostListController {
         ? `${resp.topicName} ${this.searchText}`
         : this.topicId === 'latest'
           ? '最新帖子'
-          : resp.topicName
+          : this.topicId === 'latestPost'
+            ? '最新發佈'
+            : resp.topicName
     }
 
     this.hasMoreData = this.currentPageNum < this.totalPageNum

@@ -8,6 +8,7 @@
     "cheerio": "^0.19.0",
     "lodash": "^4.17.4",
     "moment": "^2.11.2",
+    "node-sass": "^4.8.3",
     "showdown": "^1.8.0",
     "sweetalert": "^2.0.8",
     "uuid-v4": "^0.1.0",
@@ -37,7 +38,7 @@
     "gulp-util": "^3.0.7",
     "gulp-webserver": "^0.9.1",
     "run-sequence": "^1.2.2",
-    "sass": "^0.5.0",
+    "sass": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }

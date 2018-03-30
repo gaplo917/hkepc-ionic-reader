@@ -162,15 +162,10 @@ export class TabController{
         if(req.username != undefined && req.username != "") {
 
           this.isLoggedIn = true
-          this.login = String(this.hideUsername) == 'true' ? "IR 用家" : req.username
 
-          console.log("changed login name to ", this.login)
+          this.login = "IR 用家"
 
-          // useful for Native App handling
-          this.localStorageService.set('tabLoginName', this.login)
-
-        }
-        else {
+        } else {
           this.login = undefined
 
           if(this.isLoggedIn && !req.isFromLogout){
@@ -182,6 +177,8 @@ export class TabController{
 
         }
 
+        // useful for Native App handling
+        this.localStorageService.set('tabLoginName', this.login)
       }).subscribe()
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
