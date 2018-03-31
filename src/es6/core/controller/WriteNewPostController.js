@@ -4,6 +4,7 @@ import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostListRefreshRequest} from "../model/PostListRefreshRequest"
 import swal from 'sweetalert'
+import {Bridge} from "../bridge/Bridge";
 
 const cheerio = require('cheerio')
 
@@ -39,6 +40,10 @@ export class WriteNewPostController {
     this.attachImageIds = []
     this.existingImages = []
     this.ionicPopup = $ionicPopup
+    this.ionicReaderSign = HKEPC.signature({
+      androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+    })
 
     console.log("write new post ", this.topic)
     console.log("write new post ", this.categories)
@@ -137,7 +142,7 @@ export class WriteNewPostController {
           deleteImageFormData[`attachdel[${i}]`] = id
         })
 
-        const ionicReaderSign = HKEPC.signature()
+        const ionicReaderSign = this.ionicReaderSign
 
         const subject = post.title
         const replyMessage = `${post.content}\n\n${ionicReaderSign}`

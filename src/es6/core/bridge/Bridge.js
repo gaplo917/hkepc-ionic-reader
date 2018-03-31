@@ -1,5 +1,7 @@
 // Bridge wrapper
 // Designed for wrapping both iOS & Android bridge
+import {Channel} from "./Channel";
+
 export class Bridge {
   static get instance(){
     return Bridge._instance
@@ -27,6 +29,12 @@ export class Bridge {
 
   static isiOSNative(){
     return Bridge._instance && Bridge._instance.platform === 'ios'
+  }
+
+  static version(cb){
+    Bridge._instance.callHandler(Channel.version, {}, (data) => {
+      cb(data.version)
+    })
   }
 
 }

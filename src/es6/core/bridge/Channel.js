@@ -4,6 +4,7 @@ export class Channel {
   static get nativeStorage(){ return "NATIVE_STORAGE" }
   static get uploadImage() { return "UPLOAD_IMAGE" }
   static get iap() { return "IAP" }
+  static get version() { return "VERSION" }
 
   // from Native
   static get nativeStorageUpdated(){ return "NATIVE_STORAGE_UPDATE" }

@@ -22,17 +22,16 @@ function onError(err) {
   console.log(err.message)
   this.emit('end')
 }
-
 gulp.task('browserify', function () {
   // set up the browserify instance on a task basis
-  var b = browserify({
+  const b = browserify({
     entries: './src/es6/core/app.js',
     insertGlobals : true,
     debug: false,
     // defining transforms here will avoid crashing your stream
     transform: [
       babelify.configure({
-        plugins: ["transform-object-rest-spread"],
+        plugins: ["transform-object-rest-spread","transform-async-to-generator"],
         presets: ["es2015"]
       })
     ]

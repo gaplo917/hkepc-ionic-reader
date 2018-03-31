@@ -4,6 +4,7 @@ import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 import swal from 'sweetalert'
+import {Bridge} from "../bridge/Bridge";
 
 const cheerio = require('cheerio')
 
@@ -21,7 +22,7 @@ export class WriteReplyPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $compile) {
     this.id = "reply-content"
     this.message = JSON.parse($stateParams.message)
     this.reply = JSON.parse($stateParams.reply)
@@ -36,11 +37,14 @@ export class WriteReplyPostController {
     this.ngToast = ngToast
     this.ionicHistory = $ionicHistory
     this.ionicPopup = $ionicPopup
-    this.rootScope = $rootScope
     this.state = $state
     this.deleteImageIds = []
     this.attachImageIds = []
     this.existingImages = []
+    this.ionicReaderSign = HKEPC.signature({
+      androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+    })
 
     // fetch the epc data for native App
     this.preFetchContent().subscribe()
@@ -139,7 +143,7 @@ export class WriteReplyPostController {
         const postUrl = this.postUrl
         const preText = this.preText
         const hiddenFormInputs = this.hiddenFormInputs
-        const ionicReaderSign = HKEPC.signature()
+        const ionicReaderSign = this.ionicReaderSign
 
         // build the reply message
         const replyMessage = `${preText}${reply.content}\n\n${ionicReaderSign}`

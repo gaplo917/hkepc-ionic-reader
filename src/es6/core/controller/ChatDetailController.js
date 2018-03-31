@@ -9,6 +9,7 @@ import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 import swal from 'sweetalert'
+import {Bridge} from "../bridge/Bridge";
 
 const cheerio = require('cheerio')
 const moment = require('moment')
@@ -40,6 +41,10 @@ export class ChatDetailController{
 
     this.senderId = $stateParams.id
     this.messages = []
+    this.ionicReaderSign = HKEPC.signature({
+      androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+    })
 
     $scope.$on('$ionicView.loaded', (e) => {
         this.loadMessages()
@@ -99,7 +104,7 @@ export class ChatDetailController{
               hiddenFormInputs[k] = encodeURIComponent(v)
             }).get()
 
-            const ionicReaderSign = HKEPC.signature()
+            const ionicReaderSign = this.ionicReaderSign
 
             // build the reply message
             const chatMessage = `${message}\n\n${ionicReaderSign}`
@@ -115,23 +120,7 @@ export class ChatDetailController{
               headers : {'Content-Type':'application/x-www-form-urlencoded'}
             }).safeApply(this.scope, (resp) => {
 
-              const $ = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true})
-
-              const newMessage = this.parseChat($('li').html(),true)
-
-              if(newMessage.date != 'invalid date') {
-                this.messages.push(newMessage)
-
-                this.ionicScrollDelegate.scrollBottom(true)
-
-              } else {
-
-                // hotfix for cannot show message
-                setTimeout(() => {
-                  requestAnimationFrame(() => this.doRefresh())
-                }, 1000)
-
-              }
+              requestAnimationFrame(() => this.doRefresh())
 
             }).subscribe()
           }
@@ -177,7 +166,6 @@ export class ChatDetailController{
   }
 
   doRefresh(){
-    this.messages = []
     this.loadMessages()
   }
 

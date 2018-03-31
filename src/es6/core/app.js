@@ -4,14 +4,12 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
-const uuid = require('uuid-v4');
-
 import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
 import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
 import {NativeHideUsernameRequest} from './bridge/NativeHideUsernameRequest'
-
 import {Bridge, Channel} from "./bridge/index";
-require('angulartics')
+
+const uuid = require('uuid-v4');
 
 const moment = require('moment')
 require('moment/locale/zh-tw');
@@ -148,8 +146,6 @@ function initAngular(){
     'starter.directives',
     'ngToast',
     'ionicLazyLoad',
-    'angulartics',
-    require('angulartics-google-analytics'),
     'LocalForageModule',
     'rx',
     'ngFileUpload',
@@ -191,6 +187,10 @@ function initAngular(){
           console.log("onBack()")
           $ionicHistory.goBack()
         }
+
+        Bridge.version((version) => {
+          $rootScope.nativeVersion = version
+        })
       }
       else if(isAndroidNative()){
         $rootScope.openDrawer = () => {
@@ -213,6 +213,10 @@ function initAngular(){
         $rootScope.username = (username) => {
           window.LegacyAndroid.username(username)
         }
+
+        Bridge.version((version) => {
+          $rootScope.nativeVersion = version
+        })
       }
       else {
         $rootScope.openDrawer = () => {
@@ -248,10 +252,6 @@ function initAngular(){
         $ionicConfigProvider.templates.maxPrefetch(0)
       }
     }])
-    .config(function ($analyticsProvider) {
-      // turn off automatic tracking
-      $analyticsProvider.virtualPageviews(true)
-    })
     .config(function($stateProvider, $urlRouterProvider) {
 
       const stateProvider =  $stateProvider

@@ -1,8 +1,9 @@
-var cheerio = require('cheerio');
 import * as URLUtils from '../utils/url'
 import {GeneralHtml} from './model/general-html'
 import {HKEPCHtml} from './model/hkepc-html'
 import Mapper from "./mapper/mapper";
+
+const cheerio = require('cheerio');
 
 module.exports = function (self) {
   self.addEventListener('message',function (ev){

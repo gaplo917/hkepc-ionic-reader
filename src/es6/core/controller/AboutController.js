@@ -40,7 +40,6 @@ export class AboutController {
   isAndroid(){
     return ionic.Platform.isAndroid()
   }
-
   showProxyPopup(){
 
     // An elaborate, custom popup
