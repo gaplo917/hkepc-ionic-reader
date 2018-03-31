@@ -9,7 +9,7 @@
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
     </ion-nav-buttons>
-    <ion-content on-touch="vm.onTouch()" on-release="vm.onRelease()">
+    <ion-content>
         <div class="spinner" ng-show="vm.topics.length == 0">
             <ion-spinner class="spinner" icon="android"></ion-spinner>
             <p class="reminder">如無法加載，請將 <i class="ion-ios-infinite"></i> 內的「論壇風格設定」設定為 HKEPC </p>

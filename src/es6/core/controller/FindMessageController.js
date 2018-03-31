@@ -5,7 +5,7 @@ export class FindMessageController {
   static get NAME() { return 'FindMessageController'}
   static get CONFIG() { return {
     url: '/findMessage?postId=&messageId=',
-    cache: true,
+    cache: false,
     views: {
       'main': {
         templateUrl: 'templates/find-message.html',

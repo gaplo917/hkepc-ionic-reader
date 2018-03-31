@@ -25,7 +25,7 @@
     <ion-content lazy-scroll style="padding-top:30px" delegate-handle="post-detail">
 
         <div class="text-center">
-            <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
+            <ion-spinner icon="android" ng-show="vm.loadingPrevious"></ion-spinner>
         </div>
         <div class="spinner">
             <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
@@ -43,8 +43,7 @@
              ng-click="message.focused = false"
              lastread
              movable
-             on-swipe-left-option="vm.onReply(message)"
-        >
+             on-swipe-left-option="vm.onReply(message)">
 
             <!--Section Header to show the page number-->
             <h5 ng-if="message.type == 'POST_PAGE_DIVIDER'"
@@ -101,7 +100,7 @@
         </div>
         <ion-infinite-scroll
             class="ispinner text-center"
-            ng-if="!vm.end && vm.messages.length > 0"
+            ng-show="!vm.end && vm.messages.length > 0"
             on-infinite="vm.loadMore()"
             spinner="android"
             immediate-check="true"

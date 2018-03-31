@@ -22,11 +22,8 @@
 
     </div>
     <ion-content lazy-scroll>
-        <div class="spinner" ng-if="::vm.posts.length == 0">
-            <ion-spinner
-                class="spinner"
-                icon="android">
-            </ion-spinner>
+        <div class="spinner" ng-show="vm.posts.length == 0">
+            <ion-spinner class="spinner" icon="android"></ion-spinner>
         </div>
 
         <div style="padding-top:44px;">
@@ -35,23 +32,21 @@
                 ng-class-odd="'odd'" ng-class-even="'even'"
                 class="item-icon-right item-text-wrap"
                 ng-repeat="post in vm.posts track by $index"
-                ng-if="::(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
+                ng-show="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
                 ng-click="::vm.onGoToPost(post)"
                 href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
                 id="post-{{::post.id}}"
                 page="{{::post.pageNum}}"
-                lastread
-            >
+                lastread>
                 <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-show="::post.tag">
                     <small class="tag">#{{::post.tag}}</small>
                 </a></h2>
+                <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>
                 <div>
                     <i class="ion-bonfire" ng-show="::post.isSticky"></i>
                     <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
                     <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
                     <span class="less-important-info ion-person"> {{::post.author.name}}</span>
-
-                    <span class="fright less-important-info">{{::post.count.reply}} / {{::post.count.view}}</span>
                 </div>
                 <div ng-show="::post.count.reply > 0">
                     <span class="less-important-info">
@@ -67,7 +62,7 @@
 
         <ion-infinite-scroll
             class="ispinner text-center"
-            ng-if="vm.posts.length > 0 && vm.hasMoreData"
+            ng-show="vm.posts.length > 0 && vm.hasMoreData"
             on-infinite="vm.loadMore()"
             spinner="android"
             immediate-check="true"
