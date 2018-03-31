@@ -34,8 +34,6 @@ export class TabController{
     console.debug(`[${TabController.NAME}] init`)
 
     this.scope = $scope
-    this.scope.eulaModal = $scope.$new()
-
     this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
     this.rx = rx
