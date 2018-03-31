@@ -100,7 +100,7 @@
         </div>
         <ion-infinite-scroll
             class="ispinner text-center"
-            ng-show="!vm.end && vm.messages.length > 0"
+            ng-if="!vm.end && vm.messages.length > 0"
             on-infinite="vm.loadMore()"
             spinner="android"
             immediate-check="true"

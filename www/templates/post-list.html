@@ -62,7 +62,7 @@
 
         <ion-infinite-scroll
             class="ispinner text-center"
-            ng-show="vm.posts.length > 0 && vm.hasMoreData"
+            ng-if="vm.posts.length > 0 && vm.hasMoreData"
             on-infinite="vm.loadMore()"
             spinner="android"
             immediate-check="true"
