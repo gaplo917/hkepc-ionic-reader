@@ -84,7 +84,7 @@ export function createAndroidNativeBridge(cb){
   console.log("Android webview bridge is ready", window.Android)
 
   let port = null;
-  onmessage = function (e) {
+  window.onmessage = function (e) {
     console.log("Native trigger ready", e)
 
     // ensure only run once
@@ -106,9 +106,9 @@ export function createAndroidNativeBridge(cb){
     }
 
     Bridge.instance = {
-      platform:        'android',
+      platform: 'android',
       // call native
-      callHandler:     (channel, opt, cb) => {
+      callHandler: (channel, opt, cb) => {
         const uid = uuid()
 
         port.postMessage(JSON.stringify({
@@ -155,5 +155,7 @@ export function createAndroidNativeBridge(cb){
     }
 
     window.Bridge = Bridge
+
+    cb()
   }
 }
