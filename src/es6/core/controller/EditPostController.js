@@ -136,7 +136,6 @@ export class EditPostController {
     this.deleteImageIds.forEach((id,i) => {
       deleteImageFormData[`attachdel[${i}]`] = id
     })
-    const loader =
 
     swal({
       content: (() => {
@@ -167,7 +166,7 @@ export class EditPostController {
       },
       headers : {'Content-Type':'application/x-www-form-urlencoded'}
     }).safeApply(this.scope, (resp) => {
-      const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
+      const responseText = resp && resp.data && cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
       const isEditSuccess = _.includes(responseText, '成功')
       if(isEditSuccess){
 
@@ -183,13 +182,21 @@ export class EditPostController {
       else {
         swal({
           title: "修改失敗",
-          text: `HKEPC 傳回:「${responseText}`,
+          text: `HKEPC 傳回:「${responseText}」`,
           icon: "error",
           button: "確定",
         })
       }
 
-    }).subscribe()
+    }).subscribe(
+      () => {},
+      err => swal({
+        title: "發佈失敗",
+        text: `網絡異常，請重新嘗試！`,
+        icon: "error",
+        button: "確定",
+      })
+    )
   }
 
   addImageToContent(existingImage){
