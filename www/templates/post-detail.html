@@ -42,6 +42,8 @@
              ng-repeat="message in vm.messages"
              ng-click="message.focused = false"
              lastread
+             movable
+             on-swipe-left-option="vm.onReply(message)"
         >
 
             <!--Section Header to show the page number-->
