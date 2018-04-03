@@ -48,7 +48,6 @@ export class PostDetailController{
     this.LocalStorageService = LocalStorageService
     this.ionicActionSheet = $ionicActionSheet
     this.apiService = apiService
-    this.authService = AuthService
     this.$timeout = $timeout
     this.compile = $compile
     this.isAutoLoadImage = true
@@ -69,7 +68,6 @@ export class PostDetailController{
       this.pageSliderPopover.remove()
       if(this.postTaskSubscription) this.postTaskSubscription.dispose()
       this.deregisterReportModal()
-      this.deregisterUserProfileModal()
     })
     // Execute action on hide popover
     $scope.$on('popover.hidden', () => {
@@ -522,32 +520,6 @@ export class PostDetailController{
     })
   }
 
-  /**
-   *
-   * @returns {Promise<void>|Promise<IScope>|Promise.<*>}
-   */
-  registerUserProfileModal(){
-    if(this.scope.userProfileModal) return Promise.resolve(this.scope.userProfileModal)
-
-    const userProfileModal = this.scope.userProfileModal = this.scope.$new()
-
-    return this.ionicModal.fromTemplateUrl('templates/modals/user-profile.html', {
-      scope: userProfileModal
-    }).then(modal => {
-      this.userProfileModal = modal
-
-      userProfileModal.show = () => this.userProfileModal.show()
-      userProfileModal.hide = () => this.userProfileModal.hide()
-
-      return Promise.resolve(userProfileModal)
-    })
-  }
-
-  deregisterUserProfileModal(){
-    this.userProfileModal && this.userProfileModal.remove()
-
-  }
-
   deregisterReportModal(){
     this.reportModal && this.reportModal.remove()
   }
@@ -631,117 +603,16 @@ export class PostDetailController{
 
   onUserProfilePic(author){
 
-      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
-        if(isLoggedIn){
-          this.registerUserProfileModal().then(userProfileModal => {
+    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+      if(isLoggedIn){
+        this.state.go(Controllers.UserProfileController.STATE,{
+          author: JSON.stringify(author),
+        })
 
-            userProfileModal.show()
-            userProfileModal.author = author
-            userProfileModal.content = undefined
-            userProfileModal.sendPm = () => {
-              // FIXME: Not a good way. just a work arround
-              const uid = uuid()
-              swal({
-                title: `發訊息給${author.name}`,
-                content: {
-                  element: "textarea",
-                  attributes: {
-                    id: uid,
-                    rows: 5,
-                    autofocus: true,
-                    placeholder:"請輸入內容..."
-                  },
-                },
-                className: "message",
-                buttons: ["取消", "發送"],
-              })
-                .then((value) => {
-                  if(value){
-                    const inputText = document.getElementById(uid).value
-                    if(!inputText){
-                      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
-                      return
-                    }
-
-                    swal({
-                      content: (() => {
-                        return this.compile(`
-                          <div>
-                              <ion-spinner class='image-loader' icon='android'/>
-                              <div class="text-center">傳送到 HKEPC 伺服器中</div>
-                          </div>
-                        `)(this.scope)[0]
-                      })(),
-                      closeOnEsc: false,
-                      closeOnClickOutside: false,
-                      buttons: false
-                    })
-                    this.apiService.preSendPm(author.uid)
-                      .flatMap((resp) => {
-                        const xml = cheerio.load(resp.data,{xmlMode:true})
-                        const rawHtml = _.replace(
-                          _.replace(xml('root').html(), '<![CDATA[','',)
-                        ,']]>', '')
-                        const $ = cheerio.load(rawHtml)
-                        const relativeUrl = $('#sendpmform').attr('action')
-                        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
-                        let formSource = cheerio.load($('#sendpmform').html())
-
-                        const hiddenFormInputs = {}
-                        formSource(`input[type='hidden']`).map((i,elem) => {
-                          const k = formSource(elem).attr('name')
-                          const v = formSource(elem).attr('value')
-
-                          hiddenFormInputs[k] = encodeURIComponent(v)
-                        }).get()
-
-                        return this.apiService.dynamicRequest({
-                          method: "POST",
-                          url : postUrl,
-                          data : {
-                            msgto: author.name,
-                            message: inputText,
-                            ...hiddenFormInputs,
-                          },
-                          headers : {'Content-Type':'application/x-www-form-urlencoded'}
-                        })
-                      })
-                      .safeApply(this.scope, (resp) => {
-                        const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data),{xmlMode:true}).html()
-                        const isSuccess = _.includes(responseText, '成功')
-                        if(isSuccess){
-                          swal({
-                            title: "發送成功",
-                            icon: "success",
-                            button: "確定",
-                          })
-                        }
-                        else {
-                          swal({
-                            title: "發送失敗",
-                            text: `HKEPC 傳回:「${responseText}`,
-                            icon: "error",
-                            button: "確定",
-                          })
-                        }
-                      })
-                      .subscribe()
-
-                  }
-
-                });
-            }
-
-            this.apiService.userProfile(author.uid).safeApply(this.scope.userProfileModal, data => {
-              userProfileModal.author = author
-              userProfileModal.content = data.content
-            }).subscribe()
-          })
-
-        } else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
-        }
-      }).subscribe()
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
+      }
+    }).subscribe()
 
   }
 

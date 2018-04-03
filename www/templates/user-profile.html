@@ -1,0 +1,30 @@
+<ion-view class="user-profile">
+    <ion-nav-title>
+        {{ vm.author.name }}
+    </ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button-default" ng-click="vm.sendPm(vm.author)">發送短消息</button>
+    </ion-nav-buttons>
+    <ion-content>
+        <img class="profile-pic" ng-src="{{vm.author.image}}" >
+
+        <div ng-show="!vm.content">
+            <div class="text-center">
+                <h4 class="title" >下載中</h4>
+            </div>
+            <div class="spinner">
+                <ion-spinner class="spinner" icon="android"></ion-spinner>
+                <p class="less-important-info">注意：HKEPC 伺服器有時加載呢頁會特別耐！ </p>
+            </div>
+        </div>
+
+        <div ng-show="vm.content">
+
+            <div class="dashline"></div>
+
+            <div class="content" compile="vm.content"></div>
+        </div>
+
+        <div style="height:200px"></div>
+    </ion-content>
+</ion-view>

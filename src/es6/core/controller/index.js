@@ -21,4 +21,5 @@ export * from './WriteReplyPostController'
 export * from './EditPostController'
 export * from './VersionController'
 export * from './FindMessageController'
+export * from './UserProfileController'
 
