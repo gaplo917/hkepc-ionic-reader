@@ -323,72 +323,22 @@ export default
       }
     };
   })
-  .directive('movable', function ($document) {
+  .directive('onLongerThanScreen', function ($window, $document, $timeout) {
       return {
           restrict: 'A',
           link: function ($scope, $elm, $attrs) {
-              let startX = 0
-              let startY = 0
-              let x = 0
-              let y = 0
-              let isTriggered = false
+              const screenHeight = $window.innerHeight
+              $timeout(() => {
+                const height = $elm[0].clientHeight
+                if(height > screenHeight){
 
-              $elm.bind('tap', function(event){
-                  reset()
+                  console.log(`onLongerThanScreen, elementHeight ${height} > ${screenHeight}`)
 
-                  $elm.css({
-                      left: 0,
-                      transition: "left 0.5s cubic-bezier(.42, 0, .58, 1)",
-                  })
-              })
-              function bindElementMove() {
-                  $elm.bind('touchstart', function (event) {
-                      // Prevent default dragging of selected content
-                      const touch = event.touches[0]
-
-                      console.log("touch start");
-                      startX = touch.screenX - x;
-                      startY = touch.screenY - y;
-                      $document.bind('touchmove', touchmove);
-                      $document.bind('touchend', touchend);
+                  $scope.$apply(function() {
+                    $scope.$eval($attrs.onLongerThanScreen)
                   });
-              }
-
-              bindElementMove();
-
-              function touchmove(event) {
-                const touch = event.touches[0]
-                  y = 0;
-                  x = touch.screenX - startX;
-
-                  if(x < -150){
-
-                  } else if(x < 0) {
-                      $elm.css({
-                          top: y + 'px',
-                          left: x + 'px',
-                          transition: "none",
-                      });
-                  }
-
-              }
-
-              function touchend() {
-                  reset()
-
-                  console.log("touchend");
-
-                  $document.unbind('touchmove', touchmove);
-                  $document.unbind('touchend', touchend);
-              }
-
-              function reset(){
-                  isTriggered = false
-                  startX = 0
-                  startY = 0
-                  x = 0
-                  y = 0
-              }
+                }
+              })
           }
       }
   });

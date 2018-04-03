@@ -48,6 +48,16 @@
       border-color: $border-color;
       &.tabs {
         background-image: linear-gradient(0deg, $border-color, $border-color 50%);
+        margin-top: -20px;
+        height: 40px;
+        .tab-item .icon:before {
+          font-size: 20px;
+          line-height: 40px;
+        }
+
+        .card-button {
+          line-height: 40px;
+        }
       }
 
       &.item-divider {

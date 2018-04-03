@@ -41,9 +41,8 @@
           }"
              ng-repeat="message in vm.messages"
              ng-click="message.focused = false"
-             lastread
-             movable
-             on-swipe-left-option="vm.onReply(message)">
+             lastread>
+
 
             <!--Section Header to show the page number-->
             <h5 ng-if="message.type == 'POST_PAGE_DIVIDER'"
@@ -53,7 +52,9 @@
             </h5>
 
             <!--Really the Post-->
-            <div ng-if="message.type == 'POST_MESSAGE'">
+            <div ng-if="message.type == 'POST_MESSAGE'" on-longer-than-screen="message.extraReplyBtn = true">
+                <div class="button button-assertive" style="position:fixed; top:100px; right: 0px">TEST</div>
+
                 <div class="item item-avatar">
                     <!--Profile pic-->
                     <img ng-src="{{::message.author.image}}"
@@ -94,6 +95,21 @@
                     </span>
                 </div>
                 <div class="item item-body" compile="::message.content"></div>
+
+                <div class="item tabs tabs-secondary tabs-icon-left" ng-if="message.extraReplyBtn">
+                    <a class="tab-item card-button" ng-if="message.extraReplyBtn" ng-click="vm.like(message)">
+                        <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
+                        喜歡
+                    </a>
+                    <a class="tab-item card-button" ng-click="vm.onReply(message)">
+                        <i class="icon" ng-class="vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "></i>
+                        回覆
+                    </a>
+                    <a class="tab-item card-button" ng-if="message.extraReplyBtn && message.isSelf" ng-click="vm.onEdit(message)">
+                        <i class="icon ion-ios-compose-outline"></i>
+                        修改
+                    </a>
+                </div>
             </div>
 
 
