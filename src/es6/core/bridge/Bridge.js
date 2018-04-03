@@ -130,9 +130,13 @@ export function createAndroidNativeBridge(cb){
                 const jsObj = JSON.parse(msg.data)
                 cb(jsObj)
               } catch (e) {
+                console.warn("fail to handle cb or json parsing",e)
                 cb(msg.data)
               }
-            }, (err) => { console.warn(err) })
+            }, (err) => {
+              console.warn(err)
+              cb(err)
+            })
         }
       },
       // receive native message
@@ -140,16 +144,17 @@ export function createAndroidNativeBridge(cb){
         messagesFromNative
           .filter(msg => msg.channel === channel)
           .subscribe((msg) => {
-            // create a response call back
-            const responseCb = (data) => {
-              port.postMessage(JSON.stringify({
-                uid:     msg.uid,
-                channel: msg.channel,
-                data:    JSON.stringify(data)
-              }))
-            }
 
-            if (typeof cb === "function") cb(msg.data, responseCb)
+            if (typeof cb === "function") {
+              // create a response call back
+              cb(msg.data, (data) => {
+                port.postMessage(JSON.stringify({
+                  uid:     msg.uid,
+                  channel: msg.channel,
+                  data:    JSON.stringify(data)
+                }))
+              })
+            }
           })
       }
     }

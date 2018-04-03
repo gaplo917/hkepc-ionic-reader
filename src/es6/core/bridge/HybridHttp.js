@@ -20,13 +20,15 @@ export class HybridHttp {
           }
           else {
             // FIXME: UI related dependency should not appear hear. Maybe need to introduce Global EventHub to decouple
+
             this.ngToast.danger({
               dismissOnTimeout: true,
               content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`
             })
+
+            observer.onNext(responseData)
           }
           observer.onCompleted()
-          return () => {}
         })
       })
     }

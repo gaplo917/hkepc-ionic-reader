@@ -111,6 +111,11 @@ function initAngular() {
         $rootScope.openDrawer = () => {
           window.Android.openDrawer()
         }
+
+        Bridge.version((version) => {
+          $rootScope.nativeVersion = version
+        })
+
       } else if (isLegacyAndroid()) {
         // Legacy Android (no bridge)
         $rootScope.openDrawer = () => {
@@ -128,10 +133,6 @@ function initAngular() {
         $rootScope.username = (username) => {
           window.LegacyAndroid.username(username)
         }
-
-        Bridge.version((version) => {
-          $rootScope.nativeVersion = version
-        })
       } else {
         // Web
         $rootScope.openDrawer = () => {
