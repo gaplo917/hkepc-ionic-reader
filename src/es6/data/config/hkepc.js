@@ -30,7 +30,7 @@ module.exports = {
       if(searchId){
         return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
       } else {
-        return `${BASE_FORUM_URL}/search.php?srchfrom=86400&&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
+        return `${BASE_FORUM_URL}/search.php?srchfrom=16000&&orderby=lastpost&ascdesc=desc&searchsubmit=yes`
       }
     },
     latestPostNext: (searchId,page) => {
