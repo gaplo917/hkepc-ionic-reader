@@ -36,22 +36,15 @@
 
 		// Clone Repo
 		git clone https://github.com/gaplo917/hkepc-ionic-reader
-		
+
 		cd hkepc-ionic-reader
-		
-		npm install
-		
-		bower install
 
-		// Use node modules
-		npm install browserify -g
-		
-		// Build modules
-		npm install gulp -g
+		yarn install
 
+		yarn run bower install
 # Run
 		// run in web / dev with Native Project
-		gulp run
-		
+		yarn run dev
+
 		// build production / for Native Project
-		gulp release
+		yarn run build
