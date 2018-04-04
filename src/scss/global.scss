@@ -268,18 +268,39 @@ textarea {
 }
 
 // TODO: refactor Swal customization
-.swal-button--confirm {
+.swal2-popup .swal2-styled:focus {
+  box-shadow: none;
+}
+.swal2-popup .swal2-styled.swal2-confirm {
   background-color: $epc-color;
+  font-size: $button-font-size;
 }
-.swal-title {
+.swal2-popup .swal2-styled.swal2-cancel {
+  font-size: $button-font-size;
+}
+.swal2-popup .swal2-actions {
+  margin: 0;
+}
+
+.swal2-textarea {
+  margin: 0;
+}
+.swal2-popup .swal2-styled {
+  margin: 10px;
+}
+.swal2-popup .swal2-title {
   color: $text-color;
+  font-size: $bar-title-font-size;
 }
-.swal-modal.message {
+.swal2-popup.swal2-modal.message {
   color: $text-color;
   background: $bg-color;
-  vertical-align: top;
+  top: 40px;
+  position: absolute;
+  padding: 10px;
 
   textarea {
+    font-size: $font-size-base;
     color:$text-color;
     background-color: lighten($bg-color,10%);
   }
@@ -312,4 +333,70 @@ textarea {
 
 .item-checkbox > .item-content {
   background-color: transparent;
+}
+
+.custom-svg-fill {
+  fill: $epc-color;
+}
+
+// md-preloader
+.md-preloader {
+  $easing:      cubic-bezier(.8,.0,.4,.8);
+
+  $speed:      1320ms;       // animation time for each loop
+  $color:      $epc-color;      // Blue A200 in the Material Design color palette
+  $linecap:    square;       // could be 'round', but the official one is square
+  $loops:      5;            // number of points where the arc meets
+  $arc:        0.72;         // fraction of the circumference that the arc grows to
+  $perimeter:  67px * 3.14159265358979;  // circumference of the raw svg inner cricle
+
+  // measure to prevent inline block spacing from affecting the outer rotation
+  font-size: 0;
+
+  display: inline-block;
+  animation: outer $speed * $loops linear infinite;
+
+  svg {
+    animation: inner $speed linear infinite;
+
+    circle {
+      fill: none;
+      stroke: $color;
+      stroke-linecap: $linecap;
+      animation: arc $speed $easing infinite;
+    }
+  }
+
+  @keyframes outer {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes inner {
+    0% {
+      transform: rotate(-360deg * (1 - $arc));
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+
+  @keyframes arc {
+    0% {
+      stroke-dasharray: 1 $perimeter;
+      stroke-dashoffset: 0;
+    }
+    40% {
+      stroke-dasharray: $arc * $perimeter, $perimeter;
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dasharray: 1 $perimeter;
+      stroke-dashoffset: -$arc * $perimeter;
+    }
+  }
 }

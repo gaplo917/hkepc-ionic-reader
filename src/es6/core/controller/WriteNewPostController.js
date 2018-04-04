@@ -3,7 +3,7 @@ import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostListRefreshRequest} from "../model/PostListRefreshRequest"
-import swal from 'sweetalert'
+import swal from 'sweetalert2'
 import {Bridge} from "../bridge/Bridge";
 
 const cheerio = require('cheerio')
@@ -147,18 +147,21 @@ export class WriteNewPostController {
         const subject = post.title
         const replyMessage = `${post.content}\n\n${ionicReaderSign}`
 
+        const spinnerHtml = `
+          <div>
+              <span class="md-preloader">
+                <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
+                </svg>
+              </span>
+              <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
+          </div>
+        `
+
         swal({
-          content: (() => {
-            return this.compile(`
-              <div>
-                  <ion-spinner class='image-loader' icon='android'/>
-                  <div class="text-center">傳送到 HKEPC 伺服器中</div>
-              </div>
-            `)(this.scope)[0]
-          })(),
-          closeOnEsc: false,
-          closeOnClickOutside: false,
-          buttons: false
+          html: spinnerHtml,
+          allowOutsideClick: false,
+          showCancelButton: false,
+          showConfirmButton: false,
         })
 
         //Post to the server
@@ -191,8 +194,8 @@ export class WriteNewPostController {
             swal({
               title: "發佈失敗",
               text: `HKEPC 傳回:「${responseText}」`,
-              icon: "error",
-              button: "確定",
+              type: "error",
+              confirmButtonText: "確定",
             })
           }
         }).subscribe(
@@ -200,8 +203,8 @@ export class WriteNewPostController {
           err => swal({
             title: "發佈失敗",
             text: `網絡異常，請重新嘗試！`,
-            icon: "error",
-            button: "確定",
+            type: "error",
+            confirmButtonText: "確定",
           })
         )
 

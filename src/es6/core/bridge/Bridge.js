@@ -84,6 +84,8 @@ export function createAndroidNativeBridge(cb){
   console.log("Android webview bridge is ready", window.Android)
 
   let port = null;
+  let handles = {}
+  let rHandles = {}
   window.onmessage = function (e) {
     console.log("Native trigger ready", e)
 
@@ -92,13 +94,39 @@ export function createAndroidNativeBridge(cb){
 
     port = e.ports[0]
 
-    const messagesFromNative = new Rx.Subject()
+    //const messagesFromNative = new Rx.Subject()
 
+    //receive
     port.onmessage = function (f) {
       try {
-        const jsObj = JSON.parse(f.data)
-        console.log(`receieve data from native `, jsObj)
-        messagesFromNative.onNext(jsObj)
+        const msg = JSON.parse(f.data)
+        console.log(`receieve data from native `, msg)
+        const uid = msg.uid
+        const handler = handles[uid]
+
+        if(handler){
+            try {
+              const jsObj = JSON.parse(msg.data)
+              handler(jsObj)
+            } catch (e) {
+              console.warn("fail to handle cb or json parsing",e)
+              handler(msg.data)
+            }
+            delete handles[uid]
+            return
+        }
+
+        const channel = msg.channel
+        const rHandler = rHandles[channel]
+        if(rHandler){
+            rHandler(JSON.parse(msg.data), (data) => {
+                port.postMessage(JSON.stringify({
+                    uid:     msg.uid,
+                    channel: msg.channel,
+                    data:    JSON.stringify(data)
+                }))
+            })
+        }
 
       } catch (e) {
         console.warn(`message from native encounter parsing error "${f.data}"`, e)
@@ -118,44 +146,50 @@ export function createAndroidNativeBridge(cb){
         }))
 
         if (typeof cb === "function") {
-          // caller expected a reply
-          messagesFromNative
-            .asObservable()
-            .filter(msg => msg.channel === channel && msg.uid === uid)
-            .timeout(30 * 1000)
-            .take(1)
-            .subscribe((msg) => {
-              // TODO: Should do Optimization
-              try {
-                const jsObj = JSON.parse(msg.data)
-                cb(jsObj)
-              } catch (e) {
-                console.warn("fail to handle cb or json parsing",e)
-                cb(msg.data)
-              }
-            }, (err) => {
-              console.warn(err)
-              cb(err)
-            })
+            handles[uid] = cb
+
+            setTimeout(() => delete handles[uid], 30000)
         }
+        //   // caller expected a reply
+        //   messagesFromNative
+        //     .asObservable()
+        //     .filter(msg => msg.channel === channel && msg.uid === uid)
+        //     .timeout(30 * 1000)
+        //     .take(1)
+        //     .subscribe((msg) => {
+        //       // TODO: Should do Optimization
+        //       try {
+        //         const jsObj = JSON.parse(msg.data)
+        //         cb(jsObj)
+        //       } catch (e) {
+        //         console.warn("fail to handle cb or json parsing",e)
+        //         cb(msg.data)
+        //       }
+        //     }, (err) => {
+        //       console.warn(err)
+        //       cb(err)
+        //     })
+        // }
       },
       // receive native message
       registerHandler: (channel, cb) => {
-        messagesFromNative
-          .filter(msg => msg.channel === channel)
-          .subscribe((msg) => {
+        handles[channel] = cb
 
-            if (typeof cb === "function") {
-              // create a response call back
-              cb(msg.data, (data) => {
-                port.postMessage(JSON.stringify({
-                  uid:     msg.uid,
-                  channel: msg.channel,
-                  data:    JSON.stringify(data)
-                }))
-              })
-            }
-          })
+        // messagesFromNative
+        //   .filter(msg => msg.channel === channel)
+        //   .subscribe((msg) => {
+        //
+        //     if (typeof cb === "function") {
+        //       // create a response call back
+        //       cb(msg.data, (data) => {
+        //         port.postMessage(JSON.stringify({
+        //           uid:     msg.uid,
+        //           channel: msg.channel,
+        //           data:    JSON.stringify(data)
+        //         }))
+        //       })
+        //     }
+        //   })
       }
     }
 

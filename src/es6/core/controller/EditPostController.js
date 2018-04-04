@@ -3,7 +3,7 @@ import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
 import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
-import swal from 'sweetalert'
+import swal from 'sweetalert2'
 const cheerio = require('cheerio')
 
 export class EditPostController {
@@ -20,7 +20,7 @@ export class EditPostController {
       },
     }
   }}
-  
+
 
 
   constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
@@ -45,13 +45,13 @@ export class EditPostController {
 
     this.preFetchContent().subscribe()
   }
-  
+
   onImageUploadSuccess(attachmentIds){
     this.ngToast.success(`<i class="ion-ios-checkmark"> 成功新增圖片${attachmentIds.join(',')}！</i>`)
     this.preFetchContent().subscribe()
   }
-  
-  
+
+
   preFetchContent(){
     return this.apiService.preEditMessage(this.message.post.topicId,this.message.post.id,this.message.id)
       .safeApply(this.scope, (resp) => {
@@ -137,18 +137,21 @@ export class EditPostController {
       deleteImageFormData[`attachdel[${i}]`] = id
     })
 
-    swal({
-      content: (() => {
-        return this.compile(`
+    const spinnerHtml = `
           <div>
-              <ion-spinner class='image-loader' icon='android'/>
-              <div class="text-center">傳送到 HKEPC 伺服器中</div>
+              <span class="md-preloader">
+                <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
+                </svg>
+              </span>
+              <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
           </div>
-        `)(this.scope)[0]
-      })(),
-      closeOnEsc: false,
-      closeOnClickOutside: false,
-      buttons: false
+        `
+
+    swal({
+      html: spinnerHtml,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showConfirmButton: false,
     })
 
     // Post to the server
@@ -183,8 +186,8 @@ export class EditPostController {
         swal({
           title: "修改失敗",
           text: `HKEPC 傳回:「${responseText}」`,
-          icon: "error",
-          button: "確定",
+          type: "error",
+          confirmButtonText: "確定",
         })
       }
 
@@ -193,8 +196,8 @@ export class EditPostController {
       err => swal({
         title: "發佈失敗",
         text: `網絡異常，請重新嘗試！`,
-        icon: "error",
-        button: "確定",
+        type: "error",
+        confirmButtonText: "確定",
       })
     )
   }

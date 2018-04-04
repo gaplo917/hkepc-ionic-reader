@@ -12,7 +12,7 @@ import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as _ from 'lodash'
 import * as Controllers from "./index"
-import swal from 'sweetalert'
+import swal from 'sweetalert2'
 
 const cheerio = require('cheerio')
 const uuid = require('uuid-v4');

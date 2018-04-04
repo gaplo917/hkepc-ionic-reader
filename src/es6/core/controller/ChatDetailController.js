@@ -8,7 +8,7 @@ import {XMLUtils} from '../../utils/xml'
 import {GeneralHtml} from '../model/general-html'
 import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
-import swal from 'sweetalert'
+import swal from 'sweetalert2'
 import {Bridge} from "../bridge/Bridge";
 
 const cheerio = require('cheerio')
@@ -109,6 +109,23 @@ export class ChatDetailController{
             // build the reply message
             const chatMessage = `${message}\n\n${ionicReaderSign}`
 
+            const spinnerHtml = `
+              <div>
+                  <span class="md-preloader">
+                    <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
+                    </svg>
+                  </span>
+                  <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
+              </div>
+            `
+
+            swal({
+              html: spinnerHtml,
+              allowOutsideClick: false,
+              showCancelButton: false,
+              showConfirmButton: false,
+            })
+
             // Post to the server
             this.apiService.postChatMessage({
               method: "POST",
@@ -120,7 +137,10 @@ export class ChatDetailController{
               headers : {'Content-Type':'application/x-www-form-urlencoded'}
             }).safeApply(this.scope, (resp) => {
 
-              requestAnimationFrame(() => this.doRefresh())
+              setTimeout(() => {
+                swal.close()
+                this.doRefresh()
+              }, 500)
 
             }).subscribe()
           }
@@ -181,35 +201,32 @@ export class ChatDetailController{
     }
   }
 
-  onNewMessage(){
+  async onNewMessage(){
     // FIXME: Not a good way. just a work arround
-    const uid = uuid()
-    swal({
+    const {value: inputText} = await swal({
       title: `發訊息給${this.sender.username}`,
-      content: {
-        element: "textarea",
-        attributes: {
-          id: uid,
-          rows: 5,
-          autofocus: true,
-          placeholder:"請輸入內容..."
-        },
-      },
-      className: "message",
-      buttons: ["取消", "發送"],
+      input: 'textarea',
+      inputPlaceholder: '輸入你的訊息',
+      confirmButtonText: "發送",
+      cancelButtonText: "取消",
+      reverseButtons: true,
+      showCancelButton: true,
+      customClass: "message",
+      focusConfirm: true
     })
-      .then((value) => {
-        if(value){
-          const inputText = document.getElementById(uid).value
-          if(inputText){
-            this.onSendMessage(this.sender, inputText)
-          }
-          else {
-            this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
-          }
-        }
 
-      });
+    if(inputText === undefined){
+      // cancel case
+      return
+    }
+
+    if (inputText === '') {
+      // empty input
+      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
+      return
+    }
+
+    this.onSendMessage(this.sender, inputText)
   }
 
   loadLazyImage(uid, imageSrc) {

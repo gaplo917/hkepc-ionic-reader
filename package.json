@@ -14,7 +14,7 @@
     "moment": "^2.11.2",
     "node-sass": "^4.8.3",
     "showdown": "^1.8.0",
-    "sweetalert": "^2.0.8",
+    "sweetalert2": "^7.18.0",
     "uuid-v4": "^0.1.0",
     "webworkify": "^1.4.0"
   },
