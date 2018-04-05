@@ -3,7 +3,7 @@
         瀏覧紀錄
     </ion-nav-title>
     <div class="spinner">
-        <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
+        <ion-spinner class="spinner" icon="android" ng-if="vm.chats.length == 0"></ion-spinner>
     </div>
     <ion-nav-buttons side="right">
         <button class="button button-icon ion-ios-trash-outline" ng-click="vm.onClearHistory(vm.dateStr)"></button>

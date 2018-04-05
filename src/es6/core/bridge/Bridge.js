@@ -84,25 +84,22 @@ export function createAndroidNativeBridge(cb){
   console.log("Android webview bridge is ready", window.Android)
 
   let port = null;
-  let handles = {}
-  let rHandles = {}
+  let handlers = new Map()
+  let channelHandlers = new Map()
   window.onmessage = function (e) {
-    console.log("Native trigger ready", e)
+    console.log("Native web message port received", e)
 
     // ensure only run once
     if (!e.ports[0] || port !== null) return
 
     port = e.ports[0]
 
-    //const messagesFromNative = new Rx.Subject()
-
-    //receive
     port.onmessage = function (f) {
       try {
         const msg = JSON.parse(f.data)
         console.log(`receieve data from native `, msg)
         const uid = msg.uid
-        const handler = handles[uid]
+        const handler = handlers.get(uid)
 
         if(handler){
             try {
@@ -112,12 +109,13 @@ export function createAndroidNativeBridge(cb){
               console.warn("fail to handle cb or json parsing",e)
               handler(msg.data)
             }
-            delete handles[uid]
+            handlers.delete(uid)
             return
         }
 
         const channel = msg.channel
-        const rHandler = rHandles[channel]
+        const rHandler = channelHandlers.get(channel)
+
         if(rHandler){
             rHandler(JSON.parse(msg.data), (data) => {
                 port.postMessage(JSON.stringify({
@@ -146,50 +144,16 @@ export function createAndroidNativeBridge(cb){
         }))
 
         if (typeof cb === "function") {
-            handles[uid] = cb
+          handlers.set(uid, cb)
 
-            setTimeout(() => delete handles[uid], 30000)
+          // timeout for native to reply, clear the handler to prevent memory leak
+          setTimeout(() => handlers.delete(uid), 30000)
         }
-        //   // caller expected a reply
-        //   messagesFromNative
-        //     .asObservable()
-        //     .filter(msg => msg.channel === channel && msg.uid === uid)
-        //     .timeout(30 * 1000)
-        //     .take(1)
-        //     .subscribe((msg) => {
-        //       // TODO: Should do Optimization
-        //       try {
-        //         const jsObj = JSON.parse(msg.data)
-        //         cb(jsObj)
-        //       } catch (e) {
-        //         console.warn("fail to handle cb or json parsing",e)
-        //         cb(msg.data)
-        //       }
-        //     }, (err) => {
-        //       console.warn(err)
-        //       cb(err)
-        //     })
-        // }
+
       },
       // receive native message
       registerHandler: (channel, cb) => {
-        handles[channel] = cb
-
-        // messagesFromNative
-        //   .filter(msg => msg.channel === channel)
-        //   .subscribe((msg) => {
-        //
-        //     if (typeof cb === "function") {
-        //       // create a response call back
-        //       cb(msg.data, (data) => {
-        //         port.postMessage(JSON.stringify({
-        //           uid:     msg.uid,
-        //           channel: msg.channel,
-        //           data:    JSON.stringify(data)
-        //         }))
-        //       })
-        //     }
-        //   })
+        handlers.set(channel, cb)
       }
     }
 

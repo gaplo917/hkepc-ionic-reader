@@ -3,7 +3,7 @@
         功能
     </ion-nav-title>
     <div class="spinner">
-        <ion-spinner class="spinner" icon="android" ng-show="vm.chats.length == 0"></ion-spinner>
+        <ion-spinner class="spinner" icon="android" ng-if="vm.chats.length == 0"></ion-spinner>
     </div>
     <ion-nav-buttons side="left">
         <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>

@@ -4,7 +4,7 @@
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest'"
-           class="button button-icon icon ion-ios-plus-empty" ng-click="vm.doNewPost(vm.topic)"></a>
+           class="button button-icon icon ion-ios-compose-outline" ng-click="vm.doNewPost(vm.topic)"></a>
         <a ng-if="vm.topicId != 'search' " class="button button-icon icon ion-ios-refresh-empty"
            ng-click="::vm.doRefresh()"></a>
     </ion-nav-buttons>
@@ -22,7 +22,7 @@
 
     </div>
     <ion-content lazy-scroll>
-        <div class="spinner" ng-show="vm.posts.length == 0">
+        <div class="spinner" ng-if="vm.posts.length == 0">
             <ion-spinner class="spinner" icon="android"></ion-spinner>
         </div>
 
@@ -48,10 +48,10 @@
                     <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
                     <span class="less-important-info ion-person"> {{::post.author.name}}</span>
                 </div>
-                <div ng-show="::post.count.reply > 0">
-                    <span class="less-important-info">
-                        <i class="ion ion-ios-undo" ng-show="vm.topicId === 'latestPost'"></i>
-                        <span> {{::vm.relativeMomentize(post.lastPost.timestamp)}} @ {{::post.lastPost.name}}</span>
+                <div>
+                    <span class="super-less-important-info">
+                        <span ng-show="::post.count.reply > 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-undo"></i> {{::post.lastPost.name}}</span>
+                        <span ng-show="::post.count.reply == 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-redo"></i></span>
                     </span>
                 </div>
 

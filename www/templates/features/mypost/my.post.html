@@ -4,7 +4,7 @@
     </ion-nav-title>
     <ion-content lazy-scroll>
         <div class="spinner">
-            <ion-spinner class="spinner" icon="android" ng-show="vm.myposts.length == 0"></ion-spinner>
+            <ion-spinner class="spinner" icon="android" ng-if="vm.myposts.length == 0"></ion-spinner>
         </div>
         <ion-list>
             <ion-item class="item item-icon-right" href="{{::mypost.post.url}}"

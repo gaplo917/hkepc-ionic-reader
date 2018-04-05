@@ -9,7 +9,7 @@
     </ion-nav-title>
 
     <div class="spinner">
-        <ion-spinner class="spinner" icon="android" ng-show="vm.messages.length == 0"></ion-spinner>
+        <ion-spinner class="spinner" icon="android" ng-if="vm.messages.length == 0"></ion-spinner>
     </div>
 
     <ion-content has-bouncing="true" class="has-header" lazy-scroll>

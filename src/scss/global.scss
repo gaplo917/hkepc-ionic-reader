@@ -220,7 +220,12 @@ textarea {
 
 .super-less-important-info {
   color: $less-important-color !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
+}
+
+.ultra-less-important-info {
+  color: $less-important-color !important;
+  font-size: 12px !important;
 }
 
 @media (min-width: 680px) {

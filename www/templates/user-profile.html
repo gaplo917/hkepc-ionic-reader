@@ -8,7 +8,7 @@
     <ion-content>
         <img class="profile-pic" ng-src="{{vm.author.image}}" >
 
-        <div ng-show="!vm.content">
+        <div ng-if="!vm.content">
             <div class="text-center">
                 <h4 class="title" >下載中</h4>
             </div>
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div ng-show="vm.content">
+        <div ng-if="vm.content">
 
             <div class="dashline"></div>
 

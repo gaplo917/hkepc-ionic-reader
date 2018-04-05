@@ -29,55 +29,66 @@ export class NativeStorageService {
       }, (responseData) => {
         observer.onNext(responseData)
         observer.onCompleted()
-        return () => {}
+
+        cache.set(key, responseData)
       })
     }).subscribe()
   }
 
   get(key, defaultValue) {
-    return this.rx.Observable.create((observer) => {
+    const value = cache.get(key)
 
+    if(value) {
+      return this.rx.Observable.just(value)
+    }
+
+    return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: "GET",
-        key:    key
+        key: key
       }, (responseData) => {
         observer.onNext(responseData)
         observer.onCompleted()
-      })
 
-      return () => {}
+        cache.set(key, responseData)
+      })
     })
   }
 
   setObject(key, value) {
-
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: "SET",
-        key:    key,
-        value:  JSON.stringify(value)
-      }, (responseData) => {
-        observer.onNext(responseData)
+        key: key,
+        value: JSON.stringify(value)
+      }, () => {
+        observer.onNext(true)
         observer.onCompleted()
-      })
 
-      return () => {}
+        cache.set(key, value)
+      })
     }).subscribe()
 
   }
 
   getObject(key) {
-    return this.rx.Observable.create((observer) => {
+    const value = cache.get(key)
 
+    if(value) {
+      return this.rx.Observable.just(value)
+    }
+
+    return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: "GET",
-        key:    key
+        key: key
       }, (responseData) => {
-        observer.onNext(JSON.parse(responseData))
+        const jsObj = JSON.parse(responseData)
+        observer.onNext(jsObj)
         observer.onCompleted()
-      })
 
-      return () => {}
+        cache.set(key, jsObj)
+      })
     })
   }
 }

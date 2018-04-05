@@ -4,7 +4,7 @@
             <h4 class="title item-text-wrap" >{{vm.message.post.title || '下載中'}}</h4>
         </div>
         <div class="spinner">
-            <ion-spinner class="spinner" icon="android" ng-show="!vm.message"></ion-spinner>
+            <ion-spinner class="spinner" icon="android" ng-if="!vm.message"></ion-spinner>
         </div>
         <div class="card" ng-if="vm.message">
             <div class="item item-avatar">
