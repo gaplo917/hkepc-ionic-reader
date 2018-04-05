@@ -145,9 +145,6 @@ export function createAndroidNativeBridge(cb){
 
         if (typeof cb === "function") {
           handlers.set(uid, cb)
-
-          // timeout for native to reply, clear the handler to prevent memory leak
-          setTimeout(() => handlers.delete(uid), 30000)
         }
 
       },
