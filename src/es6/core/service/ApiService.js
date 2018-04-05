@@ -140,6 +140,13 @@ export class ApiService {
       .flatMapApiFromCheerioworker('userProfile')
   }
 
+  addFavPost(postId){
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.addFavPost(postId)
+    })
+  }
+
   subscribeNewReply(postId){
     return this.http.request({
       method: 'GET',

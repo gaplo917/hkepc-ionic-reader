@@ -95,6 +95,7 @@ module.exports = {
     memberCenter: () => `${BASE_FORUM_URL}/memcp.php`,
     checkPM: () => `${BASE_FORUM_URL}/pm.php?checknewpm=0&inajax=1&ajaxtarget=myprompt_check`,
     settings:() => `${BASE_FORUM_URL}/memcp.php?action=profile&typeid=5`,
+    addFavPost:(postId) => `${BASE_FORUM_URL}/my.php?item=favorites&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`,
     subscribeNewReply: (postId) => `${BASE_FORUM_URL}/my.php?item=attention&action=add&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`,
     space: (uid) => `${BASE_FORUM_URL}/space.php?uid=${uid}`,
     myPost: (page) => `${BASE_FORUM_URL}/my.php?item=threads&page=${page}`,
