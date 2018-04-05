@@ -51,13 +51,13 @@ export class WriteNewPostController {
 
     $scope.$on('$ionicView.loaded', (e) => {
       LocalStorageService.get('signature').subscribe(signature => {
-        if(signature === 'true'){
+        if(signature === 'false'){
+          this.ionicReaderSign = ''
+        } else {
           this.ionicReaderSign = HKEPC.signature({
             androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
             iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
           })
-        } else {
-          this.ionicReaderSign = ''
         }
       })
 
