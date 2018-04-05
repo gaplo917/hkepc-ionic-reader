@@ -2,7 +2,7 @@
  * Created by Gaplo917 on 6/2/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import {FindMessageRequest} from "../model/FindMessageRequest"
+import {FindMessageRequest} from "../model/requests"
 
 export class LikesController{
   static get STATE() { return 'tab.likes'}

@@ -2,13 +2,13 @@
  * Created by Gaplo917 on 29/1/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import {HKEPCHtml} from "../model/hkepc-html"
-import {FindMessageRequest} from "../model/FindMessageRequest"
-import {NotificationBadgeUpdateRequest} from "../model/NotificationBadgeUpdateRequest"
-import {ChangeThemeRequest} from "../model/ChangeThemeRequest"
-import {ChangeFontSizeRequest} from "../model/ChangeFontSizeRequest"
-import {HideUsernameRequest} from "../model/HideUsernameRequest"
+import {
+  NotificationBadgeUpdateRequest,
+  ChangeThemeRequest,
+  ChangeFontSizeRequest,
+  HideUsernameRequest
+} from "../model/requests"
+import swal from 'sweetalert2'
 
 const cheerio = require('cheerio')
 
@@ -36,6 +36,7 @@ export class FeatureRouteController{
     this.ngToast = ngToast
     this.localStorageService = LocalStorageService
     this.isLoggedIn = false
+    this.signature = true
 
     this.localStorageService.get('loadImageMethod').safeApply($scope, loadImageMethod => {
       this.isAutoLoadImage = loadImageMethod !== 'block'
@@ -50,9 +51,14 @@ export class FeatureRouteController{
     }).subscribe()
 
     this.localStorageService.get('hideUsername').safeApply($scope, data => {
-        this.hideUsername = String(data) == 'true'
+        this.hideUsername = String(data) === 'true'
     }).subscribe()
 
+    this.localStorageService.get('signature').safeApply($scope, data => {
+      if(data) {
+        this.signature = String(data) === 'true'
+      }
+    }).subscribe()
 
     this.authService = AuthService
 
@@ -132,7 +138,7 @@ export class FeatureRouteController{
   }
 
   onDarkTheme(bool){
-    const theme = bool? 'dark' : 'default'
+    const theme = bool ? 'dark' : 'default'
     this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(theme))
   }
 
@@ -155,6 +161,10 @@ export class FeatureRouteController{
 
   onHideUsername(hidden){
     this.scope.$emit(HideUsernameRequest.NAME, new HideUsernameRequest(hidden))
+  }
+
+  onSignature(signature){
+    this.localStorageService.set('signature', signature ? 'true' : 'false')
   }
 
   doRefresh(){

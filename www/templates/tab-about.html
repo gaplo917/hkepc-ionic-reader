@@ -39,7 +39,7 @@
             {{vm.proxy}}
           </span>
         </a>
-        <a class="item item-icon-left" href="" ng-show="vm.isIOS() || vm.isAndroid()">
+        <a class="item item-icon-left" href="" ng-show="nativeVersion">
             <i class="icon ion-iphone"></i>
             App 版本
             <span class="item-note">
@@ -51,22 +51,6 @@
             Web 內核版本
             <span class="item-note">
             {{::vm.version}}
-          </span>
-        </a>
-        <a class="item item-icon-left" href="" target="_system"
-           onclick="window.open('https://telegram.me/HKEPCIR', '_system', 'location=yes'); return false;">
-            <i class="icon ion-ios-paperplane"></i>
-            Telegram Channel (集合更新、教學)
-            <span class="item-note">
-            https://telegram.me/HKEPCIR
-          </span>
-        </a>
-        <a class="item item-icon-left" href="" target="_system"
-           onclick="window.open('https://telegram.me/gaplotech', '_system', 'location=yes'); return false;">
-            <i class="icon ion-ios-paperplane"></i>
-            作者 Telegram Channel
-            <span class="item-note">
-            https://telegram.me/gaplotech
           </span>
         </a>
         <a class="item item-icon-left" href="" target="_system"
@@ -82,7 +66,7 @@
             <i class="icon ion-social-github"></i>
             GitHub
             <span class="item-note">
-            HKEPC IR Project
+            HKEPC Ionic Reader
           </span>
         </a>
         <div class="tab-bar-inset"></div>

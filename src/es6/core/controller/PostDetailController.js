@@ -6,10 +6,8 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {XMLUtils} from '../../utils/xml'
 import {HKEPCHtml} from "../model/hkepc-html"
-import {FindMessageRequest} from "../model/FindMessageRequest"
-import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
+import {FindMessageRequest, PostDetailRefreshRequest, CommonInfoExtractRequest} from "../model/requests"
 
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as _ from 'lodash'
 import * as Controllers from "./index"
 import swal from 'sweetalert2'

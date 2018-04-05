@@ -6,7 +6,6 @@ import * as URLUtils from '../../utils/url'
 import {XMLUtils} from '../../utils/xml'
 
 import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 import swal from 'sweetalert2'
 import {Bridge} from "../bridge/Bridge";

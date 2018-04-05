@@ -107,10 +107,31 @@
                     <i class="ion-images inner-icon" style="background-color: #009688;"></i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">自動載入圖片
+                <div style="margin-left:10px;line-height: 2;">自動載入圖片 <span class="ultra-less-important-info">(IR Sliver 限定)</span>
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-change="vm.onIsAutoLoadImage(vm.isAutoLoadImage)"
                                ng-model="vm.isAutoLoadImage">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="list card">
+
+            <div class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-pricetag inner-icon" style="background-color: #3D5AFE;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">IR 簽名 <span class="ultra-less-important-info">(IR Sliver 限定)</span>
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-change="vm.onSignature(vm.signature)"
+                               ng-model="vm.signature">
                         <div class="track">
                             <div class="handle"></div>
                         </div>

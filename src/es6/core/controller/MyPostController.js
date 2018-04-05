@@ -2,11 +2,6 @@
  * Created by Gaplo917 on 6/3/2016.
  */
 import * as Controllers from "./index"
-import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import {HKEPCHtml} from "../model/hkepc-html"
-
-const cheerio = require('cheerio')
 
 export class MyPostController {
   static get STATE() { return 'tab.features-mypost' }

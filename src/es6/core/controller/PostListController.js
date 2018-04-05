@@ -1,8 +1,7 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import {PushHistoryRequest} from '../model/PushHistoryRequest'
-import {PostListRefreshRequest} from '../model/PostListRefreshRequest'
+import {PushHistoryRequest, PostListRefreshRequest} from '../model/requests'
 import * as Controllers from './index'
 import * as _ from "lodash"
 

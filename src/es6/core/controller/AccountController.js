@@ -3,7 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-import {LoginTabUpdateRequest}  from '../model/LoginTabUpdateRequest'
+import {LoginTabUpdateRequest}  from '../model/requests'
 import * as Controllers from "./index"
 
 export class AccountController {

@@ -2,7 +2,6 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
-import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
 import swal from 'sweetalert2'
 import {Bridge} from "../bridge/Bridge";
 
@@ -22,7 +21,7 @@ export class WriteReplyPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $compile) {
+  constructor($scope,$state,$stateParams,$ionicHistory,ngToast, apiService, $ionicPopup, $compile, LocalStorageService) {
     this.id = "reply-content"
     this.message = JSON.parse($stateParams.message)
     this.reply = JSON.parse($stateParams.reply)
@@ -44,10 +43,18 @@ export class WriteReplyPostController {
 
     $scope.$on('$ionicView.loaded', (e) => {
 
-      this.ionicReaderSign = HKEPC.signature({
-        androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-        iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+      LocalStorageService.get('signature').subscribe(signature => {
+        if(signature === 'true'){
+          this.ionicReaderSign = HKEPC.signature({
+            androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+          })
+        } else {
+          this.ionicReaderSign = ''
+        }
       })
+
+
       // fetch the epc data for native App
       this.preFetchContent().subscribe()
     })

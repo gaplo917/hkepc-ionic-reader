@@ -1,11 +1,6 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
-import {PushHistoryRequest} from '../model/PushHistoryRequest'
 import * as Controllers from './index'
 
 export class SearchController {

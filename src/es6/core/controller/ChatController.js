@@ -4,7 +4,6 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import {GeneralHtml} from '../model/general-html'
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
 import * as Controllers from "./index"
 
 const cheerio = require('cheerio')

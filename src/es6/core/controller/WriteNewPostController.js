@@ -2,7 +2,6 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
-import {PostListRefreshRequest} from "../model/PostListRefreshRequest"
 import swal from 'sweetalert2'
 import {Bridge} from "../bridge/Bridge";
 
@@ -22,7 +21,7 @@ export class WriteNewPostController {
       },
     }
   }}
-  constructor($scope,$state,$stateParams,$ionicHistory,$ionicPopover,ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+  constructor($scope,$state,$stateParams,$ionicHistory,$ionicPopover,ngToast, apiService, $ionicPopup, $rootScope, $compile, LocalStorageService) {
     this.id = "new-content"
     this.post = { content: "" }
     this.topicId = $stateParams.topicId
@@ -51,10 +50,17 @@ export class WriteNewPostController {
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.ionicReaderSign = HKEPC.signature({
-        androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-        iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+      LocalStorageService.get('signature').subscribe(signature => {
+        if(signature === 'true'){
+          this.ionicReaderSign = HKEPC.signature({
+            androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+          })
+        } else {
+          this.ionicReaderSign = ''
+        }
       })
+
 
       // fetch the epc data for native App
       this.preFetchContent().subscribe()

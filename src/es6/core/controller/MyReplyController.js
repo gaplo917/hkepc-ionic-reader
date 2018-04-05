@@ -3,9 +3,8 @@
  */
 import * as Controllers from "./index"
 import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
 import {HKEPCHtml} from "../model/hkepc-html"
-import {FindMessageRequest} from "../model/FindMessageRequest"
+import {FindMessageRequest} from "../model/requests"
 
 const cheerio = require('cheerio')
 

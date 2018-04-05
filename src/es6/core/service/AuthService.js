@@ -3,7 +3,6 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-import {GeneralHtml} from '../model/general-html'
 const cheerio = require('cheerio')
 
 export class AuthService {

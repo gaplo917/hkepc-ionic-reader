@@ -3,7 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import Mapper from "../mapper/mapper";
-import {CommonInfoExtractRequest} from "../model/CommonInfoExtractRequest"
+import {CommonInfoExtractRequest} from "../model/requests"
 import {HybridHttp} from "../bridge/HybridHttp"
 const work = require('webworkify');
 

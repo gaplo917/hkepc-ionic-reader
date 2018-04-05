@@ -2,7 +2,7 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
 import {XMLUtils} from '../../utils/xml'
 import * as _ from "lodash";
-import {PostDetailRefreshRequest} from "../model/PostDetailRefreshRequest"
+import {PostDetailRefreshRequest} from "../model/requests"
 import swal from 'sweetalert2'
 const cheerio = require('cheerio')
 

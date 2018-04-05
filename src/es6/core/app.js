@@ -4,9 +4,12 @@ import servicesModules from './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
-import {NativeChangeThemeRequest} from './bridge/NativeChangeThemeRequest'
-import {NativeChangeFontSizeRequest} from './bridge/NativeChangeFontSizeRequest'
-import {NativeHideUsernameRequest} from './bridge/NativeHideUsernameRequest'
+import {
+  NativeChangeThemeRequest,
+  NativeChangeFontSizeRequest,
+  NativeHideUsernameRequest
+} from './bridge/requests'
+
 import {
   Bridge,
   Channel,
@@ -75,6 +78,13 @@ function initAngular() {
       $rootScope.isAndroidNative = isAndroidNative
       $rootScope.isLegacyAndroid = isLegacyAndroid
 
+      if(isiOSNative() || isAndroidNative()){
+        // share handling
+        Bridge.version((version) => {
+          $rootScope.nativeVersion = version
+        })
+      }
+
       if (isiOSNative()) {
         // iOS Native
         Bridge.registerHandler(Channel.nativeStorageUpdated, function (data, responseCallback) {
@@ -102,19 +112,11 @@ function initAngular() {
           $ionicHistory.goBack()
         }
 
-        Bridge.version((version) => {
-          $rootScope.nativeVersion = version
-        })
-
       } else if (isAndroidNative()) {
         // Android Native
         $rootScope.openDrawer = () => {
           window.Android.openDrawer()
         }
-
-        Bridge.version((version) => {
-          $rootScope.nativeVersion = version
-        })
 
       } else if (isLegacyAndroid()) {
         // Legacy Android (no bridge)

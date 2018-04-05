@@ -2,17 +2,22 @@
  * Created by Gaplo917 on 23/1/2016.
  */
 import * as HKEPC from '../../data/config/hkepc'
-import {FindMessageRequest} from '../model/FindMessageRequest'
-import {NotificationBadgeUpdateRequest} from '../model/NotificationBadgeUpdateRequest'
-import {CommonInfoExtractRequest} from '../model/CommonInfoExtractRequest'
-import {LoginTabUpdateRequest} from '../model/LoginTabUpdateRequest'
-import {PushHistoryRequest} from '../model/PushHistoryRequest'
-import {ChangeThemeRequest} from '../model/ChangeThemeRequest'
-import {ChangeFontSizeRequest} from '../model/ChangeFontSizeRequest'
-import {HideUsernameRequest} from '../model/HideUsernameRequest'
-import {NativeChangeFontSizeRequest} from '../bridge/NativeChangeFontSizeRequest'
-import {NativeChangeThemeRequest} from '../bridge/NativeChangeThemeRequest'
-import {NativeHideUsernameRequest} from '../bridge/NativeHideUsernameRequest'
+import {
+  FindMessageRequest,
+  NotificationBadgeUpdateRequest,
+  CommonInfoExtractRequest,
+  LoginTabUpdateRequest,
+  PushHistoryRequest,
+  ChangeThemeRequest,
+  ChangeFontSizeRequest,
+  HideUsernameRequest,
+} from '../model/requests'
+
+import {
+  NativeChangeFontSizeRequest,
+  NativeChangeThemeRequest,
+  NativeHideUsernameRequest
+} from '../bridge/requests'
 
 import {Bridge, Channel} from '../bridge/index'
 
