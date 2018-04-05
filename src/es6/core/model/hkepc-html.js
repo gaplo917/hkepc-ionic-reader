@@ -17,44 +17,44 @@ export class HKEPCHtml extends GeneralHtml{
   processEpcUrl(currentHash){
 
     this.source('a').each((i,e) => {
-
+      const elm = this.source(e)
       // remove action attr on img
-      this.source(e).removeAttr('onload')
-      this.source(e).removeAttr('onclick')
+      elm.removeAttr('onload')
+      elm.removeAttr('onclick')
 
-      const url = this.source(e).attr('href')
+      const url = elm.attr('href')
 
       // save it in raw-href
-      this.source(e).attr('raw-href',url)
+      elm.attr('raw-href',url)
 
       if(url && url.indexOf('redirect.php?') >= 0 && url.indexOf('goto=findpost') >= 0){
         const messageId = URLUtils.getQueryVariable(url,'pid')
         const postId = URLUtils.getQueryVariable(url,'ptid')
 
-        this.source(e).attr('href',``)
-        this.source(e).removeAttr('target')
-        this.source(e).attr('pid',messageId)
-        this.source(e).attr('ptid',postId)
+        elm.attr('href',``)
+        elm.removeAttr('target')
+        elm.attr('pid',messageId)
+        elm.attr('ptid',postId)
 
-        this.source(e).attr('in-app-url',`#/tab/topics//posts/${postId}/page/1`)
+        elm.attr('in-app-url',`#/tab/topics//posts/${postId}/page/1`)
 
-        this.source(e).attr('ng-click',`vm.findMessage(${postId},${messageId})`)
+        elm.attr('ng-click',`vm.findMessage(${postId},${messageId})`)
 
       }
       else if (url && url.indexOf('forumdisplay.php') >= 0){
         const topicId = URLUtils.getQueryVariable(url,'fid')
 
-        this.source(e).removeAttr('target')
+        elm.removeAttr('target')
 
-        this.source(e).attr('href',`#/tab/topics/${topicId}/page/1`)
+        elm.attr('href',`#/tab/topics/${topicId}/page/1`)
       }
       else if(url && url.indexOf('viewthread.php?') >= 0){
         const postId = URLUtils.getQueryVariable(url,'tid')
 
-        this.source(e).removeAttr('target')
+        elm.removeAttr('target')
 
         // detect the tab
-        this.source(e).attr('href',`#/tab/topics//posts/${postId}/page/1`)
+        elm.attr('href',`#/tab/topics//posts/${postId}/page/1`)
 
       }
       else if(url && url.indexOf('space.php?') >= 0){
@@ -66,31 +66,31 @@ export class HKEPCHtml extends GeneralHtml{
         // }
       }
       else if(url && url.indexOf('logging.php') >= 0){
-        this.source(e).attr('href',`#/tab/features/account`)
+        elm.attr('href',`#/tab/features/account`)
 
-        this.source(e).removeAttr('target')
+        elm.removeAttr('target')
       }
       else if(url && url.indexOf('attachment.php?') >= 0){
         // remove action attr on img
-        this.source(e).removeAttr('onload')
-        this.source(e).removeAttr('onclick')
+        elm.removeAttr('onload')
+        elm.removeAttr('onclick')
 
-        this.source(e).attr('href','')
-        this.source(e).attr('target',`_system`)
-        this.source(e).attr('onclick',`window.open('${this.IMAGE_URL}/${url}', '_system', 'location=yes'); return false;`)
+        elm.attr('href','')
+        elm.attr('target',`_system`)
+        elm.attr('onclick',`window.open('${this.IMAGE_URL}/${url}', '_system', 'location=yes'); return false;`)
       }
       else if(url && !url.startsWith("http") && !url.startsWith('#') && !url.startsWith("//")) {
         // relative url
-        this.source(e).removeAttr('onload')
-        this.source(e).removeAttr('onclick')
-        this.source(e).removeAttr('onmouseover')
+        elm.removeAttr('onload')
+        elm.removeAttr('onclick')
+        elm.removeAttr('onmouseover')
 
-        this.source(e).attr('href','')
-        this.source(e).attr('target',`_system`)
-        this.source(e).attr('onclick',`window.open('${this.BASE_FORUM_URL}/${url}', '_system', 'location=yes'); return false;`)
-        this.source(e).attr('data-href',`${this.BASE_FORUM_URL}/${url}`)
+        elm.attr('href','')
+        elm.attr('target',`_system`)
+        elm.attr('onclick',`window.open('${this.BASE_FORUM_URL}/${url}', '_system', 'location=yes'); return false;`)
+        elm.attr('data-href',`${this.BASE_FORUM_URL}/${url}`)
       } else {
-        this.source(e).attr('data-href',`${url}`)
+        elm.attr('data-href',`${url}`)
       }
 
       // TODO: more rules needs to be applied here

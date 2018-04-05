@@ -49,27 +49,27 @@ export class GeneralHtml{
 
   processImgUrl(imagePrefix){
     this.source('img').each((i,e) => {
-
-      const lazyImg = this.source(e).attr('file')
+      const elm = this.source(e)
+      const lazyImg = elm.attr('file')
 
       if(lazyImg){
         this.source(e).attr('src',lazyImg)
       }
 
-      const imgSrc = this.source(e).attr('src')
+      const imgSrc = elm.attr('src')
 
       if(URLUtils.isRelativeUrl(imgSrc)){
-        this.source(e).attr('src',`${imagePrefix}/${imgSrc}`)
+        elm.attr('src',`${imagePrefix}/${imgSrc}`)
       } else if(imgSrc.indexOf('//') == 0) {
-        this.source(e).attr('src',`http:${imgSrc}`)
+        elm.attr('src',`http:${imgSrc}`)
       }
 
-      this.source(e).attr('raw-src', imgSrc)
+      elm.attr('raw-src', imgSrc)
 
       // remove action attr on img
-      this.source(e).removeAttr('onload')
-      this.source(e).removeAttr('onclick')
-      this.source(e).removeAttr('onmouseover')
+      elm.removeAttr('onload')
+      elm.removeAttr('onclick')
+      elm.removeAttr('onmouseover')
 
     })
 
@@ -78,29 +78,30 @@ export class GeneralHtml{
 
   processImageToLazy(isAutoLoadImage = true){
     this.source('img').each((i,e) => {
+      const elm = this.source(e)
       const imgSrc = this.source(e).attr('src')
       const uid = uuid()
-      this.source(e).attr('raw-src',imgSrc)
-      this.source(e).attr('id', uid)
-      this.source(e).attr('onError', `this.onerror=null;this.src='${DEFAULT_DEAD_IMAGE_PLACEHOLDER}';`)
+      elm.attr('raw-src',imgSrc)
+      elm.attr('id', uid)
+      elm.attr('onError', `this.onerror=null;this.src='${DEFAULT_DEAD_IMAGE_PLACEHOLDER}';`)
 
       if(imgSrc && !imgSrc.endsWith('.gif')){
-        this.source(e).attr('image-lazy-src', imgSrc)
-        this.source(e).attr('image-lazy-distance-from-bottom-to-load',"0")
-        this.source(e).attr('image-lazy-loader',"android")
-        this.source(e).removeAttr('src')
-        this.source(e).removeAttr('alt')
-        this.source(e).attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
+        elm.attr('image-lazy-src', imgSrc)
+        elm.attr('image-lazy-distance-from-bottom-to-load',"0")
+        elm.attr('image-lazy-loader',"android")
+        elm.removeAttr('src')
+        elm.removeAttr('alt')
+        elm.attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
       }
 
       if(!isAutoLoadImage && !imgSrc.endsWith('.gif')){
-        this.source(e).removeAttr('image-lazy-src')
-        this.source(e).attr('src', DEFAULT_IMAGE_PLACEHOLDER)
-        this.source(e).attr('ng-click',`vm.loadLazyImage('${uid}', '${imgSrc}')`)
+        elm.removeAttr('image-lazy-src')
+        elm.attr('src', DEFAULT_IMAGE_PLACEHOLDER)
+        elm.attr('ng-click',`vm.loadLazyImage('${uid}', '${imgSrc}')`)
       }
 
       if(!isAutoLoadImage && imgSrc.indexOf("avatar") >= 0){
-        this.source(e).attr('image-lazy-src', DEFAULT_AVATAR_PLACEHOLDER)
+        elm.attr('image-lazy-src', DEFAULT_AVATAR_PLACEHOLDER)
       }
     })
 
@@ -110,19 +111,20 @@ export class GeneralHtml{
   processExternalUrl(){
 
     this.source('a').each((i,e) => {
+      const elm = this.source(e)
 
       const url = this.source(e).attr('href')
 
       if(url && !url.startsWith('#') && url.indexOf(DEFAULT_IMAGE_PLACEHOLDER) === -1){
         // remove action attr on img
-        this.source(e).removeAttr('onload')
-        this.source(e).removeAttr('onclick')
-        this.source(e).removeAttr('onmouseover')
+        elm.removeAttr('onload')
+        elm.removeAttr('onclick')
+        elm.removeAttr('onmouseover')
 
-        this.source(e).attr('href','')
-        this.source(e).attr('target',`_system`)
-        this.source(e).attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
-        this.source(e).attr('raw-href', url)
+        elm.attr('href','')
+        elm.attr('target',`_system`)
+        elm.attr('onclick',`window.open('${url}', '_system', 'location=yes'); return false;`)
+        elm.attr('raw-href', url)
 
       }
 
