@@ -23,12 +23,17 @@ export class FindMessageController {
     const messageId = $stateParams.messageId
     const postId = $stateParams.postId
 
-    apiService.findMessage({postId,messageId})
-      .safeApply(this.scope, ({currentPage, message}) => {
-        this.pageNumber = currentPage
-        this.message = message
-      })
-      .subscribe()
+    $scope.$on('$ionicView.loaded', (e) => {
+
+      apiService.findMessage({postId,messageId})
+        .safeApply(this.scope, ({currentPage, message}) => {
+          this.pageNumber = currentPage
+          this.message = message
+        })
+        .subscribe()
+    })
+
+
   }
 
   goToMessage() {

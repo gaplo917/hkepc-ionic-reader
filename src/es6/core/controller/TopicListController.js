@@ -39,44 +39,42 @@ export class TopicListController {
         }
       })
 
-
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
-      this.isLoggedIn = isLoggedIn
-
-      if(isLoggedIn && this.firstLogin) {
-        // auto refresh for logged in user
-        this.loadList()
-
-        // unset to false to prevent next loading
-        this.firstLogin = false
-      }
-
-      else if (!isLoggedIn && !this.firstLogin) {
-        // auto refresh for non logged in user
-        this.loadList()
-        this.firstLogin = true
-      }
-    }).subscribe()
-
-    this.topicsSubscription = this.localStorageService.getObject('topics')
-      .do(topics => {
-        if (topics) {
-          console.log('[TopicListController]', 'using cache')
-        }
-      })
-      .flatMap(topics => {
-        return topics
-          ? rx.Observable.just(topics)
-          : this.apiService.topicList()
-            .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
-      })
-      .safeApply($scope, topics => {
-        this.topics = topics
-      })
-      .subscribe()
-
     $scope.$on('$ionicView.loaded', (e) => {
-      console.log("loaded")
+
+      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+        this.isLoggedIn = isLoggedIn
+
+        if(isLoggedIn && this.firstLogin) {
+          // auto refresh for logged in user
+          this.loadList()
+
+          // unset to false to prevent next loading
+          this.firstLogin = false
+        }
+
+        else if (!isLoggedIn && !this.firstLogin) {
+          // auto refresh for non logged in user
+          this.loadList()
+          this.firstLogin = true
+        }
+      }).subscribe()
+
+      this.topicsSubscription = this.localStorageService.getObject('topics')
+        .do(topics => {
+          if (topics) {
+            console.log('[TopicListController]', 'using cache')
+          }
+        })
+        .flatMap(topics => {
+          return topics
+            ? rx.Observable.just(topics)
+            : this.apiService.topicList()
+              .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
+        })
+        .safeApply($scope, topics => {
+          this.topics = topics
+        })
+        .subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {

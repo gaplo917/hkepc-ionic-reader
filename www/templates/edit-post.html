@@ -28,10 +28,15 @@
             </div>
         </div>
 
+        <div class="spinner" ng-if="!vm.edit.content">
+            <ion-spinner class="spinner" icon="android"></ion-spinner>
+        </div>
+
         <textarea id="edit-content"
                   placeholder="請輸入文字"
                   ng-model="vm.edit.content"
                   style="width: 100%;height: 50%; padding: 20px 20px 0 20px;"
+                  ng-if="vm.edit.content"
         ></textarea>
 
         <div class="tab-bar-inset"></div>

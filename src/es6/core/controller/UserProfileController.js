@@ -40,13 +40,15 @@ export class UserProfileController {
 
     const author = JSON.parse($stateParams.author || '{}')
 
-    console.log("author", author)
     this.author = author
 
-    this.apiService.userProfile(author.uid).safeApply($scope, data => {
-      this.content = data.content
-    }).subscribe()
+    $scope.$on('$ionicView.loaded', (e) => {
 
+      this.apiService.userProfile(author.uid).safeApply($scope, data => {
+        this.content = data.content
+      }).subscribe()
+
+    })
   }
 
   async sendPm(author) {

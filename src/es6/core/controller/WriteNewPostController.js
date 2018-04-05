@@ -40,14 +40,9 @@ export class WriteNewPostController {
     this.attachImageIds = []
     this.existingImages = []
     this.ionicPopup = $ionicPopup
-    this.ionicReaderSign = HKEPC.signature({
-      androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
-    })
 
     console.log("write new post ", this.topic)
     console.log("write new post ", this.categories)
-
 
     $ionicPopover.fromTemplateUrl('templates/modals/categories.html', {
       scope: $scope
@@ -55,7 +50,15 @@ export class WriteNewPostController {
       this.categoryPopover = popover;
     })
 
-    this.preFetchContent().subscribe()
+    $scope.$on('$ionicView.loaded', (e) => {
+      this.ionicReaderSign = HKEPC.signature({
+        androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
+        iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+      })
+
+      // fetch the epc data for native App
+      this.preFetchContent().subscribe()
+    })
   }
 
   onImageUploadSuccess(attachmentIds){
@@ -149,11 +152,7 @@ export class WriteNewPostController {
 
         const spinnerHtml = `
           <div>
-              <span class="md-preloader">
-                <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
-                </svg>
-              </span>
-              <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
+              <div class="text-center">傳送到 HKEPC 伺服器中</div>
           </div>
         `
 
@@ -163,6 +162,8 @@ export class WriteNewPostController {
           showCancelButton: false,
           showConfirmButton: false,
         })
+
+        swal.showLoading()
 
         //Post to the server
         this.apiService.dynamicRequest({

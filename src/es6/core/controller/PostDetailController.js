@@ -416,7 +416,6 @@ export class PostDetailController{
       }
     }).subscribe()
 
-
   }
 
   onReport(message){

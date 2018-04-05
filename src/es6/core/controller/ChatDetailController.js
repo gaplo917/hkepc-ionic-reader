@@ -29,7 +29,7 @@ export class ChatDetailController{
       }
     }
   }}
-  constructor($scope, apiService, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state){
+  constructor($scope, apiService, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state, $compile){
 
     this.scope = $scope
     this.apiService = apiService
@@ -38,6 +38,7 @@ export class ChatDetailController{
     this.ngToast = ngToast
     this.ionicHistory = $ionicHistory
     this.state = $state
+    this.compile = $compile
 
     this.senderId = $stateParams.id
     this.messages = []
@@ -111,11 +112,7 @@ export class ChatDetailController{
 
             const spinnerHtml = `
               <div>
-                  <span class="md-preloader">
-                    <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
-                    </svg>
-                  </span>
-                  <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
+                  <div class="text-center">傳送到 HKEPC 伺服器中</div>
               </div>
             `
 
@@ -125,6 +122,8 @@ export class ChatDetailController{
               showCancelButton: false,
               showConfirmButton: false,
             })
+
+            swal.showLoading()
 
             // Post to the server
             this.apiService.postChatMessage({

@@ -43,7 +43,10 @@ export class EditPostController {
     this.existingImages = []
     this.ionicPopup = $ionicPopup
 
-    this.preFetchContent().subscribe()
+    $scope.$on('$ionicView.loaded', (e) => {
+      // fetch the epc data for native App
+      this.preFetchContent().subscribe()
+    })
   }
 
   onImageUploadSuccess(attachmentIds){
@@ -139,11 +142,7 @@ export class EditPostController {
 
     const spinnerHtml = `
           <div>
-              <span class="md-preloader">
-                <svg version="1.1" height="40" width="40"><circle cx="20" cy="20" r="16" stroke-width="3"/>
-                </svg>
-              </span>
-              <span class="text-center" style="display: block">傳送到 HKEPC 伺服器中</span>
+              <div class="text-center">傳送到 HKEPC 伺服器中</div>
           </div>
         `
 
@@ -153,6 +152,8 @@ export class EditPostController {
       showCancelButton: false,
       showConfirmButton: false,
     })
+
+    swal.showLoading()
 
     // Post to the server
     this.apiService.dynamicRequest({
