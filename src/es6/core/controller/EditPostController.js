@@ -68,7 +68,7 @@ export class EditPostController {
           const isAttachment = _.startsWith(src, "//forum.hkepc.net")
           const id = _.replace(rawId, 'image_', '')
           return {
-            src: src,
+            src: src.replace("//forum.hkepc.net", "https://forum.hkepc.net"),
             id: id,
             isAttachment: isAttachment
           }
