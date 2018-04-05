@@ -219,11 +219,11 @@ export class ApiService {
     })
   }
 
-  myPosts(page){
+  myPosts(page, type){
     return this.http.request({
       method: 'GET',
-      url: HKEPC.forum.myPost(page)
-    })
+      url: HKEPC.forum.myPost(page, type)
+    }).flatMapApiFromCheerioworker('myPost')
   }
 
   myReplies(page){

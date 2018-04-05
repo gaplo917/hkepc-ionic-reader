@@ -72,6 +72,12 @@ module.exports = function (self) {
         })
         break
 
+      case 'myPost':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.myPost(html,ev.data.opt)
+        })
+
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({

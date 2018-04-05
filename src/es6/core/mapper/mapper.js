@@ -1,3 +1,5 @@
+import * as HKEPC from "../../data/config/hkepc";
+
 const cheerio = require('cheerio')
 import {GeneralHtml} from '../model/general-html'
 import {HKEPCHtml} from '../model/hkepc-html'
@@ -236,6 +238,53 @@ export default class Mapper{
     return {
       currentPage: currentPage,
       message: result.messages.filter(_ => parseInt(_.id) === parseInt(messageId))[0],
+    }
+  }
+
+  static myPost(html, opt) {
+    const $ = html.getCheerio()
+
+    const pageNumSource = $('.pages a, .pages strong')
+
+    const pageNumArr = pageNumSource
+      .map((i,elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length == 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    const posts = $('.datalist table > tbody > tr').map((i,elem) => {
+      const postSource = cheerio.load($(elem).html())
+
+      return {
+        post:{
+          title:postSource('th a').text(),
+          url: postSource('th a').attr('href')
+        },
+        topic: {
+          url : postSource('.forum a').attr('href'),
+          title:  postSource('.forum a').text() || postSource('td.forum').text()
+        },
+        status: postSource('.nums').text(),
+        lastpost:{
+          by : postSource('.lastpost cite a').text() || postSource('.lastpost cite').text(),
+          timestamp: postSource('.lastpost > em > a > span').attr('title')
+                     || postSource('.lastpost > em > a').text()
+                     || postSource('.lastpost > em > span').text()
+                     || postSource('.lastpost > em').text()
+                     || 0,
+        },
+      }
+
+    }).get()
+      .filter(it => it.post.title)
+
+    return {
+      totalPageNum, posts
     }
   }
 }

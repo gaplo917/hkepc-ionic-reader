@@ -98,7 +98,18 @@ module.exports = {
     addFavPost:(postId) => `${BASE_FORUM_URL}/my.php?item=favorites&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`,
     subscribeNewReply: (postId) => `${BASE_FORUM_URL}/my.php?item=attention&action=add&tid=${postId}&inajax=1&ajaxtarget=favorite_msg`,
     space: (uid) => `${BASE_FORUM_URL}/space.php?uid=${uid}`,
-    myPost: (page) => `${BASE_FORUM_URL}/my.php?item=threads&page=${page}`,
+    myPost: (page, type) => {
+      switch (type){
+        case "threads":
+          return `${BASE_FORUM_URL}/my.php?item=threads&page=${page}`
+        case "favorites":
+          return `${BASE_FORUM_URL}/my.php?item=favorites&type=thread&page=${page}`
+        case "attention":
+          return `${BASE_FORUM_URL}/my.php?item=attention&type=thread&page=${page}`
+        default:
+          throw new Error("no matching type on myPost")
+      }
+    },
     myReply: (page) => `${BASE_FORUM_URL}/my.php?item=posts&page=${page}`,
     preSendPm: (uid) => `${BASE_FORUM_URL}/pm.php?action=new&uid=${uid}&infloat=yes&handlekey=sendpm&inajax=1&ajaxtarget=fwin_content_sendpm`,
   },

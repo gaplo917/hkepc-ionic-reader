@@ -15,7 +15,7 @@ export class MyPostController {
 
   static get CONFIG() {
     return {
-      url: '/features/mypost',
+      url: '/features/mypost/:type',
       views: {
         'main': {
           templateUrl: 'templates/features/mypost/my.post.html',
@@ -26,14 +26,14 @@ export class MyPostController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$scope,$ionicPopover,apiService,AuthService,ngToast) {
-    this.historyService = HistoryService
+  constructor($ionicHistory,$state,$scope,$ionicPopover,apiService,AuthService,ngToast, $stateParams) {
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.apiService = apiService
     this.ngToast = ngToast
 
+    this.type = $stateParams.type
     this.page = 1
     this.myposts = []
 
@@ -62,59 +62,14 @@ export class MyPostController {
 
   loadMyPosts(){
 
-    this.refeshing = true
-
-    this.apiService.myPosts(this.page)
+    this.apiService.myPosts(this.page, this.type)
       .safeApply(this.scope, resp => {
+        const {posts, totalPageNum} = resp
+        this.totalPageNum = totalPageNum
+        this.myposts = this.myposts.concat(posts)
 
-      const html = new HKEPCHtml(cheerio.load(resp.data))
-
-      const $ = html.processImgUrl(HKEPC.imageUrl)
-          .processEpcUrl(window.location.hash)
-          .processExternalUrl()
-          .getCheerio()
-
-      const pageNumSource = $('.pages a, .pages strong')
-
-      const pageNumArr = pageNumSource
-          .map((i,elem) => $(elem).text())
-          .get()
-          .map(e => e.match(/\d/g)) // array of string with digit
-          .filter(e => e != null) // filter null value
-          .map(e => parseInt(e.join(''))) // join the array and parseInt
-
-      this.totalPageNum = pageNumArr.length == 0
-          ? 1
-          : Math.max(...pageNumArr)
-
-      const myposts = $('.datalist > table > tbody > tr').map((i,elem) => {
-        const postSource = cheerio.load($(elem).html())
-
-        return {
-          post:{
-            title:postSource('th a').text(),
-            url: postSource('th a').attr('href')
-          },
-          topic: {
-            url : postSource('.forum a').attr('href'),
-            title:  postSource('.forum a').text()
-          },
-          status: postSource('.nums').text(),
-          lastpost:{
-            by : postSource('.lastpost cite a').text(),
-            timestamp: postSource('.lastpost > em > a > span').attr('title') || postSource('.lastpost > em > a').text() || 0,
-          }
-
-        }
-
-      }).get()
-
-
-      this.myposts = this.myposts.concat(myposts)
-
-      this.refeshing = false
-      this.scope.$broadcast('scroll.infiniteScrollComplete')
-    }).subscribe()
+        this.scope.$broadcast('scroll.infiniteScrollComplete')
+      }).subscribe()
   }
 
   onBack(){
@@ -145,6 +100,14 @@ export class MyPostController {
     this.reset()
     this.page = this.inputPage
     this.loadMyPosts()
+  }
+
+  parseInt(i){
+    return parseInt(i)
+  }
+
+  getTimes(i){
+    return new Array(parseInt(i))
   }
 
   loadMore(){
