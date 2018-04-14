@@ -22,13 +22,13 @@
     </ion-nav-buttons>
     <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="vm.isLock"></i> {{vm.post.title}}</span>
 
-    <ion-content lazy-scroll style="padding-top:30px" delegate-handle="post-detail">
+    <ion-content lazy-scroll style="padding-top:15px" delegate-handle="post-detail">
 
-        <div class="text-center">
-            <ion-spinner icon="android" ng-if="vm.loadingPrevious"></ion-spinner>
+        <div class="text-center" ng-if="vm.loadingPrevious">
+            <ir-spinner></ir-spinner>
         </div>
-        <div class="spinner">
-            <ion-spinner class="spinner" icon="android" ng-if="vm.messages.length == 0"></ion-spinner>
+        <div class="spinner" ng-if="vm.messages.length == 0">
+            <ir-spinner></ir-spinner>
         </div>
 
         <div id="message-{{::message.id}}"
@@ -114,15 +114,13 @@
 
         </div>
         <ion-infinite-scroll
-            class="ispinner text-center"
             ng-if="!vm.end && vm.messages.length > 0"
             on-infinite="vm.loadMore()"
-            spinner="android"
             immediate-check="true"
-            distance="7%">
+            distance="10%">
         </ion-infinite-scroll>
         <div class="text-center" ng-if="vm.end">
-            <button class="button button-full" ng-click="vm.forceLoadMore()">F5</button>
+            <button class="f5-button button button-full" ng-click="vm.forceLoadMore()">F5</button>
         </div>
 
         <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->

@@ -2,12 +2,8 @@
     <ion-nav-title> IR 專區</ion-nav-title>
 
     <ion-content>
-        <div class="spinner">
-            <ion-spinner
-                class="spinner"
-                icon="android"
-                ng-show="vm.showSpinner">
-            </ion-spinner>
+        <div class="spinner" ng-show="vm.showSpinner">
+            <ir-spinner></ir-spinner>
         </div>
 
         <style>

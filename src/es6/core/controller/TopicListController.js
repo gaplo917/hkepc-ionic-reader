@@ -1,8 +1,8 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import {Bridge} from "../bridge/Bridge";
 import * as Controllers from "./index"
+import swal from 'sweetalert2'
 
 
 export class TopicListController {

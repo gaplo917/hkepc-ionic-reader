@@ -290,7 +290,6 @@ export class PostDetailController{
         }
         else {
           // normal style (next)
-          this.scope.$broadcast('scroll.infiniteScrollComplete')
 
           this.messages.push({
             post: { page: page },
@@ -306,6 +305,10 @@ export class PostDetailController{
         }
       }
 
+      this.$timeout(() => {
+        this.scope.$broadcast('scroll.infiniteScrollComplete')
+      })
+
       this.refreshing = false
       this.loadingPrevious = false
       this.end = page >= this.totalPageNum
@@ -317,10 +320,11 @@ export class PostDetailController{
           const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
           console.log("ready to scroll to ",document.querySelector(`#message-${this.focus}`), focusPosition)
 
-          this.$timeout(() =>{
-            this.ionicScrollDelegate.scrollTo(0,focusPosition)
-          })
+          this.ionicScrollDelegate.scrollTo(0,focusPosition)
 
+          this.$timeout(() => {
+            swal.close()
+          })
           this.focus = undefined
 
         })
@@ -528,14 +532,26 @@ export class PostDetailController{
 
   doLoadPreviousPage(){
     const minPageNum = Math.min(...this.messages.map(msg => msg.post.page))
-    // scroll to top first
-    this.ionicScrollDelegate.scrollTo(0,0, true)
 
     this.inputPage = minPageNum == 1 ? 1 : minPageNum - 1
 
+    const spinnerHtml = `
+          <div>
+              <div class="text-center">加載上一頁中</div>
+          </div>
+        `
+
+    swal({
+      html: spinnerHtml,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+    })
+
+    swal.showLoading()
+
     this.$timeout(() => {
       this.currentPage = minPageNum
-
       this.doJumpPage()
     },400)
 

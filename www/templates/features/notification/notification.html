@@ -2,18 +2,15 @@
     <ion-nav-title>
         提醒
     </ion-nav-title>
-    <div class="spinner">
-        <ion-spinner class="spinner" icon="android" ng-if="vm.chats.length == 0"></ion-spinner>
+    <div class="spinner" ng-if="vm.chats.length == 0">
+        <ir-spinner></ir-spinner>
     </div>
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
     </ion-nav-buttons>
     <ion-content>
         <div class="spinner" ng-if="vm.notifications.length == 0">
-            <ion-spinner
-                class="spinner"
-                icon="android">
-            </ion-spinner>
+            <ir-spinner></ir-spinner>
         </div>
 
         <ion-list>
@@ -26,11 +23,9 @@
                 <div class="item-body" compile="::notification.content"></div>
             </ion-item>
             <ion-infinite-scroll
-                class="ispinner text-center"
                 ng-if="vm.hasMoreData()"
                 on-infinite="vm.loadMore()"
-                spinner="android"
-                immediate-check="false"
+                immediate-check="true"
                 distance="7%">
             </ion-infinite-scroll>
         </ion-list>

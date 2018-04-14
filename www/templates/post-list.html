@@ -23,7 +23,7 @@
     </div>
     <ion-content lazy-scroll>
         <div class="spinner" ng-if="vm.posts.length == 0">
-            <ion-spinner class="spinner" icon="android"></ion-spinner>
+            <ir-spinner></ir-spinner>
         </div>
 
         <div style="padding-top:44px;">
@@ -61,10 +61,8 @@
         </div>
 
         <ion-infinite-scroll
-            class="ispinner text-center"
             ng-if="vm.posts.length > 0 && vm.hasMoreData"
             on-infinite="vm.loadMore()"
-            spinner="android"
             immediate-check="true"
             distance="10%">
         </ion-infinite-scroll>

@@ -5680,7 +5680,8 @@ IonicModule
   '$attrs',
   '$element',
   '$timeout',
-function($scope, $attrs, $element, $timeout) {
+  '$compile',
+function($scope, $attrs, $element, $timeout, $compile) {
   var self = this;
   self.isLoading = false;
 
@@ -5703,19 +5704,29 @@ function($scope, $attrs, $element, $timeout) {
     }
   });
 
+  let loader;
+
   // debounce checking infinite scroll events
-  self.checkBounds = ionic.Utils.throttle(checkInfiniteBounds, 300);
+  self.checkBounds = ionic.Utils.throttle(checkInfiniteBounds, 500);
 
   function onInfinite() {
+    loader = $compile(`<div style="padding: 10px 0;"><ir-spinner></ir-spinner></div>`)($scope);
+
     ionic.requestAnimationFrame(function() {
+      $element.after(loader);
       $element[0].classList.add('active');
+
+      $timeout(() => {
+        $scope.$parent && $scope.$parent.$apply($attrs.onInfinite || '');
+      })
+
     });
     self.isLoading = true;
-    $scope.$parent && $scope.$parent.$apply($attrs.onInfinite || '');
   }
 
   function finishInfiniteScroll() {
     ionic.requestAnimationFrame(function() {
+      if(loader) loader.remove()
       $element[0].classList.remove('active');
     });
     $timeout(function() {
@@ -10603,10 +10614,6 @@ IonicModule
   return {
     restrict: 'E',
     require: ['?^$ionicScroll', 'ionInfiniteScroll'],
-    template: function($element, $attrs) {
-      if ($attrs.icon) return '<i class="icon {{icon()}} icon-refreshing {{scrollingType}}"></i>';
-      return '<ion-spinner icon="{{spinner()}}"></ion-spinner>';
-    },
     scope: true,
     controller: '$ionInfiniteScroll',
     link: function($scope, $element, $attrs, ctrls) {

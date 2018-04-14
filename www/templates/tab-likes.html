@@ -41,11 +41,9 @@
 
         </div>
         <ion-infinite-scroll
-            class="ispinner text-center"
             ng-if="vm.hasMoreData()"
             on-infinite="vm.loadMore()"
-            spinner="android"
-            immediate-check="false"
+            immediate-check="true"
             distance="7%">
         </ion-infinite-scroll>
         <div class="text-center" ng-if="vm.end">

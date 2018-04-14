@@ -9,6 +9,51 @@ div{
   }
 }
 
+ir-spinner {
+  @-webkit-keyframes ir-rotate-loading {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg); } }
+
+  @keyframes ir-rotate-loading {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg); } }
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .icon {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    border: 2px solid transparent;
+    border-left-color: $epc-color;
+    border-right-color: $epc-color;
+    margin: 5px;
+    padding: 0;
+    border-radius: 100%;
+    background-color: transparent !important;
+    color: transparent;
+    cursor: default;
+    box-sizing: border-box;
+    -webkit-animation: ir-rotate-loading 1.5s linear 0s infinite normal;
+    animation: ir-rotate-loading 1.5s linear 0s infinite normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+}
+
 // infinity spinner
 .ispinner {
   .spinner {

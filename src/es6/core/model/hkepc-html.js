@@ -3,7 +3,6 @@
  */
 import {GeneralHtml} from './general-html'
 import * as URLUtils from '../../utils/url'
-const cheerio = require('cheerio')
 
 export class HKEPCHtml extends GeneralHtml{
 

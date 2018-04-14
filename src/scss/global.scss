@@ -343,3 +343,8 @@ textarea {
 .custom-svg-fill {
   fill: $epc-color;
 }
+
+ion-infinite-scroll {
+  position: absolute;
+  height: 50px;
+}

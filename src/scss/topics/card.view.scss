@@ -27,9 +27,12 @@
     padding: 0 20px;
   }
 
+  .f5-button, .page-divider, .card {
+    margin: 15px 0 0 0;
+  }
+
   .card {
     background-color: $card-bg-color;
-    margin: 15px 0;
 
     .card-button{
       color: $tab-item-stoke-color;

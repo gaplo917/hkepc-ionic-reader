@@ -44,7 +44,6 @@ function dynamicModules() {
       'starter.services',
       'starter.directives',
       'ngToast',
-      'ionicLazyLoad',
       'rx',
       'ngFileUpload',
     ]
@@ -55,7 +54,6 @@ function dynamicModules() {
       'starter.services',
       'starter.directives',
       'ngToast',
-      'ionicLazyLoad',
       'LocalForageModule',
       'rx',
       'ngFileUpload',

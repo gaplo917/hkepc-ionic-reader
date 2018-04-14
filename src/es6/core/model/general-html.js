@@ -88,7 +88,6 @@ export class GeneralHtml{
       if(imgSrc && !imgSrc.endsWith('.gif')){
         elm.attr('image-lazy-src', imgSrc)
         elm.attr('image-lazy-distance-from-bottom-to-load',"0")
-        elm.attr('image-lazy-loader',"android")
         elm.removeAttr('src')
         elm.removeAttr('alt')
         elm.attr('ng-click',`vm.openImage('${uid}', '${imgSrc}')`)
