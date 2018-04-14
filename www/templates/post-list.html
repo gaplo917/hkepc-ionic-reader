@@ -3,18 +3,18 @@
                                                                        ng-show="vm.subTopicList.length > 0"></i>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest'"
+        <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
            class="button button-icon icon ion-ios-compose-outline" ng-click="vm.doNewPost(vm.topic)"></a>
         <a ng-if="vm.topicId != 'search' " class="button button-icon icon ion-ios-refresh-empty"
            ng-click="::vm.doRefresh()"></a>
     </ion-nav-buttons>
     <div class="bar bar-subheader">
         <a class="button button-icon icon ion-bonfire"
-           ng-if="vm.topicId != 'search' && vm.topicId != 'latest'"
+           ng-if="vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
            ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
            ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
         </a>
-        <h2 class="title" ng-show="vm.totalPageNum">
+        <h2 class="title" ng-if="vm.totalPageNum">
             第 {{vm.pointingPage == 0 ? 1 : vm.pointingPage}} 頁 / 共 {{vm.totalPageNum}} 頁
         </h2>
         <a ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"

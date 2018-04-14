@@ -88,8 +88,6 @@ export class PostListController {
       this.filter = undefined
       this.order = undefined
 
-      this.loadMore()
-
     })
 
     $scope.$on('$ionicView.enter', (e) => {
@@ -98,6 +96,8 @@ export class PostListController {
 
     $scope.$on('$ionicView.unloaded', (e) => {
     })
+
+    this.loadMore()
   }
 
   loadMore(cb){
@@ -161,7 +161,7 @@ export class PostListController {
   reset(){
     this.currentPageNum = 0
     this.posts = []
-
+    this.searchId = null
   }
 
   doRefresh(){
