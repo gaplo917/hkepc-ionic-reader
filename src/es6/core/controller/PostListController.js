@@ -45,7 +45,9 @@ export class PostListController {
     this.subTopicList = []
     this.posts = []
     this.hasMoreData = true
-
+    this.filter = undefined
+    this.order = undefined
+    
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
       scope: $scope
@@ -79,23 +81,17 @@ export class PostListController {
       })
       .subscribe()
 
-    $scope.$on('$ionicView.loaded', (e) => {
-      this.localStorageService.get('showSticky',true).safeApply($scope, data => {
-        console.log("showSticky",data)
-        this.showSticky = String(data) === 'true'
-      }).subscribe()
+    // $scope.$on('$ionicView.enter', (e) => {
+    //
+    // })
+    //
+    // $scope.$on('$ionicView.unloaded', (e) => {
+    // })
 
-      this.filter = undefined
-      this.order = undefined
-
-    })
-
-    $scope.$on('$ionicView.enter', (e) => {
-
-    })
-
-    $scope.$on('$ionicView.unloaded', (e) => {
-    })
+    this.localStorageService.get('showSticky',true).safeApply($scope, data => {
+      console.log("showSticky",data)
+      this.showSticky = String(data) === 'true'
+    }).subscribe()
 
     this.loadMore()
   }

@@ -94,29 +94,28 @@ export class TabController{
       this.hideUsername = String(data) == "true"
     }).subscribe()
 
-    if(Bridge.isiOSNative()){
-      // polling the pm, only one of the tab do
-      if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
+    $scope.$on('$ionicView.loaded', (e) => {
+      // FIXME: ugly hack for dark theme, all style use ios style
+      this.removeAndroidStyleCssClass()
+
+      if(Bridge.isiOSNative()){
+        // polling the pm, only one of the tab do
+        if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
+          this.rx.Observable.interval(60 * 1000)
+            .startWith(1)
+            .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
+            .flatMap(() => apiService.checkPM())
+            .subscribe()
+        }
+      }
+      else {
+        // schedule to check PM
         this.rx.Observable.interval(60 * 1000)
           .startWith(1)
           .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
           .flatMap(() => apiService.checkPM())
           .subscribe()
       }
-    }
-    else {
-      // schedule to check PM
-      this.rx.Observable.interval(60 * 1000)
-        .startWith(1)
-        .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
-        .flatMap(() => apiService.checkPM())
-        .subscribe()
-    }
-
-
-    $scope.$on('$ionicView.loaded', (e) => {
-      // FIXME: ugly hack for dark theme, all style use ios style
-      this.removeAndroidStyleCssClass()
     })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)

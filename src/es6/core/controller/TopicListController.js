@@ -94,9 +94,6 @@ export class TopicListController {
 
     })
 
-    $scope.$on('$ionicView.beforeLeave', (e) => {
-    })
-    
   }
 
   reset(){

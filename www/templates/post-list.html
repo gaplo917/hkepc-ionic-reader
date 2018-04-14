@@ -1,6 +1,6 @@
 <ion-view class="post-list-view">
     <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown"
-                                                                       ng-show="vm.subTopicList.length > 0"></i>
+                                                                         ng-if="vm.subTopicList.length > 0"></i>
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
@@ -32,7 +32,7 @@
                 ng-class-odd="'odd'" ng-class-even="'even'"
                 class="item-icon-right item-text-wrap"
                 ng-repeat="post in vm.posts track by $index"
-                ng-show="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
+                ng-if="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
                 ng-click="::vm.onGoToPost(post)"
                 href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
                 id="post-{{::post.id}}"

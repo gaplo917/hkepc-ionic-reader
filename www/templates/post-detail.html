@@ -119,8 +119,8 @@
             immediate-check="true"
             distance="10%">
         </ion-infinite-scroll>
-        <div class="text-center" ng-if="vm.end">
-            <button class="f5-button button button-full" ng-click="vm.forceLoadMore()">F5</button>
+        <div class="text-center f5-button" style="width: 100%; display:block; height:59px">
+            <button class="button button-full" ng-click="vm.forceLoadMore()" ng-if="vm.end">F5</button>
         </div>
 
         <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->

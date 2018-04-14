@@ -67,14 +67,6 @@ export class PostDetailController{
       if(this.postTaskSubscription) this.postTaskSubscription.dispose()
       this.deregisterReportModal()
     })
-    // Execute action on hide popover
-    $scope.$on('popover.hidden', () => {
-      // Execute action
-    })
-    // Execute action on remove popover
-    $scope.$on('popover.removed', () => {
-      // Execute action
-    })
 
     $scope.$eventToObservable('lastread')
       .throttle(500)
@@ -150,9 +142,6 @@ export class PostDetailController{
           this.currentUsername = username
         }).subscribe()
 
-    })
-
-    $scope.$on('$ionicView.unloaded', (e) => {
     })
 
     $scope.$on('$ionicView.beforeLeave', (e) => {
@@ -307,6 +296,7 @@ export class PostDetailController{
 
       this.$timeout(() => {
         this.scope.$broadcast('scroll.infiniteScrollComplete')
+        swal.close()
       })
 
       this.refreshing = false
@@ -320,11 +310,10 @@ export class PostDetailController{
           const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
           console.log("ready to scroll to ",document.querySelector(`#message-${this.focus}`), focusPosition)
 
-          this.ionicScrollDelegate.scrollTo(0,focusPosition)
-
           this.$timeout(() => {
-            swal.close()
+            this.ionicScrollDelegate.scrollTo(0,focusPosition)
           })
+
           this.focus = undefined
 
         })
@@ -546,6 +535,7 @@ export class PostDetailController{
       allowOutsideClick: false,
       showCancelButton: false,
       showConfirmButton: false,
+      animation: false
     })
 
     swal.showLoading()
