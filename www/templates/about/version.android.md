@@ -1,3 +1,17 @@
+**15 Apr 2018 - Release IR Pro 內核 v3.1, Android v2.2.1**
+內核重點內容：
+* 重製 image lazy loading 功能（改善圖片加載時會 Lag 機問題）
+* 重製 infinity loading 功能 (提升流暢度)
+* 移除原生 ionic spinner (CPU intensive) 改用純 CSS spinner (提升流暢度)
+* 修正「最新發佈」出現置頂貼開關及發佈新帖子按鍵
+* 修正轉換頁面時出現某些元件閃一下的問題
+* 改善「加載上一頁」效果
+
+App 重點內容：
+* 改善圖片壓縮畫質
+
+---
+
 **4 Apr 2018 - Release IR Pro 內核 v3.0, Android v2.2.0**
 重點內容：
 * 大量優化效能並提升瀏覽速度
@@ -23,6 +37,8 @@
 * 修正無法正確顯示上載到 EPC 的咐件
 * 移除顯示用戶名稱
 
+---
+
 **2 Nov 2017 - Release v2.1.8 IR Pro**
 新增功能：
 * 支援 Android 5.0, 5.1 ! (部份功能）
@@ -31,13 +47,19 @@
 修正問題：
 * 修正瀏灠 URL 時會出時黑屏或彈 App 問題
 
+---
+
 **2 Nov 2017 - Release v2.1.5 IR Pro**
 修正問題：
 * 返回或轉頁面有機會出現去唔到問題
 
+---
+
 **1 Nov 2017 - Release v2.1.1 IR Pro**
 修正問題：
 * 不能正常登出
+
+---
 
 **1 Nov 2017 - Release v2.1.0 IR Pro**
 
