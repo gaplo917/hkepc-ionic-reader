@@ -263,19 +263,20 @@ export class PostDetailController{
           // slient update the content only
           for(let i = 0; i < this.messages.length; i ++){
             for(let j = 0; j < post.messages.length; j ++){
-              if(this.messages[i].id == post.messages[j].id){
+              if(this.messages[i].id == post.messages[j].id && this.messages[i].pstatus !== post.messages[j].pstatus){
                 this.messages[i].content = post.messages[j].content
               }
+
             }
           }
 
           // maybe have new post, filter duplicate and concat new post to tail
           const messageIds = this.messages.map(_ => _.id)
-          const filtered = post.messages.filter(msg => {
-            return messageIds.indexOf(msg.id) == -1
-          })
+          const filtered = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
 
-          this.messages = this.messages.concat(filtered)
+          if(filtered.length > 0){
+            this.messages = this.messages.concat(filtered)
+          }
         }
         else {
           // normal style (next)
@@ -623,12 +624,12 @@ export class PostDetailController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-ios-copy-outline"></i> 開啟 HKEPC 原始連結' },
-        { text: `<i class="icon ion-ios-loop"></i> ${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
-        { text: `<i class="icon ion-ios-eye-outline"></i> ${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
-        { text: `<i class="icon ion-ios-lightbulb-outline"></i> 關注此主題的新回覆` },
-        { text: `<i class="icon ion-ios-bookmarks-outline"></i> 收藏此主題` },
-        { text: `<i class="icon ion-ios-flag-outline"></i> 舉報` },
+        { text: '開啟 HKEPC 原始連結' },
+        { text: `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
+        { text: `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
+        { text: `關注此主題的新回覆` },
+        { text: `收藏此主題` },
+        { text: `舉報` },
       ],
       titleText: '更多功能',
       cancelText: '取消',

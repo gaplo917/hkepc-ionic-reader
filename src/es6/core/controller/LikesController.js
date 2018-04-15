@@ -200,11 +200,11 @@ export class LikesController{
     // Show the action sheet
     var hideSheet = this.ionicActionSheet.show({
       buttons: [
-        { text: '<i class="icon ion-ios-redo balanced"></i>開啟' },
-        { text: '<i class="icon ion-share balanced"></i>開啟 HKEPC 原始連結' },
+        { text: '開啟' },
+        { text: '開啟 HKEPC 原始連結' },
       ],
       titleText: '分享連結',
-      destructiveText: '<i class="icon ion-heart-broken assertive" style="color:red"></i> 從我的最愛移除',
+      destructiveText: '從我的最愛移除',
       cancelText: '取消',
       cancel: () => {
         // add cancel code..

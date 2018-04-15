@@ -143,8 +143,17 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
     color: mix($text-color,$bg-color,50%);
   }
 
-  .item:last-child {
-    border-bottom: 1px solid $border-color;
+  .item {
+    border:0 !important;
+  }
+
+  .item .item-content {
+    background-color: $header-bg-color;
+  }
+
+  .scroll-content {
+    padding: 0;
+    margin: 0;
   }
 }
 .item-checkbox, .item-input, .item-radio, .popover {
@@ -347,4 +356,23 @@ textarea {
 ion-infinite-scroll {
   position: absolute;
   height: 50px;
+}
+
+.menu {
+  a {
+    border:0 !important;
+  }
+}
+
+.action-sheet .button, .action-sheet .input-helper .flow-button, .input-helper .action-sheet .flow-button {
+  color: $text-color;
+  font-size: $font-size-large;
+}
+
+.action-sheet .button:hover, .action-sheet .input-helper .flow-button:hover, .input-helper .action-sheet .flow-button:hover {
+  color: $text-color;
+}
+
+.action-sheet .button.activated, .action-sheet .input-helper .flow-button.activated, .input-helper .action-sheet .flow-button.activated {
+  color: $text-color;
 }

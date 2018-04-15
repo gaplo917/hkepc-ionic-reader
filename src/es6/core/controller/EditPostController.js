@@ -114,9 +114,11 @@ export class EditPostController {
         this.subTopicTypeId = subTopicTypeId
 
         // the text showing the effects of reply / quote
-        this.edit = {
-          subject: formSource('#subject').attr('value'),
-          content :formSource('#e_textarea').text()
+        if(!this.edit){
+          this.edit = {
+            subject: formSource('#subject').attr('value'),
+            content :formSource('#e_textarea').text()
+          }
         }
 
       })

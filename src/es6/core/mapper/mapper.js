@@ -177,11 +177,13 @@ export default class Mapper{
 
       // processed by general html (isAutoLoadImage features)
       const avatarImageUrl = avatarImage.attr('image-lazy-src')
+      const pstatus = content('.pstatus').text()
 
       return {
         id: postSource.find('table').attr('id').replace('pid',''),
         pos: postSource.find('.postinfo strong a em').text(),
         createdAt: postSource.find('.posterinfo .authorinfo em span').attr('title') || postSource.find('.posterinfo .authorinfo em').text().replace('發表於 ',''),
+        pstatus: pstatus,
         content : content.html(),
         type: 'POST_MESSAGE',
         post:{
