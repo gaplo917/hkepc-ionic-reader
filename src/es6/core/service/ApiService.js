@@ -22,6 +22,7 @@ export class ApiService {
   }
 
   constructor($http, rx, $rootScope,ngToast) {
+    this.webHttp = $http
     this.http = new HybridHttp($http,rx,ngToast)
     this.rx = rx
     this.$rootScope = $rootScope
@@ -283,17 +284,10 @@ export class ApiService {
   }
 
   version(isAndroid){
-    if(isAndroid){
-      return this.http.request({
-        method: 'GET',
-        url: 'https://hkepc.ionic-reader.xyz/templates/about/version.android.md'
-      })
-    }
-    else {
-      return this.http.request({
-        method: 'GET',
-        url: 'https://hkepc.ionic-reader.xyz/templates/about/version.md'
-      })
-    }
+    const versionMD = isAndroid ? 'version.android.md' : 'version.md'
+    return this.rx.Observable.fromPromise(this.webHttp({
+      method: 'GET',
+      url: `templates/about/${versionMD}`
+    }))
   }
 }
