@@ -23,11 +23,11 @@ export default angular.module('starter.directives', ['ngAnimate'])
       )
     };
   }])
-  .directive('lastread', ($document, $timeout, $ionicScrollDelegate) => {
+  .directive('lastread', ($document, $timeout) => {
     return {
       restrict: 'A',
-      scope:    true,
-      link:     ($scope, $element, $attributes) => {
+      scope: true,
+      link: ($scope, $element, $attributes) => {
 
         const deregistration = $scope.$on('lazyScrollEvent', () => {
           if (isInView()) {
@@ -37,9 +37,9 @@ export default angular.module('starter.directives', ['ngAnimate'])
         })
 
         function isInView() {
-          var clientHeight = $document[0].documentElement.clientHeight;
+          const clientHeight = $document[0].documentElement.clientHeight;
           // var clientWidth = $document[0].documentElement.clientWidth;
-          var imageRect = $element[0].getBoundingClientRect();
+          const imageRect = $element[0].getBoundingClientRect();
 
           //console.log(`isInView height ${clientHeight}, width ${clientWidth}`,imageRect)
 
@@ -59,7 +59,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
         $timeout(() => {
           if (isInView()) {
             $scope.$emit('lastread', {page: $attributes.page, id: $attributes.id})
-            deregistration();
           }
         });
 
@@ -351,7 +350,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
             console.log(`onLongerThanScreen, elementHeight ${height} > ${screenHeight}`)
 
-            $scope.$apply(function () {
+            $scope.$applyAsync(function () {
               $scope.$eval($attrs.onLongerThanScreen)
             });
           }
@@ -364,9 +363,42 @@ export default angular.module('starter.directives', ['ngAnimate'])
       return {
         restrict: 'A',
         link: function ($scope, $element) {
-          var origEvent = $scope.$onScroll;
+          const origEvent = $scope.$onScroll;
+
+          function throttle (func, wait, options) {
+            let context, args, result;
+            let timeout = null;
+            let previous = 0;
+            options || (options = {});
+            let later = function() {
+              previous = options.leading === false ? 0 : Date.now();
+              timeout = null;
+              result = func.apply(context, args);
+            };
+            return function() {
+              let now = Date.now();
+              if (!previous && options.leading === false) previous = now;
+              let remaining = wait - (now - previous);
+              context = this;
+              args = arguments;
+              if (remaining <= 0) {
+                clearTimeout(timeout);
+                timeout = null;
+                previous = now;
+                result = func.apply(context, args);
+              } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+              }
+              return result;
+            };
+          }
+
+          const throttleEmit = throttle(() => {
+            $rootScope.$broadcast('lazyScrollEvent')
+          }, 300)
+
           $scope.$onScroll = function () {
-            $rootScope.$broadcast('lazyScrollEvent');
+            throttleEmit()
 
             if (typeof origEvent === 'function') {
               origEvent();
@@ -394,7 +426,8 @@ export default angular.module('starter.directives', ['ngAnimate'])
           let isLoaded = false
 
           const deregistration = $scope.$on('lazyScrollEvent', function () {
-              console.log('scroll');
+              console.log('lazy image receiving scrolling event');
+
               if (isInView()) {
                 loadImage();
               }
