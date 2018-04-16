@@ -71,8 +71,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
       restrict: 'E',
       scope:    {
         modal:         '=',
-        contentModel:  '=',
-        onImageUpload: '='
+        contentModel:  '='
       },
       link:     function (scope, element) {
         const modal = scope.modal
@@ -112,7 +111,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
               if (fileSizeInKB >= 150) {
 
                 scope.imageErr = `圖片(${fileSizeInKB} KB) 大於 HKEPC 限制(150KB)`
-                scope.imageErrSuggestion = `iOS 用家：可使用 Apple 新收購的 Work Flow 配搭作者設計專用的 Script 壓縮圖片。<a href="" target="_system" onclick="window.open('https://blog.gaplotech.com/workflow-x-hkepc-ir/', '_system', 'location=yes'); return false;">查看此教學</a>`
+                scope.imageErrSuggestion = `建議使用具有自動壓縮功能的 iOS 或 Android (6.0 或以上) HKEPC IR Pro App`
               } else {
                 // image is valid to upload
                 scope.file = file
@@ -145,12 +144,9 @@ export default angular.module('starter.directives', ['ngAnimate'])
             //DISCUZUPLOAD|0|1948831|1
             const attactmentId = resp.data.split('|')[2]
 
-            modal.onImageUpload({
-              formData: `attachnew[${attactmentId}][description]=`,
-              id:       attactmentId
-            })
+            modal.onImageUploadSuccess([attactmentId])
 
-            scope.imageUploadSuccess = `上傳成功，已插入 ${attachImageCode}！`
+            scope.imageUploadSuccess = `上傳成功 ${attactmentId}！`
 
             // release the file
             scope.file = undefined
