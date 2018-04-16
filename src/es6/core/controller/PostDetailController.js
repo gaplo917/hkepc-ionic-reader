@@ -52,7 +52,6 @@ export class PostDetailController{
 
     this.messages = []
     this.postUrl = URLUtils.buildUrlFromState($state,$stateParams)
-    this.currentUsername = undefined
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
@@ -73,8 +72,6 @@ export class PostDetailController{
       .doOnNext(([event,{ page, id }]) => {
         console.log("received broadcast lastread",page, id)
         const postId = id.replace('message-','')
-
-        this.lastFocus = postId
 
         this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`,{
           page: page,
@@ -133,14 +130,6 @@ export class PostDetailController{
           this.loadMessages()
         }).subscribe()
       }
-
-
-      // best effort to get it first
-      this.authService.getUsername()
-        .filter(username => username != undefined)
-        .safeApply($scope, username => {
-          this.currentUsername = username
-        }).subscribe()
 
     })
 
@@ -225,16 +214,16 @@ export class PostDetailController{
         // maybe have duplicate message
         const messageIds = this.messages.map(_ => _.id)
         const filtered = post.messages.filter(msg => {
-          return messageIds.indexOf(msg.id) == -1
+          return messageIds.indexOf(msg.id) === -1
         })
 
         this.messages = this.messages.concat(filtered)
 
       } else {
-        if(style == 'previous'){
+        if(style === 'previous'){
           const messageIds = this.messages.map(_ => _.id)
           const filtered = post.messages.filter(msg => {
-            return messageIds.indexOf(msg.id) == -1
+            return messageIds.indexOf(msg.id) === -1
           })
 
           const nextFocusId = `divider-previous-${page}`
@@ -263,7 +252,7 @@ export class PostDetailController{
           // slient update the content only
           for(let i = 0; i < this.messages.length; i ++){
             for(let j = 0; j < post.messages.length; j ++){
-              if(this.messages[i].id == post.messages[j].id && this.messages[i].pstatus !== post.messages[j].pstatus){
+              if(this.messages[i].id === post.messages[j].id && this.messages[i].pstatus !== post.messages[j].pstatus){
                 this.messages[i].content = post.messages[j].content
               }
 
@@ -288,7 +277,7 @@ export class PostDetailController{
 
           const messageIds = this.messages.map(_ => _.id)
           const filtered = post.messages.filter(msg => {
-            return messageIds.indexOf(msg.id) == -1
+            return messageIds.indexOf(msg.id) === -1
           })
 
           this.messages = this.messages.concat(filtered)
