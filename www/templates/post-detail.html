@@ -69,7 +69,7 @@
                             style="right: 70px;"
                             ng-click="::vm.onReply(message)"></button>
                     <button class="button button-icon on-more-button"
-                            ng-class="::message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "
+                            ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "
                             style="right: 35px;"
                             ng-click="::vm.like(message)"></button>
                     <button class="button button-icon ion-android-more-vertical on-more-button"
@@ -97,7 +97,7 @@
 
                 <div class="item tabs tabs-secondary tabs-icon-left" ng-if="message.extraReplyBtn">
                     <a class="tab-item card-button" ng-click="::vm.like(message)">
-                        <i class="icon" ng-class="::message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
+                        <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
                         喜歡
                     </a>
                     <a class="tab-item card-button" ng-click="::vm.onReply(message)">
