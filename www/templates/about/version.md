@@ -1,4 +1,4 @@
-**16 Apr 2018 - Release IR Pro 內核 v3.1.1, iOS v2.2.1**
+**18 Apr 2018 - Release IR Pro 內核 v3.1.2, iOS v2.2.1**
 內核重點內容：
 * 重製 image lazy loading 功能（改善圖片加載時會 Lag 機問題）
 * 重製 infinity loading 功能 (提升流暢度)
@@ -11,6 +11,8 @@
 * 修正「修改帖子」時，上載圖片後帖子內容會重新由 HKEPC 提取
 * 修正返回瀏灠帖子時會重新 Render 頁面問題
 * 解決鍵盤會遮蓋輸入問題
+* 修正非 Native App 用家無法上載圖片問題
+* 大量減低帖子內的 watcher 數目及 Throttle scrolling event (提升流暢度)
 
 App 重點內容：
 * 改善圖片壓縮畫質

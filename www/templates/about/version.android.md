@@ -1,3 +1,15 @@
+**18 Apr 2018 - Release IR Pro 內核 v3.1.2, Android v2.2.3**
+內核重點內容：
+* 修正 Android 6.0 以下裝置無法上載圖片問題
+* 大量減低帖子內的 watcher 數目及 Throttle scrolling event (提升流暢度)
+
+App 重點內容：
+* 修正 Android 6.0 以下裝置空白畫面問題
+* 修正 Android 6.0 以下裝置無法瀏灠外部連結問題
+* 修正 Android 6.0 以下裝置無法上載圖片問題
+
+---
+
 **16 Apr 2018 - Release IR Pro 內核 v3.1.1, Android v2.2.2**
 內核重點內容：
 * 修正部分無邊框元件設計
