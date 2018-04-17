@@ -9,7 +9,7 @@ div{
   }
 }
 
-ir-spinner {
+ir-spinner, .ir-spinner {
   @-webkit-keyframes ir-rotate-loading {
     0% {
       -webkit-transform: rotate(0deg);

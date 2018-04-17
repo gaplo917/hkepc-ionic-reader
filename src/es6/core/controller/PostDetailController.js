@@ -68,6 +68,7 @@ export class PostDetailController{
     })
 
     $scope.$eventToObservable('lastread')
+      .observeOn(rx.Scheduler.async)
       .throttle(500)
       .doOnNext(([event,{ page, id }]) => {
         console.log("received broadcast lastread",page, id)
@@ -149,7 +150,11 @@ export class PostDetailController{
   loadMore(){
     if(!this.end){
       //update the page count
-      this.currentPage = parseInt(this.currentPage) + 1
+      this.currentPage = _.max(this.messages.filter(_ => _.type !== 'POST_PAGE_DIVIDER').map(_ => parseInt(_.post.page))) || 0
+
+      if(this.currentPage < this.totalPageNum) {
+        this.currentPage += 1
+      }
 
       this.loadMessages()
     }
@@ -270,10 +275,14 @@ export class PostDetailController{
         else {
           // normal style (next)
 
-          this.messages.push({
-            post: { page: page },
-            type: 'POST_PAGE_DIVIDER'
-          })
+          if(this.messages.filter(_ => _.type === 'POST_PAGE_DIVIDER' && _.post.page == page).length === 0){
+            // prevent F5 loading will duplicate the result
+            this.messages.push({
+              post: { page: page },
+              type: 'POST_PAGE_DIVIDER'
+            })
+
+          }
 
           const messageIds = this.messages.map(_ => _.id)
           const filtered = post.messages.filter(msg => {
@@ -289,10 +298,10 @@ export class PostDetailController{
         swal.close()
       })
 
-      this.refreshing = false
       this.loadingPrevious = false
-      this.end = page >= this.totalPageNum
+      this.refreshing = false
       this.currentPage = page
+      this.end = page >= this.totalPageNum
 
       if(this.focus){
         this.$timeout(() => {

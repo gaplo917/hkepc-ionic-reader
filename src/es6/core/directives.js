@@ -10,61 +10,18 @@ import {Bridge, Channel} from './bridge/index'
  */
 export default angular.module('starter.directives', ['ngAnimate'])
 
-  .directive('compile', ['$compile', ($compile) => {
+  .directive('compile', ($compile) => {
     return (scope, element, attrs) => {
       scope.$watch(
         (scope) => {
-          return scope.$eval(attrs.compile);
+          return scope.$eval(attrs.compile)
         },
         (value) => {
-          element.html(value);
-          $compile(element.contents())(scope);
+          element.html(value)
+          $compile(element.contents())(scope)
         }
       )
-    };
-  }])
-  .directive('lastread', ($document, $timeout) => {
-    return {
-      restrict: 'A',
-      scope: true,
-      link: ($scope, $element, $attributes) => {
-
-        const deregistration = $scope.$on('lazyScrollEvent', () => {
-          if (isInView()) {
-            //console.log("isInView",$attributes.id,$attributes.page)
-            $scope.$emit('lastread', {page: $attributes.page, id: $attributes.id})
-          }
-        })
-
-        function isInView() {
-          const clientHeight = $document[0].documentElement.clientHeight;
-          // var clientWidth = $document[0].documentElement.clientWidth;
-          const imageRect = $element[0].getBoundingClientRect();
-
-          //console.log(`isInView height ${clientHeight}, width ${clientWidth}`,imageRect)
-
-          // scroll to the half of the screen mean user if viewing
-          return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
-        }
-
-        // bind listener
-        // listenerRemover = scrollAndResizeListener.bindListener(isInView);
-
-        // unbind event listeners if element was destroyed
-        // it happens when you change view, etc
-        $element.on('$destroy', () => {
-          deregistration();
-        })
-
-        $timeout(() => {
-          if (isInView()) {
-            $scope.$emit('lastread', {page: $attributes.page, id: $attributes.id})
-          }
-        });
-
-      }
     }
-
   })
   .directive('inputHelper', (Upload, $timeout) => {
     return {
@@ -104,7 +61,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
           scope.previewUploadImage = undefined
 
           if (file) {
-            var reader = new FileReader();
+            var reader = new FileReader()
 
             reader.onload = function (e) {
               const fileSizeInKB = e.total / 1000
@@ -139,7 +96,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
             url:  data.action,
             data: data
           }).then(function (resp) {
-            console.log('Success uploaded. Response: ', resp.data);
+            console.log('Success uploaded. Response: ', resp.data)
 
             //DISCUZUPLOAD|0|1948831|1
             const attactmentId = resp.data.split('|')[2]
@@ -152,7 +109,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
             scope.file = undefined
 
           }, function (resp) {
-            console.log('Error status: ' + resp.status);
+            console.log('Error status: ' + resp.status)
           }, function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total)
             console.log('progress: ' + progressPercentage + '%')
@@ -270,13 +227,13 @@ export default angular.module('starter.directives', ['ngAnimate'])
     }
   })
   // Customize from https://gist.github.com/BobNisco/9885852
-  .directive('onLongPress', function ($timeout) {
+  .directive('onLongPress', ($timeout) => {
     return {
       restrict: 'A',
-      link:     function ($scope, $elm, $attrs) {
+      link: function ($scope, $elm, $attrs) {
         $elm.bind('touchstart', function (evt) {
           // Locally scoped variable that will keep track of the long press
-          $scope.longPress = true;
+          $scope.longPress = true
 
           // We'll set a timeout for 600 ms for a long press
           $timeout(function () {
@@ -285,12 +242,12 @@ export default angular.module('starter.directives', ['ngAnimate'])
               // apply the function given in on the element's on-long-press attribute
               $scope.$apply(function () {
                 $scope.$eval($attrs.onLongPress)
-              });
+              })
 
               $scope.triggeredLongPress = true
             }
-          }, 600);
-        });
+          }, 600)
+        })
 
         $elm.bind('touchend', function (evt) {
           if (!$scope.triggeredLongPress) {
@@ -298,28 +255,28 @@ export default angular.module('starter.directives', ['ngAnimate'])
             if ($attrs.onShortPress) {
               $scope.$apply(function () {
                 $scope.$eval($attrs.onShortPress)
-              });
+              })
             }
 
           }
 
           $scope.triggeredLongPress = false
           // Prevent the onLongPress event from firing
-          $scope.longPress = false;
+          $scope.longPress = false
           // If there is an on-touch-end function attached to this element, apply it
           if ($attrs.onTouchEnd) {
             $scope.$apply(function () {
               $scope.$eval($attrs.onTouchEnd)
-            });
+            })
           }
-        });
+        })
       }
-    };
+    }
   })
-  .directive('onLongerThanScreen', function ($window, $document, $timeout) {
+  .directive('onLongerThanScreen', ($window, $document, $timeout) => {
     return {
       restrict: 'A',
-      link:     function ($scope, $elm, $attrs) {
+      link: function ($scope, $elm, $attrs) {
         const screenHeight = $window.innerHeight
         $timeout(() => {
           const height = $elm[0].clientHeight
@@ -329,168 +286,102 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
             $scope.$apply(function () {
               $scope.$eval($attrs.onLongerThanScreen)
-            });
+            })
           }
         })
       }
     }
   })
-  .directive('onLongerThanScreen', function ($window, $document, $timeout) {
-    return {
-      restrict: 'A',
-      link:     function ($scope, $elm, $attrs) {
-        const screenHeight = $window.innerHeight
-        $timeout(() => {
-          const height = $elm[0].clientHeight
-          if (height > screenHeight) {
-
-            console.log(`onLongerThanScreen, elementHeight ${height} > ${screenHeight}`)
-
-            $scope.$applyAsync(function () {
-              $scope.$eval($attrs.onLongerThanScreen)
-            });
-          }
-        })
-      }
-    }
-  })
-  .directive('lazyScroll', ['$rootScope',
-    function ($rootScope) {
+  .directive('lazyScroll', ($rootScope, rx) => {
       return {
         restrict: 'A',
         link: function ($scope, $element) {
-          const origEvent = $scope.$onScroll;
 
-          function throttle (func, wait, options) {
-            let context, args, result;
-            let timeout = null;
-            let previous = 0;
-            options || (options = {});
-            let later = function() {
-              previous = options.leading === false ? 0 : Date.now();
-              timeout = null;
-              result = func.apply(context, args);
-            };
-            return function() {
-              let now = Date.now();
-              if (!previous && options.leading === false) previous = now;
-              let remaining = wait - (now - previous);
-              context = this;
-              args = arguments;
-              if (remaining <= 0) {
-                clearTimeout(timeout);
-                timeout = null;
-                previous = now;
-                result = func.apply(context, args);
-              } else if (!timeout && options.trailing !== false) {
-                timeout = setTimeout(later, remaining);
-              }
-              return result;
-            };
-          }
-
-          const throttleEmit = throttle(() => {
-            $rootScope.$broadcast('lazyScrollEvent')
-          }, 300)
-
-          $scope.$onScroll = function () {
-            throttleEmit()
-
-            if (typeof origEvent === 'function') {
-              origEvent();
-            }
-          };
+          $scope.$createObservableFunction("$onScroll")
+            .throttle(300, rx.Scheduler.async)
+            .doOnNext(() => console.debug("emit lazy scroll event"))
+            .subscribe(() => {
+              $scope.$broadcast('lazyScrollEvent')
+            })
         }
-      };
-    }])
+      }
+    })
+  .directive('lastread', ($document, rx) => {
+    return {
+      restrict: 'A',
+      scope: true,
+      link: ($scope, $element, $attributes) => {
+        $scope.$eventToObservable('lazyScrollEvent')
+          .startWith(1)
+          .observeOn(rx.Scheduler.async)
+          .doOnNext(() => console.debug("[LAST_READ] rx lazy scroll event"))
+          .filter(() => {
+            const clientHeight = $document[0].documentElement.clientHeight
+            const imageRect = $element[0].getBoundingClientRect()
+            return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
+          })
+          .subscribe(() => {
+            $scope.$emit('lastread', {page: $attributes.page, id: $attributes.id})
+          })
+      }
+    }
 
-  .directive('imageLazySrc', ['$document', '$timeout', '$ionicScrollDelegate', '$compile',
-    function ($document, $timeout, $ionicScrollDelegate, $compile) {
+  })
+  .directive('imageLazySrc', ($document, $timeout, $ionicScrollDelegate, $compile, rx)  => {
       return {
         restrict: 'A',
         scope: {
-          lazyScrollResize:         "@lazyScrollResize",
-          imageLazyBackgroundImage: "@imageLazyBackgroundImage",
-          imageLazySrc:             "@"
+          imageLazySrc: "@"
         },
-        link:     function ($scope, $element, $attributes) {
-          const imageLazyDistanceFromBottomToLoad = $attributes.imageLazyDistanceFromBottomToLoad
-            ? parseInt($attributes.imageLazyDistanceFromBottomToLoad)
-            : 0
-
+        link: function ($scope, $element, $attributes) {
           let loader;
-          let isLoaded = false
+          const subscription = $scope.$eventToObservable('lazyScrollEvent')
+            .startWith(1)
+            .observeOn(rx.Scheduler.async)
+            .doOnNext(() => console.debug("[LAZY_IMAGE] rx lazy scroll event"))
+            .filter(() => {
+              const clientHeight = $document[0].documentElement.clientHeight
+              const imageRect = $element[0].getBoundingClientRect()
+              return (imageRect.top >= 0 && imageRect.top <= clientHeight)
+            })
+            .safeApply($scope, () => {
+              loader = $compile(`<div class="spinner-container"><ir-spinner></ir-spinner></div>`)($scope)
+              $element.after(loader)
 
-          const deregistration = $scope.$on('lazyScrollEvent', function () {
-              console.log('lazy image receiving scrolling event');
+              //Bind "load" event
+              $element.on("load", function (e) {
+                loader.remove()
+                $element.off("load")
+              })
 
-              if (isInView()) {
-                loadImage();
-              }
+              $element[0].src = $attributes.imageLazySrc // set src attribute on element (it will load image)
+            })
+            .subscribe(() => {
+              subscription.dispose()
+            })
 
-              if(isLoaded){
-                deregistration();
-              }
-            }
-          );
-
-          function loadImage() {
-            if(!loader){
-              loader = $compile(`<div style="height: 100px;display: flex;align-items: center;justify-content: center;"><ir-spinner></ir-spinner></div>`)($scope);
-              $element.after(loader);
-            }
-
-            //Bind "load" event
-            $element.bind("load", function (e) {
-              if (loader) {
-                loader.remove();
-              }
-              isLoaded = true
-              $element.unbind("load");
-            });
-
-            if ($scope.imageLazyBackgroundImage == "true") {
-              const bgImg = new Image();
-              bgImg.onload = function () {
-                if (loader) {
-                  loader.remove();
-                }
-                $element[0].style.backgroundImage = 'url(' + $attributes.imageLazySrc + ')'; // set style attribute on element (it will load image)
-              };
-              bgImg.src = $attributes.imageLazySrc;
-            } else {
-              $element[0].src = $attributes.imageLazySrc; // set src attribute on element (it will load image)
-            }
-          }
-
-          function isInView() {
-            const clientHeight = $document[0].documentElement.clientHeight;
-            const imageRect = $element[0].getBoundingClientRect();
-            return (imageRect.top >= 0 && imageRect.top <= clientHeight + imageLazyDistanceFromBottomToLoad)
-          }
+          // wrap a container
+          $element.wrap('<div class="lazy-loading-container"></div>')
 
           // bind listener
-          // listenerRemover = scrollAndResizeListener.bindListener(isInView);
+          $element.on("error", function (e) {
+            $element.off("error")
+            loader.remove()
+            subscription.dispose()
+          })
 
           // unbind event listeners if element was destroyed
           // it happens when you change view, etc
           $element.on('$destroy', function () {
-            deregistration();
-          });
-
-          // explicitly call scroll listener (because, some images are in viewport already and we haven't scrolled yet)
-          $timeout(function () {
-            if (isInView()) {
-              loadImage();
-            }
-          });
+            subscription.dispose()
+          })
         }
-      };
-    }])
+      }
+    })
   .directive('irSpinner', function () {
     return {
       restrict: 'E',
       template: `<div class="icon"></div>`
 
-    };
-  });
+    }
+  })

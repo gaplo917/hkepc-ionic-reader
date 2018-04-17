@@ -376,3 +376,13 @@ ion-infinite-scroll {
 .action-sheet .button.activated, .action-sheet .input-helper .flow-button.activated, .input-helper .action-sheet .flow-button.activated {
   color: $text-color;
 }
+
+
+.platform-ios .popover-arrow:after {
+  display: none;
+}
+.platform-ios .popover .scroll-content {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}

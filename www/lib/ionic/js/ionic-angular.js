@@ -5704,12 +5704,15 @@ function($scope, $attrs, $element, $timeout, $compile) {
     }
   });
 
-  let loader;
+  let loader = null;
 
   // debounce checking infinite scroll events
   self.checkBounds = ionic.Utils.throttle(checkInfiniteBounds, 500);
 
   function onInfinite() {
+    if(loader) {
+      loader.remove()
+    }
     loader = $compile(`<div style="padding: 10px 0;"><ir-spinner></ir-spinner></div>`)($scope);
 
     ionic.requestAnimationFrame(function() {
@@ -5726,7 +5729,10 @@ function($scope, $attrs, $element, $timeout, $compile) {
 
   function finishInfiniteScroll() {
     ionic.requestAnimationFrame(function() {
-      if(loader) loader.remove()
+      if(loader) {
+        loader.remove()
+        loader = null
+      }
       $element[0].classList.remove('active');
     });
     $timeout(function() {
