@@ -1,3 +1,16 @@
+**19 Apr 2018 - Release IR Pro 內核 v3.2, Android v2.2.4**
+內核重點內容：
+* 以 RxJS 重寫部分 event-driven directives，活用 `Rx.Schedulers.async` (提升流暢度)
+* 改善 image lazy loading spinner 當圖片加載中時佔用了不必要的空白位置
+* 修正 infinite loading 部份時間出現 Load 錯頁數問題
+* 修正 infinite loading spinner 有時條不會被移除問題
+* 組合多個重複 Toast，i.e. 連續多個重複的連線問題
+
+App 重點內容：
+* 修正 Android 6.0 以下裝置狀態列出現透明問題
+
+---
+
 **18 Apr 2018 - Release IR Pro 內核 v3.1.2, Android v2.2.3**
 內核重點內容：
 * 修正 Android 6.0 以下裝置無法上載圖片問題

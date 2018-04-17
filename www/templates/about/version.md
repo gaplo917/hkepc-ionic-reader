@@ -1,20 +1,32 @@
-**18 Apr 2018 - Release IR Pro 內核 v3.1.2, iOS v2.2.1**
-內核重點內容：
+**19 Apr 2018 - Release IR Pro 內核 v3.2, iOS v2.2.1**
+重點內容：
+* 移除或重製致慢元件，大幅提升瀏灠速度
+* 解決鍵盤會遮蓋輸入問題
+* 加入內置 Safari 瀏灠外部連結
+* 改善圖片壓縮畫質
+* 修正選取圖片後，預覧時圖片比例不正確問題
+
+內核更新：
 * 重製 image lazy loading 功能（改善圖片加載時會 Lag 機問題）
 * 重製 infinity loading 功能 (提升流暢度)
 * 移除原生 ionic spinner (CPU intensive) 改用純 CSS spinner (提升流暢度)
+* 以 RxJS 重寫部分 event-driven directives，活用 `Rx.Schedulers.async` (提升流暢度)
+* 大量減低帖子內的 watcher 數目及 Throttle scrolling event (提升流暢度)
+* 組合多個重複 Toast，i.e. 連續多個重複的連線
+* 解決鍵盤會遮蓋輸入問題
+* 改善「加載上一頁」效果
+* 簡化部份元件
+
+內核修正問題：
+* 修正部分無邊框元件設計
 * 修正「最新發佈」出現置頂貼開關及發佈新帖子按鍵
 * 修正轉換頁面時出現某些元件閃一下的問題
-* 改善「加載上一頁」效果
-* 修正部分無邊框元件設計
-* 簡化部份元件
 * 修正「修改帖子」時，上載圖片後帖子內容會重新由 HKEPC 提取
 * 修正返回瀏灠帖子時會重新 Render 頁面問題
-* 解決鍵盤會遮蓋輸入問題
 * 修正非 Native App 用家無法上載圖片問題
-* 大量減低帖子內的 watcher 數目及 Throttle scrolling event (提升流暢度)
 
-App 重點內容：
+App 更新：
+* 加入內置 Safari 瀏灠外部連結
 * 改善圖片壓縮畫質
 * 修正選取圖片後，預覧時圖片比例不正確問題
 * 修正 EPC Server 返回 Invalidate UTF-8 HTML 時不能正常運作
