@@ -3,7 +3,7 @@
 * 以 RxJS 重寫部分 event-driven directives，活用 `Rx.Schedulers.async` (提升流暢度)
 * 改善 image lazy loading spinner 當圖片加載中時佔用了不必要的空白位置
 * 修正 infinite loading 部份時間出現 Load 錯頁數問題
-* 修正 infinite loading spinner 有時條不會被移除問題
+* 修正 infinite loading spinner 有時不會被移除問題
 * 組合多個重複 Toast，i.e. 連續多個重複的連線問題
 
 App 重點內容：
