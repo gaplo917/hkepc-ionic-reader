@@ -185,7 +185,8 @@ function initAngular() {
         timeout:            '2000',
         verticalPosition:   'top',
         horizontalPosition: 'right',
-        animation:          "slide"
+        animation:          "slide",
+        combineDuplications: true
       })
     }])
 
@@ -251,19 +252,22 @@ function initAngular() {
               if (err.status == 404) {
                 ngToast.danger({
                   dismissOnTimeout: false,
-                  content: `<i class="ion-network"> 找不到相關的內容！</i>`
+                  content: `<i class="ion-network"> 找不到相關的內容！</i>`,
+                  combineDuplications: true
                 })
               }
               else if (err.status == -1) {
                 ngToast.danger({
                   dismissOnTimeout: true,
-                  content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`
+                  content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`,
+                  combineDuplications: true
                 })
               }
               else {
                 ngToast.danger({
                   dismissOnTimeout: true,
-                  content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>`
+                  content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>`,
+                  combineDuplications: true
                 })
               }
 
