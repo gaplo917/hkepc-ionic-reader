@@ -5713,7 +5713,7 @@ function($scope, $attrs, $element, $timeout, $compile) {
     if(loader) {
       loader.remove()
     }
-    loader = $compile(`<div style="padding: 10px 0;"><ir-spinner></ir-spinner></div>`)($scope);
+    loader = $compile('<div style="padding: 10px 0;"><ir-spinner></ir-spinner></div>')($scope);
 
     ionic.requestAnimationFrame(function() {
       $element.after(loader);
