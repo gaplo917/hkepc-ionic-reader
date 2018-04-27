@@ -5704,7 +5704,7 @@ function($scope, $attrs, $element, $timeout, $compile) {
     }
   });
 
-  let loader = null;
+  var loader = null;
 
   // debounce checking infinite scroll events
   self.checkBounds = ionic.Utils.throttle(checkInfiniteBounds, 500);
@@ -5719,9 +5719,9 @@ function($scope, $attrs, $element, $timeout, $compile) {
       $element.after(loader);
       $element[0].classList.add('active');
 
-      $timeout(() => {
+      $timeout(function(){
         $scope.$parent && $scope.$parent.$apply($attrs.onInfinite || '');
-      })
+      });
 
     });
     self.isLoading = true;
