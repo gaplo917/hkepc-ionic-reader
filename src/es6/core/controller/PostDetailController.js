@@ -355,7 +355,7 @@ export class PostDetailController{
           id : null,
           postId: this.postId,
           topicId: post.topicId,
-          type: 1 // default to use quote
+          type: 1 // default to use none
         }
 
         const message = {

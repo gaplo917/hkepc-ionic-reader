@@ -25,6 +25,7 @@ export class WriteReplyPostController {
     this.id = "reply-content"
     this.message = JSON.parse($stateParams.message)
     this.reply = JSON.parse($stateParams.reply)
+    this.isHideSelectType = this.reply.type === 1
     this.reply.content = ""
     this.topicId = $stateParams.topicId
     this.postId = $stateParams.postId
