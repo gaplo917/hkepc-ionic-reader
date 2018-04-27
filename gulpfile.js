@@ -60,7 +60,7 @@ gulp.task('webserver',() => {
 })
 
 gulp.task('sass', function() {
-  return gulp.src(['./src/scss/ionic.app.scss','./src/scss/ionic.app.dark.scss'])
+  return gulp.src(['./src/scss/ionic.app.scss','./src/scss/ionic.app.dark.scss','./src/scss/ionic.app.oled.dark.scss'])
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))

@@ -73,10 +73,6 @@ function initAngular() {
       window.isAndroidNative = isAndroidNative()
       window.isLegacyAndroid = isLegacyAndroid()
 
-      $timeout(() => {
-        // set after render
-        $rootScope.isRendered = true
-      })
       $rootScope.isiOSNative = isiOSNative()
       $rootScope.isAndroidNative = isAndroidNative()
       $rootScope.isLegacyAndroid = isLegacyAndroid()

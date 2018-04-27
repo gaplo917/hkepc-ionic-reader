@@ -41,7 +41,7 @@ export class TabController{
 
   }}
 
-  constructor($scope,$state,$rootScope,$ionicModal,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope, $ionicSideMenuDelegate) {
+  constructor($scope,$state,$rootScope,$ionicModal,$stateParams,AuthService,ngToast,LocalStorageService,HistoryService,$ionicHistory,rx, apiService, observeOnScope, $ionicSideMenuDelegate, $timeout) {
     console.debug(`[${TabController.NAME}] init`)
 
     this.scope = $scope
@@ -89,7 +89,7 @@ export class TabController{
     }).subscribe()
 
     this.localStorageService.get('theme').safeApply(this.scope, data => {
-      this.darkTheme = data == 'dark'
+      this.darkTheme = data
     }).subscribe()
 
     this.localStorageService.get('fontSize').safeApply(this.scope, data => {
@@ -128,6 +128,11 @@ export class TabController{
           .flatMap(() => apiService.checkPM())
           .subscribe()
       }
+
+      $timeout(() => {
+        // set after render
+        $rootScope.isRendered = true
+      })
     })
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
@@ -246,7 +251,7 @@ export class TabController{
     $rootScope.$eventToObservable(NativeChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof NativeChangeThemeRequest)
       .safeApply(this.scope, ([event, req]) => {
-        this.darkTheme = req.theme == 'dark'
+        this.darkTheme = req.theme
       }).subscribe()
 
     $rootScope.$eventToObservable(NativeChangeFontSizeRequest.NAME)
@@ -261,12 +266,12 @@ export class TabController{
       .safeApply(this.scope, ([event, req]) => {
         this.hideUsername = req.hideUsername
       }).subscribe()
-
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
+
       .filter(([event,req]) => req instanceof ChangeThemeRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
-        this.darkTheme = req.theme == 'dark'
+        this.darkTheme = req.theme
         this.localStorageService.set('theme',req.theme)
       }).subscribe()
 

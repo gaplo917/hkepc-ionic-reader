@@ -41,7 +41,7 @@ export class FeatureRouteController{
     }).subscribe()
 
     this.localStorageService.get('theme').safeApply($scope, data => {
-      this.darkTheme = data == 'dark'
+      this.darkTheme = data || 'default'
     }).subscribe()
 
     this.localStorageService.get('fontSize').safeApply($scope, data => {
@@ -104,8 +104,7 @@ export class FeatureRouteController{
       })
 
       observeOnScope($scope, 'vm.darkTheme').subscribe(({oldValue, newValue}) => {
-        const theme = newValue ? 'dark' : 'default'
-        this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(theme))
+        this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(newValue))
       })
 
       observeOnScope($scope, 'vm.forumStyle').subscribe(({oldValue, newValue}) => {

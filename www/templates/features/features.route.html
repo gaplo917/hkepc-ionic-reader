@@ -142,18 +142,19 @@
 
         <div class="list card">
 
-            <div class="feature-route item item-icon-left">
+            <div class="feature-route item item-icon-left selectable">
                 <div class="icon">
                     <i class="ion-ios-color-wand inner-icon" style="background-color: #212121;"></i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">黑底模式
-                    <label class="toggle toggle-assertive fright">
-                        <input type="checkbox" ng-model="vm.darkTheme">
-                        <div class="track">
-                            <div class="handle"></div>
-                        </div>
-                    </label>
+                <div style="margin-left:10px;line-height: 2;">顏色風格
+                    <div class="fright ">
+                        <select ng-model="vm.darkTheme">
+                            <option value="default">EPC</option>
+                            <option value="dark">暗黑</option>
+                            <option value="oled">OLED 省電</option>
+                        </select>
+                    </div>
                 </div>
 
             </div>
