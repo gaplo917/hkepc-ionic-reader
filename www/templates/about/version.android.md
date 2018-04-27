@@ -1,4 +1,15 @@
-**19 Apr 2018 - Release IR Pro 內核 v3.2, Android v2.2.4**
+**28 Apr 2018 - Release IR Pro 內核 v3.3.0, Android v2.3.0**
+內核更新：
+* 加入 「M 字額修正」
+* 加入 「OLED 省電」模式
+* 修正網絡不穩定時會登出問題
+* 修正加載畫面時出現不必要的 icon
+* 修正 action sheet 在黑底模式時底色不是黑色
+
+App 更新：
+* 支援內核「OLED 省電」模式
+
+**19 Apr 2018 - Release IR Pro 內核 v3.2.0, Android v2.2.4**
 內核重點內容：
 * 以 RxJS 重寫部分 event-driven directives，活用 `Rx.Schedulers.async` (提升流暢度)
 * 改善 image lazy loading spinner 當圖片加載中時佔用了不必要的空白位置
