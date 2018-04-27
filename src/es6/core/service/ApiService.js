@@ -46,6 +46,7 @@ export class ApiService {
 
     this.rx.Observable.fromWebWorkerAndTopic(cheerioWorker, 'commonInfo')
       .do(console.log)
+      .filter(resp => resp.status === 200)
       .subscribe(data => {
         $rootScope.$emit(CommonInfoExtractRequest.NAME, new CommonInfoExtractRequest(
           data.username,
