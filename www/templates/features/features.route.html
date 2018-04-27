@@ -6,7 +6,7 @@
         <ir-spinner></ir-spinner>
     </div>
     <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
+        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
@@ -109,8 +109,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">自動載入圖片 <span class="ultra-less-important-info">(IR Silver 限定)</span>
                     <label class="toggle toggle-assertive fright">
-                        <input type="checkbox" ng-change="vm.onIsAutoLoadImage(vm.isAutoLoadImage)"
-                               ng-model="vm.isAutoLoadImage">
+                        <input type="checkbox" ng-model="vm.isAutoLoadImage">
                         <div class="track">
                             <div class="handle"></div>
                         </div>
@@ -130,8 +129,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">IR 簽名 <span class="ultra-less-important-info">(IR Silver 限定)</span>
                     <label class="toggle toggle-assertive fright">
-                        <input type="checkbox" ng-change="vm.onSignature(vm.signature)"
-                               ng-model="vm.signature">
+                        <input type="checkbox" ng-model="vm.signature">
                         <div class="track">
                             <div class="handle"></div>
                         </div>
@@ -151,7 +149,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">黑底模式
                     <label class="toggle toggle-assertive fright">
-                        <input type="checkbox" ng-change="vm.onDarkTheme(vm.darkTheme)" ng-model="vm.darkTheme">
+                        <input type="checkbox" ng-model="vm.darkTheme">
                         <div class="track">
                             <div class="handle"></div>
                         </div>
@@ -171,7 +169,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">界面大小
                     <div class="fright">
-                        <select ng-model="vm.fontSize" ng-change="vm.onResizeFont(vm.fontSize)">
+                        <select ng-model="vm.fontSize">
                             <option value="60">人類極限</option>
                             <option value="70">極小</option>
                             <option value="80">小</option>
@@ -189,6 +187,26 @@
 
         </div>
 
+        <div class="list card">
+
+            <div class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class=" inner-icon" style="background-color: #212121;">M</i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">M 字額修正 <span class="ultra-less-important-info">(適用於部份手機)</span>
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-model="vm.mHeadFix">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
         <div class="list card" ng-show="vm.isLoggedIn">
 
             <div class="feature-route item item-icon-left selectable">
@@ -198,7 +216,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">論壇風格設定
                     <div class="fright ">
-                        <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
+                        <select ng-model="vm.forumStyle">
                             <option value="">使用默認</option>
                             <option value="23">HKEPC（傳統介面)</option>
                             <option value="28">HKEPC</option>

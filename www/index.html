@@ -30,7 +30,7 @@
 </head>
 <body class="ios">
 <toast></toast>
-<ion-side-menus>
+<ion-side-menus ng-if="isRendered">
 
     <ion-side-menu-content>
         <ion-nav-view></ion-nav-view>
@@ -42,28 +42,16 @@
 
         <ion-content class="has-header side-menu">
             <ion-list>
-                <ion-item menu-close href="#/tab/topics" class="item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-pulse-strong inner-icon"></i>
-                    </div>
+                <ion-item menu-close href="#/tab/topics">
                     論壇版塊
                 </ion-item>
-                <ion-item menu-close href="#/tab/likes" class="item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-heart-outline inner-icon"></i>
-                    </div>
+                <ion-item menu-close href="#/tab/likes">
                     我的最愛
                 </ion-item>
-                <ion-item menu-close href="#/tab/features" class="item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-infinite inner-icon"></i>
-                    </div>
+                <ion-item menu-close href="#/tab/features">
                     功能
                 </ion-item>
-                <ion-item menu-close href="#/tab/about" class="item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-help-outline inner-icon"></i>
-                    </div>
+                <ion-item menu-close href="#/tab/about">
                     關於
                 </ion-item>
             </ion-list>
@@ -78,8 +66,7 @@
 -->
 <ion-nav-bar id="ion-nav-bar" class="bar-stable">
     <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
-        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="onBack()" ng-if="::isiOSNative()"></button>
+        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()"></button>
     </ion-nav-buttons>
 </ion-nav-bar>
 <!--

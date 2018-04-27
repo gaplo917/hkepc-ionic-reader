@@ -8,7 +8,7 @@ navigation history that also transitions its views in and out.
 
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === false" href="css/ionic.app.css" rel="stylesheet">
 <link ng-if="vm.darkTheme !== null && vm.darkTheme === true" href="css/ionic.app.dark.css" rel="stylesheet">
-<style ng-if="isAndroidNative()">
+<style ng-if="isAndroidNative">
     .bar.bar-header {
         height: 59px;
     }
@@ -46,7 +46,7 @@ navigation history that also transitions its views in and out.
         height: 7.8vh;
     }
 </style>
-<style ng-if="isiOSNative()">
+<style ng-if="isiOSNative">
 
     .bar.bar-header {
         height: 59px;
@@ -201,4 +201,29 @@ navigation history that also transitions its views in and out.
         }
     }
 
+</style>
+<style ng-if="vm.mHeadFix">
+    body {
+        top: 74px;
+    }
+
+    .bar.bar-header {
+        height: 74px;
+    }
+
+    .bar.bar-subheader {
+        top: 74px;
+    }
+
+    .bar.bar-header .title {
+        top: 30px;
+    }
+
+    .bar.bar-header > .buttons, .bar.bar-header > .button {
+        margin-top: 30px;
+    }
+
+    .has-header {
+        top: 74px;
+    }
 </style>

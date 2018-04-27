@@ -20,7 +20,7 @@ export class VersionController {
     this.ionicHistory = $ionicHistory
     const converter = new showdown.Converter()
 
-    apiService.version($rootScope.isAndroidNative()).safeApply($scope, resp => {
+    apiService.version($rootScope.isAndroidNative).safeApply($scope, resp => {
       this.content = converter.makeHtml(resp.data)
     }).subscribe()
   }

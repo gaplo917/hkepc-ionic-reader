@@ -6,9 +6,8 @@ import {
   NotificationBadgeUpdateRequest,
   ChangeThemeRequest,
   ChangeFontSizeRequest,
-  HideUsernameRequest
+  MHeadFixRequest
 } from "../model/requests"
-import swal from 'sweetalert2'
 
 const cheerio = require('cheerio')
 
@@ -26,11 +25,10 @@ export class FeatureRouteController{
     }
   }}
 
-  constructor($scope,$rootScope, apiService, AuthService,$state,$sce,ngToast,LocalStorageService){
+  constructor($scope, apiService, AuthService,$state,$sce,ngToast,LocalStorageService, observeOnScope, $rootScope){
 
     this.apiService = apiService
     this.scope = $scope
-    this.rootScope = $rootScope
     this.sce = $sce
     this.state = $state
     this.ngToast = ngToast
@@ -60,6 +58,12 @@ export class FeatureRouteController{
       }
     }).subscribe()
 
+    this.localStorageService.get('mHeadFix').safeApply($scope, data => {
+      if(data) {
+        this.mHeadFix = String(data) === 'true'
+      }
+    }).subscribe()
+
     this.authService = AuthService
 
     $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
@@ -84,16 +88,45 @@ export class FeatureRouteController{
       }).subscribe()
 
 
+      observeOnScope($scope, 'vm.isAutoLoadImage').subscribe(({oldValue, newValue}) => {
+        const loadImageMethod = newValue ? 'auto' : 'block'
+
+        this.localStorageService.set('loadImageMethod', loadImageMethod)
+      })
+
+      observeOnScope($scope, 'vm.signature').subscribe(({oldValue, newValue}) => {
+        this.localStorageService.set('signature', newValue ? 'true' : 'false')
+
+      })
+
+      observeOnScope($scope, 'vm.fontSize').subscribe(({oldValue, newValue}) => {
+        this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(newValue))
+      })
+
+      observeOnScope($scope, 'vm.darkTheme').subscribe(({oldValue, newValue}) => {
+        const theme = newValue ? 'dark' : 'default'
+        this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(theme))
+      })
+
+      observeOnScope($scope, 'vm.forumStyle').subscribe(({oldValue, newValue}) => {
+        this.registerOnChangeForumStyle()
+      })
+
+      observeOnScope($scope, 'vm.mHeadFix').subscribe(({oldValue, newValue}) => {
+        this.scope.$emit(MHeadFixRequest.NAME, new MHeadFixRequest(newValue))
+      })
+
     })
   }
 
   registerOnChangeForumStyle(){
 
+    //TODO: move to web-worker
     this.apiService.settings()
       .safeApply(this.scope, (resp) => {
         let $ = cheerio.load(resp.data)
         let form = $(`form[name='reg']`)
-        let formSource = cheerio.load(form.html())
+        let formSource = cheerio.load(form.html() ||"")
         const relativeUrl = form.attr('action')
         const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
 
@@ -135,36 +168,6 @@ export class FeatureRouteController{
         }
 
       }).subscribe()
-  }
-
-  onDarkTheme(bool){
-    const theme = bool ? 'dark' : 'default'
-    this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(theme))
-  }
-
-  onResizeFont(size) {
-    this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(size))
-  }
-
-  onDev(){
-    this.ngToast.warning({
-      dismissOnTimeout: false,
-      content:`<i class="ion-ios-time"> 功能待開發中! <br/> 如你希望作者能盡快加入此功能，可考慮捐款支持作者。</i>`
-    })
-  }
-
-  onIsAutoLoadImage(isAutoLoadImage){
-    const loadImageMethod = isAutoLoadImage ? 'auto' : 'block'
-
-    this.localStorageService.set('loadImageMethod', loadImageMethod)
-  }
-
-  onHideUsername(hidden){
-    this.scope.$emit(HideUsernameRequest.NAME, new HideUsernameRequest(hidden))
-  }
-
-  onSignature(signature){
-    this.localStorageService.set('signature', signature ? 'true' : 'false')
   }
 
   doRefresh(){

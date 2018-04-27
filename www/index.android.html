@@ -26,21 +26,14 @@
     <script src="lib/babel-polyfill/browser-polyfill.js"></script>
     <script src="js/app.js"></script>
 </head>
-<body class="ios">
-<toast></toast>
-<ion-nav-view></ion-nav-view>
-<!--
-  The nav bar that will be updated as we navigate between views.
--->
-<ion-nav-bar id="ion-nav-bar" class="bar-stable">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()"></button>
-    </ion-nav-buttons>
-</ion-nav-bar>
-<!--
-  The views will be rendered in the <ion-nav-view> directive below
-  Templates are in the /templates folder (but you could also
-  have templates inline in this html file if you'd like).
--->
-</body>
+    <body class="ios">
+        <toast></toast>
+        <ion-nav-view></ion-nav-view>
+
+        <ion-nav-bar id="ion-nav-bar" class="bar-stable">
+            <ion-nav-buttons side="left">
+                <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="isRendered"></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+    </body>
 </html>

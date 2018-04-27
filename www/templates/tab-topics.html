@@ -4,7 +4,7 @@
         <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative()"></button>
+        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::!isiOSNative"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>

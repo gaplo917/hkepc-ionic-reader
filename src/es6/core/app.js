@@ -65,17 +65,21 @@ function initAngular() {
   console.log("init angular...")
 
   const angularInit = angular.module('starter', dynamicModules())
-    .run(function ($rootScope, ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate, $ionicHistory) {
+    .run(function ($rootScope, ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate, $ionicHistory, $timeout) {
+
       window.moment = moment
       // export the global
-      window.isiOSNative = isiOSNative
-      window.isAndroidNative = isAndroidNative
-      window.isLegacyAndroid = isLegacyAndroid
+      window.isiOSNative = isiOSNative()
+      window.isAndroidNative = isAndroidNative()
+      window.isLegacyAndroid = isLegacyAndroid()
 
-      $rootScope.isiOSNative = isiOSNative
-      $rootScope.isAndroidNative = isAndroidNative
-      $rootScope.isLegacyAndroid = isLegacyAndroid
-
+      $timeout(() => {
+        // set after render
+        $rootScope.isRendered = true
+      })
+      $rootScope.isiOSNative = isiOSNative()
+      $rootScope.isAndroidNative = isAndroidNative()
+      $rootScope.isLegacyAndroid = isLegacyAndroid()
       if(isiOSNative() || isAndroidNative()){
         // share handling
         Bridge.version((version) => {

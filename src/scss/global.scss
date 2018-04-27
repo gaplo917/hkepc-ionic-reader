@@ -367,6 +367,7 @@ ion-infinite-scroll {
 .action-sheet .button, .action-sheet .input-helper .flow-button, .input-helper .action-sheet .flow-button {
   color: $text-color;
   font-size: $font-size-large;
+  border-color: $border-color;
 }
 
 .action-sheet .button:hover, .action-sheet .input-helper .flow-button:hover, .input-helper .action-sheet .flow-button:hover {
@@ -377,6 +378,9 @@ ion-infinite-scroll {
   color: $text-color;
 }
 
+.action-sheet-options, .action-sheet-group {
+  background-color: $popover-bg-color;
+}
 
 .platform-ios .popover-arrow:after {
   display: none;

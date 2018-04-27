@@ -77,3 +77,10 @@ export class PushHistoryRequest {
     this.historyObj = any
   }
 }
+export class MHeadFixRequest {
+  static get NAME() { return 'MHeadFixRequest'}
+
+  constructor(mHeadFix) {
+    this.mHeadFix = mHeadFix
+  }
+}

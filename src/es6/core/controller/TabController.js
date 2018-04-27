@@ -10,7 +10,7 @@ import {
   PushHistoryRequest,
   ChangeThemeRequest,
   ChangeFontSizeRequest,
-  HideUsernameRequest,
+  HideUsernameRequest, MHeadFixRequest,
 } from '../model/requests'
 
 import {
@@ -19,7 +19,13 @@ import {
   NativeHideUsernameRequest
 } from '../bridge/requests'
 
-import {Bridge, Channel} from '../bridge/index'
+import {
+  Bridge,
+  Channel,
+  isiOSNative,
+  isAndroidNative,
+  isLegacyAndroid,
+} from '../bridge/index'
 
 import * as Controllers from './index'
 
@@ -58,19 +64,19 @@ export class TabController{
     })
 
     observeOnScope($scope, 'vm.darkTheme').subscribe(({oldValue, newValue}) => {
-      if($rootScope.isLegacyAndroid()){
+      if(isLegacyAndroid()){
         $rootScope.darkTheme(newValue)
       }
     })
 
     observeOnScope($scope, 'vm.notification').subscribe(({oldValue, newValue}) => {
-      if($rootScope.isLegacyAndroid()){
+      if(isLegacyAndroid()){
         $rootScope.notification(JSON.stringify(newValue))
       }
     })
 
     observeOnScope($scope, 'vm.login').subscribe(({oldValue, newValue}) => {
-      if($rootScope.isLegacyAndroid()){
+      if(isLegacyAndroid()){
         $rootScope.username(newValue)
       }
     })
@@ -92,6 +98,12 @@ export class TabController{
 
     this.localStorageService.get('hideUsername').safeApply(this.scope, data => {
       this.hideUsername = String(data) == "true"
+    }).subscribe()
+
+    this.localStorageService.get('mHeadFix').safeApply($scope, data => {
+      if(data) {
+        this.mHeadFix = String(data) === 'true'
+      }
     }).subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -267,6 +279,13 @@ export class TabController{
         this.ionicHistory.clearCache();
       }).subscribe()
 
+    $scope.$eventToObservable(MHeadFixRequest.NAME)
+      .filter(([event,req]) => req instanceof MHeadFixRequest)
+      .safeApply(this.scope, ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received MHeadFixRequest`, req)
+        this.mHeadFix = String(req.mHeadFix) === 'true'
+        this.localStorageService.set('mHeadFix', req.mHeadFix ? 'true' : 'false')
+      }).subscribe()
   }
 
   removeAndroidStyleCssClass(){

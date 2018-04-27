@@ -2,8 +2,10 @@
  * Created by Gaplo917 on 11/1/2016.
  */
 import * as Controllers from "./index"
-import swal from 'sweetalert2'
-
+import {
+  isiOSNative,
+  isAndroidNative,
+} from "../bridge/index";
 
 export class TopicListController {
   static get STATE() { return 'tab.topics'}
@@ -146,14 +148,14 @@ export class TopicListController {
   }
 
   onIRSection(){
-    if(window.isiOSNative()){
+    if(isiOSNative()){
       this.state.go(Controllers.PostDetailController.STATE, {
         topicId: 202,
         postId: 2295363,
         page: 1
       })
     }
-    else if(window.isAndroidNative()){
+    else if(isAndroidNative()){
       this.state.go(Controllers.PostDetailController.STATE, {
         topicId: 180,
         postId: 2266086,
