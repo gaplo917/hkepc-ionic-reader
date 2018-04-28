@@ -27,11 +27,12 @@ export class HybridHttp {
               combineDuplications: true
             })
 
+            // fulfill the handler to prevent memory leak
             observer.onNext(responseData)
           }
           observer.onCompleted()
         })
-      })
+      }).filter(_ => _.status === 200)
     }
     else {
       const serializedData = this.serialize(opt.data)

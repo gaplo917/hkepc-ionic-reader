@@ -1,4 +1,4 @@
-**28 Apr 2018 - Release IR Pro 內核 v3.3.0, iOS v2.3.0**
+**28 Apr 2018 - Release IR Pro 內核 v3.3.1, iOS v2.3.0**
 內核更新：
 * 加入 「M 字額修正」(只適用於非 iOS 用戶)
 * 加入 「OLED 省電」模式
@@ -9,6 +9,8 @@
 
 App 更新：
 * 支援內核「OLED 省電」模式
+
+---
 
 **19 Apr 2018 - Release IR Pro 內核 v3.2.0, iOS v2.2.1**
 重點內容：
