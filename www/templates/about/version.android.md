@@ -5,6 +5,7 @@
 
 App 更新： 
 * 加入智能檢查 PM (每 20 個 EPC Request 檢查 1 次 / 入 App 檢查 1 次 / 每 5 分鐘檢查 1 次)
+* 優化 Side Menu 黑夜/ OLED 省電模式用色
 
 **28 Apr 2018 - Release IR Pro 內核 v3.3.1, Android v2.3.0**
 內核更新：
