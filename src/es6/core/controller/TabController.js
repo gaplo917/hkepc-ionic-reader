@@ -110,25 +110,6 @@ export class TabController{
       // FIXME: ugly hack for dark theme, all style use ios style
       this.removeAndroidStyleCssClass()
 
-      if(Bridge.isiOSNative()){
-        // polling the pm, only one of the tab do
-        if(window.location.hash.indexOf(Controllers.FeatureRouteController.CONFIG.url) > 0){
-          this.rx.Observable.interval(60 * 1000)
-            .observeOn(rx.Scheduler.async)
-            .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
-            .flatMap(() => apiService.checkPM())
-            .subscribe()
-        }
-      }
-      else {
-        // schedule to check PM
-        this.rx.Observable.interval(60 * 1000)
-          .observeOn(rx.Scheduler.async)
-          .do(() => console.debug(`[${TabController.NAME}] Background getting PM`))
-          .flatMap(() => apiService.checkPM())
-          .subscribe()
-      }
-
       $timeout(() => {
         // set after render
         $rootScope.isRendered = true
