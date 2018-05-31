@@ -1,9 +1,10 @@
 **1 Jun 2018 - Release IR Pro 內核 v3.3.2, Android v2.3.1**
 內核更新：
 * 移除背景檢查 PM 功能 (IR App 在背景運行時，有機會被 EPC 伺服器認為 DDoS 而封 IP)
+* 加長 「M 字額修正」
 
 App 更新： 
-* 加入智能檢查 PM (每 20 個 EPC Request 檢查 1 次)
+* 加入智能檢查 PM (每 20 個 EPC Request 檢查 1 次 / 入 App 檢查 1 次 / 每 5 分鐘檢查 1 次)
 
 **28 Apr 2018 - Release IR Pro 內核 v3.3.1, Android v2.3.0**
 內核更新：
