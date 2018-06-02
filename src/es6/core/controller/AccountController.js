@@ -49,6 +49,10 @@ export class AccountController {
         this.proxy = data || HKEPC.proxy
       }).subscribe()
 
+      LocalStorageService.getObject('authority').safeApply($scope, data => {
+        this.loginForm = data
+      }).subscribe()
+
     })
   }
 
