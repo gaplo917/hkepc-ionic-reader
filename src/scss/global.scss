@@ -6,6 +6,7 @@ html, body {
 * {
   word-break: break-all;
   -webkit-text-size-adjust: none!important;
+  text-rendering: optimizeSpeed;
 }
 
 input,textarea {

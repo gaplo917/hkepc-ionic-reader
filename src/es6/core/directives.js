@@ -232,6 +232,11 @@ export default angular.module('starter.directives', ['ngAnimate'])
       restrict: 'A',
       link: function ($scope, $elm, $attrs) {
         $elm.bind('touchstart', function (evt) {
+          $scope.startTouch = {
+            x: evt.touches[0].clientX,
+            y: evt.touches[0].clientY
+          }
+
           // Locally scoped variable that will keep track of the long press
           $scope.longPress = true
 
@@ -246,7 +251,21 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
               $scope.triggeredLongPress = true
             }
-          }, 600)
+          }, 1200)
+        })
+        $elm.bind('touchcancel', function(evt){
+          $scope.triggeredLongPress = false
+          // Prevent the onLongPress event from firing
+          $scope.longPress = false
+        })
+
+        $elm.bind('touchmove', function(evt){
+          const { clientX, clientY } = evt.touches[0]
+          if(Math.abs($scope.startTouch.x - clientX) > 5 || Math.abs($scope.startTouch.y - clientY) > 5){
+            $scope.triggeredLongPress = false
+            // Prevent the onLongPress event from firing
+            $scope.longPress = false
+          }
         })
 
         $elm.bind('touchend', function (evt) {

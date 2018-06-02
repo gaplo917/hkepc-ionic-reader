@@ -24,4 +24,20 @@
     border-color: $border-color;
   }
 
+  .my-topic {
+    .my-topic-item:after {
+      // right angle triangle on left-top
+      //position: absolute;
+      //top: 0;
+      //left: 1px;
+      //width: 0;
+      //height: 0;
+      //border-top: 6px solid $sub-epc-color;
+      //border-right: 6px solid transparent;
+      //color: $sub-epc-color;
+      //content: "";
+      //pointer-events: none;
+      //z-index: 100;
+    }
+  }
 }

@@ -22,98 +22,136 @@
         <ion-list ng-if="vm.topics.length > 0">
             <!--Static Topic-->
             <span>
-        <div class="item item-divider" ng-show='vm.isLoggedIn'>會員功能</div>
-        <ion-item
-            ng-show='vm.isLoggedIn'
-            class="odd item-remove-animate item-avatar item-icon-right "
-            type="item-text-wrap"
-            href="#/tab/topics/latestPost/page/1">
-          <i class="ion-ios-clock-outline icon"
-             style="position: absolute;
-                    top: 16px;
-                    color:#77c320;
-                    left: 16px;
-                    max-width: 40px;
-                    max-height: 40px;
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;"></i>
-          <h2>最新發佈</h2>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description">瀏覧用戶 24 小時內最新發佈的帖子</small>
-        </ion-item>
-        <ion-item
-            ng-show='vm.isLoggedIn'
-            class="even item-remove-animate item-avatar item-icon-right "
-            type="item-text-wrap"
-            href="#/tab/topics/latest/page/1">
-          <i class="ion-ios-chatboxes-outline icon"
-             style="position: absolute;
-                    top: 16px;
-                    color:#77c320;
-                    left: 16px;
-                    max-width: 40px;
-                    max-height: 40px;
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;"></i>
-          <h2>最新帖子</h2>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description">瀏覧 24 小時內回覆的帖子</small>
-        </ion-item>
-        <ion-item
-            ng-show='vm.isLoggedIn'
-            class="odd item-remove-animate item-avatar item-icon-right "
-            type="item-text-wrap"
-            href="#/tab/topics/search">
-          <i class="ion-ios-search icon"
-             style="position: absolute;
-                    top: 16px;
-                    color:#77c320;
-                    left: 16px;
-                    max-width: 40px;
-                    max-height: 40px;
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;"></i>
-          <h2>搜尋帖子</h2>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description">尋找你有興趣的帖子</small>
-        </ion-item>
-          
-        <ion-item
-            ng-show='vm.isLoggedIn'
-            class="even item-remove-animate item-avatar item-icon-right "
-            type="item-text-wrap"
-            href=""
-            ng-click="vm.onIRSection()">
-          <img class="topic-icon" ng-src="img/Icon.png"/>
-          <h2>IR 專區</h2>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description">更新、教學、問題回報</small>
-        </ion-item>
+                <div class="item item-divider" ng-show='vm.isLoggedIn'>會員功能</div>
 
-      </span>
+                <ion-item
+                    ng-show='vm.isLoggedIn'
+                    class="odd item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    href="#/tab/topics/latestPost/page/1">
+                  <i class="ion-ios-clock-outline icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#77c320;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>最新發佈</h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description">瀏覧用戶 24 小時內最新發佈的帖子</small>
+                </ion-item>
+                <ion-item
+                    ng-show='vm.isLoggedIn'
+                    class="even item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    href="#/tab/topics/latest/page/1">
+                  <i class="ion-ios-chatboxes-outline icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#77c320;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>最新帖子</h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description">瀏覧 24 小時內回覆的帖子</small>
+                </ion-item>
+                <ion-item
+                    ng-show='vm.isLoggedIn'
+                    class="odd item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    href="#/tab/topics/search">
+                  <i class="ion-ios-search icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#77c320;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>搜尋帖子</h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description">尋找你有興趣的帖子</small>
+                </ion-item>
 
+                <ion-item
+                    ng-show='vm.isLoggedIn'
+                    class="even item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    href=""
+                    ng-click="vm.onIRSection()">
+                  <img class="topic-icon" ng-src="img/Icon.png"/>
+                  <h2>IR 專區</h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description">更新、教學、問題回報</small>
+                </ion-item>
 
-        <!--Dynamic Topic-->
-        <span ng-repeat="topic in vm.topics track by $index">
-        <div ng-if="topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider"
-             ng-bind="topic.groupName">
-        </div>
-        <ion-item
-            ng-if="!topic.groupName"
-            ng-show="vm.canShowSectionInIOSReview(topic.id)"
-            ng-class-odd="'odd'" ng-class-even="'even'"
-            class="item-remove-animate item-avatar item-icon-right "
-            type="item-text-wrap"
-            href="#/tab/topics/{{topic.id}}/page/1">
-          <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
-          <h2 ng-bind="topic.name"></h2>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <small class="last-description" ng-bind="topic.description"></small>
-        </ion-item>
-      </span>
+            </span >
+
+            <span class="my-topic">
+                <div class="item item-divider">我的版塊 <small style="font-size: 12px;">(長按版塊加入/移除)</small></div>
+                <ion-item
+                    ng-show='vm.myTopics.length === 0'
+                    class="my-topic-item odd item-remove-animate item-avatar item-icon-right "
+                    href=""
+                    type="item-text-wrap">
+                  <i class="ion-android-star icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#ff6d00;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>版塊範例</h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description">立即加入你的第一個版塊！</small>
+                </ion-item>
+                <ion-item
+                    ng-repeat="topic in vm.myTopics track by $index"
+                    ng-if="!topic.groupName"
+                    ng-show="vm.canShowSectionInIOSReview(topic.id)"
+                    ng-class-odd="'odd'" ng-class-even="'even'"
+                    class="my-topic-item item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    on-long-press="vm.longPressMyTopic(topic)"
+                    href="#/tab/topics/{{topic.id}}/page/1">
+                  <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
+                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="topic.rank > 0" > +{{topic.rank}}</span></h2>
+                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
+                  <small class="last-description" ng-bind="topic.description"></small>
+                </ion-item>
+            </span>
+
+            <!--Dynamic Topic-->
+            <span ng-repeat="topic in vm.topics track by $index">
+                <div ng-if="topic.groupName" ng-show="vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider"
+                     ng-bind="topic.groupName">
+                </div>
+                <ion-item
+                    ng-if="!topic.groupName"
+                    ng-show="vm.canShowSectionInIOSReview(topic.id)"
+                    ng-class-odd="'odd'" ng-class-even="'even'"
+                    class="item-remove-animate item-avatar item-icon-right "
+                    type="item-text-wrap"
+                    on-long-press="vm.longPressTopic(topic)"
+                    href="#/tab/topics/{{topic.id}}/page/1">
+                  <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
+                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="topic.rank > 0" > +{{topic.rank}}</span></h2>
+                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <small class="last-description" ng-bind="topic.description"></small>
+                </ion-item>
+            </span>
 
             <div class="tab-bar-inset"></div>
         </ion-list>
