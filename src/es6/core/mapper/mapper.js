@@ -158,6 +158,7 @@ export default class Mapper{
       .map((i, elem) => {
 
       let postSource = $(elem)
+      const hasEdit = !!postSource.find('a.editpost').text()
 
       const content = new HKEPCHtml(
         cheerio.load(postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
@@ -186,6 +187,7 @@ export default class Mapper{
         pstatus: pstatus,
         content : content.html(),
         type: 'POST_MESSAGE',
+        hasEdit: hasEdit,
         post:{
           id: postId,
           topicId: topicId,

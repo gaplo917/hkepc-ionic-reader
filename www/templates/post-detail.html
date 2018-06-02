@@ -62,7 +62,7 @@
                     <!--Control buttons-->
                     <button class="button button-icon ion-ios-compose-outline on-more-button"
                             style="right: 105px;"
-                            ng-if="::message.isSelf"
+                            ng-if="::message.hasEdit"
                             ng-click="::vm.onEdit(message)"></button>
                     <button class="button button-icon on-more-button"
                             ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "
@@ -104,7 +104,7 @@
                         <i class="icon" ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "></i>
                         回覆
                     </a>
-                    <a class="tab-item card-button" ng-if="::message.isSelf" ng-click="::vm.onEdit(message)">
+                    <a class="tab-item card-button" ng-if="::message.hasEdit" ng-click="::vm.onEdit(message)">
                         <i class="icon ion-ios-compose-outline"></i>
                         修改
                     </a>
