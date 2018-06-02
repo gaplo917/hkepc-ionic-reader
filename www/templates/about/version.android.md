@@ -1,3 +1,12 @@
+**3 Jun 2018 - Release IR Pro 內核 v3.3.4, Android v2.3.3**
+內核更新：
+* 修正無法使用「一鍵轉換論壇風格」功能
+
+App 更新： 
+* 更改智能檢查 PM 條件為(每 60 秒由每個 EPC Request 引發)
+
+---
+
 **3 Jun 2018 - Release IR Pro 內核 v3.3.3, Android v2.3.2**
 內核更新：
 * 加入「安全問題」登入
