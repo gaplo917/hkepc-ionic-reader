@@ -1,3 +1,13 @@
+**3 Jun 2018 - Release IR Pro 內核 v3.3.3, Android v2.3.2**
+內核更新：
+* 加入「安全問題」登入
+* 修正`登入名稱`與`EPC 顯示名稱`大小寫不對會無法出現修改帖子功能
+
+App 更新： 
+* 修正 Side Menu 黑夜/ OLED 模式時，私人及帖子訊息數目顏色未有變更問題
+
+---
+
 **1 Jun 2018 - Release IR Pro 內核 v3.3.2, Android v2.3.1**
 內核更新：
 * 移除背景檢查 PM 功能 (IR App 在背景運行時，有機會被 EPC 伺服器認為 DDoS 而封 IP)
