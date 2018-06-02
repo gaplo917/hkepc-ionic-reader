@@ -1,4 +1,4 @@
-**3 Jun 2018 - Release IR Pro 內核 v3.3.4, Android v2.3.1**
+**3 Jun 2018 - Release IR Pro 內核 v3.3.4, Android v2.3.2**
 內核更新：
 * 加入「安全問題」登入
 * 修正`登入名稱`與`EPC 顯示名稱`大小寫不對會無法出現修改帖子功能
@@ -7,6 +7,8 @@
 
 App 更新： 
 * 修正上載多張圖片使用過多 RAM 而 Crash 問題
+* 加入上載圖片 Progress
+* 更改智能檢查 PM 條件為(每 60 秒 1 次為限，每次由 EPC Request 主動引發)
 
 ---
 
