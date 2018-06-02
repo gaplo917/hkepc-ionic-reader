@@ -217,7 +217,7 @@
 
                 <div style="margin-left:10px;line-height: 2;">論壇風格設定
                     <div class="fright ">
-                        <select ng-model="vm.forumStyle">
+                        <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
                             <option value="">使用默認</option>
                             <option value="23">HKEPC（傳統介面)</option>
                             <option value="28">HKEPC</option>

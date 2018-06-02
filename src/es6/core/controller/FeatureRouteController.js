@@ -8,6 +8,7 @@ import {
   ChangeFontSizeRequest,
   MHeadFixRequest
 } from "../model/requests"
+import swal from 'sweetalert2'
 
 const cheerio = require('cheerio')
 
@@ -60,12 +61,6 @@ export class FeatureRouteController{
       .skip(1)
       .subscribe(({oldValue, newValue}) => {
         this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(newValue))
-      })
-
-    observeOnScope($scope, 'vm.forumStyle')
-      .skip(1)
-      .subscribe(({oldValue, newValue}) => {
-        this.registerOnChangeForumStyle()
       })
 
     observeOnScope($scope, 'vm.mHeadFix')
@@ -162,6 +157,21 @@ export class FeatureRouteController{
 
         this.onChangeForumStyle = (newStyle) => {
 
+          const spinnerHtml = `
+          <div>
+              <div class="text-center">傳送到 HKEPC 伺服器中</div>
+          </div>
+        `
+
+          swal({
+            html: spinnerHtml,
+            allowOutsideClick: false,
+            showCancelButton: false,
+            showConfirmButton: false,
+          })
+
+          swal.showLoading()
+
           // Post to the server
           this.apiService.dynamicRequest({
             method: "POST",
@@ -172,8 +182,11 @@ export class FeatureRouteController{
             },
             headers : {'Content-Type':'application/x-www-form-urlencoded'}
           }).safeApply(this.scope, (resp) => {
-
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功更改！</i>`)
+            swal({
+              title: "成功更改",
+              text: '',
+              type: 'success'
+            })
           }).subscribe()
         }
 
