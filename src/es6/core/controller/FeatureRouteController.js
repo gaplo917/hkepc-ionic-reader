@@ -36,6 +36,44 @@ export class FeatureRouteController{
     this.isLoggedIn = false
     this.signature = true
 
+    observeOnScope($scope, 'vm.isAutoLoadImage')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        const loadImageMethod = newValue ? 'auto' : 'block'
+
+        this.localStorageService.set('loadImageMethod', loadImageMethod)
+      })
+
+    observeOnScope($scope, 'vm.signature')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        this.localStorageService.set('signature', newValue ? 'true' : 'false')
+      })
+
+    observeOnScope($scope, 'vm.fontSize')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(newValue))
+      })
+
+    observeOnScope($scope, 'vm.darkTheme')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(newValue))
+      })
+
+    observeOnScope($scope, 'vm.forumStyle')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        this.registerOnChangeForumStyle()
+      })
+
+    observeOnScope($scope, 'vm.mHeadFix')
+      .skip(1)
+      .subscribe(({oldValue, newValue}) => {
+        this.scope.$emit(MHeadFixRequest.NAME, new MHeadFixRequest(newValue))
+      })
+
     this.localStorageService.get('loadImageMethod').safeApply($scope, loadImageMethod => {
       this.isAutoLoadImage = loadImageMethod !== 'block'
     }).subscribe()
@@ -73,7 +111,7 @@ export class FeatureRouteController{
       })
       .subscribe()
 
-    $scope.$on('$ionicView.enter', (e) => {
+    $scope.$on('$ionicView.loaded', (e) => {
 
       this.localStorageService.getObject('notification').subscribe( data => {
         this.notification = data
@@ -87,33 +125,6 @@ export class FeatureRouteController{
         }
       }).subscribe()
 
-
-      observeOnScope($scope, 'vm.isAutoLoadImage').subscribe(({oldValue, newValue}) => {
-        const loadImageMethod = newValue ? 'auto' : 'block'
-
-        this.localStorageService.set('loadImageMethod', loadImageMethod)
-      })
-
-      observeOnScope($scope, 'vm.signature').subscribe(({oldValue, newValue}) => {
-        this.localStorageService.set('signature', newValue ? 'true' : 'false')
-
-      })
-
-      observeOnScope($scope, 'vm.fontSize').subscribe(({oldValue, newValue}) => {
-        this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(newValue))
-      })
-
-      observeOnScope($scope, 'vm.darkTheme').subscribe(({oldValue, newValue}) => {
-        this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(newValue))
-      })
-
-      observeOnScope($scope, 'vm.forumStyle').subscribe(({oldValue, newValue}) => {
-        this.registerOnChangeForumStyle()
-      })
-
-      observeOnScope($scope, 'vm.mHeadFix').subscribe(({oldValue, newValue}) => {
-        this.scope.$emit(MHeadFixRequest.NAME, new MHeadFixRequest(newValue))
-      })
 
     })
   }

@@ -3,8 +3,6 @@
  */
 import {Bridge, Channel} from "../bridge/index";
 
-const cache = new Map()
-
 export class NativeStorageService {
   static get NAME() { return 'LocalStorageService'}
 
@@ -29,19 +27,11 @@ export class NativeStorageService {
       }, (responseData) => {
         observer.onNext(responseData)
         observer.onCompleted()
-
-        cache.set(key, responseData)
       })
     }).subscribe()
   }
 
   get(key, defaultValue) {
-    const value = cache.get(key)
-
-    if(value) {
-      return this.rx.Observable.just(value)
-    }
-
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: "GET",
@@ -49,8 +39,6 @@ export class NativeStorageService {
       }, (responseData) => {
         observer.onNext(responseData)
         observer.onCompleted()
-
-        cache.set(key, responseData)
       })
     })
   }
@@ -64,19 +52,12 @@ export class NativeStorageService {
       }, () => {
         observer.onNext(true)
         observer.onCompleted()
-
-        cache.set(key, value)
       })
     }).subscribe()
 
   }
 
   getObject(key) {
-    const value = cache.get(key)
-
-    if(value) {
-      return this.rx.Observable.just(value)
-    }
 
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
@@ -86,8 +67,6 @@ export class NativeStorageService {
         const jsObj = JSON.parse(responseData)
         observer.onNext(jsObj)
         observer.onCompleted()
-
-        cache.set(key, jsObj)
       })
     })
   }
@@ -111,8 +90,6 @@ export class LocalStorageService {
 
   set(key, value) {
 
-    cache.set(key, value)
-
     return this.rx.Observable
       .fromPromise(this.$localForage.setItem(key, value))
       .subscribe()
@@ -121,20 +98,13 @@ export class LocalStorageService {
 
   get(key, defaultValue) {
 
-    const value = cache.get(key)
-    return value
-      ? this.rx.Observable.just(value)
-      : this.rx.Observable
+    return this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
         .map(data => (data !== undefined && data != null) ? data : defaultValue)
-        .do(data => {
-          cache.set(key, data)
-        })
   }
 
   setObject(key, value) {
 
-    cache.set(key, value)
     return this.rx.Observable
       .fromPromise(this.$localForage.setItem(key, JSON.stringify(value)))
       .subscribe()
@@ -143,16 +113,9 @@ export class LocalStorageService {
 
   getObject(key) {
 
-    const value = cache.get(key)
-
-    return value
-      ? this.rx.Observable.just(value)
-      : this.rx.Observable
+    return this.rx.Observable
         .fromPromise(this.$localForage.getItem(key))
         .map(JSON.parse)
-        .do(data => {
-          cache.set(key, data)
-        })
 
   }
 }
