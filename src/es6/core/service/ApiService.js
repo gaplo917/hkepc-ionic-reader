@@ -61,13 +61,15 @@ export class ApiService {
     return this.http.request(opt)
   }
 
-  login(username, password){
+  login({username, password, securityQuestionId, securityQuestionAns}){
     return this.http.request({
       method: 'POST',
       url: HKEPC.forum.login(),
       data: {
         username: username,
         password: password,
+        questionid: securityQuestionId,
+        answer: securityQuestionAns,
         cookietime: 2592000
       },
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}

@@ -21,18 +21,22 @@ export class AccountController {
     }
   }}
 
-  constructor($scope, $http, $state, LocalStorageService, AuthService,$ionicPopup,$ionicHistory) {
+  constructor($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory) {
 
-    this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
     this.state = $state
     this.authService = AuthService
-    this.ionicPopup = $ionicPopup
     this.version = HKEPC.version
     this.ionicHistory = $ionicHistory
     this.isLoggedIn = false
     this.isReady = false
+    this.loginForm = {
+      username: null,
+      password: null,
+      securityQuestionId: '0',
+      securityQuestionAns: null
+    }
 
     $scope.$on('$ionicView.loaded', (e) => {
 
@@ -45,18 +49,12 @@ export class AccountController {
         this.proxy = data || HKEPC.proxy
       }).subscribe()
 
-      LocalStorageService.getObject('authority').safeApply($scope, data => {
-        this.user = data
-      }).subscribe()
     })
   }
 
   login(username,password){
 
-    const authority = {
-      username: username,
-      password: password
-    }
+    const authority = this.loginForm
 
     this.authService.login(authority,(err,username) => {
       this.authService.saveAuthority(authority)
@@ -64,7 +62,8 @@ export class AccountController {
       this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username) )
 
       // unset the password field
-      this.user.password = undefined
+      delete this.loginForm.password
+      delete this.loginForm.securityQuestionAns
 
       this.ionicHistory.clearCache()
 

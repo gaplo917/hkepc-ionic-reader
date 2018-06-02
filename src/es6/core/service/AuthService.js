@@ -22,6 +22,7 @@ export class AuthService {
   saveAuthority(authority) {
     // remove the password before save
     delete authority['password']
+    delete authority['securityQuestionAns']
 
     return this.localStorageService.setObject('authority',authority)
   }
@@ -57,7 +58,7 @@ export class AuthService {
     if(authority && authority.username && authority.password){
       console.log('[AuthService]','Request login')
 
-      this.apiService.login(authority.username, authority.password)
+      this.apiService.login(authority)
         .subscribe((resp) => {
 
           if(URLUtils.isProxy()){

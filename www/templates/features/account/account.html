@@ -1,25 +1,46 @@
-<ion-view view-title="帳號管理">
+<ion-view view-title="帳號管理" class="account-view">
     <ion-content>
         <div class="list" ng-if="vm.isReady && !vm.isLoggedIn" style="margin-bottom: 0">
             <label class="item item-input">
                 <span class="input-label">登入名稱</span>
-                <input type="text" placeholder="請輸入登入名稱" ng-model="vm.user.username">
+                <input type="text" placeholder="請輸入登入名稱" ng-model="vm.loginForm.username">
             </label>
             <label class="item item-input">
                 <span class="input-label">登入密碼</span>
-                <input type="password" placeholder="請輸入登入密碼" ng-model="vm.user.password">
+                <input type="password" placeholder="請輸入登入密碼" ng-model="vm.loginForm.password">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">安全提問</span>
+                <div class="selectable">
+                    <select ng-model="vm.loginForm.securityQuestionId">
+                        <option value="0">無安全提問</option>
+                        <option value="1">母親的名字</option>
+                        <option value="2">爺爺的名字</option>
+                        <option value="3">父親出生的城市</option>
+                        <option value="4">您其中一位老師的名字</option>
+                        <option value="5">您個人計算機的型號</option>
+                        <option value="6">您最喜歡的餐館名稱</option>
+                        <option value="7">駕駛執照的最後四位數字</option>
+                    </select>
+                </div>
+
+            </label>
+            <label class="item item-input" ng-if="vm.loginForm.securityQuestionId > 0">
+                <span class="input-label">安全提問回答</span>
+                <input type="password" placeholder="請輸入安全提問回答" ng-model="vm.loginForm.securityQuestionAns">
             </label>
             <ion-checkbox ng-if="vm.isProxy()" ng-model="vm.agreeProxy">我同意使用 Proxy 傳送資料</ion-checkbox>
             <div class="padding" ng-if="vm.isProxy()">
                 <button class="button button-block button-assertive"
-                        ng-class="vm.user.username && vm.user.password && vm.agreeProxy ? '' : 'disabled'"
-                        ng-click="vm.login(vm.user.username,vm.user.password)">登入
+                        ng-class="vm.loginForm.username && vm.loginForm.password && vm.agreeProxy ? '' : 'disabled'"
+                        ng-click="vm.login()">登入
                 </button>
             </div>
+
             <div ng-if="!vm.isProxy()">
                 <div class="padding">
                     <button class="button button-block button-assertive"
-                            ng-click="vm.login(vm.user.username,vm.user.password)">登入
+                            ng-click="vm.login()">登入
                     </button>
                 </div>
             </div>
@@ -27,7 +48,7 @@
         <div class="list" ng-if="vm.isReady && vm.isLoggedIn">
             <div class="padding">
                 <button class="button button-block button-assertive" ng-click="vm.logout()">登出
-                    {{vm.user.username}}
+                    {{vm.loginForm.username}}
                 </button>
             </div>
         </div>
