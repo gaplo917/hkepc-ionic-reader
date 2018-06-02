@@ -100,6 +100,29 @@
 
         </div>
 
+        <div class="list card" ng-show="vm.isLoggedIn">
+
+            <div class="feature-route item item-icon-left selectable">
+                <div class="icon">
+                    <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">論壇風格設定
+                    <div class="fright ">
+                        <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
+                            <option value="">使用默認</option>
+                            <option value="23">HKEPC（傳統介面)</option>
+                            <option value="28">HKEPC</option>
+                            <option value="29">HKEPC 2.0（beta）</option>
+                        </select>
+                    </div>
+                    <p class="forum-style-warning" ng-show="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
+                </div>
+
+            </div>
+
+        </div>
+
         <div class="list card">
 
             <div class="feature-route item item-icon-left">
@@ -208,28 +231,6 @@
 
         </div>
 
-        <div class="list card" ng-show="vm.isLoggedIn">
-
-            <div class="feature-route item item-icon-left selectable">
-                <div class="icon">
-                    <i class="ion-ios-cog inner-icon" style="background-color: #8fc320;"></i>
-                </div>
-
-                <div style="margin-left:10px;line-height: 2;">論壇風格設定
-                    <div class="fright ">
-                        <select ng-model="vm.forumStyle" ng-change="vm.onChangeForumStyle(vm.forumStyle)">
-                            <option value="">使用默認</option>
-                            <option value="23">HKEPC（傳統介面)</option>
-                            <option value="28">HKEPC</option>
-                            <option value="29">HKEPC 2.0（beta）</option>
-                        </select>
-                    </div>
-                    <p class="forum-style-warning" ng-show="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
-                </div>
-
-            </div>
-
-        </div>
         <div class="super-less-important-info text-center" style="padding-bottom: 20px;">
             Designed & Developed by <a onclick="window.open('https://blog.gaplotech.com', '_system', 'location=yes')">Gap撈Tech</a>
         </div>
