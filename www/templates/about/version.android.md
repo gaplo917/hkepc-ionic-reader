@@ -1,3 +1,12 @@
+**4 Jun 2018 - Release IR Pro 內核 v3.4.0, Android v2.3.3**
+內核更新：
+* 加入「我的版塊」！
+
+App 更新： 
+* 開啟 Drawer 時暫停 WebView
+
+---
+
 **3 Jun 2018 - Release IR Pro 內核 v3.3.4, Android v2.3.3**
 內核更新：
 * 修正無法使用「一鍵轉換論壇風格」功能

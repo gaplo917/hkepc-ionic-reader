@@ -97,11 +97,12 @@
             </span >
 
             <span class="my-topic">
-                <div class="item item-divider">我的版塊 <small style="font-size: 12px;">(長按版塊加入/移除)</small></div>
+                <div class="item item-divider">我的版塊 <small style="font-size: 12px;">(長按版塊提升喜好程度/移除)</small></div>
                 <ion-item
-                    ng-show='vm.myTopics.length === 0'
+                    ng-if='vm.myTopics.length === 0'
                     class="my-topic-item odd item-remove-animate item-avatar item-icon-right "
                     href=""
+                    on-long-press="vm.myTopicTutorial()"
                     type="item-text-wrap">
                   <i class="ion-android-star icon"
                      style="position: absolute;
@@ -113,8 +114,48 @@
                             width: 100%;
                             height: 100%;
                             border-radius: 50%;"></i>
-                  <h2>版塊範例</h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
+                  <h2>範例版塊一<span style="color: #ff6d00;" > +5</span></h2>
+                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
+                  <small class="last-description">按你的喜好程度排列</small>
+                </ion-item>
+                <ion-item
+                    ng-if='vm.myTopics.length === 0'
+                    class="my-topic-item even item-remove-animate item-avatar item-icon-right "
+                    href=""
+                    on-long-press="vm.myTopicTutorial()"
+                    type="item-text-wrap">
+                  <i class="ion-android-star icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#ff6d00;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>範例版塊二<span style="color: #ff6d00;" > +2</span></h2>
+                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
+                  <small class="last-description">長按版塊可提升喜好程度</small>
+                </ion-item>
+                <ion-item
+                    ng-if='vm.myTopics.length === 0'
+                    class="my-topic-item odd item-remove-animate item-avatar item-icon-right "
+                    href=""
+                    on-long-press="vm.myTopicTutorial()"
+                    type="item-text-wrap">
+                  <i class="ion-android-star icon"
+                     style="position: absolute;
+                            top: 16px;
+                            color:#ff6d00;
+                            left: 16px;
+                            max-width: 40px;
+                            max-height: 40px;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;"></i>
+                  <h2>範例版塊三<span style="color: #ff6d00;" > +1</span></h2>
+                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
                   <small class="last-description">立即加入你的第一個版塊！</small>
                 </ion-item>
                 <ion-item

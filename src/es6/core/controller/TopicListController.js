@@ -194,6 +194,13 @@ export class TopicListController {
     })
   }
 
+  myTopicTutorial(){
+    swal({
+      text: `這個是範例版塊，不會有喜好程度。你要長按 HKEPC 的版塊才能提升喜好程度！`,
+      showCancelButton: false,
+    })
+  }
+
   isMyTopic(topic) {
     return this.myTopics.includes(topic)
   }
@@ -239,7 +246,6 @@ export class TopicListController {
   }
 
   updateMyTopics(myTopics){
-    console.table(myTopics)
     this.myTopics = myTopics.sort((t1,t2) => {
       return t1.rank < t2.rank
     })
