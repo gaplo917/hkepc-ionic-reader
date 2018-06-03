@@ -29,14 +29,14 @@ export class TopicListController {
     this.localStorageService = LocalStorageService
     this.authService = AuthService
     this.topics = []
-    this.topicMap = new Map()
+    this.topicRankMap = new Map()
+    this.rankedTopics = []
     this.apiService = apiService
     this.firstLogin = true
     this.q = $q
     this.state = $state
     this.ngToast = ngToast
-    this.myTopicMap = new Map()
-    this.myTopics = []
+    this.editMode = false
 
     observeOnScope($scope, 'vm.topics')
       .delay(1000) // delay for saving topics
@@ -44,13 +44,6 @@ export class TopicListController {
         if (newValue.length > 0) {
           this.localStorageService.setObject('topics', newValue)
         }
-      })
-
-    observeOnScope($scope, 'vm.myTopics')
-      .skip(1)
-      .subscribe(({oldValue, newValue}) => {
-          console.log("save my topics")
-          this.localStorageService.setObject('myTopics', newValue)
       })
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -73,29 +66,28 @@ export class TopicListController {
         }
       }).subscribe()
 
+      this.localStorageService.getObject('topic-rank-map')
+        .safeApply($scope, topicRankMapObj => {
+          this.topicRankMap = new Map(topicRankMapObj)
+        }).flatMap(() => {
+          return this.localStorageService.getObject('topics')
+            .do(topics => {
+              if (topics) {
+                console.log('[TopicListController]', 'using cache')
+              }
+            })
+            .flatMap(topics => {
+              return topics
+                ? rx.Observable.just(topics)
+                : this.apiService.topicList()
+                  .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
+            })
 
-      this.localStorageService.getObject('myTopics').subscribe(myTopics => {
-        this.updateMyTopics(myTopics)
+        }).safeApply($scope, topics => {
+          this.updateTopics(topics)
+        })
+        .subscribe()
 
-
-        this.topicsSubscription = this.localStorageService.getObject('topics')
-          .do(topics => {
-            if (topics) {
-              console.log('[TopicListController]', 'using cache')
-            }
-          })
-          .flatMap(topics => {
-            return topics
-              ? rx.Observable.just(topics)
-              : this.apiService.topicList()
-                .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
-          })
-          .safeApply($scope, topics => {
-            this.updateTopics(topics)
-          })
-          .subscribe()
-
-      })
 
     })
 
@@ -110,7 +102,6 @@ export class TopicListController {
         if(data){
           this.cacheTimestamp = moment(data * 1000).fromNow()
           console.log(this.cacheTimestamp)
-
         }
       }).subscribe()
 
@@ -154,6 +145,57 @@ export class TopicListController {
     this.loadList()
   }
 
+  changeEditMode(){
+    this.editMode = !this.editMode
+
+    this.updateRankedTopics()
+  }
+
+  updateRankedTopics(){
+
+    this.rankedTopics = [...this.topics].filter(t => {
+      const rank = this.topicRankMap.get(t.id)
+      return rank && rank > 0
+    })
+      .map(t => {
+        t.rank = this.topicRankMap.get(t.id)
+        return t
+      })
+
+    this.rankedTopics.sort((t1,t2) => t1.rank <= t2.rank)
+  }
+
+  increaseRank(topic){
+    const topicRank = this.topicRankMap.get(topic.id)
+
+    if(topicRank){
+      this.topicRankMap.set(topic.id, topicRank + 1)
+    } else {
+      this.topicRankMap.set(topic.id, 1)
+    }
+
+    this.saveTopicRankMap()
+  }
+
+  decreaseRank(topic){
+    const topicRank = this.topicRankMap.get(topic.id)
+
+    if(topicRank > 0){
+      this.topicRankMap.set(topic.id, topicRank - 1)
+    } else {
+      this.topicRankMap.set(topic.id, 0)
+    }
+
+    this.saveTopicRankMap()
+
+    // decrease can update ranked topics,
+    this.updateRankedTopics()
+  }
+
+  saveTopicRankMap(){
+    this.localStorageService.setObject('topic-rank-map', [...this.topicRankMap])
+  }
+
   canShowGroupNameIniOSReview(groupName){
     return !ionic.Platform.isIOS() || groupName != 'Mobile Phone'
   }
@@ -166,17 +208,6 @@ export class TopicListController {
   canShowSectionInIOSReview(topicId){
     const blackList = [171,168,170,44,277,202,-1] // -1 is IR Zone
     return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
-  }
-
-  longPressTopic(topic){
-    if(this.myTopicMap.get(topic.id)){
-      this.ngToast.success(`<i class="ion-alert-circled"> <b><b>${topic.name}</b>喜愛程度 +1</i>`)
-    } else {
-      this.ngToast.success(`<i class="ion-ios-checkmark"> 成功加入<b>${topic.name}</b>到我的版塊</i>`)
-    }
-    this.addToMyTopics(topic)
-
-    this.updateTopics(this.topics)
   }
 
   longPressMyTopic(topic){
@@ -196,79 +227,23 @@ export class TopicListController {
 
   myTopicTutorial(){
     swal({
-      text: `這個是範例版塊，不會有喜好程度。你要長按 HKEPC 的版塊才能提升喜好程度！`,
+      html: `這個是範例版塊。你要點擊 HKEPC 的版塊右邊的<span style="color: #FF6D00; font-size:24px; font-weight: 500"> +1 </span>才能提升喜好程度！`,
       showCancelButton: false,
     })
   }
 
-  isMyTopic(topic) {
-    return this.myTopics.includes(topic)
-  }
-
-  addToMyTopics(topic){
-    let myTopic = this.myTopicMap.get(topic.id)
-    if(myTopic){
-      myTopic.rank += 1
-      this.myTopicMap.set(myTopic.id, myTopic)
-      this.updateMyTopics(this.myTopics.map(t => {
-        return t.id === myTopic.id ? myTopic : t
-      }))
-    } else {
-      myTopic = { ...topic, rank: 1, rankedAt: new Date().getTime() }
-      this.myTopicMap.set(myTopic.id, myTopic)
-      this.updateMyTopics([...this.myTopics, myTopic])
-    }
-
-  }
-
   updateTopics(topics){
-    this.topics = topics.map(t => {
-      const myTopic = this.myTopicMap.get(t.id)
-      return {
-        ...t,
-        rank: myTopic ? myTopic.rank : 0
+    this.topics = topics
+
+    topics.forEach(t => {
+      if(!this.topicRankMap[t.id]){
+        this.topicRankMap[t.id] = 0
       }
     })
 
-    this.topicMap.clear()
-    this.topics.forEach(t => this.topicMap.set(t.id, t))
-
-    if(this.myTopics.length > 0) {
-      this.myTopics = this.myTopics.map(t => {
-        const description = this.topicMap.get(t.id).description
-        return { ...t, description }
-      })
-
-      this.myTopicMap.clear()
-
-      this.myTopics.forEach(t => this.myTopicMap.set(t.id, t))
-    }
+    this.updateRankedTopics()
   }
 
-  updateMyTopics(myTopics){
-    this.myTopics = myTopics.sort((t1,t2) => {
-      return t1.rank < t2.rank
-    })
-
-    this.myTopicMap.clear()
-
-    this.myTopics.forEach(t => this.myTopicMap.set(t.id, t))
-
-    this.topics = this.topics.map(t => {
-      const myTopic = this.myTopicMap.get(t.id)
-      return {
-        ...t,
-        rank: myTopic ? myTopic.rank : 0
-      }
-    })
-
-    this.topics.forEach(t => this.topicMap.set(t.id, t))
-
-  }
-
-  getTimes(i){
-    return new Array(parseInt(i) || 0)
-  }
 
   onIRSection(){
     if(isiOSNative()){

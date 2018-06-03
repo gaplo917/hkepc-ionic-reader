@@ -8,11 +8,11 @@
     color: $less-important-color
   }
 
-  .odd > a{
-    background-color: $odd-color
+  .odd > a {
+    background-color: $odd-color;
   }
 
-  .even > a{
+  .even > a {
     background-color: $even-color
   }
 
@@ -24,20 +24,36 @@
     border-color: $border-color;
   }
 
-  .my-topic {
-    .my-topic-item:after {
-      // right angle triangle on left-top
-      //position: absolute;
-      //top: 0;
-      //left: 1px;
-      //width: 0;
-      //height: 0;
-      //border-top: 6px solid $sub-epc-color;
-      //border-right: 6px solid transparent;
-      //color: $sub-epc-color;
-      //content: "";
-      //pointer-events: none;
-      //z-index: 100;
+
+  // My Topic edit mode
+  .odd {
+    &.editable-item, .item-reorder, .item-delete {
+      background-color: $odd-color;
+      padding: 0;
     }
+
+  }
+
+  .even {
+    &.editable-item, .item-reorder, .item-delete {
+      background-color: $even-color;
+      padding: 0;
+    }
+  }
+
+  .item-delete {
+    margin-left: 5px
+  }
+
+  .item-reorder > .edit-plus-one {
+    color: $sub-epc-color;
+  }
+
+  .item-delete > .edit-minus-one {
+    color: $danger-text-color;
+  }
+
+  .item-reorder .button.icon, .item-reorder .input-helper .icon.flow-button, .input-helper .item-reorder .icon.flow-button {
+    font-size: 24px;
   }
 }

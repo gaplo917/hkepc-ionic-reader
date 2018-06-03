@@ -390,3 +390,12 @@ ion-infinite-scroll {
   padding: 0;
   border-radius: 0;
 }
+
+.bar {
+  a.ion-edit.edit-mode-activated {
+    color: $sub-epc-color;
+  }
+  a.ion-edit:before {
+    font-size: 22px !important;
+  }
+}
