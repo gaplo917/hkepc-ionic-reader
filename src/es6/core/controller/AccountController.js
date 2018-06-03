@@ -50,7 +50,10 @@ export class AccountController {
       }).subscribe()
 
       LocalStorageService.getObject('authority').safeApply($scope, data => {
-        this.loginForm = data
+        this.loginForm = {
+          ...this.loginForm,
+          data
+        }
       }).subscribe()
 
     })
@@ -66,8 +69,12 @@ export class AccountController {
       this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username) )
 
       // unset the password field
-      delete this.loginForm.password
-      delete this.loginForm.securityQuestionAns
+      this.loginForm = {
+        ...this.loginForm,
+        password: null,
+        securityQuestionId: '0',
+        securityQuestionAns: null
+      }
 
       this.ionicHistory.clearCache()
 

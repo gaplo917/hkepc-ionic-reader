@@ -23,6 +23,7 @@ export class AuthService {
     // remove the password before save
     delete authority['password']
     delete authority['securityQuestionAns']
+    delete authority['securityQuestionId']
 
     return this.localStorageService.setObject('authority',authority)
   }
