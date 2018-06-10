@@ -103,6 +103,7 @@
                     ng-if='vm.rankedTopics.length === 0'
                     class="editable-item odd item-remove-animate item-avatar item-icon-right "
                     href=""
+                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
                     type="item-text-wrap">
                   <i class="ion-android-star icon"
                      style="position: absolute;
@@ -117,13 +118,14 @@
                   <h2>範例版塊一<span style="color: #ff6d00;" ng-if="vm.editMode" > +5</span></h2>
                   <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
                   <small class="last-description">點擊 <i class="ion-edit"></i> 開始排列你的喜愛的版塊</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial(topic)">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial(topic)">+1</ion-reorder-button>
+                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
                 </ion-item>
                 <ion-item
                     ng-if='vm.rankedTopics.length === 0'
                     class="editable-item even item-remove-animate item-avatar item-icon-right "
                     href=""
+                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
                     type="item-text-wrap">
                   <i class="ion-android-star icon"
                      style="position: absolute;
@@ -138,13 +140,14 @@
                     <h2>範例版塊二<span style="color: #ff6d00;" ng-if="vm.editMode"> +2</span></h2>
                     <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
                     <small class="last-description">點擊「+1」可提升喜好程度</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial(topic)">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial(topic)">+1</ion-reorder-button>
+                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
                 </ion-item>
                 <ion-item
                     ng-if='vm.rankedTopics.length === 0'
                     class="editable-item odd item-remove-animate item-avatar item-icon-right "
                     href=""
+                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
                     type="item-text-wrap">
                   <i class="ion-android-star icon"
                      style="position: absolute;
@@ -159,8 +162,8 @@
                   <h2>範例版塊三<span style="color: #ff6d00;" ng-if="vm.editMode"> +1</span></h2>
                   <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
                   <small class="last-description">完成後點擊 <i class="ion-edit" style="color: #ff6d00;"></i> 更新！</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial(topic)">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial(topic)">+1</ion-reorder-button>
+                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
                 </ion-item>
                 <!--Real My Topic-->
                 <ion-item
@@ -172,7 +175,7 @@
                     type="item-text-wrap"
                     href="#/tab/topics/{{topic.id}}/page/1">
                   <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
-                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.editMode" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
+                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.editMode && vm.topicRankMap.get(topic.id) > 0" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
                   <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
                   <small class="last-description" ng-bind="topic.description"></small>
                   <ion-delete-button class="edit-minus-one" ng-click="vm.decreaseRank(topic)">-1</ion-delete-button>

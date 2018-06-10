@@ -187,9 +187,6 @@ export class TopicListController {
     }
 
     this.saveTopicRankMap()
-
-    // decrease can update ranked topics,
-    this.updateRankedTopics()
   }
 
   saveTopicRankMap(){
@@ -210,24 +207,16 @@ export class TopicListController {
     return !ionic.Platform.isIOS() || (blackList.indexOf(parseInt(topicId)) < 0 || (this.isLoggedIn && this.username != 'logary917'))
   }
 
-  longPressMyTopic(topic){
-    swal({
-      html: `確認從我的版塊移除<b>${topic.name}</b>嗎？`,
-      showCancelButton: true,
-      cancelButtonText: '取消',
-      confirmButtonText: '我要移除'
-    }).then((result) => {
-      if (result.value) {
-        this.scope.$apply(() => {
-          this.updateMyTopics(this.myTopics.filter(t => t.id !== topic.id))
-        })
-      }
-    })
-  }
-
   myTopicTutorial(){
     swal({
       html: `這個是範例版塊。你要點擊 HKEPC 的版塊右邊的<span style="color: #FF6D00; font-size:24px; font-weight: 500"> +1 </span>才能提升喜好程度！`,
+      showCancelButton: false,
+    })
+  }
+
+  encourageTopicTutorial(){
+    swal({
+      html: `這個是範例版塊。你要點擊右上角 <i class="ion-edit"></i> ，然後開始編緝你的論壇版塊喜好程度！`,
       showCancelButton: false,
     })
   }
