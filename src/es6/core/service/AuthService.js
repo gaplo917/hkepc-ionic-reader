@@ -61,58 +61,28 @@ export class AuthService {
 
       this.apiService.login(authority)
         .subscribe((resp) => {
+          const $ = cheerio.load(resp.data)
+          const currentUsername = $('#umenu > cite').text()
+          const formhash = $(`input[name='formhash']`).attr('value')
 
-          if(URLUtils.isProxy()){
-            const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
-            const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
+          if(currentUsername){
+            const expire = new Date().getTime() + 2592000000
+            this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
+            this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
+            this.localStorageService.set(HKEPC.auth.expire,expire)
+            this.localStorageService.set(HKEPC.auth.formhash,formhash)
 
-            if(sidKV && authKV){
-              const sidValue = sidKV.split(';')[0].split('=')[1]
-              const authValue = authKV.split(';')[0].split('=')[1]
-              const authExpireValue = authKV.split(';')[1].split('=')[1]
-
-              if(sidValue && authValue) {
-                const expire = new Date().getTime() + 2592000000
-
-                this.localStorageService.set(HKEPC.auth.id,sidValue)
-                this.localStorageService.set(HKEPC.auth.token,authValue)
-                this.localStorageService.set(HKEPC.auth.expire,expire)
-
-                requestAnimationFrame(() => {
-                  this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
-                })
-
-                if(cb) cb(null,authority.username)
-              }
-            } else{
-              requestAnimationFrame(() => {
-                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
-              })
-              cb("Fail!")
-            }
+            requestAnimationFrame(() => {
+              this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
+            })
+            if(cb) cb(null,currentUsername)
           } else {
-            const $ = cheerio.load(resp.data)
-            const currentUsername = $('#umenu > cite').text()
-            const formhash = $(`input[name='formhash']`).attr('value')
-
-            if(currentUsername){
-              const expire = new Date().getTime() + 2592000000
-              this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
-              this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
-              this.localStorageService.set(HKEPC.auth.expire,expire)
-              this.localStorageService.set(HKEPC.auth.formhash,formhash)
-
-              requestAnimationFrame(() => {
-                this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
-              })
-              if(cb) cb(null,currentUsername)
-            } else {
-              requestAnimationFrame(() => {
-                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
-              })
-              cb("Fail!")
-            }
+            requestAnimationFrame(() => {
+              this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+            })
+            cb("Fail!")
           }
+
         })
 
     }

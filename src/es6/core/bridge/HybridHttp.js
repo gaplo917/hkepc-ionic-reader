@@ -37,7 +37,7 @@ export class HybridHttp {
     else {
       const serializedData = this.serialize(opt.data)
 
-      const nOpt = { ...opt, data: serializedData}
+      const nOpt = { ...opt, data: serializedData, withCredentials: true }
 
       console.log(nOpt)
 

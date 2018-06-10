@@ -196,11 +196,7 @@ function initAngular() {
       .config(['$httpProvider', function ($httpProvider) {
 
         // true if ionic is run in ios/android to allow use of cookies
-        if (isProxied) {
-          $httpProvider.defaults.withCredentials = false
-        } else {
-          $httpProvider.defaults.withCredentials = true
-        }
+        $httpProvider.defaults.withCredentials = true
 
         // always use async is a good practice
         $httpProvider.useApplyAsync(true)
@@ -231,11 +227,11 @@ function initAngular() {
 
                     const proxy = proxyInDb || HKEPC.proxy
                     // rewrite the url with proxy
-                    config.url = config.url.replace('https://', `${proxy}/`)
+                    config.url = config.url.replace('https://www.hkepc.com/', `${proxy}/`)
 
                     console.debug("proxied request", config.url)
                   }
-                  config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
+                  //config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
 
                 }
                 config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
