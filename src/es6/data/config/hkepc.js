@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
 */
-const PROXY_URL = 'https://ionic-reader.xyz'
+const PROXY_URL = 'https://ionic-reader.xyz:8443'
 const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
