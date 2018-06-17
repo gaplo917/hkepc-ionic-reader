@@ -61,7 +61,7 @@ export class GeneralHtml{
       if(URLUtils.isRelativeUrl(imgSrc)){
         elm.attr('src',`${imagePrefix}/${imgSrc}`)
       } else if(imgSrc.indexOf('//') == 0) {
-        elm.attr('src',`http:${imgSrc}`)
+        elm.attr('src',`https:${imgSrc}`)
       }
 
       elm.attr('raw-src', imgSrc)
