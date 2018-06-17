@@ -77,9 +77,13 @@ function initAngular() {
       $rootScope.isAndroidNative = isAndroidNative()
       $rootScope.isLegacyAndroid = isLegacyAndroid()
       if(isiOSNative() || isAndroidNative()){
-        // share handling
+        // shared handling
         Bridge.version((version) => {
           $rootScope.nativeVersion = version
+        })
+
+        Bridge.registerHandler(Channel.ping, (data, cb) => {
+          cb({ timestamp: new Date().getTime() })
         })
       }
 

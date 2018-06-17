@@ -9,5 +9,6 @@ export class Channel {
   // from Native
   static get nativeStorageUpdated(){ return "NATIVE_STORAGE_UPDATE" }
   static get statusBarDidTap(){ return "STATUS_BAR_DID_TAP" }
+  static get ping(){ return "PING" }
 
 }
