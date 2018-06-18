@@ -213,17 +213,7 @@ function initAngular() {
             request: function (config) {
               const deferred = $q.defer()
 
-              rx.Observable.combineLatest(
-                LocalStorageService.get('proxy', HKEPC.proxy),
-                LocalStorageService.get(HKEPC.auth.id),
-                LocalStorageService.get(HKEPC.auth.token),
-                (proxyInDb, authId, token) => {
-                  return {
-                    proxyInDb: proxyInDb,
-                    authId:    authId,
-                    token:     token
-                  }
-                }).subscribe(({proxyInDb, authId, token}) => {
+              LocalStorageService.get('proxy', HKEPC.proxy).subscribe((proxyInDb) => {
                 if (isProxied) {
                   // we need to proxy all the request to prevent CORS
 
@@ -235,8 +225,6 @@ function initAngular() {
 
                     console.debug("proxied request", config.url)
                   }
-                  //config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
-
                 }
                 config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
 

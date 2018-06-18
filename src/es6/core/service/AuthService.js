@@ -45,14 +45,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.rx.Observable.combineLatest(
-      this.localStorageService.get(HKEPC.auth.id),
-      this.localStorageService.get(HKEPC.auth.token),
-      this.localStorageService.get(HKEPC.auth.expire),
-      (id, token, expire) => {
-        return id && token && new Date().getTime() < parseInt(expire)
-      }
-    )
+    return this.localStorageService.get(HKEPC.auth.id)
   }
 
   login (authority,cb) {
@@ -66,10 +59,7 @@ export class AuthService {
           const formhash = $(`input[name='formhash']`).attr('value')
 
           if(currentUsername){
-            const expire = new Date().getTime() + 2592000000
             this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
-            this.localStorageService.set(HKEPC.auth.token,"dummy_val_for_non_proxied_client")
-            this.localStorageService.set(HKEPC.auth.expire,expire)
             this.localStorageService.set(HKEPC.auth.formhash,formhash)
 
             requestAnimationFrame(() => {
@@ -90,8 +80,6 @@ export class AuthService {
 
   logout () {
     this.localStorageService.set(HKEPC.auth.id,undefined)
-    this.localStorageService.set(HKEPC.auth.token,undefined)
-    this.localStorageService.set(HKEPC.auth.expire,undefined)
     this.removeAuthority()
 
     // must be success
