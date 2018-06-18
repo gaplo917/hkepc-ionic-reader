@@ -2,6 +2,12 @@
     <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown"
                                                                          ng-if="vm.subTopicList.length > 0"></i>
     </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button ng-if="::isiOSNative" class="button button-icon ion-ios-arrow-thin-left"
+                ng-click="::vm.onBack()"></button>
+        <button ng-if="::!isiOSNative" class="button button-icon icon ion-navicon"
+                ng-click="::openDrawer()"></button>
+    </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
            class="button button-icon icon ion-ios-compose-outline" ng-click="vm.doNewPost(vm.topic)"></a>
