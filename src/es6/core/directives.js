@@ -353,7 +353,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
           imageLazySrc: "@"
         },
         link: function ($scope, $element, $attributes) {
-          let loader;
+
           const subscription = $scope.$eventToObservable('lazyScrollEvent')
             .startWith(1)
             .observeOn(rx.Scheduler.async)
@@ -363,16 +363,8 @@ export default angular.module('starter.directives', ['ngAnimate'])
               const imageRect = $element[0].getBoundingClientRect()
               return (imageRect.top >= 0 && imageRect.top <= clientHeight)
             })
+            .take(1)
             .safeApply($scope, () => {
-              loader = $compile(`<div class="spinner-container"><ir-spinner></ir-spinner></div>`)($scope)
-              $element.after(loader)
-
-              //Bind "load" event
-              $element.on("load", function (e) {
-                loader.remove()
-                $element.off("load")
-              })
-
               $element[0].src = $attributes.imageLazySrc // set src attribute on element (it will load image)
             })
             .subscribe(() => {
@@ -385,7 +377,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
           // bind listener
           $element.on("error", function (e) {
             $element.off("error")
-            loader.remove()
             subscription.dispose()
           })
 
