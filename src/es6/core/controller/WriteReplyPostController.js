@@ -158,7 +158,7 @@ export class WriteReplyPostController {
         const ionicReaderSign = this.ionicReaderSign
 
         // build the reply message
-        const replyMessage = `${preText}${reply.content}\n\n${ionicReaderSign}`
+        const replyMessage = `${preText.trim()}\n\n${reply.content}\n\n${ionicReaderSign}`
 
         const imageFormData = {}
         const deleteImageFormData = {}
