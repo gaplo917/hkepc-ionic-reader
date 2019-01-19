@@ -115,6 +115,8 @@ module.exports = {
   },
   auth:{
     id: 'cdb_sid',
+    token: 'cdb_auth',
+    expire: 'expires',
     formhash: 'formhash'
   },
   signature: (opt) => {

@@ -70,7 +70,9 @@ export class ApiService {
         password: password,
         questionid: securityQuestionId,
         answer: securityQuestionAns,
-        cookietime: 2592000
+        cookietime: 2592000,
+        referer: 'https://www.hkepc.com/forum/',
+        loginsubmit: true
       },
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     })

@@ -35,7 +35,7 @@ export class AccountController {
       username: null,
       password: null,
       securityQuestionId: '0',
-      securityQuestionAns: null
+      securityQuestionAns: ""
     }
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -73,7 +73,7 @@ export class AccountController {
         ...this.loginForm,
         password: null,
         securityQuestionId: '0',
-        securityQuestionAns: null
+        securityQuestionAns: ""
       }
 
       this.ionicHistory.clearCache()
