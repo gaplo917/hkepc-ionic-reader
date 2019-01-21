@@ -74,3 +74,4 @@ crashlytics-build.properties
 *.keystore
 
 !/www/lib/ionic
+.firebase
