@@ -45,6 +45,12 @@ export class AccountController {
         this.isReady = true
       }).subscribe()
 
+      this.authService.getUsername().safeApply($scope, username => {
+        if(username){
+          this.loginForm.username = username
+        }
+      }).subscribe()
+
       LocalStorageService.get('proxy').safeApply($scope, data => {
         this.proxy = data || HKEPC.proxy
       }).subscribe()

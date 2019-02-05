@@ -14,10 +14,10 @@ export class NativeChangeThemeRequest {
   }
 }
 
-export class NativeHideUsernameRequest {
-  static get NAME() { return 'NativeHideUsernameRequest'}
+export class NativeUpdateMHeadFixRequest {
+  static get NAME() { return 'NativeUpdateMHeadFixRequest'}
 
-  constructor(bool) {
-    this.hideUsername = bool
+  constructor(isMHead) {
+    this.isMHead = isMHead
   }
 }

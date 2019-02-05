@@ -97,7 +97,7 @@ export function createAndroidNativeBridge(cb){
     port.onmessage = function (f) {
       try {
         const msg = JSON.parse(f.data)
-        console.log(`receieve data from native `, msg)
+        console.log(`receive data from native ${f.data}`)
         const uid = msg.uid
         const handler = handlers.get(uid)
 
@@ -112,6 +112,8 @@ export function createAndroidNativeBridge(cb){
             handlers.delete(uid)
             return
         }
+
+        console.log(`receive data from native channel=${msg.channel}`)
 
         const channel = msg.channel
         const rHandler = channelHandlers.get(channel)
@@ -150,7 +152,7 @@ export function createAndroidNativeBridge(cb){
       },
       // receive native message
       registerHandler: (channel, cb) => {
-        handlers.set(channel, cb)
+        channelHandlers.set(channel, cb)
       }
     }
 

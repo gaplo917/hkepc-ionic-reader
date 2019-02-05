@@ -3,9 +3,9 @@
         第 {{vm.currentPage}} 頁 <i class="ion-android-arrow-dropdown"></i>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button ng-if="::isiOSNative" class="button button-icon ion-ios-arrow-thin-left"
+        <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
                 ng-click="::vm.onBack()"></button>
-        <button ng-if="::!isiOSNative" class="button button-icon icon ion-navicon"
+        <button ng-if="::(!isiOSNative && !isAndroidNative)" class="button button-icon icon ion-navicon"
                 ng-click="::openDrawer()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">

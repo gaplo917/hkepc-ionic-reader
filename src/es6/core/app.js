@@ -7,7 +7,7 @@ import * as URLUtils from '../utils/url'
 import {
   NativeChangeThemeRequest,
   NativeChangeFontSizeRequest,
-  NativeHideUsernameRequest
+  NativeUpdateMHeadFixRequest
 } from './bridge/requests'
 
 import {
@@ -87,9 +87,10 @@ function initAngular() {
         })
       }
 
-      if (isiOSNative()) {
+      if (isiOSNative() || isAndroidNative()) {
         // iOS Native
         Bridge.registerHandler(Channel.nativeStorageUpdated, function (data, responseCallback) {
+          console.log(`receive nativeStorageUpdated from native, data=${data}`)
           switch (data.key) {
             case "theme":
               $rootScope.$emit(NativeChangeThemeRequest.NAME, new NativeChangeThemeRequest(data.value))
@@ -97,8 +98,8 @@ function initAngular() {
             case "fontSize":
               $rootScope.$emit(NativeChangeFontSizeRequest.NAME, new NativeChangeFontSizeRequest(data.value))
               break
-            case "hideUsername":
-              $rootScope.$emit(NativeHideUsernameRequest.NAME, new NativeHideUsernameRequest(data.value))
+            case "mHeadFix":
+              $rootScope.$emit(NativeUpdateMHeadFixRequest.NAME, new NativeUpdateMHeadFixRequest(data.value))
               break
             default:
               break
@@ -112,12 +113,6 @@ function initAngular() {
         $rootScope.onBack = () => {
           console.log("onBack()")
           $ionicHistory.goBack()
-        }
-
-      } else if (isAndroidNative()) {
-        // Android Native
-        $rootScope.openDrawer = () => {
-          window.Android.openDrawer()
         }
 
       } else if (isLegacyAndroid()) {

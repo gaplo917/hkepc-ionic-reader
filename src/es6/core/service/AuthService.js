@@ -118,7 +118,6 @@ export class AuthService {
     const formhash = this.localStorageService.get(HKEPC.auth.formhash)
     this.apiService.logout(formhash).subscribe(() => {
       // useful for Native App handling
-      this.localStorageService.set('tabLoginName', undefined)
     })
   }
 

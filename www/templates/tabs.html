@@ -5,8 +5,7 @@ navigation history that also transitions its views in and out.
 -->
 <ion-nav-bar id="ion-nav-bar" class="bar-stable">
     <ion-nav-buttons side="left">
-        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="onBack()" ng-if="isRendered && isiOSNative"></button>
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="isRendered && isAndroidNative"></button>
+        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="onBack()" ng-if="isRendered && (isiOSNative || isAndroidNative)"></button>
     </ion-nav-buttons>
 </ion-nav-bar>
 

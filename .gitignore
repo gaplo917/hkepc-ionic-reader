@@ -75,3 +75,4 @@ crashlytics-build.properties
 
 !/www/lib/ionic
 .firebase
+dist.zip

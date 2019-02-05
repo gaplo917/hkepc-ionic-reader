@@ -81,10 +81,6 @@ export class FeatureRouteController{
       this.fontSize = data || "100"
     }).subscribe()
 
-    this.localStorageService.get('hideUsername').safeApply($scope, data => {
-        this.hideUsername = String(data) === 'true'
-    }).subscribe()
-
     this.localStorageService.get('signature').safeApply($scope, data => {
       if(data) {
         this.signature = String(data) === 'true'

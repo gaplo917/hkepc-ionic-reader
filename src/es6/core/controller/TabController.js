@@ -10,13 +10,13 @@ import {
   PushHistoryRequest,
   ChangeThemeRequest,
   ChangeFontSizeRequest,
-  HideUsernameRequest, MHeadFixRequest,
+  MHeadFixRequest,
 } from '../model/requests'
 
 import {
   NativeChangeFontSizeRequest,
   NativeChangeThemeRequest,
-  NativeHideUsernameRequest
+  NativeUpdateMHeadFixRequest
 } from '../bridge/requests'
 
 import {
@@ -84,8 +84,6 @@ export class TabController{
     // cache the value
     rx.Observable.combineLatest(AuthService.isLoggedIn(), AuthService.getUsername(), (isLoggedIn, username) => {
       this.isLoggedIn = isLoggedIn
-
-      this.scope.$emit(LoginTabUpdateRequest.NAME,new LoginTabUpdateRequest(username))
     }).subscribe()
 
     this.localStorageService.get('theme').safeApply(this.scope, data => {
@@ -94,10 +92,6 @@ export class TabController{
 
     this.localStorageService.get('fontSize').safeApply(this.scope, data => {
       this.fontSize = data || "100"
-    }).subscribe()
-
-    this.localStorageService.get('hideUsername').safeApply(this.scope, data => {
-      this.hideUsername = String(data) == "true"
     }).subscribe()
 
     this.localStorageService.get('mHeadFix').safeApply($scope, data => {
@@ -118,7 +112,7 @@ export class TabController{
 
     $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
       .filter(([event, req]) => req instanceof CommonInfoExtractRequest)
-      .debounce(500)
+      .debounce(100)
       .subscribe( ([event, req]) =>{
         console.debug(`[${TabController.NAME}] Received CommonInfoExtractRequest`)
 
@@ -141,7 +135,6 @@ export class TabController{
 
     $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
       .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
-      .debounce(500)
       .subscribe( ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
 
@@ -162,7 +155,7 @@ export class TabController{
 
           this.isLoggedIn = true
 
-          this.login = "IR 用家"
+          this.login = req.username
 
         } else {
           this.login = undefined
@@ -176,8 +169,6 @@ export class TabController{
 
         }
 
-        // useful for Native App handling
-        this.localStorageService.set('tabLoginName', this.login)
       }).subscribe()
 
     $scope.$eventToObservable(FindMessageRequest.NAME)
@@ -201,52 +192,30 @@ export class TabController{
 
       })
 
-    $scope.$eventToObservable(HideUsernameRequest.NAME)
-      .filter(([event,req]) => req instanceof HideUsernameRequest)
-      .flatMap(([event,req]) => {
-
-        return this.authService.getUsername().map(username => {
-          return {
-            req: req,
-            username: username
-          }
-        })
-      })
-      .safeApply($scope, ({req, username}) => {
-        console.debug(`[${TabController.NAME}] Received HideUsernameRequest`, req)
-
-        this.localStorageService.set('hideUsername',req.hidden)
-
-        this.hideUsername = String(req.hidden) == "true"
-
-        if (this.hideUsername) {
-          // hide user name
-          $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest("IR 用家"))
-        }
-        else {
-          // show user name
-          $scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
-        }
-      }).subscribe()
-
     $rootScope.$eventToObservable(NativeChangeThemeRequest.NAME)
       .filter(([event,req]) => req instanceof NativeChangeThemeRequest)
       .safeApply(this.scope, ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received NativeChangeThemeRequest`)
+
         this.darkTheme = req.theme
       }).subscribe()
 
     $rootScope.$eventToObservable(NativeChangeFontSizeRequest.NAME)
       .filter(([event,req]) => req instanceof NativeChangeFontSizeRequest)
       .safeApply(this.scope, ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received NativeChangeFontSizeRequest`)
+
         this.fontSize = req.size
         this.ionicHistory.clearCache()
       }).subscribe()
 
-    $rootScope.$eventToObservable(NativeHideUsernameRequest.NAME)
-      .filter(([event,req]) => req instanceof NativeHideUsernameRequest)
+    $rootScope.$eventToObservable(NativeUpdateMHeadFixRequest.NAME)
+      .filter(([event,req]) => req instanceof NativeUpdateMHeadFixRequest)
       .safeApply(this.scope, ([event, req]) => {
-        this.hideUsername = req.hideUsername
+        console.debug(`[${TabController.NAME}] Received NativeUpdateMHeadFixRequest`)
+        this.mHeadFix = String(req.isMHead) === 'true'
       }).subscribe()
+
     $scope.$eventToObservable(ChangeThemeRequest.NAME)
 
       .filter(([event,req]) => req instanceof ChangeThemeRequest)

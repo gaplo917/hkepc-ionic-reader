@@ -34,14 +34,6 @@ export class FindMessageRequest {
   }
 }
 
-export class HideUsernameRequest {
-  static get NAME() { return 'HideUsernameRequest'}
-
-  constructor(hidden) {
-    this.hidden = hidden
-  }
-}
-
 export class LoginTabUpdateRequest {
   static get NAME() { return 'LoginTabUpdateRequest'}
 
