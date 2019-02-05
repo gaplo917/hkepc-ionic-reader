@@ -1,4 +1,5 @@
 **6 Feb 2019 - Release IR Pro 內核 v3.5.0, Android v3.0.0**
+
 內核更新：
 * 修正圖片無法完全加載問題
 * 修正於側彈式提示於 M 字額機不能完整顯示問題
@@ -19,6 +20,7 @@ App 更新：
 ---
 
 **3 Jun 2018 - Release IR Pro 內核 v3.3.4, Android v2.3.3**
+
 內核更新：
 * 修正無法使用「一鍵轉換論壇風格」功能
 
@@ -28,6 +30,7 @@ App 更新：
 ---
 
 **3 Jun 2018 - Release IR Pro 內核 v3.3.3, Android v2.3.2**
+
 內核更新：
 * 加入「安全問題」登入
 * 修正`登入名稱`與`EPC 顯示名稱`大小寫不對會無法出現修改帖子功能
@@ -38,6 +41,7 @@ App 更新：
 ---
 
 **1 Jun 2018 - Release IR Pro 內核 v3.3.2, Android v2.3.1**
+
 內核更新：
 * 移除背景檢查 PM 功能 (IR App 在背景運行時，有機會被 EPC 伺服器認為 DDoS 而封 IP)
 * 加長 「M 字額修正」
@@ -49,12 +53,14 @@ App 更新：
 ---
 
 **28 Apr 2018 - Release IR Pro 內核 v3.3.1, Android v2.3.0**
+
 內核更新：
 * 修正私人訊息/帖子訊息消失問題
 
 ---
 
 **28 Apr 2018 - Release IR Pro 內核 v3.3.0, Android v2.3.0**
+
 內核更新：
 * 加入 「M 字額修正」
 * 加入 「OLED 省電」模式
@@ -68,6 +74,7 @@ App 更新：
 * 支援內核「OLED 省電」模式
 
 **19 Apr 2018 - Release IR Pro 內核 v3.2.0, Android v2.2.4**
+
 內核重點內容：
 * 以 RxJS 重寫部分 event-driven directives，活用 `Rx.Schedulers.async` (提升流暢度)
 * 改善 image lazy loading spinner 當圖片加載中時佔用了不必要的空白位置
@@ -81,6 +88,7 @@ App 重點內容：
 ---
 
 **18 Apr 2018 - Release IR Pro 內核 v3.1.2, Android v2.2.3**
+
 內核重點內容：
 * 修正 Android 6.0 以下裝置無法上載圖片問題
 * 大量減低帖子內的 watcher 數目及 Throttle scrolling event (提升流暢度)
@@ -93,6 +101,7 @@ App 重點內容：
 ---
 
 **16 Apr 2018 - Release IR Pro 內核 v3.1.1, Android v2.2.2**
+
 內核重點內容：
 * 修正部分無邊框元件設計
 * 簡化部份元件
@@ -106,6 +115,7 @@ App 重點內容：
 ---
 
 **15 Apr 2018 - Release IR Pro 內核 v3.1, Android v2.2.1**
+
 內核重點內容：
 * 重製 image lazy loading 功能（改善圖片加載時會 Lag 機問題）
 * 重製 infinity loading 功能 (提升流暢度)
@@ -120,6 +130,7 @@ App 重點內容：
 ---
 
 **4 Apr 2018 - Release IR Pro 內核 v3.0, Android v2.2.0**
+
 重點內容：
 * 大量優化效能並提升瀏覽速度
 * 修正愈用愈 Lag 的問題
@@ -147,6 +158,7 @@ App 重點內容：
 ---
 
 **2 Nov 2017 - Release v2.1.8 IR Pro**
+
 新增功能：
 * 支援 Android 5.0, 5.1 ! (部份功能）
 * 於「功能」頁面加入 Refresh 鍵
@@ -157,12 +169,14 @@ App 重點內容：
 ---
 
 **2 Nov 2017 - Release v2.1.5 IR Pro**
+
 修正問題：
 * 返回或轉頁面有機會出現去唔到問題
 
 ---
 
 **1 Nov 2017 - Release v2.1.1 IR Pro**
+
 修正問題：
 * 不能正常登出
 
@@ -249,6 +263,7 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 ---
 
 **2 Feb 2017 - Release v.1.5.3**
+
 * 加入隱藏用戶名稱選項
 * 修正轉頁問題
 * 修正部份用家看不見修改帖子
@@ -261,6 +276,7 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 ---
 
 **2 Jan 2017 - Release v.1.5.1**
+
 * 提升接近 2 倍解讀 HKEPC HTML 的速度  
 * 使用最新的 Web Worker 提升使用流暢度
 * 改善論壇版塊的版面重新整理設計
@@ -281,6 +297,7 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 ---
 
 **14 Aug 2016 - Release v1.4.2**
+
 * 加入新聞中心
 * 加入分享連結功能
 * 加入調整字型大小功能!!!
@@ -291,6 +308,7 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 
 
 **5 June 2016 - Release v1.3.3**
+
 * 加入瀏覧最新文章功能 (需登入）
 * 加入自動跳到上一次閱讀的頁數
 * 在 Edit Post 加入 Gif Keyboard
@@ -302,12 +320,14 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 ---
 
 **22 Mar 2016 - Release v1.2.9**
+
 * 改善黑底模式用色
 * 修正少量問題
 
 ---
 
 **19 Mar 2016 - Release v1.2.4**
+
 * 加入全新 前往帖子功能
 * Fix minor UI bugs
 * Fix some color
@@ -315,12 +335,14 @@ IR v2.1.0  (又命名為 IR Pro) 正式推出，
 ---
 
 **11 Mar 2016 - v1.1.0 Web Version Released**
+
 * 加入黑底模式
 * Fix minor UI bug,  improve UX
 
 ---
 
 **08 Mar 2016 - v1.0.0 Web Version Released**
+
 * 加入修改 Comment
 * PM 對話
 * Proxy 連線 升級至 Https
