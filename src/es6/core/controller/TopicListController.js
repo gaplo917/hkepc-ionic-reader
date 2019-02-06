@@ -162,7 +162,7 @@ export class TopicListController {
         return t
       })
 
-    this.rankedTopics.sort((t1,t2) => t1.rank <= t2.rank)
+    this.rankedTopics.sort((t1,t2) => t2.rank - t1.rank)
   }
 
   increaseRank(topic){
