@@ -1,3 +1,10 @@
+**6 Feb 2019 - Release IR Pro 內核 v3.5.0, Android v3.0.2**
+
+App 更新： 
+* 修正實體鍵用戶有黑邊問題
+
+---
+
 **6 Feb 2019 - Release IR Pro 內核 v3.5.0, Android v3.0.1**
 
 App 更新： 
