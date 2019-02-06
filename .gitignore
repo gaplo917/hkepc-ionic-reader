@@ -76,3 +76,4 @@ crashlytics-build.properties
 !/www/lib/ionic
 .firebase
 dist.zip
+yarn-error.log
