@@ -9,6 +9,7 @@ import {
   MHeadFixRequest
 } from "../model/requests"
 import swal from 'sweetalert2'
+import {NativeUpdateNotificationRequest} from "../bridge/requests";
 
 const cheerio = require('cheerio')
 
@@ -97,6 +98,13 @@ export class FeatureRouteController{
 
     $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
       .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
+      .safeApply($scope, ([event, req]) => {
+        this.notification = req.notification
+      })
+      .subscribe()
+
+    $rootScope.$eventToObservable(NativeUpdateNotificationRequest.NAME)
+      .filter(([event, req]) => req instanceof NativeUpdateNotificationRequest)
       .safeApply($scope, ([event, req]) => {
         this.notification = req.notification
       })

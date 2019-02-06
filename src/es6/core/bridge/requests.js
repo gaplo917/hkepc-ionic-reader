@@ -21,3 +21,14 @@ export class NativeUpdateMHeadFixRequest {
     this.isMHead = isMHead
   }
 }
+
+export class NativeUpdateNotificationRequest {
+  static get NAME() { return 'NativeUpdateNotificationRequest'}
+
+  constructor(pmNotificationCount, postNotificationCount) {
+    this.notification = {
+      pm : parseInt(pmNotificationCount),
+      post: parseInt(postNotificationCount)
+    }
+  }
+}

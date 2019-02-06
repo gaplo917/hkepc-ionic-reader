@@ -7,7 +7,7 @@ import * as URLUtils from '../utils/url'
 import {
   NativeChangeThemeRequest,
   NativeChangeFontSizeRequest,
-  NativeUpdateMHeadFixRequest
+  NativeUpdateMHeadFixRequest, NativeUpdateNotificationRequest
 } from './bridge/requests'
 
 import {
@@ -100,6 +100,14 @@ function initAngular() {
               break
             case "mHeadFix":
               $rootScope.$emit(NativeUpdateMHeadFixRequest.NAME, new NativeUpdateMHeadFixRequest(data.value))
+              break
+            case "notification":
+              if(data.value) {
+                const payload = JSON.parse(data.value)
+                $rootScope.$emit(NativeUpdateNotificationRequest.NAME, new NativeUpdateNotificationRequest(payload.pm, payload.post))
+              } else {
+                console.warn("structure of notification update from native is not correct")
+              }
               break
             default:
               break
