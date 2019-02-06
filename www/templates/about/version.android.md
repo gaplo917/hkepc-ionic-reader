@@ -1,3 +1,10 @@
+**6 Feb 2019 - Release IR Pro 內核 v3.5.0, Android v3.0.1**
+
+App 更新： 
+* 優化 Android 8.0, 8.1, 9.0 用戶界面
+
+---
+
 **6 Feb 2019 - Release IR Pro 內核 v3.5.0, Android v3.0.0**
 
 內核更新：
