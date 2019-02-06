@@ -1,3 +1,16 @@
+**7 Feb 2019 - Release IR Pro 內核 v3.5.2, Android v3.1.0**
+
+內核更新：
+* 支援提示雙向(Native <-> WebView X 4)同步功能，
+
+App 更新： 
+* 加入提示雙向(Native <-> WebView X 4)同步功能，用戶無需要再手動刷新頁面更新提示數目
+* 加入「一鍵回到主頁功能」，只需點擊底部 Navigation
+* 加入內置瀏灠器提供更好的體驗（支援長按下載圖片及複制連結）
+* 改善調色（不在使用的底部 Navigation） 
+
+---
+
 **6 Feb 2019 - Release IR Pro 內核 v3.5.1, Android v3.0.4**
 
 App 更新： 
