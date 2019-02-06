@@ -1,3 +1,10 @@
+**6 Feb 2019 - Release IR Pro 內核 v3.5.1, Android v3.0.4**
+
+App 更新： 
+* 加入手動撤走黑邊；用戶如有黑邊問題，點擊一下就能撤走黑邊。
+
+---
+
 **6 Feb 2019 - Release IR Pro 內核 v3.5.1, Android v3.0.3**
 
 內核更新：
