@@ -1,3 +1,11 @@
+**7 Feb 2019 - Release IR Pro 內核 v3.5.2, Android v3.1.2**
+
+App 更新： 
+* 修正 v3.1.0, v3.1.1 版本不能正常使用問題 (Incremental build 出問題)
+
+---
+
+
 **7 Feb 2019 - Release IR Pro 內核 v3.5.2, Android v3.1.0**
 
 內核更新：
