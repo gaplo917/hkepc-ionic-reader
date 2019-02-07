@@ -1,8 +1,7 @@
 # HKEPC IR Pro
-![](https://forum.hkepc.net/month_1606/160606011038e92a0a72f079e4.png)
-
-<a href="https://appsto.re/hk/zAtDab.i"><img src="https://upload.cc/i1/2019/01/22/lMriFw.png" height="50"></a>
-<a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://upload.cc/i1/2019/01/22/2SsjTL.png" height="50"></a>
+<img src="https://storage.googleapis.com/hkepc-ir-public/hkepc-ir-pro-icon@512.png" height="200">
+<a href="https://appsto.re/hk/zAtDab.i"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50"> </a>
+<a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-googleplay.png" height="50"></a>
 
 # 簡介
 [1.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/1.x) Branch 完全依賴 Cordova
