@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "browser-sync": "^2.26.3"
+  },
+  "scripts": {
+    "dev": "browser-sync start --server --files \"index.html\""
+  },
+  "name": "HKEPC_IR_PRO_HTML_GH_PAGES",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/gaplo917/hkepc-ionic-reader.git",
+  "author": "Gary Lo <logap@me.com>",
+  "license": "MIT"
+}
