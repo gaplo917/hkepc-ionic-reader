@@ -21,8 +21,47 @@
         background-color: #8fc320;
         color: white;
     }
-    .tick-list-style {
-        list-style-image: url('img/baseline-done-24px.svg');
+    .tick-list-style{
+        list-style-type: none;
+        margin-left: -40px
+    }
+
+    .tick-list-style li img {
+        margin-right: 8px;
+    }
+
+    .stylish-title {
+        border: 1px solid white;
+        width: 56px;
+        margin: 0 auto 4px auto;
+        display: block;
+    }
+
+    @media (max-width: 576px) {
+        .theme-hero-l {
+            margin-left: 0 !important;
+        }
+        .theme-hero-r {
+            left: 40% !important;
+        }
+    }
+
+    .theme-hero-l {
+        margin-left: -160px;
+        max-height: 700px;
+    }
+    .theme-hero-r {
+        left: 160px;
+        max-height: 700px;
+        position: absolute;
+        top:0;
+    }
+
+    a {
+        color: white;
+    }
+    a:hover {
+        color: white;
     }
 </style>
 <body>
@@ -33,44 +72,113 @@
     <div class="row" style="margin-top: 15%">
         <div class="offset-md-1 col-md-3 offset-3 col-5 my-auto pb-3">
             <div class="w-100 mx-auto">
-                <img class="img-fluid mt-5" src="img/pixel2.png" alt="android">
-                <img class="img-fluid" src="img/iphonexsmax.png" alt="ios" style="position: absolute; top:-15%; left: 20%;">
+                <img class="img-fluid mt-5" src="img/pixel2@2x.png" alt="android">
+                <img class="img-fluid" src="img/iphonexsmax@2x.png" alt="ios" style="position: absolute; top:-15%; left: 20%;">
             </div>
         </div>
         <div class="offset-md-2 col-md-6 offset-0 col-12 my-auto">
             <div class="w-100 mx-auto text-md-left text-center">
-                <h1><b>HKEPC IR Pro</b></h1>
+                <h1>
+                    <b>HKEPC IR Pro</b>
+                    <a class="github-button" href="https://github.com/gaplo917/hkepc-ionic-reader" data-size="large" data-show-count="true" aria-label="Star gaplo917/hkepc-ionic-reader on GitHub">Star</a>
+                </h1>
                 <h3 class="pb-3">帶給你最好的瀏覽體驗</h3>
-                <ul class="text-left tick-list-style">
-                    <li>一鍵壓縮圖片並上傳到 <b>HKEPC</b> 伺服器</li>
-                    <li>黑夜及 OLED 省電主題</li>
-                    <li>多款界面大小設定</li>
+                <ul class="text-md-left text-center tick-list-style">
+                    <li><a href="#upload"><img src="img/baseline-done-24px.svg"/>一鍵壓縮圖片並上傳到 <b>HKEPC</b> 伺服器</a></li>
+                    <li><a href="#upload"><img src="img/baseline-done-24px.svg"/>黑夜及 OLED 省電主題</a></li>
+                    <li><a href="#upload"><img src="img/baseline-done-24px.svg"/>多款界面大小設定</a></li>
                 </ul>
 
                 <div class="row">
                     <div class="offset-md-0 col-md-6 offset-1 col-10 pt-1 pb-1">
                         <a href="https://appsto.re/hk/zAtDab.i" target="_blank">
-                            <img src="img/apps-applestore.png" height="80" alt="Download on the AppStore">
+                            <img src="img/appstore@2x.png" class="img-fluid" style="max-height: 80px" alt="Download on the AppStore">
                         </a>
                     </div>
                     <div class="offset-md-0 col-md-6 offset-1 col-10 pt-1 pb-1">
                         <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader" target="_blank">
-                            <img src="img/apps-googleplay.png" height="80" alt="Get it on Google Play">
+                            <img src="img/playstore@2x.png" class="img-fluid" style="max-height: 80px" alt="Get it on Google Play">
                         </a>
                     </div>
                 </div>
-
-                <div class="w-100" style="height: 100px"></div>
+                <div class="w-100 pb-md-5"></div>
             </div>
         </div>
     </div>
+
+    <section id="upload">
+        <div class="row pt-5 pl-2 pr-2">
+            <span class="text-center stylish-title"></span>
+            <h1 class="text-center w-100">一鍵壓縮圖片並上傳到 <b>HKEPC</b> 伺服器</h1>
+        </div>
+
+        <div class="row pt-3">
+            <div class="offset-md-3 col-md-6 offset-0 col-12 my-auto text-center">
+                <img src="img/pixel2_upload@2x.png" alt="" style="max-height: 700px;">
+            </div>
+        </div>
+    </section>
+
+    <section id="theme">
+        <div class="row pt-5 pl-1 pr-1">
+            <span class="text-center stylish-title"></span>
+            <h1 class="text-center w-100 ">黑夜及 OLED 省電主題</h1>
+        </div>
+
+        <div class="row pt-3">
+            <div class="offset-md-3 col-md-6 offset-0 col-12 my-auto">
+                <div class="text-center">
+                    <img class="theme-hero-l" src="img/pixel2_dark@2x.png" alt="">
+                    <img class="theme-hero-r" src="img/pixel2_oled_dark@2x.png" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="size">
+        <div class="row pt-5">
+            <span class="text-center stylish-title"></span>
+            <h1 class="text-center w-100 ">多款界面大小設定</h1>
+        </div>
+
+        <div class="row pt-3">
+            <div class="offset-md-3 col-md-6 offset-0 col-12 my-auto text-center">
+                <img src="img/pixel2_size@2x.png" alt="" style="max-height: 700px">
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row pt-5">
+            <span class="text-center stylish-title"></span>
+            <h1 class="text-center w-100 ">馬上體驗 HKEPC IR Pro</h1>
+        </div>
+
+        <div class="row">
+            <div class="offset-md-0 col-md-6 offset-1 col-10 pt-1 pb-1 text-md-right text-center">
+                <a href="https://appsto.re/hk/zAtDab.i" target="_blank">
+                    <img src="img/appstore@2x.png" class="img-fluid" style="max-height: 80px" alt="Download on the AppStore">
+                </a>
+            </div>
+            <div class="offset-md-0 col-md-6 offset-1 col-10 pt-1 pb-1 text-md-left text-center">
+                <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader" target="_blank">
+                    <img src="img/playstore@2x.png" class="img-fluid" style="max-height: 80px" alt="Get it on Google Play">
+                </a>
+            </div>
+        </div>
+    </section>
 </div>
 
-
+<footer class="container p-3">
+    <div class="text-center">
+        Copyright © 2019, <a href="https://blog.gaplotech.com">Gap撈Tech</a>. All Right Reserved
+    </div>
+</footer>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
