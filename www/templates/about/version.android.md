@@ -1,3 +1,12 @@
+**12 Feb 2019 - Release IR Pro 內核 v3.5.2, Android v3.2.0**
+
+App 更新：
+* 改善「下載圖片」功能；v3.2.0 將直接下載到 `DCIM/HKEPC` 內
+* 修正內置瀏灠器不能於系統瀏灠器開啟時會 Crash 問題
+* 修正 HKEPC IR 閒置過久後重啟有機會 Crash 問題
+
+---
+
 **7 Feb 2019 - Release IR Pro 內核 v3.5.2, Android v3.1.2**
 
 App 更新： 
