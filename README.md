@@ -3,6 +3,15 @@
 <a href="https://appsto.re/hk/zAtDab.i"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50"> </a>
 <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-googleplay.png" height="50"></a>
 
+
+# Brief Introduction in English
+* This project DON'T use Corodva.
+* This web app ONLY use customized `ionic.css`, `ionic.js`, `ionic-angular.js` (aka ionic v1). No `ionic-cli` used.
+* The native projects to host this web app are written in pure Swift(iOS) and Kotlin(Android). 
+* This web app connects native via a pure tailor-made message bridge.
+* The native projects (iOS & Android) will be available later. Stay calm.
+* A seperated tailor-made native message bridge will also be available later.
+
 # 簡介
 [1.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/1.x) Branch 完全依賴 Cordova
 
