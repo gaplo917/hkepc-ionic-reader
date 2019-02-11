@@ -1,4 +1,4 @@
-# HKEPC IR Pro
+# HKEPC IR Pro (https://hkepc.pro)
 <img src="https://storage.googleapis.com/hkepc-ir-public/hkepc-ir-pro-icon@512.png" height="200">
 <a href="https://appsto.re/hk/zAtDab.i"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50"> </a>
 <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-googleplay.png" height="50"></a>
@@ -30,7 +30,7 @@ Disable 咗個 Cache 之後，基上成個 Ionic V1 App 清爽咗好多，Androi
 * **AngularJs 1 + ES6 + AngularJS Rx** - Ionic V1 跟機係配 ES5，好多好開心嘅 ES6 功能用唔到；但因為自己深信寫 ES6 長遠一定有幫助，起手嘅時候我花咗好多時間搞 AngularJs + ES6 + Gulp + Babel + Browserify。
 呢個組合其實真係好少眾，網上亦冇乜資源。冇咁上下 Javascript 經歷其實好難做到。另外，自己係 ReactiveX 信徒加上 Angular 2 開始都用 RxJs，當然要用埋啦。
  
-* **Web Worker** - Web Worker 呢兩隻字，好多人聽到都覺得離地。因為真正看待 Performance 嘅人，想唔 Block UI Thread 先會接觸搞放資源去寫 Web Worker，否則放埋落 UI Thread 其實都係疾一疾，唔理 Performance 其車無乜問題。
+* **Web Worker** - Web Worker 呢兩隻字，好多人聽到都覺得離地。因為真正看待 Performance 嘅人，想唔 Block UI Thread 先會接觸搞並放資源去寫，因為放埋落 UI Thread 其實都只係疾一疾，唔理 Performance 其實無乜問題。
 但 HKEPC IR 係 Client-side parsing HTML，即係每一頁 HKEPC 拎落黎要抽取資料再去 Render，無可能下下都疾一下先去到下一版，就用 [Rx doOnNext 叫醒 WebWorker 做 Parsing，再 FlatMap 去等收番個 Message](https://github.com/gaplo917/hkepc-ionic-reader/blob/4be9b221b0d2dfa1b61dcb4a5bb6616a9e1c859a/src/es6/core/service/ApiService.js#L30-L59)
 ，無 Rx 加持真係好難寫得好。
 
@@ -44,8 +44,7 @@ Disable 咗個 Cache 之後，基上成個 Ionic V1 App 清爽咗好多，Androi
 
 ---
 
-HKEPC IR Pro iOS 版本真正做到 hybrid sweet spot，自己用緊 iPhone 6S Plus 都覺得好流暢，未來嘅機只會更加流暢；
-Android 方面準備大改 Native 部份改成接近 iOS 版本的使用方法。
+HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自己用緊 iPhone 6S Plus(A9)/ LG G6(Snapdragon 821) 測試都覺得好流暢，未來嘅機只會更加流暢；
 
 > HKEPC IR Pro 仲有好多位可以做得更好，Side Project 黎講真係要儲下心力先可以再更新。
 
@@ -68,9 +67,9 @@ Android 方面準備大改 Native 部份改成接近 iOS 版本的使用方法�
 
 
 ### 點解唔將啲時間做 React Native?
-* 睇完 iPhone 8/X 發佈會，見到粒 A11 效能已經拍得住 i5 Mobile CPU 級數；[「CPU 效能過剩」係自己 2 前年認為會發生嘅事](http://blog.gaplotech.com/hkepc-ionic-reader/) 所以當年先會揀 HTML 起手。
+* [「CPU 效能過剩」係自己 2016 年頭認為會發生嘅事](http://blog.gaplotech.com/hkepc-ionic-reader/) 所以當年先會揀 HTML 起手，2017 年尾睇完 iPhone 8/X 發佈會，見到粒 A11 效能已經拍得住 i5 Mobile CPU 級數，更加確信自己嘅睇法。
 
-* 做呢個 Project 嘅目標不嬲都係將「長遠性」放第一位； 現時 HKEPC Ionic Reader 受惠於 HTML，直接將 HKEPC 拎番嘅 HTML + 自製 CSS 去 Render，完全唔需要處理最複雜多變嘅 Content Parsing（要做到完美要花極大量嘅時間，只要 HKEPC 一改界面就要重新做過）。
+* 做呢個 Project 嘅目標不嬲都係將「長遠性」放第一位； 現時 HKEPC IR Pro 受惠於 HTML，直接將 HKEPC 拎番嘅 HTML 配合少量自製 CSS 去 Render，完全唔需要處理最複雜多變嘅 Content Parsing（因為要做到完美要花極大量嘅時間，只要 HKEPC 一改界面就要重新做過）。
 
 * 好多好有用嘅功能一早已經係 HTML 版本做好咗，若果要係 React Native 度重製，保守估計要花起碼半年工餘時間先可以做到超越 HKEPC IR 嘅 RN 版本。但個人認為若果用戶用緊 (iPhone 6S/ LG G6) 之後嘅手機，流暢未必會感覺得到有大轉變。唔信？ [Download 黎試下](https://itunes.apple.com/hk/app/hkepc-ir/id1081423513?mt=8)
 
