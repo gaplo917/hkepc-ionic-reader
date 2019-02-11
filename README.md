@@ -18,7 +18,7 @@ Ionic V1 - 雖然係第一代比較完整嘅 HTML 5 Mobile framework 並以 Cord
 ---
 * **Virtual DOM Cache** - 用 Profiler 見到[呢幾行每次轉 View 都會成個 DOM element Cache 低，愈多 Element 就愈行愈慢](https://github.com/gaplo917/hkepc-ionic-reader/blob/026c729c0bf411d2c34b1cd15010c59e57b19a89/www/lib/ionic/js/ionic.js#L418-L449)
 ，所以點解嘅啲 Example App 好似咁順，但一寫落手 Ionic V1 一多 DOM 就疾疾下，[其它人嘅案例(Ionic V2 Beta)](https://github.com/ionic-team/ionic/issues/10781)。慶幸地由於 2.x 開始已經全棄 Cordova，Native 部份已經係自己寫，所有「返回上一頁」嘅動作都已經用 Native 處理（Native Browser 有 Cache 根本冇需要自己 Cache)。
-Disable 咗個 Cache 之後，基上成個 Ionic V1 App 清爽咗好多，Android 中底階機更由 `~700 ms` 轉頁降到 `~300 ms` ，瀏覧速度接近快咗 1 倍。
+Disable 咗個 Cache 之後，基本上成個 Ionic V1 App 清爽咗好多，Android 中低階機更由 `~700 ms` 轉頁降到 `~300 ms` ，瀏覧速度接近快咗 1 倍。
 
 * **CPU-Heavy spinner** - 唔知點解 Scroll 嘅時好唔順，最後發現佢 Ionic V1 提供嘅 Spinner 係用 javascript 撩 DOM 咁去 Render，極級燒 CPU，之[換做 CSS hardware accelerated spinner](https://github.com/gaplo917/hkepc-ionic-reader/commit/b3e6fbf25e063ac9957511fea2769183106275a7)
 ，效果相常滿意
