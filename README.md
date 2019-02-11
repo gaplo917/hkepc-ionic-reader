@@ -7,8 +7,8 @@
 # Brief Introduction in English
 * This project DON'T use Corodva.
 * This web app ONLY use customized `ionic.css`, `ionic.js`, `ionic-angular.js` (aka ionic v1). No `ionic-cli` used.
-* The native projects to host this web app are written in pure Swift(iOS) and Kotlin(Android). 
-* This web app connects native via a pure tailor-made message bridge.
+* The native projects host this web app internally and are written in pure Swift(iOS) and Kotlin(Android). 
+* This web app connects native via a pure tailor-made message bridge. i.e. pick images, compress images, upload images, HTTP proxy to prevent CORS
 * The native projects (iOS & Android) will be available later. Stay calm.
 * A seperated tailor-made native message bridge will also be available later.
 
