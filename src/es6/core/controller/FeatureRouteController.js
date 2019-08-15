@@ -7,28 +7,31 @@ import {
   ChangeThemeRequest,
   ChangeFontSizeRequest,
   MHeadFixRequest
-} from "../model/requests"
+} from '../model/requests'
 import swal from 'sweetalert2'
-import {NativeUpdateNotificationRequest} from "../bridge/requests";
+import { NativeUpdateNotificationRequest } from '../bridge/requests'
 
 const cheerio = require('cheerio')
 
-export class FeatureRouteController{
-  static get STATE() { return 'tab.features'}
-  static get NAME() { return 'FeatureRouteController'}
-  static get CONFIG() { return {
-    url: '/features',
-    views: {
-      'main': {
-        templateUrl: 'templates/features/features.route.html',
-        controller: FeatureRouteController.NAME,
-        controllerAs: 'vm'
+export class FeatureRouteController {
+  static get STATE () { return 'tab.features' }
+
+  static get NAME () { return 'FeatureRouteController' }
+
+  static get CONFIG () {
+    return {
+      url: '/features',
+      views: {
+        main: {
+          templateUrl: 'templates/features/features.route.html',
+          controller: FeatureRouteController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
+  }
 
-  constructor($scope, apiService, AuthService,$state,$sce,ngToast,LocalStorageService, observeOnScope, $rootScope){
-
+  constructor ($scope, apiService, AuthService, $state, $sce, ngToast, LocalStorageService, observeOnScope, $rootScope) {
     this.apiService = apiService
     this.scope = $scope
     this.sce = $sce
@@ -40,7 +43,7 @@ export class FeatureRouteController{
 
     observeOnScope($scope, 'vm.isAutoLoadImage')
       .skip(1)
-      .subscribe(({oldValue, newValue}) => {
+      .subscribe(({ oldValue, newValue }) => {
         const loadImageMethod = newValue ? 'auto' : 'block'
 
         this.localStorageService.set('loadImageMethod', loadImageMethod)
@@ -48,25 +51,25 @@ export class FeatureRouteController{
 
     observeOnScope($scope, 'vm.signature')
       .skip(1)
-      .subscribe(({oldValue, newValue}) => {
+      .subscribe(({ oldValue, newValue }) => {
         this.localStorageService.set('signature', newValue ? 'true' : 'false')
       })
 
     observeOnScope($scope, 'vm.fontSize')
       .skip(1)
-      .subscribe(({oldValue, newValue}) => {
+      .subscribe(({ oldValue, newValue }) => {
         this.scope.$emit(ChangeFontSizeRequest.NAME, new ChangeFontSizeRequest(newValue))
       })
 
     observeOnScope($scope, 'vm.darkTheme')
       .skip(1)
-      .subscribe(({oldValue, newValue}) => {
+      .subscribe(({ oldValue, newValue }) => {
         this.scope.$emit(ChangeThemeRequest.NAME, new ChangeThemeRequest(newValue))
       })
 
     observeOnScope($scope, 'vm.mHeadFix')
       .skip(1)
-      .subscribe(({oldValue, newValue}) => {
+      .subscribe(({ oldValue, newValue }) => {
         this.scope.$emit(MHeadFixRequest.NAME, new MHeadFixRequest(newValue))
       })
 
@@ -79,17 +82,17 @@ export class FeatureRouteController{
     }).subscribe()
 
     this.localStorageService.get('fontSize').safeApply($scope, data => {
-      this.fontSize = data || "100"
+      this.fontSize = data || '100'
     }).subscribe()
 
     this.localStorageService.get('signature').safeApply($scope, data => {
-      if(data) {
+      if (data) {
         this.signature = String(data) === 'true'
       }
     }).subscribe()
 
     this.localStorageService.get('mHeadFix').safeApply($scope, data => {
-      if(data) {
+      if (data) {
         this.mHeadFix = String(data) === 'true'
       }
     }).subscribe()
@@ -111,56 +114,50 @@ export class FeatureRouteController{
       .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
-
-      this.localStorageService.getObject('notification').subscribe( data => {
+      this.localStorageService.getObject('notification').subscribe(data => {
         this.notification = data
       })
 
-
       this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
         this.isLoggedIn = isLoggedIn
-        if(isLoggedIn) {
+        if (isLoggedIn) {
           this.registerOnChangeForumStyle()
         }
       }).subscribe()
-
-
     })
   }
 
-  registerOnChangeForumStyle(){
-
-    //TODO: move to web-worker
+  registerOnChangeForumStyle () {
+    // TODO: move to web-worker
     this.apiService.settings()
       .safeApply(this.scope, (resp) => {
-        let $ = cheerio.load(resp.data)
-        let form = $(`form[name='reg']`)
-        let formSource = cheerio.load(form.html() ||"")
+        const $ = cheerio.load(resp.data)
+        const form = $(`form[name='reg']`)
+        const formSource = cheerio.load(form.html() || '')
         const relativeUrl = form.attr('action')
         const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
 
         const formInputs = {}
 
-        formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i,elem) => {
+        formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i, elem) => {
           const k = formSource(elem).attr('name')
           const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
 
           formInputs[k] = encodeURIComponent(v)
         }).get()
 
-        $(`select[name='styleidnew'] option`).each((i,elem) => {
+        $(`select[name='styleidnew'] option`).each((i, elem) => {
           const obj = $(elem)
-          const isSelected = obj.attr('selected') == 'selected'
+          const isSelected = obj.attr('selected') === 'selected'
           const value = obj.attr('value')
-          const name = obj.text()
+          // const name = obj.text()
 
-          if(isSelected){
+          if (isSelected) {
             this.forumStyle = value
           }
         })
 
         this.onChangeForumStyle = (newStyle) => {
-
           const spinnerHtml = `
           <div>
               <div class="text-center">傳送到 HKEPC 伺服器中</div>
@@ -171,33 +168,32 @@ export class FeatureRouteController{
             html: spinnerHtml,
             allowOutsideClick: false,
             showCancelButton: false,
-            showConfirmButton: false,
+            showConfirmButton: false
           })
 
           swal.showLoading()
 
           // Post to the server
           this.apiService.dynamicRequest({
-            method: "POST",
-            url : postUrl,
-            data : {
+            method: 'POST',
+            url: postUrl,
+            data: {
               styleidnew: newStyle,
               ...formInputs
             },
-            headers : {'Content-Type':'application/x-www-form-urlencoded'}
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
           }).safeApply(this.scope, (resp) => {
             swal({
-              title: "成功更改",
+              title: '成功更改',
               text: '',
               type: 'success'
             })
           }).subscribe()
         }
-
       }).subscribe()
   }
 
-  doRefresh(){
+  doRefresh () {
     this.registerOnChangeForumStyle()
     this.apiService.checkPM()
       .flatMap(() => this.apiService.memberCenter())

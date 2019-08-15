@@ -3,24 +3,27 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-import {Bridge, Channel} from "../bridge/index";
+import { Bridge, Channel } from '../bridge/index'
 
 export class AboutController {
-  static get STATE() { return 'tab.about'}
-  static get NAME() { return 'AboutController'}
-  static get CONFIG() { return {
-    url: '/about',
-    views: {
-      'main': {
-        templateUrl: 'templates/tab-about.html',
-        controller: AboutController.NAME,
-        controllerAs: 'vm'
+  static get STATE () { return 'tab.about' }
+
+  static get NAME () { return 'AboutController' }
+
+  static get CONFIG () {
+    return {
+      url: '/about',
+      views: {
+        main: {
+          templateUrl: 'templates/tab-about.html',
+          controller: AboutController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
+  }
 
-  constructor($scope, $http, LocalStorageService,$ionicPopup, ngToast) {
-
+  constructor ($scope, $http, LocalStorageService, $ionicPopup, ngToast) {
     this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
@@ -33,15 +36,15 @@ export class AboutController {
     }).subscribe()
   }
 
-  isIOS(){
+  isIOS () {
     return ionic.Platform.isIOS()
   }
 
-  isAndroid(){
+  isAndroid () {
     return ionic.Platform.isAndroid()
   }
-  showProxyPopup(){
 
+  showProxyPopup () {
     // An elaborate, custom popup
     const proxyPopup = this.ionicPopup.show({
       template: '<input type="text" ng-model="vm.proxy">',
@@ -55,10 +58,10 @@ export class AboutController {
           type: 'button-positive',
           onTap: (e) => {
             if (!this.proxy) {
-              //don't allow the user to close unless he enters wifi password
-              e.preventDefault();
+              // don't allow the user to close unless he enters wifi password
+              e.preventDefault()
             } else {
-              return this.proxy;
+              return this.proxy
             }
           }
         }
@@ -66,23 +69,21 @@ export class AboutController {
     })
 
     proxyPopup.then((res) => {
-      if(res){
-        this.localStorageService.set('proxy',res)
+      if (res) {
+        this.localStorageService.set('proxy', res)
       }
     })
   };
 
-  isProxy() {
+  isProxy () {
     return URLUtils.isProxy()
   }
 
-  onIAP(){
-    if(Bridge.isAvailable()){
+  onIAP () {
+    if (Bridge.isAvailable()) {
       Bridge.callHandler(Channel.iap)
-    }
-    else {
+    } else {
       this.ngToast.info(`<i class="ion-ios-timer-outline">請使用 iOS 或 Android App 訂閱</i>`)
     }
-
   }
 }

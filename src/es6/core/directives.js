@@ -3,7 +3,7 @@
  */
 
 import * as HKEPC from '../data/config/hkepc'
-import {Bridge, Channel} from './bridge/index'
+import { Bridge, Channel } from './bridge/index'
 
 /**
  * Register the directives
@@ -26,25 +26,23 @@ export default angular.module('starter.directives', ['ngAnimate'])
   .directive('inputHelper', (Upload, $timeout) => {
     return {
       restrict: 'E',
-      scope:    {
-        modal:         '=',
-        contentModel:  '='
+      scope: {
+        modal: '=',
+        contentModel: '='
       },
-      link:     function (scope, element) {
+      link: function (scope, element) {
         const modal = scope.modal
 
         scope.selectTab = (index) => {
           if (index === 4 && Bridge.isAvailable()) {
             Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
-
               modal.onImageUploadSuccess(attachmentIds)
 
               $timeout(() => {
                 scope.$apply()
               })
             })
-          }
-          else {
+          } else {
             modal.showInputHelperAt = index
           }
         }
@@ -66,7 +64,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
             reader.onload = function (e) {
               const fileSizeInKB = e.total / 1000
               if (fileSizeInKB >= 150) {
-
                 scope.imageErr = `圖片(${fileSizeInKB} KB) 大於 HKEPC 限制(150KB)`
                 scope.imageErrSuggestion = `建議使用具有自動壓縮功能的 iOS 或 Android (6.0 或以上) HKEPC IR Pro App`
               } else {
@@ -80,25 +77,24 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
             reader.readAsDataURL(file)
           }
-
         }
 
         scope.upload = function () {
-          console.log("modal.hiddenAttachFormInputs", modal.hiddenAttachFormInputs)
+          console.log('modal.hiddenAttachFormInputs', modal.hiddenAttachFormInputs)
           if (!modal.hiddenAttachFormInputs) {
-            throw new Error("Modal Missing hiddenAttachFormInputs")
+            throw new Error('Modal Missing hiddenAttachFormInputs')
           }
 
           const data = modal.hiddenAttachFormInputs
           data.Filedata = scope.file
 
           Upload.upload({
-            url:  data.action,
+            url: data.action,
             data: data
           }).then(function (resp) {
             console.log('Success uploaded. Response: ', resp.data)
 
-            //DISCUZUPLOAD|0|1948831|1
+            // DISCUZUPLOAD|0|1948831|1
             const attactmentId = resp.data.split('|')[2]
 
             modal.onImageUploadSuccess([attactmentId])
@@ -107,7 +103,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
             // release the file
             scope.file = undefined
-
           }, function (resp) {
             console.log('Error status: ' + resp.status)
           }, function (evt) {
@@ -143,7 +138,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
           $timeout(() => {
             scope.$apply()
           })
-
         }
 
         modal.addTextStyleTagToText = function (tag) {
@@ -155,7 +149,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
           console.log(splits)
           const openTag = `[${tag}]`
           const closeTag = `[/${tag}]`
-          if (tag == 'hr') {
+          if (tag === 'hr') {
             scope.contentModel = `${splits[0]}${openTag}${splits[1]}`
           } else {
             scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
@@ -172,7 +166,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
               }, 200)
             })
           })
-
         }
         modal.addFontSizeTagToText = function (size) {
           const selectorId = this.id
@@ -196,7 +189,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
               }, 200)
             })
           })
-
         }
 
         modal.addGifCodeToText = function (code) {
@@ -253,15 +245,15 @@ export default angular.module('starter.directives', ['ngAnimate'])
             }
           }, 1200)
         })
-        $elm.bind('touchcancel', function(evt){
+        $elm.bind('touchcancel', function (evt) {
           $scope.triggeredLongPress = false
           // Prevent the onLongPress event from firing
           $scope.longPress = false
         })
 
-        $elm.bind('touchmove', function(evt){
+        $elm.bind('touchmove', function (evt) {
           const { clientX, clientY } = evt.touches[0]
-          if(Math.abs($scope.startTouch.x - clientX) > 5 || Math.abs($scope.startTouch.y - clientY) > 5){
+          if (Math.abs($scope.startTouch.x - clientX) > 5 || Math.abs($scope.startTouch.y - clientY) > 5) {
             $scope.triggeredLongPress = false
             // Prevent the onLongPress event from firing
             $scope.longPress = false
@@ -276,7 +268,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
                 $scope.$eval($attrs.onShortPress)
               })
             }
-
           }
 
           $scope.triggeredLongPress = false
@@ -300,7 +291,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
         $timeout(() => {
           const height = $elm[0].clientHeight
           if (height > screenHeight) {
-
             console.log(`onLongerThanScreen, elementHeight ${height} > ${screenHeight}`)
 
             $scope.$apply(function () {
@@ -312,19 +302,18 @@ export default angular.module('starter.directives', ['ngAnimate'])
     }
   })
   .directive('lazyScroll', ($rootScope, rx) => {
-      return {
-        restrict: 'A',
-        link: function ($scope, $element) {
-
-          $scope.$createObservableFunction("$onScroll")
-            .throttle(300, rx.Scheduler.async)
-            .doOnNext(() => console.debug("emit lazy scroll event"))
-            .subscribe(() => {
-              $scope.$broadcast('lazyScrollEvent')
-            })
-        }
+    return {
+      restrict: 'A',
+      link: function ($scope, $element) {
+        $scope.$createObservableFunction('$onScroll')
+          .throttle(300, rx.Scheduler.async)
+          .doOnNext(() => console.debug('emit lazy scroll event'))
+          .subscribe(() => {
+            $scope.$broadcast('lazyScrollEvent')
+          })
       }
-    })
+    }
+  })
   .directive('lastread', ($document, rx) => {
     return {
       restrict: 'A',
@@ -333,61 +322,59 @@ export default angular.module('starter.directives', ['ngAnimate'])
         $scope.$eventToObservable('lazyScrollEvent')
           .startWith(1)
           .observeOn(rx.Scheduler.async)
-          .doOnNext(() => console.debug("[LAST_READ] rx lazy scroll event"))
+          .doOnNext(() => console.debug('[LAST_READ] rx lazy scroll event'))
           .filter(() => {
             const clientHeight = $document[0].documentElement.clientHeight
             const imageRect = $element[0].getBoundingClientRect()
             return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
           })
           .subscribe(() => {
-            $scope.$emit('lastread', {page: $attributes.page, id: $attributes.id})
+            $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
           })
       }
     }
-
   })
-  .directive('imageLazySrc', ($document, $timeout, $ionicScrollDelegate, $compile, rx)  => {
-      return {
-        restrict: 'A',
-        scope: {
-          imageLazySrc: "@"
-        },
-        link: function ($scope, $element, $attributes) {
-
-          const subscription = $scope.$eventToObservable('lazyScrollEvent')
-            .startWith(1)
-            .observeOn(rx.Scheduler.async)
-            .doOnNext(() => console.debug("[LAZY_IMAGE] rx lazy scroll event"))
-            .filter(() => {
-              const clientHeight = $document[0].documentElement.clientHeight
-              const imageRect = $element[0].getBoundingClientRect()
-              return (imageRect.top >= 0 && imageRect.top <= clientHeight)
-            })
-            .take(1)
-            .safeApply($scope, () => {
-              $element[0].src = $attributes.imageLazySrc // set src attribute on element (it will load image)
-            })
-            .subscribe(() => {
-              subscription.dispose()
-            })
-
-          // wrap a container
-          $element.wrap('<div class="lazy-loading-container"></div>')
-
-          // bind listener
-          $element.on("error", function (e) {
-            $element.off("error")
+  .directive('imageLazySrc', ($document, $timeout, $ionicScrollDelegate, $compile, rx) => {
+    return {
+      restrict: 'A',
+      scope: {
+        imageLazySrc: '@'
+      },
+      link: function ($scope, $element, $attributes) {
+        const subscription = $scope.$eventToObservable('lazyScrollEvent')
+          .startWith(1)
+          .observeOn(rx.Scheduler.async)
+          .doOnNext(() => console.debug('[LAZY_IMAGE] rx lazy scroll event'))
+          .filter(() => {
+            const clientHeight = $document[0].documentElement.clientHeight
+            const imageRect = $element[0].getBoundingClientRect()
+            return (imageRect.top >= 0 && imageRect.top <= clientHeight)
+          })
+          .take(1)
+          .safeApply($scope, () => {
+            $element[0].src = $attributes.imageLazySrc // set src attribute on element (it will load image)
+          })
+          .subscribe(() => {
             subscription.dispose()
           })
 
-          // unbind event listeners if element was destroyed
-          // it happens when you change view, etc
-          $element.on('$destroy', function () {
-            subscription.dispose()
-          })
-        }
+        // wrap a container
+        $element.wrap('<div class="lazy-loading-container"></div>')
+
+        // bind listener
+        $element.on('error', function (e) {
+          $element.off('error')
+          subscription.dispose()
+        })
+
+        // unbind event listeners if element was destroyed
+        // it happens when you change view, etc
+        $element.on('$destroy', function () {
+          subscription.dispose()
+        })
       }
-    })
+    }
+  })
   .directive('irSpinner', function () {
     return {
       restrict: 'E',

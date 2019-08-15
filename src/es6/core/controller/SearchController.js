@@ -4,20 +4,24 @@
 import * as Controllers from './index'
 
 export class SearchController {
-  static get STATE() { return 'tab.topics-search'}
-  static get NAME() { return 'SearchController'}
-  static get CONFIG() { return {
-    url: '/topics/search',
-    views: {
-      'main': {
-        templateUrl: 'templates/search.html',
-        controller: SearchController.NAME,
-        controllerAs: 'vm'
+  static get STATE () { return 'tab.topics-search' }
+
+  static get NAME () { return 'SearchController' }
+
+  static get CONFIG () {
+    return {
+      url: '/topics/search',
+      views: {
+        main: {
+          templateUrl: 'templates/search.html',
+          controller: SearchController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
-  constructor($scope,$ionicHistory,$state,ngToast,apiService, rx, LocalStorageService) {
+  }
 
+  constructor ($scope, $ionicHistory, $state, ngToast, apiService, rx, LocalStorageService) {
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.state = $state
@@ -31,12 +35,10 @@ export class SearchController {
 
     this.localStorageService.get('formhash').safeApply($scope, data => {
       this.formhash = data
-
     }).subscribe()
-
   }
 
-  onSearch(keyword){
+  onSearch (keyword) {
     const now = new Date().getTime()
 
     const diffInSecond = parseInt((now - this.lastSearchTimestamp) / 1000)
@@ -44,15 +46,15 @@ export class SearchController {
     // only allow serach per 20 second ( limited by hkepc )
     const canSearch = diffInSecond >= 20
 
-    if(canSearch){
+    if (canSearch) {
       this.searching = true
       this.lastSearchTimestamp = new Date().getTime()
 
-      this.apiService.search(this.formhash , keyword).safeApply(this.scope, resp => {
+      this.apiService.search(this.formhash, keyword).safeApply(this.scope, resp => {
         this.state.go(
           Controllers.PostListController.STATE,
           {
-            page:1 ,
+            page: 1,
             topicId: 'search',
             searchResp: JSON.stringify(resp),
             searchText: keyword
@@ -60,20 +62,17 @@ export class SearchController {
         )
 
         this.searching = false
-
       }).subscribe()
-    }
-    else {
+    } else {
       this.ngToast.danger({
         dismissOnTimeout: false,
         content: `<i class="ion-ios-stopwatch-outline"> HKEPC 只支授 20 秒搜尋一次，請於 ${20 - diffInSecond} 秒後再嘗試！</i>`
       })
     }
-
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({

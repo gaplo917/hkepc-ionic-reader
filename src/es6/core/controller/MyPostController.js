@@ -1,18 +1,18 @@
 /**
  * Created by Gaplo917 on 6/3/2016.
  */
-import * as Controllers from "./index"
+import * as Controllers from './index'
 
 export class MyPostController {
-  static get STATE() { return 'tab.features-mypost' }
+  static get STATE () { return 'tab.features-mypost' }
 
-  static get NAME() { return 'MyPostController' }
+  static get NAME () { return 'MyPostController' }
 
-  static get CONFIG() {
+  static get CONFIG () {
     return {
       url: '/features/mypost/:type',
       views: {
-        'main': {
+        main: {
           templateUrl: 'templates/features/mypost/my.post.html',
           controller: MyPostController.NAME,
           controllerAs: 'vm'
@@ -21,7 +21,7 @@ export class MyPostController {
     }
   }
 
-  constructor($ionicHistory,$state,$scope,$ionicPopover,apiService,AuthService,ngToast, $stateParams) {
+  constructor ($ionicHistory, $state, $scope, $ionicPopover, apiService, AuthService, ngToast, $stateParams) {
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
@@ -51,15 +51,12 @@ export class MyPostController {
         }
       }).subscribe()
     })
-
-
   }
 
-  loadMyPosts(){
-
+  loadMyPosts () {
     this.apiService.myPosts(this.page, this.type)
       .safeApply(this.scope, resp => {
-        const {posts, totalPageNum} = resp
+        const { posts, totalPageNum } = resp
         this.totalPageNum = totalPageNum
         this.myposts = this.myposts.concat(posts)
 
@@ -67,8 +64,8 @@ export class MyPostController {
       }).subscribe()
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
@@ -79,51 +76,47 @@ export class MyPostController {
     }
   }
 
-  reset(){
+  reset () {
     this.myposts = []
-    this.end = false;
-
+    this.end = false
   }
 
-  openPageSliderPopover($event) {
+  openPageSliderPopover ($event) {
     this.inputPage = this.page
     this.pageSliderPopover.show($event)
   }
 
-  doJumpPage(){
+  doJumpPage () {
     this.pageSliderPopover.hide()
     this.reset()
     this.page = this.inputPage
     this.loadMyPosts()
   }
 
-  parseInt(i){
+  parseInt (i) {
     return parseInt(i)
   }
 
-  getTimes(i){
+  getTimes (i) {
     return new Array(parseInt(i))
   }
 
-  loadMore(){
-    if(this.hasMoreData()){
+  loadMore () {
+    if (this.hasMoreData()) {
       const nextPage = parseInt(this.page) + 1
-      if(nextPage <= this.totalPageNum){
-        //update the page count
+      if (nextPage <= this.totalPageNum) {
+        // update the page count
         this.page = parseInt(this.page) + 1
 
         this.loadMyPosts()
-      }
-      else{
+      } else {
         // set a flag for end
         this.end = true
       }
-
     }
-
   }
 
-  hasMoreData(){
+  hasMoreData () {
     return !this.end && !this.refreshing
   }
 }

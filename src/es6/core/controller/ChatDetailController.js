@@ -3,33 +3,35 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-import {XMLUtils} from '../../utils/xml'
 
-import {GeneralHtml} from '../model/general-html'
-import * as Controllers from "./index"
+import { GeneralHtml } from '../model/general-html'
+import * as Controllers from './index'
 import swal from 'sweetalert2'
-import {Bridge} from "../bridge/Bridge";
+import { Bridge } from '../bridge/Bridge'
 
 const cheerio = require('cheerio')
 const moment = require('moment')
-const uuid = require('uuid-v4');
 
-export class ChatDetailController{
-  static get STATE() { return 'tab.features-chat-detail'}
-  static get NAME() { return 'ChatDetailController'}
-  static get CONFIG() { return {
-    url: '/features/chats/:id',
-    cache: false,
-    views: {
-      'main': {
-        templateUrl: 'templates/features/chats/chats.details.html',
-        controller: ChatDetailController.NAME,
-        controllerAs: 'vm'
+export class ChatDetailController {
+  static get STATE () { return 'tab.features-chat-detail' }
+
+  static get NAME () { return 'ChatDetailController' }
+
+  static get CONFIG () {
+    return {
+      url: '/features/chats/:id',
+      cache: false,
+      views: {
+        main: {
+          templateUrl: 'templates/features/chats/chats.details.html',
+          controller: ChatDetailController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
-  constructor($scope, apiService, $sce, $stateParams,$ionicScrollDelegate,ngToast,$ionicHistory,$state, $compile){
+  }
 
+  constructor ($scope, apiService, $sce, $stateParams, $ionicScrollDelegate, ngToast, $ionicHistory, $state, $compile) {
     this.scope = $scope
     this.apiService = apiService
     this.sce = $sce
@@ -43,111 +45,104 @@ export class ChatDetailController{
     this.messages = []
     this.ionicReaderSign = HKEPC.signature({
       androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
+      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
     })
 
     $scope.$on('$ionicView.loaded', (e) => {
-        this.loadMessages()
+      this.loadMessages()
     })
-
   }
 
-  loadMessages(){
+  loadMessages () {
     this.apiService
-        .chatDetails(this.senderId)
-        .safeApply(this.scope, (resp) => {
+      .chatDetails(this.senderId)
+      .safeApply(this.scope, (resp) => {
+        const html = new GeneralHtml(cheerio.load(resp.data))
 
-          const html = new GeneralHtml(cheerio.load(resp.data))
+        const $ = html
+          .removeAds()
+          .processImgUrl(HKEPC.baseForumUrl)
+          .processImageToLazy()
+          .processExternalUrl()
+          .getCheerio()
 
-          let $ = html
-              .removeAds()
-              .processImgUrl(HKEPC.baseForumUrl)
-              .processImageToLazy()
-              .processExternalUrl()
-              .getCheerio()
+        const messages = $('.pm_list li.s_clear').map((i, elem) => {
+          const isSelf = $(elem).attr('class').indexOf('self') > 0
 
-          const messages = $('.pm_list li.s_clear').map((i, elem) => {
-            const isSelf = $(elem).attr('class').indexOf('self') > 0
+          return this.parseChat($(elem).html(), isSelf)
+        }).get()
 
-            return this.parseChat($(elem).html(),isSelf)
+        // must exist in the list
+        const senderMessage = messages.filter((m) => !m.isSelf)[0]
+        if (senderMessage) {
+          this.sender = {
+            id: senderMessage.id,
+            username: senderMessage.username
+          }
+        }
 
+        this.messages = messages
+
+        // scroll to bottom
+        this.ionicScrollDelegate.scrollBottom(true)
+
+        this.sendMessage = (message) => {
+          // prepare the chat message
+          const relativeUrl = $('#pmform').attr('action')
+          const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+
+          const formSource = cheerio.load($('#pmform').html())
+
+          const hiddenFormInputs = {}
+
+          formSource(`input[type='hidden']`).map((i, elem) => {
+            const k = formSource(elem).attr('name')
+            const v = formSource(elem).attr('value')
+
+            hiddenFormInputs[k] = encodeURIComponent(v)
           }).get()
 
-          // must exist in the list
-          const senderMessage = messages.filter((m) => !m.isSelf)[0]
-          if(senderMessage){
-            this.sender = {
-              id : senderMessage.id,
-              username : senderMessage.username
-            }
-          }
+          const ionicReaderSign = this.ionicReaderSign
 
-          this.messages = messages
+          // build the reply message
+          const chatMessage = `${message}\n\n${ionicReaderSign}`
 
-          // scroll to bottom
-          this.ionicScrollDelegate.scrollBottom(true)
-
-
-          this.sendMessage = (message) => {
-            // prepare the chat message
-            const relativeUrl = $('#pmform').attr('action')
-            const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
-
-            let formSource = cheerio.load($('#pmform').html())
-
-            const hiddenFormInputs = {}
-
-            formSource(`input[type='hidden']`).map((i,elem) => {
-              const k = formSource(elem).attr('name')
-              const v = formSource(elem).attr('value')
-
-              hiddenFormInputs[k] = encodeURIComponent(v)
-            }).get()
-
-            const ionicReaderSign = this.ionicReaderSign
-
-            // build the reply message
-            const chatMessage = `${message}\n\n${ionicReaderSign}`
-
-            const spinnerHtml = `
+          const spinnerHtml = `
               <div>
                   <div class="text-center">傳送到 HKEPC 伺服器中</div>
               </div>
             `
 
-            swal({
-              html: spinnerHtml,
-              allowOutsideClick: false,
-              showCancelButton: false,
-              showConfirmButton: false,
-            })
+          swal({
+            html: spinnerHtml,
+            allowOutsideClick: false,
+            showCancelButton: false,
+            showConfirmButton: false
+          })
 
-            swal.showLoading()
+          swal.showLoading()
 
-            // Post to the server
-            this.apiService.postChatMessage({
-              method: "POST",
-              url : postUrl,
-              data : {
-                message: chatMessage,
-               ...hiddenFormInputs
-              },
-              headers : {'Content-Type':'application/x-www-form-urlencoded'}
-            }).safeApply(this.scope, (resp) => {
-
-              setTimeout(() => {
-                swal.close()
-                this.doRefresh()
-              }, 500)
-
-            }).subscribe()
-          }
-
-        }).subscribe()
+          // Post to the server
+          this.apiService.postChatMessage({
+            method: 'POST',
+            url: postUrl,
+            data: {
+              message: chatMessage,
+              ...hiddenFormInputs
+            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          }).safeApply(this.scope, (resp) => {
+            setTimeout(() => {
+              swal.close()
+              this.doRefresh()
+            }, 500)
+          }).subscribe()
+        }
+      }).subscribe()
   }
 
-  parseChat(chatHtml,isSelf) {
-    let chatSource = cheerio.load(chatHtml)
+  parseChat (chatHtml, isSelf) {
+    const chatSource = cheerio.load(chatHtml)
 
     const avatarUrl = chatSource('.avatar img').attr('raw-src')
     const text = chatSource('.summary').html()
@@ -158,37 +153,35 @@ export class ChatDetailController{
     const date = chatSource('.cite').text()
     let mDate
     try {
-      mDate = moment(date,'YYYY-M-D hh:mm').fromNow()
-    } catch(e){
-      console.warn("date format not correct",e)
-      mDate = "幾秒前"
+      mDate = moment(date, 'YYYY-M-D hh:mm').fromNow()
+    } catch (e) {
+      console.warn('date format not correct', e)
+      mDate = '幾秒前'
     }
 
-    const id = URLUtils.getQueryVariable(avatarUrl,'uid')
+    const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
     return {
       id: id,
-      avatarUrl:avatarUrl,
+      avatarUrl: avatarUrl,
       content: this.sce.trustAsHtml(
-          text
+        text
       ),
       username: username,
-      date : mDate,
+      date: mDate,
       isSelf: isSelf
     }
   }
 
-  onSendMessage(sender,message){
-
+  onSendMessage (sender, message) {
     this.sendMessage(message)
-
   }
 
-  doRefresh(){
+  doRefresh () {
     this.loadMessages()
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
@@ -199,21 +192,21 @@ export class ChatDetailController{
     }
   }
 
-  async onNewMessage(){
+  async onNewMessage () {
     // FIXME: Not a good way. just a work arround
-    const {value: inputText} = await swal({
+    const { value: inputText } = await swal({
       title: `發訊息給${this.sender.username}`,
       input: 'textarea',
       inputPlaceholder: '輸入你的訊息',
-      confirmButtonText: "發送",
-      cancelButtonText: "取消",
+      confirmButtonText: '發送',
+      cancelButtonText: '取消',
       reverseButtons: true,
       showCancelButton: true,
-      customClass: "message",
+      customClass: 'message',
       focusConfirm: true
     })
 
-    if(inputText === undefined){
+    if (inputText === undefined) {
       // cancel case
       return
     }
@@ -227,18 +220,16 @@ export class ChatDetailController{
     this.onSendMessage(this.sender, inputText)
   }
 
-  loadLazyImage(uid, imageSrc) {
+  loadLazyImage (uid, imageSrc) {
     const image = document.getElementById(uid)
-    if(image.getAttribute('src') === imageSrc){
+    if (image.getAttribute('src') === imageSrc) {
       window.open(imageSrc, '_system', 'location=yes')
-    }
-    else {
+    } else {
       image.setAttribute('src', imageSrc)
     }
   }
 
-  openImage(uid, imageSrc) {
+  openImage (uid, imageSrc) {
     window.open(imageSrc, '_system', 'location=yes')
   }
-
 }

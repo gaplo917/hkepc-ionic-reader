@@ -1,27 +1,26 @@
 import * as Controllers from './index'
-import {XMLUtils} from "../../utils/xml";
-import * as _ from "lodash";
-import * as HKEPC from "../../data/config/hkepc";
+import { XMLUtils } from '../../utils/xml'
+import * as _ from 'lodash'
+import * as HKEPC from '../../data/config/hkepc'
 import swal from 'sweetalert2'
 
 const cheerio = require('cheerio')
-const uuid = require('uuid-v4');
 
 export class UserProfileController {
-  static get STATE() {
+  static get STATE () {
     return 'tab.user-profile'
   }
 
-  static get NAME() {
+  static get NAME () {
     return 'UserProfileController'
   }
 
-  static get CONFIG() {
+  static get CONFIG () {
     return {
       url: '/userProfile?author=',
       cache: false,
       views: {
-        'main': {
+        main: {
           templateUrl: 'templates/user-profile.html',
           controller: UserProfileController.NAME,
           controllerAs: 'vm'
@@ -30,7 +29,7 @@ export class UserProfileController {
     }
   }
 
-  constructor($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile) {
+  constructor ($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile) {
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
@@ -43,28 +42,26 @@ export class UserProfileController {
     this.author = author
 
     $scope.$on('$ionicView.loaded', (e) => {
-
       this.apiService.userProfile(author.uid).safeApply($scope, data => {
         this.content = data.content
       }).subscribe()
-
     })
   }
 
-  async sendPm(author) {
-    const {value: inputText} = await swal({
+  async sendPm (author) {
+    const { value: inputText } = await swal({
       title: `發訊息給${author.name}`,
       input: 'textarea',
       inputPlaceholder: '輸入你的訊息',
-      confirmButtonText: "發送",
-      cancelButtonText: "取消",
+      confirmButtonText: '發送',
+      cancelButtonText: '取消',
       reverseButtons: true,
       showCancelButton: true,
-      customClass: "message",
+      customClass: 'message',
       focusConfirm: true
     })
 
-    if(inputText === undefined){
+    if (inputText === undefined) {
       // cancel case
       return
     }
@@ -76,58 +73,57 @@ export class UserProfileController {
     }
 
     this.apiService.preSendPm(author.uid)
-        .flatMap((resp) => {
-          const xml = cheerio.load(resp.data, {xmlMode: true})
-          const rawHtml = _.replace(
-              _.replace(xml('root').html(), '<![CDATA[', '',)
-              , ']]>', '')
-          const $ = cheerio.load(rawHtml)
-          const relativeUrl = $('#sendpmform').attr('action')
-          const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
-          let formSource = cheerio.load($('#sendpmform').html())
+      .flatMap((resp) => {
+        const xml = cheerio.load(resp.data, { xmlMode: true })
+        const rawHtml = _.replace(
+          _.replace(xml('root').html(), '<![CDATA[', '')
+          , ']]>', '')
+        const $ = cheerio.load(rawHtml)
+        const relativeUrl = $('#sendpmform').attr('action')
+        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+        const formSource = cheerio.load($('#sendpmform').html())
 
-          const hiddenFormInputs = {}
-          formSource(`input[type='hidden']`).map((i, elem) => {
-            const k = formSource(elem).attr('name')
-            const v = formSource(elem).attr('value')
+        const hiddenFormInputs = {}
+        formSource(`input[type='hidden']`).map((i, elem) => {
+          const k = formSource(elem).attr('name')
+          const v = formSource(elem).attr('value')
 
-            hiddenFormInputs[k] = encodeURIComponent(v)
-          }).get()
+          hiddenFormInputs[k] = encodeURIComponent(v)
+        }).get()
 
-          return this.apiService.dynamicRequest({
-            method: "POST",
-            url: postUrl,
-            data: {
-              msgto: author.name,
-              message: inputText,
-              ...hiddenFormInputs,
-            },
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        return this.apiService.dynamicRequest({
+          method: 'POST',
+          url: postUrl,
+          data: {
+            msgto: author.name,
+            message: inputText,
+            ...hiddenFormInputs
+          },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+      })
+      .safeApply(this.scope, (resp) => {
+        const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data), { xmlMode: true }).html()
+        const isSuccess = _.includes(responseText, '成功')
+        if (isSuccess) {
+          swal({
+            title: '發送成功',
+            type: 'success',
+            confirmButtonText: '確定'
           })
-        })
-        .safeApply(this.scope, (resp) => {
-          const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data), {xmlMode: true}).html()
-          const isSuccess = _.includes(responseText, '成功')
-          if (isSuccess) {
-            swal({
-              title: "發送成功",
-              type: "success",
-              confirmButtonText: "確定",
-            })
-          }
-          else {
-            swal({
-              title: "發送失敗",
-              text: `HKEPC 傳回:「${responseText}`,
-              type: "error",
-              confirmButtonText: "確定",
-            })
-          }
-        })
-        .subscribe()
+        } else {
+          swal({
+            title: '發送失敗',
+            text: `HKEPC 傳回:「${responseText}`,
+            type: 'error',
+            confirmButtonText: '確定'
+          })
+        }
+      })
+      .subscribe()
   }
 
-  onBack() {
+  onBack () {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {

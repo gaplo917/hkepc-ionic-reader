@@ -1,20 +1,25 @@
 import * as Controllers from './index'
 
 export class FindMessageController {
-  static get STATE() { return 'tab.find-message'}
-  static get NAME() { return 'FindMessageController'}
-  static get CONFIG() { return {
-    url: '/findMessage?postId=&messageId=',
-    cache: false,
-    views: {
-      'main': {
-        templateUrl: 'templates/find-message.html',
-        controller: FindMessageController.NAME,
-        controllerAs: 'vm'
+  static get STATE () { return 'tab.find-message' }
+
+  static get NAME () { return 'FindMessageController' }
+
+  static get CONFIG () {
+    return {
+      url: '/findMessage?postId=&messageId=',
+      cache: false,
+      views: {
+        main: {
+          templateUrl: 'templates/find-message.html',
+          controller: FindMessageController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
-  constructor($scope, $state, $stateParams, $ionicHistory, apiService, $compile) {
+  }
+
+  constructor ($scope, $state, $stateParams, $ionicHistory, apiService, $compile) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     this.scope = $scope
@@ -24,20 +29,17 @@ export class FindMessageController {
     const postId = $stateParams.postId
 
     $scope.$on('$ionicView.loaded', (e) => {
-
-      apiService.findMessage({postId,messageId})
-        .safeApply(this.scope, ({currentPage, message}) => {
+      apiService.findMessage({ postId, messageId })
+        .safeApply(this.scope, ({ currentPage, message }) => {
           this.pageNumber = currentPage
           this.message = message
         })
         .subscribe()
     })
-
-
   }
 
-  goToMessage() {
-    this.state.go(Controllers.PostDetailController.STATE,{
+  goToMessage () {
+    this.state.go(Controllers.PostDetailController.STATE, {
       topicId: this.message.post.topicId,
       postId: this.message.post.id,
       page: this.pageNumber,
@@ -46,22 +48,22 @@ export class FindMessageController {
     })
   }
 
-  getTimes(i){
+  getTimes (i) {
     return new Array(parseInt(i))
   }
 
-  relativeMomentize(dateStr){
+  relativeMomentize (dateStr) {
     const momentDate = moment(dateStr)
 
-    if(momentDate.diff(new Date(),'days') >= -3 ){
+    if (momentDate.diff(new Date(), 'days') >= -3) {
       return momentDate.fromNow()
     } else {
       return dateStr
     }
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({

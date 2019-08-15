@@ -1,23 +1,23 @@
 export class ChangeFontSizeRequest {
-  static get NAME() { return 'ChangeFontSizeRequest'}
+  static get NAME () { return 'ChangeFontSizeRequest' }
 
-  constructor(size) {
+  constructor (size) {
     this.size = size
   }
 }
 
 export class ChangeThemeRequest {
-  static get NAME() { return 'ChangeThemeRequest'}
+  static get NAME () { return 'ChangeThemeRequest' }
 
-  constructor(theme) {
+  constructor (theme) {
     this.theme = theme
   }
 }
 
 export class CommonInfoExtractRequest {
-  static get NAME() { return 'CommonInfoExtractRequest'}
+  static get NAME () { return 'CommonInfoExtractRequest' }
 
-  constructor(username,pmNotification,postNotification,formhash) {
+  constructor (username, pmNotification, postNotification, formhash) {
     this.username = username
     this.pmNotification = pmNotification
     this.postNotification = postNotification
@@ -26,53 +26,53 @@ export class CommonInfoExtractRequest {
 }
 
 export class FindMessageRequest {
-  static get NAME() { return 'FindMessageRequest'}
+  static get NAME () { return 'FindMessageRequest' }
 
-  constructor(postId, messageId) {
+  constructor (postId, messageId) {
     this.postId = postId
     this.messageId = messageId
   }
 }
 
 export class LoginTabUpdateRequest {
-  static get NAME() { return 'LoginTabUpdateRequest'}
+  static get NAME () { return 'LoginTabUpdateRequest' }
 
-  constructor(username, isFromLogout = false) {
+  constructor (username, isFromLogout = false) {
     this.username = username
     this.isFromLogout = isFromLogout
   }
 }
 
 export class NotificationBadgeUpdateRequest {
-  static get NAME() { return 'NotificationBadgeUpdateRequest'}
+  static get NAME () { return 'NotificationBadgeUpdateRequest' }
 
-  constructor(pmNotificationCount, postNotificationCount) {
+  constructor (pmNotificationCount, postNotificationCount) {
     this.notification = {
-      pm : parseInt(pmNotificationCount),
+      pm: parseInt(pmNotificationCount),
       post: parseInt(postNotificationCount)
     }
   }
 }
 
 export class PostDetailRefreshRequest {
-  static get NAME() { return 'PostDetailRefreshRequest'}
+  static get NAME () { return 'PostDetailRefreshRequest' }
 }
 
 export class PostListRefreshRequest {
-  static get NAME() { return 'PostListRefreshRequest'}
+  static get NAME () { return 'PostListRefreshRequest' }
 }
 
 export class PushHistoryRequest {
-  static get NAME() { return 'PushHistoryRequest'}
+  static get NAME () { return 'PushHistoryRequest' }
 
-  constructor(any) {
+  constructor (any) {
     this.historyObj = any
   }
 }
 export class MHeadFixRequest {
-  static get NAME() { return 'MHeadFixRequest'}
+  static get NAME () { return 'MHeadFixRequest' }
 
-  constructor(mHeadFix) {
+  constructor (mHeadFix) {
     this.mHeadFix = mHeadFix
   }
 }

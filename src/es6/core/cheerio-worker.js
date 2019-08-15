@@ -1,20 +1,18 @@
-import * as URLUtils from '../utils/url'
-import {GeneralHtml} from './model/general-html'
-import {HKEPCHtml} from './model/hkepc-html'
-import Mapper from "./mapper/mapper";
+import { HKEPCHtml } from './model/hkepc-html'
+import Mapper from './mapper/mapper'
 
-const cheerio = require('cheerio');
+const cheerio = require('cheerio')
 
 module.exports = function (self) {
-  self.addEventListener('message',function (ev){
-    const {topic, data, currentHash, isAutoLoadImage} = ev.data
+  self.addEventListener('message', function (ev) {
+    const { topic, data, currentHash, isAutoLoadImage } = ev.data
 
     const html = new HKEPCHtml(cheerio.load(data))
-        .removeAds()
-        .processImgUrl('https://www.hkepc.com/forum')
-        .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
-        .processEpcUrl(currentHash || "")
-        .processExternalUrl()
+      .removeAds()
+      .processImgUrl('https://www.hkepc.com/forum')
+      .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
+      .processEpcUrl(currentHash || '')
+      .processExternalUrl()
 
     self.postMessage({
       topic: 'commonInfo',
@@ -22,7 +20,7 @@ module.exports = function (self) {
     })
 
     console.log(html.getLoggedInUserInfo())
-    switch(topic) {
+    switch (topic) {
       case 'topicList':
 
         self.postMessage({
@@ -37,7 +35,7 @@ module.exports = function (self) {
 
         self.postMessage({
           topic: topic,
-          data: Mapper.postListHtmlToPostListPage(html,pageNum)
+          data: Mapper.postListHtmlToPostListPage(html, pageNum)
         })
 
         break
@@ -68,26 +66,22 @@ module.exports = function (self) {
 
         self.postMessage({
           topic: topic,
-          data: Mapper.postListHtmlToPostListPage(html,1)
+          data: Mapper.postListHtmlToPostListPage(html, 1)
         })
         break
 
       case 'myPost':
         self.postMessage({
           topic: topic,
-          data: Mapper.myPost(html,ev.data.opt)
+          data: Mapper.myPost(html, ev.data.opt)
         })
-
+        break
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({
           topic: topic,
           data: {}
         })
-        break
     }
-
   })
-
-
 }

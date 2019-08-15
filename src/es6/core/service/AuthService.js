@@ -6,81 +6,80 @@ import * as URLUtils from '../../utils/url'
 const cheerio = require('cheerio')
 
 export class AuthService {
-  static get NAME() { return 'AuthService' }
+  static get NAME () { return 'AuthService' }
 
-  static get DI() {
-    return (LocalStorageService,ngToast,rx, apiService) => new AuthService(LocalStorageService,ngToast,rx, apiService)
+  static get DI () {
+    return (LocalStorageService, ngToast, rx, apiService) => new AuthService(LocalStorageService, ngToast, rx, apiService)
   }
 
-  constructor(LocalStorageService,ngToast,rx,apiService) {
+  constructor (LocalStorageService, ngToast, rx, apiService) {
     this.localStorageService = LocalStorageService
     this.ngToast = ngToast
     this.rx = rx
     this.apiService = apiService
   }
 
-  saveAuthority(authority) {
+  saveAuthority (authority) {
     // remove the password before save
     delete authority['password']
     delete authority['securityQuestionAns']
     delete authority['securityQuestionId']
 
-    return this.localStorageService.setObject('authority',authority)
+    return this.localStorageService.setObject('authority', authority)
   }
 
-  removeAuthority(){
-   return this.localStorageService.setObject('authority',{})
+  removeAuthority () {
+    return this.localStorageService.setObject('authority', {})
   }
 
-  getUsername() {
+  getUsername () {
     return this.localStorageService.getObject('authority')
       .map(authority => {
-        if(authority && authority.username){
+        if (authority && authority.username) {
           return authority.username.trim()
-        }
-        else {
+        } else {
           return undefined
         }
       })
   }
 
-  isLoggedIn() {
+  isLoggedIn () {
     return this.localStorageService.get(HKEPC.auth.id)
   }
 
-  login (authority,cb) {
-    if(authority && authority.username && authority.password){
-      console.log('[AuthService]','Request login')
+  login (authority, cb) {
+    if (authority && authority.username && authority.password) {
+      console.log('[AuthService]', 'Request login')
 
       this.apiService.login(authority)
         .subscribe((resp) => {
-          if(URLUtils.isProxy()){
+          if (URLUtils.isProxy()) {
             const sidKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.id}=`))
             const authKV = resp.data.find(x => x.startsWith(`${HKEPC.auth.token}=`))
 
-            if(sidKV && authKV){
+            if (sidKV && authKV) {
               const sidValue = sidKV.split(';')[0].split('=')[1]
               const authValue = authKV.split(';')[0].split('=')[1]
-              const authExpireValue = authKV.split(';')[1].split('=')[1]
+              // const authExpireValue = authKV.split(';')[1].split('=')[1]
 
-              if(sidValue && authValue) {
+              if (sidValue && authValue) {
                 const expire = new Date().getTime() + 2592000000
 
-                this.localStorageService.set(HKEPC.auth.id,sidValue)
-                this.localStorageService.set(HKEPC.auth.token,authValue)
-                this.localStorageService.set(HKEPC.auth.expire,expire)
+                this.localStorageService.set(HKEPC.auth.id, sidValue)
+                this.localStorageService.set(HKEPC.auth.token, authValue)
+                this.localStorageService.set(HKEPC.auth.expire, expire)
 
                 requestAnimationFrame(() => {
                   this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
                 })
 
-                if(cb) cb(null,authority.username)
+                if (cb) cb(null, authority.username)
               }
             } else {
               requestAnimationFrame(() => {
                 this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
               })
-              cb("Fail!")
+              cb('Fail!')
             }
           } else {
             // native code
@@ -88,30 +87,27 @@ export class AuthService {
             const currentUsername = $('#umenu > cite').text()
             const formhash = $(`input[name='formhash']`).attr('value')
 
-            if(currentUsername){
-              this.localStorageService.set(HKEPC.auth.id,"dummy_val_for_non_proxied_client")
-              this.localStorageService.set(HKEPC.auth.formhash,formhash)
+            if (currentUsername) {
+              this.localStorageService.set(HKEPC.auth.id, 'dummy_val_for_non_proxied_client')
+              this.localStorageService.set(HKEPC.auth.formhash, formhash)
 
               requestAnimationFrame(() => {
                 this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
               })
-              if(cb) cb(null,currentUsername)
+              if (cb) cb(null, currentUsername)
             } else {
               requestAnimationFrame(() => {
                 this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
               })
-              cb("Fail!")
+              cb('Fail!')
             }
           }
-
-
         })
-
     }
   }
 
   logout () {
-    this.localStorageService.set(HKEPC.auth.id,undefined)
+    this.localStorageService.set(HKEPC.auth.id, undefined)
     this.removeAuthority()
 
     // must be success
@@ -120,6 +116,4 @@ export class AuthService {
       // useful for Native App handling
     })
   }
-
 }
-

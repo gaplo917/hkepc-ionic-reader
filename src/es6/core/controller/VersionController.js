@@ -1,21 +1,26 @@
 import * as Controllers from './index'
-const showdown  = require('showdown')
+const showdown = require('showdown')
 
 export class VersionController {
-  static get STATE() { return 'tab.about-version'}
-  static get NAME() { return 'VersionController'}
-  static get CONFIG() { return {
-    url: '/about/version',
-    cache: false,
-    views: {
-      'main': {
-        templateUrl: 'templates/about/version.html',
-        controller: VersionController.NAME,
-        controllerAs: 'vm'
+  static get STATE () { return 'tab.about-version' }
+
+  static get NAME () { return 'VersionController' }
+
+  static get CONFIG () {
+    return {
+      url: '/about/version',
+      cache: false,
+      views: {
+        main: {
+          templateUrl: 'templates/about/version.html',
+          controller: VersionController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
-  constructor($scope, $state,$ionicHistory, $http, $rootScope, apiService) {
+  }
+
+  constructor ($scope, $state, $ionicHistory, $http, $rootScope, apiService) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     const converter = new showdown.Converter()
@@ -25,8 +30,8 @@ export class VersionController {
     }).subscribe()
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({

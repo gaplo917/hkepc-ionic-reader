@@ -1,18 +1,18 @@
 /**
  * Created by Gaplo917 on 6/3/2016.
  */
-import * as Controllers from "./index"
+import * as Controllers from './index'
 
 export class HistoryDetailController {
-  static get STATE() { return 'tab.features-history-details' }
+  static get STATE () { return 'tab.features-history-details' }
 
-  static get NAME() { return 'HistoryDetailController' }
+  static get NAME () { return 'HistoryDetailController' }
 
-  static get CONFIG() {
+  static get CONFIG () {
     return {
       url: '/features/history/:dateStr',
       views: {
-        'main': {
+        main: {
           templateUrl: 'templates/features/history/history.details.html',
           controller: HistoryDetailController.NAME,
           controllerAs: 'vm'
@@ -21,7 +21,7 @@ export class HistoryDetailController {
     }
   }
 
-  constructor(HistoryService,$ionicHistory,$state,$stateParams,$scope) {
+  constructor (HistoryService, $ionicHistory, $state, $stateParams, $scope) {
     this.historyService = HistoryService
     this.state = $state
     this.ionicHistory = $ionicHistory
@@ -29,16 +29,14 @@ export class HistoryDetailController {
     this.dateStr = $stateParams.dateStr
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.historyService.getHistoryAt(this.dateStr).safeApply($scope,histories => {
+      this.historyService.getHistoryAt(this.dateStr).safeApply($scope, histories => {
         this.histories = histories
       }).subscribe()
-
     })
-
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
@@ -49,22 +47,21 @@ export class HistoryDetailController {
     }
   }
 
-  momentize(dateStr){
+  momentize (dateStr) {
     return moment(dateStr, 'YYYYMMDD').format('L')
   }
 
-  relativeMomentize(dateStr){
+  relativeMomentize (dateStr) {
     return moment(dateStr, 'YYYYMMDD').endOf('day').fromNow()
   }
 
-  relativeMomentizeTimestamp(timestamp){
+  relativeMomentizeTimestamp (timestamp) {
     return moment(timestamp).fromNow()
   }
 
-  onClearHistory(dateStr){
+  onClearHistory (dateStr) {
     this.historyService.clearHistory(dateStr)
 
     this.ionicHistory.goBack()
   }
-
 }

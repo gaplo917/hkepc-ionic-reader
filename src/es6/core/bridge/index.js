@@ -1,2 +1,2 @@
-export * from "./Bridge"
-export * from "./Channel"
+export * from './Bridge'
+export * from './Channel'

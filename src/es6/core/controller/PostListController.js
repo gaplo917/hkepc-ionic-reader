@@ -1,24 +1,29 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import {PushHistoryRequest, PostListRefreshRequest} from '../model/requests'
+import { PushHistoryRequest } from '../model/requests'
 import * as Controllers from './index'
-import * as _ from "lodash"
+import * as _ from 'lodash'
 
 export class PostListController {
-  static get STATE() { return 'tab.topics-posts'}
-  static get NAME() { return 'PostListController'}
-  static get CONFIG() { return {
-    url: '/topics/:topicId/page/:page?searchId=&searchText=&searchResp=',
-    views: {
-      'main': {
-        templateUrl: 'templates/post-list.html',
-        controller: PostListController.NAME,
-        controllerAs: 'vm'
+  static get STATE () { return 'tab.topics-posts' }
+
+  static get NAME () { return 'PostListController' }
+
+  static get CONFIG () {
+    return {
+      url: '/topics/:topicId/page/:page?searchId=&searchText=&searchResp=',
+      views: {
+        main: {
+          templateUrl: 'templates/post-list.html',
+          controller: PostListController.NAME,
+          controllerAs: 'vm'
+        }
       }
     }
-  }}
-  constructor($scope,$state,$stateParams,$location,$ionicScrollDelegate,$ionicHistory,$ionicPopover,LocalStorageService,$ionicModal,ngToast,$q, apiService, rx, $rootScope) {
+  }
+
+  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $rootScope) {
     this.scope = $scope
     this.state = $state
     this.location = $location
@@ -47,7 +52,7 @@ export class PostListController {
     this.hasMoreData = true
     this.filter = undefined
     this.order = undefined
-    
+
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
       scope: $scope
@@ -62,12 +67,12 @@ export class PostListController {
     })
 
     $scope.openPopover = ($event) => {
-      if(this.subTopicList && this.subTopicList.length > 0){
+      if (this.subTopicList && this.subTopicList.length > 0) {
         this.subTopicListPopover.show($event)
       }
     }
 
-    //Cleanup the popover when we're done with it!
+    // Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
       this.filterOrderPopover && this.filterOrderPopover.remove()
       this.subTopicListPopover && this.subTopicListPopover.remove()
@@ -75,8 +80,8 @@ export class PostListController {
 
     $scope.$eventToObservable('lastread')
       .throttle(300)
-      .safeApply($scope, ([event,{ page, id }]) => {
-        console.log("received broadcast lastread",page, id)
+      .safeApply($scope, ([event, { page, id }]) => {
+        console.log('received broadcast lastread', page, id)
         this.pointingPage = page
       })
       .subscribe()
@@ -88,27 +93,26 @@ export class PostListController {
     // $scope.$on('$ionicView.unloaded', (e) => {
     // })
 
-    this.localStorageService.get('showSticky',true).safeApply($scope, data => {
-      console.log("showSticky",data)
+    this.localStorageService.get('showSticky', true).safeApply($scope, data => {
+      console.log('showSticky', data)
       this.showSticky = String(data) === 'true'
     }).subscribe()
 
     this.loadMore()
   }
 
-  loadMore(cb){
-    if(this.hasMoreData){
+  loadMore (cb) {
+    if (this.hasMoreData) {
       const nextPage = parseInt(this.currentPageNum) + 1
 
-      if(this.searchResp){
+      if (this.searchResp) {
         this.renderPostListResponse(this.searchResp)
         this.searchResp = undefined
-      }
-      else {
+      } else {
         this.apiService.postListPage({
           topicId: this.topicId,
           pageNum: nextPage,
-          filter : this.filter,
+          filter: this.filter,
           order: this.order,
           searchId: this.searchId
         })
@@ -119,13 +123,13 @@ export class PostListController {
     }
   }
 
-  renderPostListResponse(resp){
+  renderPostListResponse (resp) {
     this.searchId = resp.searchId
     // only extract the number
     this.totalPageNum = resp.totalPageNum
 
     // use exiting list if there is
-    this.subTopicList =  this.subTopicList.length === 0
+    this.subTopicList = this.subTopicList.length === 0
       ? resp.subTopicList
       : this.subTopicList
 
@@ -154,25 +158,25 @@ export class PostListController {
     this.scope.$broadcast('scroll.infiniteScrollComplete')
   }
 
-  reset(){
+  reset () {
     this.currentPageNum = 0
     this.posts = []
     this.searchId = null
   }
 
-  doRefresh(){
+  doRefresh () {
     this.reset()
-    if(this.filter) {
+    if (this.filter) {
       const category = this.categories.find(c => c.id === this.filter)
-      if(category){
+      if (category) {
         this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
       }
     }
     this.loadMore()
   }
 
-  goToSubTopic(index,subTopic){
-    this.subTopicListPopover.hide();
+  goToSubTopic (index, subTopic) {
+    this.subTopicListPopover.hide()
 
     // swap the item in the list
     this.subTopicList[index] = this.topic
@@ -184,13 +188,11 @@ export class PostListController {
     this.doRefresh()
   }
 
-
-  saveShowSticky(bool) {
-    this.localStorageService.set('showSticky',bool)
+  saveShowSticky (bool) {
+    this.localStorageService.set('showSticky', bool)
   }
 
-  doNewPost(topic){
-
+  doNewPost (topic) {
     this.state.go(Controllers.WriteNewPostController.STATE, {
       topicId: this.topicId,
       topic: JSON.stringify(topic),
@@ -198,12 +200,12 @@ export class PostListController {
     })
   }
 
-  doFilterOrder($event){
+  doFilterOrder ($event) {
     this.filterOrderPopover.show($event)
   }
 
-  onBack(){
-    if(this.ionicHistory.viewHistory().currentView.index !== 0){
+  onBack () {
+    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
@@ -216,79 +218,79 @@ export class PostListController {
     }
   }
 
-  onGoToPost(post){
+  onGoToPost (post) {
     this.scope.$emit(PushHistoryRequest.NAME, new PushHistoryRequest(post))
   }
 
-  hasStickyPost(posts) {
+  hasStickyPost (posts) {
     return posts && posts.filter(post => post.isSticky).length > 0
   }
 
-  relativeMomentize(dateStr){
-    if(moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(),'days') >= -3 ){
+  relativeMomentize (dateStr) {
+    if (moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(), 'days') >= -3) {
       return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
     } else {
       return dateStr
     }
   }
 
-  swipeLeft(){
+  swipeLeft () {
     this.onBack()
   }
 
   /**
    *  Modified version from LikesController
    */
-  highlightSearchText(posts, searchText){
-    const searchKeywordIndex = (str,keyword,indexArr = []) => {
+  highlightSearchText (posts, searchText) {
+    const searchKeywordIndex = (str, keyword, indexArr = []) => {
       const lastIndexPos = indexArr.length === 0 ? 0 : indexArr[indexArr.length - 1] + 1
-      const index = str.indexOf(keyword,lastIndexPos)
-      if(index === -1 || !str || !keyword){
+      const index = str.indexOf(keyword, lastIndexPos)
+      if (index === -1 || !str || !keyword) {
         return indexArr
       } else {
-        return searchKeywordIndex(str,keyword,indexArr.concat([index]))
+        return searchKeywordIndex(str, keyword, indexArr.concat([index]))
       }
     }
 
-    const searchBraceIndex = (str,indexArr = []) => {
-      return (searchKeywordIndex(str,'<').concat(searchKeywordIndex(str,'>'))).sort((a,b) => a - b)
+    const searchBraceIndex = (str, indexArr = []) => {
+      return (searchKeywordIndex(str, '<').concat(searchKeywordIndex(str, '>'))).sort((a, b) => a - b)
     }
 
-    const isIndexInBrace = (content,bracePos,index) => {
-      switch (bracePos.length){
+    const isIndexInBrace = (content, bracePos, index) => {
+      switch (bracePos.length) {
         case 0 :
           return false
         case 1 :
           return false
         default :
           return (
-              content[bracePos[0]] === '<'
-              && content[bracePos[1]] === '>'
-              && index > bracePos[0]
-              && index < bracePos[1]
-            ) || isIndexInBrace(content,bracePos.slice(2),index)
+            content[bracePos[0]] === '<' &&
+              content[bracePos[1]] === '>' &&
+              index > bracePos[0] &&
+              index < bracePos[1]
+          ) || isIndexInBrace(content, bracePos.slice(2), index)
       }
     }
 
-    const breakContent = (content,len, validIndexs,prevPos = 0,splits = []) => {
-      switch(validIndexs.length){
+    const breakContent = (content, len, validIndexs, prevPos = 0, splits = []) => {
+      switch (validIndexs.length) {
         case 0:
           // concat the rest of the content
           return splits.concat([
-            content.slice(Math.min(prevPos,content.length)),
+            content.slice(Math.min(prevPos, content.length))
           ])
         default:
           const contentIndex = validIndexs[0]
           // break down into two part
           const s = splits.concat([
-            content.slice(prevPos ,contentIndex),
-            content.slice(contentIndex,contentIndex + len),
+            content.slice(prevPos, contentIndex),
+            content.slice(contentIndex, contentIndex + len)
           ])
-          return breakContent(content,len,validIndexs.slice(1),contentIndex + len ,s)
+          return breakContent(content, len, validIndexs.slice(1), contentIndex + len, s)
       }
     }
 
-    const mergeAndInjectHightLightContent = (splits,hlContent = '') => {
+    const mergeAndInjectHightLightContent = (splits, hlContent = '') => {
       switch (splits.length) {
         case 0 :
           return hlContent
@@ -296,21 +298,21 @@ export class PostListController {
           return `${hlContent}${splits[0]}`
         default :
           const merged = `${hlContent}${splits[0]}<span class="search-highlight">${splits[1]}</span>`
-          return mergeAndInjectHightLightContent(splits.slice(2),merged)
+          return mergeAndInjectHightLightContent(splits.slice(2), merged)
       }
     }
 
-    const searchAndInjectHighlightBetweenKeyword = (content,keyword) => {
+    const searchAndInjectHighlightBetweenKeyword = (content, keyword) => {
       // find all brace for identify the html tag
       const bracePos = searchBraceIndex(content)
 
       // search the keyword position
-      const validIndex = searchKeywordIndex(content.toLowerCase(),keyword.toLowerCase())
-        .filter(index => !isIndexInBrace(content,bracePos,index))
+      const validIndex = searchKeywordIndex(content.toLowerCase(), keyword.toLowerCase())
+        .filter(index => !isIndexInBrace(content, bracePos, index))
 
       return {
-        matches : validIndex.length,
-        hlContent : mergeAndInjectHightLightContent(breakContent(content,keyword.length,validIndex))
+        matches: validIndex.length,
+        hlContent: mergeAndInjectHightLightContent(breakContent(content, keyword.length, validIndex))
       }
     }
 
@@ -319,31 +321,30 @@ export class PostListController {
         case 0 :
           return result
         default :
-          const hlm = Object.assign({},post)
+          const hlm = Object.assign({}, post)
 
           const title = angular.element('<div/>').html(hlm.name).html()
           const keyword = keywordArr[0]
 
           const searchResult = {
-            name: searchAndInjectHighlightBetweenKeyword(title,keyword)
+            name: searchAndInjectHighlightBetweenKeyword(title, keyword)
           }
 
           // set the name
           hlm.name = searchResult.name.hlContent
 
           result = {
-            matches : result.matches + searchResult.name.matches,
+            matches: result.matches + searchResult.name.matches,
             post: hlm
           }
 
-          return searchMultipleKeyword(keywordArr.slice(1),hlm,result)
+          return searchMultipleKeyword(keywordArr.slice(1), hlm, result)
       }
     }
 
     return posts.map(post => {
       // map to a search result
-      return searchMultipleKeyword(searchText.split(' '),post)
+      return searchMultipleKeyword(searchText.split(' '), post)
     }).map(e => e.post)
-
   }
 }
