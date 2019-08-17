@@ -9,6 +9,7 @@ import { FindMessageRequest } from '../model/requests'
 import * as _ from 'lodash'
 import * as Controllers from './index'
 import swal from 'sweetalert2'
+import { userFilterSchema } from '../schema'
 
 const cheerio = require('cheerio')
 
@@ -144,6 +145,20 @@ export class PostDetailController {
     })
   }
 
+  updateFilterOpts () {
+    return this.rx.Observable.combineLatest(
+      this.LocalStorageService.getObject('latestPostTopicFilters', []),
+      this.LocalStorageService.getObject('latestReplyTopicFilters', []),
+      this.LocalStorageService.getObject('hlKeywords', []),
+      this.LocalStorageService.getObject('userFilter', userFilterSchema).map(it => it.userIds),
+      this.LocalStorageService.get('filterMode', '1'),
+      (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds, filterMode) => ({
+        filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds },
+        filterMode
+      })
+    )
+  }
+
   loadMore () {
     if (!this.end) {
       // update the page count
@@ -172,15 +187,22 @@ export class PostDetailController {
 
     this.postTaskSubscription && this.postTaskSubscription.dispose()
 
-    this.postTaskSubscription = this.apiService.postDetails({
-      topicId: this.topicId,
-      postId: this.postId,
-      page: page,
-      orderType: this.reversePostOrder ? 1 : 0,
-      filterOnlyAuthorId: this.filterOnlyAuthorId,
-      isAutoLoadImage: this.isAutoLoadImage
-    })
-      .safeApply(this.scope, post => {
+    this.postTaskSubscription = this.rx.Observable.combineLatest(
+      // api call
+      this.apiService.postDetails({
+        topicId: this.topicId,
+        postId: this.postId,
+        page: page,
+        orderType: this.reversePostOrder ? 1 : 0,
+        filterOnlyAuthorId: this.filterOnlyAuthorId,
+        isAutoLoadImage: this.isAutoLoadImage
+      }),
+      // local db access
+      this.updateFilterOpts(),
+      (post, { filterOpts, filterMode }) => ({ post, filterOpts, filterMode })
+    )
+      .safeApply(this.scope, ({ post, filterOpts, filterMode }) => {
+        const { userIds: userIdFilters } = filterOpts
         this.post = post
 
         this.totalPageNum = post.totalPageNum
@@ -193,6 +215,9 @@ export class PostDetailController {
 
           // delayRender == -1 => not from find message
           message.focused = this.delayRender !== -1 && message.id === this.focus
+          message.isMatchedFilter = userIdFilters.indexOf(message.author.uid) >= 0
+          message.filterMode = filterMode
+          message.filterReason = `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子)`
         })
 
         if (page > this.totalPageNum) {
@@ -487,11 +512,11 @@ export class PostDetailController {
         `
 
     swal({
+      animation: false,
       html: spinnerHtml,
       allowOutsideClick: false,
       showCancelButton: false,
-      showConfirmButton: false,
-      animation: false
+      showConfirmButton: false
     })
 
     swal.showLoading()

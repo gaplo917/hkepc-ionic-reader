@@ -38,12 +38,14 @@
                 ng-class-odd="'odd'" ng-class-even="'even'"
                 class="item-icon-right item-text-wrap"
                 ng-repeat="post in vm.posts track by $index"
+                ng-class="{'partial-hide': post.isMatchedFilter && post.filterMode === '1', 'complete-hide': post.isMatchedFilter && post.filterMode === '2'}"
                 ng-if="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
                 ng-click="::vm.onGoToPost(post)"
-                href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
+                ng-href="{{vm.postInAppUrl(post)}}"
                 id="post-{{::post.id}}"
                 page="{{::post.pageNum}}"
                 lastread>
+                <h2 class="bigger-title filter-reason"><span compile="::post.filterReason"></span></h2>
                 <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-show="::post.tag">
                     <small class="tag">#{{::post.tag}}</small>
                 </a></h2>

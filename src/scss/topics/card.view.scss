@@ -34,6 +34,33 @@
   .card {
     background-color: $card-bg-color;
 
+    .filter-reason {
+      display: none;
+      color: $less-important-color;
+      line-height: 32px;
+      margin-left: 16px;
+    }
+
+    &.partial-hide {
+      height: 32px;
+      > * {
+        display: none;
+      }
+      .filter-reason {
+        display: initial;
+      }
+    }
+
+    &.complete-hide {
+      margin: 0;
+      padding: 0;
+      display: none;
+
+      > * {
+        display: none;
+      }
+    }
+
     .card-button{
       color: $tab-item-stoke-color;
     }

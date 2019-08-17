@@ -1,4 +1,4 @@
-.feature-view {
+.feature-view, .contentmanage-view {
   ion-content {
     background-color: $bg-color;
 
@@ -10,6 +10,13 @@
 
     padding:4px 9px;
     border-radius:10px;
+  }
+
+  .text-icon {
+    line-height: 28px;
+    width: 40px;
+    text-align: center;
+    font-family: "Lucida Console", Monaco, monospace;
   }
 
   .list-right-arrow {
@@ -28,6 +35,11 @@
     }
     :hover{
       background-color: $card-selection-color;
+    }
+
+    .selectable, .toggleable {
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
 
     .selectable:after {

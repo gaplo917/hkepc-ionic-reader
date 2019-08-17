@@ -114,6 +114,7 @@ export class ChatDetailController {
             `
 
           swal({
+            animation: false,
             html: spinnerHtml,
             allowOutsideClick: false,
             showCancelButton: false,
@@ -195,7 +196,8 @@ export class ChatDetailController {
   async onNewMessage () {
     // FIXME: Not a good way. just a work arround
     const { value: inputText } = await swal({
-      title: `發訊息給${this.sender.username}`,
+      title: `發訊息給 ${this.sender.username}`,
+      animation: false,
       input: 'textarea',
       inputPlaceholder: '輸入你的訊息',
       confirmButtonText: '發送',

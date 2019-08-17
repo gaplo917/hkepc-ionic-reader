@@ -37,12 +37,14 @@
              style="display:block!important;"
              ng-class="{
                'shake-notice shake-constant': message.focused,
-               'card': message.type == 'POST_MESSAGE'
+               'card': message.type === 'POST_MESSAGE',
+               'partial-hide': message.isMatchedFilter && message.filterMode === '1',
+               'complete-hide': message.isMatchedFilter && message.filterMode === '2'
              }"
              ng-repeat="message in vm.messages"
-             ng-click="message.focused = false"
+             ng-click="message.focused = false; message.filterMode = '0'"
              lastread>
-
+            <div class="bigger-title filter-reason"><span compile="::message.filterReason"></span></div>
 
             <!--Section Header to show the page number-->
             <h5 ng-if="::(message.type == 'POST_PAGE_DIVIDER')"

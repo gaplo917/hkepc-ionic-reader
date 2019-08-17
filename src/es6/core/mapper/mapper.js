@@ -31,6 +31,23 @@ export default class Mapper {
     }).get()
   }
 
+  static fullTopicListFromSearchHtmlToTopicList (html) {
+    const $ = html.getCheerio()
+
+    return $('#srchfid optgroup option').map((i, elem) => {
+      const source = $(elem)
+      const id = source.attr('value')
+      const name = source.text()
+      const trimmedName = name.trim()
+      const isSubTopic = trimmedName.length < name.length
+      return {
+        id,
+        name: trimmedName,
+        isSubTopic
+      }
+    }).get()
+  }
+
   static postListHtmlToPostListPage (html, pageNum) {
     const $ = html.getCheerio()
 
@@ -81,6 +98,7 @@ export default class Mapper {
           timestamp: postSource.find('tr .lastpost em a span').attr('title') || postSource.find('tr .lastpost em a').text()
         },
         author: {
+          id: URLUtils.getQueryVariable(postSource.find('tr .author a').attr('raw-href'), 'uid'),
           name: postSource.find('tr .author a').text()
         },
         count: {
@@ -204,11 +222,18 @@ export default class Mapper {
     }
   }
 
-  static userProfileHtmlToUserProfile (html) {
+  static userProfileHtmlToUserProfile (html, uid) {
     const $ = html.getCheerio()
-
+    const contentSource = $('#profilecontent')
+    const image = $('.avatar > img').attr('raw-src')
+    const rank = (contentSource.find('.lightlink img').attr('alt') || '').replace('Rank: ', '')
+    const name = contentSource.find('#profilecontent .itemtitle > h1').text()
     return {
-      content: $('#profilecontent').html()
+      uid,
+      rank,
+      name,
+      image,
+      content: contentSource.html()
     }
   }
 

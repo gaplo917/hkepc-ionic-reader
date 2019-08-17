@@ -165,6 +165,7 @@ export class FeatureRouteController {
         `
 
           swal({
+            animation: false,
             html: spinnerHtml,
             allowOutsideClick: false,
             showCancelButton: false,
@@ -184,6 +185,7 @@ export class FeatureRouteController {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
           }).safeApply(this.scope, (resp) => {
             swal({
+              animation: false,
               title: '成功更改',
               text: '',
               type: 'success'

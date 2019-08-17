@@ -50,7 +50,7 @@ export class UserProfileController {
 
   async sendPm (author) {
     const { value: inputText } = await swal({
-      title: `發訊息給${author.name}`,
+      title: `發訊息給 ${author.name}`,
       input: 'textarea',
       inputPlaceholder: '輸入你的訊息',
       confirmButtonText: '發送',
@@ -107,12 +107,14 @@ export class UserProfileController {
         const isSuccess = _.includes(responseText, '成功')
         if (isSuccess) {
           swal({
+            animation: false,
             title: '發送成功',
             type: 'success',
             confirmButtonText: '確定'
           })
         } else {
           swal({
+            animation: false,
             title: '發送失敗',
             text: `HKEPC 傳回:「${responseText}`,
             type: 'error',

@@ -21,7 +21,7 @@
                 <img ng-src="{{::chat.avatarUrl}}">
                 <span style="float:right"><small>{{::chat.date}}</small></span>
                 <h2>{{::chat.username}}</h2>
-                <p>{{::chat.summary}}</p>
+                <p>{{::chat.summary.trim()}}</p>
                 <i class="icon ion-chevron-right icon-accessory"></i>
             </ion-item>
             <ion-infinite-scroll

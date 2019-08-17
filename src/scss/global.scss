@@ -270,6 +270,7 @@ textarea {
 .search-highlight{
   background-color: $highlight-background;
   color: $highlight-text-color;
+  padding: 0 3px;
 }
 
 .popup-container.active .popup {
@@ -283,6 +284,9 @@ textarea {
 }
 
 // TODO: refactor Swal customization
+.swal2-popup .swal2-styled {
+  padding: 8px;
+}
 .swal2-popup .swal2-styled:focus {
   box-shadow: none;
 }
@@ -294,24 +298,40 @@ textarea {
   font-size: $button-font-size;
 }
 .swal2-popup .swal2-actions {
-  margin: 0;
+  margin: 0 8px;
+  > * {
+    flex: 1;
+  }
 }
 
-.swal2-textarea {
-  margin: 0;
+.swal2-popup .swal2-textarea {
+  resize: none;
+  height: 80px;
+  margin: 16px;
+  width: calc(100% - 32px);
+  transition: unset !important;
+  border: 0 !important;
+  box-shadow: none;
+  &:focus {
+    border: 0 !important;
+    outline: unset !important;
+    box-shadow: unset !important;
+  }
 }
 .swal2-popup .swal2-styled {
   margin: 10px;
 }
 .swal2-popup .swal2-title {
   font-size: $bar-title-font-size;
+  margin: 0;
 }
 .swal2-popup.swal2-modal.message {
   color: $text-color;
   background: $bg-color;
   top: 40px;
   position: absolute;
-  padding: 10px;
+  max-width: 400px;
+  padding: 16px;
 
   textarea {
     font-size: $font-size-base;

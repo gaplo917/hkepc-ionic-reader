@@ -92,6 +92,13 @@ export class ApiService {
       .map(topics => topics.filter(_ => _.groupName || _.id))
   }
 
+  fullTopicListFromSearch () {
+    return this.http.request({
+      method: 'GET',
+      url: HKEPC.forum.search()
+    }).flatMapApiFromCheerioworker('fullTopicListFromSearch')
+  }
+
   postListPage (opt) {
     const { topicId, pageNum, filter, order, searchId } = opt
 
@@ -141,7 +148,7 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.space(uid)
     })
-      .flatMapApiFromCheerioworker('userProfile')
+      .flatMapApiFromCheerioworker('userProfile', { uid })
   }
 
   addFavPost (postId) {

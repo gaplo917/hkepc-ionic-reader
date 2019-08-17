@@ -1,54 +1,56 @@
 .post-list-view {
 
-  .last-description{
-    color:$less-important-color
+  .last-description {
+    color: $less-important-color
   }
 
-  .odd > a{
+  .odd > a {
     background-color: $odd-color
   }
 
-  .even > a{
+  .even > a {
     background-color: $even-color
   }
 
-  .bar.bar-subheader{
+  .bar.bar-subheader {
     background-color: $epc-color;
 
     .title {
       color: $text-on-epc-color;
     }
+
     .icon.ion-bonfire {
-      float:left;
+      float: left;
       font-size: floor($font-size-large * 1.8);
 
-      &.icon-on{
-        color:$hot-topic-icon-color-on;
+      &.icon-on {
+        color: $hot-topic-icon-color-on;
       }
-      &.icon-off{
+
+      &.icon-off {
         color: $hot-topic-icon-color-off;
       }
     }
 
-    .icon.ion-ios-more{
-      color:$text-on-epc-color;
+    .icon.ion-ios-more {
+      color: $text-on-epc-color;
     }
   }
 
   ion-slide {
-    padding-top:36px
+    padding-top: 36px
   }
 
   .tag {
-    font-size:$font-size-small;
+    font-size: $font-size-small;
   }
 
-  .less-important-info{
+  .less-important-info {
     color: $less-important-color;
   }
 
-  .ion-bonfire{
-    color:$hot-topic-icon-color-on;
+  .ion-bonfire {
+    color: $hot-topic-icon-color-on;
   }
 
 
@@ -56,6 +58,27 @@
     border-color: $border-color;
     background-color: $bg-color;
     border: 0;
+
+    .filter-reason {
+      display: none;
+      color: $less-important-color;
+    }
+
+    &.partial-hide {
+      .item-content {
+        height: 48px;
+        > * {
+          display: none;
+        }
+        .filter-reason {
+          display: initial;
+        }
+      }
+    }
+
+    &.complete-hide {
+      display: none;
+    }
 
     .item-content {
       padding: 15px;
@@ -75,7 +98,7 @@
     }
   }
 
-  .ion-ios-locked{
+  .ion-ios-locked {
     color: $danger-text-color;
   }
 }

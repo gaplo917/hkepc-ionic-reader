@@ -37,7 +37,11 @@ export class NativeStorageService {
         action: 'GET',
         key: key
       }, (responseData) => {
-        observer.onNext(responseData)
+        if (responseData !== undefined && responseData !== null) {
+          observer.onNext(responseData)
+        } else {
+          observer.onNext(defaultValue)
+        }
         observer.onCompleted()
       })
     })
@@ -56,14 +60,18 @@ export class NativeStorageService {
     }).subscribe()
   }
 
-  getObject (key) {
+  getObject (key, defaultValue = null) {
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: 'GET',
         key: key
       }, (responseData) => {
         const jsObj = JSON.parse(responseData)
-        observer.onNext(jsObj)
+        if (jsObj !== null) {
+          observer.onNext(defaultValue)
+        } else {
+          observer.onNext(jsObj)
+        }
         observer.onCompleted()
       })
     })
@@ -104,9 +112,10 @@ export class LocalStorageService {
       .subscribe()
   }
 
-  getObject (key) {
+  getObject (key, defaultValue = null) {
     return this.rx.Observable
       .fromPromise(this.$localForage.getItem(key))
       .map(JSON.parse)
+      .map(data => (data !== null) ? data : defaultValue)
   }
 }

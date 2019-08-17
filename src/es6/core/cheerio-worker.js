@@ -29,6 +29,12 @@ module.exports = function (self) {
         })
 
         break
+      case 'fullTopicListFromSearch':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.fullTopicListFromSearchHtmlToTopicList(html)
+        })
+        break
 
       case 'postListPage':
         const pageNum = ev.data.pageNum
@@ -58,7 +64,7 @@ module.exports = function (self) {
       case 'userProfile':
         self.postMessage({
           topic: topic,
-          data: Mapper.userProfileHtmlToUserProfile(html)
+          data: Mapper.userProfileHtmlToUserProfile(html, ev.data.uid)
         })
         break
 

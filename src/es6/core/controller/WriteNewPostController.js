@@ -165,6 +165,7 @@ export class WriteNewPostController {
         `
 
       swal({
+        animation: false,
         html: spinnerHtml,
         allowOutsideClick: false,
         showCancelButton: false,
@@ -200,6 +201,7 @@ export class WriteNewPostController {
           this.onBack()
         } else {
           swal({
+            animation: false,
             title: '發佈失敗',
             text: `HKEPC 傳回:「${responseText}」`,
             type: 'error',
@@ -209,6 +211,7 @@ export class WriteNewPostController {
       }).subscribe(
         () => {},
         () => swal({
+          animation: false,
           title: '發佈失敗',
           text: `網絡異常，請重新嘗試！`,
           type: 'error',

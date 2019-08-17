@@ -28,6 +28,19 @@
 
         <div class="list card">
 
+            <a href="#/tab/features/contentmanage" class="feature-route item item-icon-left">
+                <div class="icon">
+                    <i class="ion-ios-paper inner-icon" style="background-color: #555555;"></i>
+                </div>
+
+                <div style="margin-left:10px">論壇內容設定</div>
+                <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+            </a>
+
+        </div>
+
+        <div class="list card">
+
             <a href="#/tab/features/chats" class="feature-route item item-icon-left">
                 <div class="icon">
                     <i class="ion-ios-email inner-icon" style="background-color: #2196F3;"></i>
@@ -41,7 +54,7 @@
 
             <a href="#/tab/features/notifications" class="feature-route item item-icon-left">
                 <div class="icon">
-                    <i class="ion-ios-paper inner-icon" style="background-color: #43A047;"></i>
+                    <i class="ion-android-notifications inner-icon" style="background-color: #43A047;"></i>
                 </div>
                 <div style="margin-left:10px">帖子消息</div>
                 <span ng-show="vm.notification.post > 0"
@@ -125,12 +138,12 @@
 
         <div class="list card">
 
-            <div class="feature-route item item-icon-left">
+            <div class="feature-route item item-icon-left toggleable">
                 <div class="icon">
                     <i class="ion-images inner-icon" style="background-color: #009688;"></i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">自動載入圖片 <span class="ultra-less-important-info">(IR Silver 限定)</span>
+                <div style="margin-left:10px;line-height: 2;">自動載入圖片
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-model="vm.isAutoLoadImage">
                         <div class="track">
@@ -145,12 +158,12 @@
 
         <div class="list card">
 
-            <div class="feature-route item item-icon-left">
+            <div class="feature-route item item-icon-left toggleable">
                 <div class="icon">
                     <i class="ion-ios-pricetag inner-icon" style="background-color: #3D5AFE;"></i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">IR 簽名 <span class="ultra-less-important-info">(IR Silver 限定)</span>
+                <div style="margin-left:10px;line-height: 2;">IR 簽名
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-model="vm.signature">
                         <div class="track">
@@ -188,7 +201,7 @@
 
             <div class="feature-route item item-icon-left selectable">
                 <div class="icon">
-                    <i class=" inner-icon" style="background-color: #212121;">A</i>
+                    <i class="text-icon inner-icon" style="background-color: #ff6b68;">A</i>
                 </div>
 
                 <div style="margin-left:10px;line-height: 2;">界面大小
@@ -213,9 +226,9 @@
 
         <div class="list card">
 
-            <div class="feature-route item item-icon-left">
+            <div class="feature-route item item-icon-left toggleable">
                 <div class="icon">
-                    <i class=" inner-icon" style="background-color: #212121;">M</i>
+                    <i class="text-icon inner-icon" style="background-color: #8b8b8b;">M</i>
                 </div>
 
                 <div style="margin-left:10px;line-height: 2;">M 字額修正 <span class="ultra-less-important-info">(適用於部份手機)</span>

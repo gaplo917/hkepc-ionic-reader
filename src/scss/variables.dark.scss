@@ -57,8 +57,8 @@ $danger-text-color: #ff4444;
 $success-text-color: #8fc320;
 
 // search highlight
-$highlight-background: $epc-color;
-$highlight-text-color: $text-color;
+$highlight-background: rgba(#FFEB3B, 1);
+$highlight-text-color: #000;
 
 // override ionic css color
 $light:                           #fff !default;
