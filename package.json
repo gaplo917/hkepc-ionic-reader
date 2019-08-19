@@ -11,7 +11,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "cheerio": "^0.19.0",
     "lodash": "^4.17.4",
-    "moment": "^2.11.2",
+    "moment": "^2.19.3",
     "node-sass": "^4.8.3",
     "showdown": "^1.8.0",
     "sweetalert2": "^7.18.0",
