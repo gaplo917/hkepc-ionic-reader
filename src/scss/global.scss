@@ -284,6 +284,10 @@ textarea {
 }
 
 // TODO: refactor Swal customization
+.swal2-popup .swal2-content {
+  font-family: $font-family-base !important;
+  font-weight: normal;
+}
 .swal2-popup .swal2-styled {
   padding: 8px;
 }
@@ -297,11 +301,19 @@ textarea {
 .swal2-popup .swal2-styled.swal2-cancel {
   font-size: $button-font-size;
 }
-.swal2-popup .swal2-actions {
+.swal2-popup .swal2-actions:not(.swal2-loading) {
   margin: 0 8px;
   > * {
     flex: 1;
   }
+}
+
+.swal2-popup.swal2-loading {
+  width: 300px;
+}
+
+.swal2-popup .swal2-actions.swal2-loading {
+  margin: 8px 0 0 0;
 }
 
 .swal2-popup .swal2-textarea {
@@ -417,5 +429,40 @@ ion-infinite-scroll {
   }
   a.ion-edit:before {
     font-size: 22px !important;
+  }
+}
+
+.page-indicator-wrapper {
+  opacity: 0.7;
+  position: fixed;
+  bottom: 24px;
+  z-index: 10;
+  width: 100%;
+  text-align: center;
+}
+
+.button-rounded {
+  border-radius: 32px;
+  background-color: #0b0b0b;
+  color: white;
+  padding: 0 8px;
+  height: 24px;
+  line-height: 24px;
+  min-height: unset;
+}
+
+.action-button {
+  font-size: 14px;
+  &.action-button-small {
+    font-size: 12px;
+  }
+
+  border: 1px solid $border-color;
+  background-color: $action-button-bg-color;
+  color: $text-color;
+
+  &:active {
+    background-color: lighten($action-button-bg-color, 3%);
+    color: $text-color;
   }
 }

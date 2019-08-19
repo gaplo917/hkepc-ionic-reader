@@ -1,6 +1,5 @@
 <ion-view class="post-list-view">
-    <ion-nav-title ng-click="openPopover($event)">{{::vm.topic.name}} <i class="ion-android-arrow-dropdown"
-                                                                         ng-if="vm.subTopicList.length > 0"></i>
+    <ion-nav-title>主題列表</i>
     </ion-nav-title>
     <ion-nav-buttons side="left">
         <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
@@ -20,9 +19,18 @@
            ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
            ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
         </a>
-        <h2 class="title" ng-if="vm.totalPageNum">
-            第 {{vm.pointingPage == 0 ? 1 : vm.pointingPage}} 頁 / 共 {{vm.totalPageNum}} 頁
-        </h2>
+        <div id="topics" class="title">
+            <button ng-repeat="subTopic in vm.subTopicList track by $index"
+                    ng-click="vm.goToSubTopic($index, subTopic)"
+                    ng-class="{'active': vm.topic === subTopic}"
+                    id="subtopic-{{subTopic.id}}"
+                    class="topic-btn"
+                    ng-style="{
+                        'opacity': vm.topicUiReady ? 1 : 0
+                    }">
+                {{subTopic.name}}
+            </button>
+        </div>
         <a ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
            class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
 
@@ -77,4 +85,8 @@
 
         <div class="tab-bar-inset"></div>
     </ion-content>
+
+    <page-indicator
+        current-page="vm.pointingPage"
+        total-page="vm.totalPageNum" />
 </ion-view>

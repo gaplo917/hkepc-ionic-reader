@@ -62,6 +62,7 @@ $success-text-color: #8fc320;
 $highlight-background: #FFEB3B;
 $highlight-text-color: $text-color;
 
+$action-button-bg-color: lighten($bg-color,2%) !default;
 
 // override ionic css color
 $light:                           #fff !default;

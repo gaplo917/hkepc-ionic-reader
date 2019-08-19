@@ -1,47 +1,51 @@
-<ion-popover-view style="width:90%; height:70%;" class="page-picker-view">
-  <ion-header-bar style="border-radius: 0">
-    <h1 class="col-90 title">第 {{vm.inputPage}} 頁 / 共 {{vm.totalPageNum}} 頁</h1>
-  </ion-header-bar>
-  <ion-content scroll="false" scrollbar-y="false" style="border-radius: 0; margin:0">
-    <div class="row">
-      <button class="button col-33 button-full" ng-click="vm.inputPage = 1; vm.doJumpPage()">第一頁</button>
-      <button class="button col-33 button-full" ng-click="vm.inputPage = vm.inputPage == 1 ? 1 : vm.inputPage - 1; vm.doJumpPage()">上一頁</button>
-      <button class="button col-33 button-full" ng-click="vm.inputPage = vm.totalPageNum; vm.doJumpPage()">最後一頁</button>
-    </div>
-    <ion-scroll
-        class="range-pick"
-        ng-if="vm.totalPageNum > 1 && vm.inputPage"
-        ng-init="vm.inputPageRangeStart = vm.parseInt(vm.inputPage / 50)"
-        style="margin: 0;">
-      <div class="list">
-        <ion-radio class="item"
-             style="border:0px"
-             ng-repeat="page in vm.getTimes(vm.totalPageNum / 50 + 1) track by $index"
-             ng-init="start = $index * 50 + 1; end = ($index+1) * 50"
-             ng-model="vm.inputPageRangeStart"
-             ng-value="$index"
-        >
-          {{::start}} - {{::end}}  頁
-        </ion-radio>
-        <!--Offset-->
-        <div style="height:100px"></div>
-      </div>
-    </ion-scroll>
+<ion-popover-view style="width:240px; height:200px;" class="page-picker-view">
+    <ion-content scroll="false" scrollbar-y="false" style="border-radius: 0; margin:0">
+        <ion-scroll
+            class="range-pick"
+            ng-if="vm.totalPageNum >= 1 && vm.inputPage"
+            ng-init="vm.inputPageRangeStart = vm.parseInt(vm.inputPage / 50)"
+            style="margin: 0;">
+            <div class="list">
+                <ion-radio class="item"
+                           style="border:0px"
+                           ng-repeat="page in vm.getTimes(vm.totalPageNum / 50 + 1) track by $index"
+                           ng-init="start = $index * 50 + 1; end = ($index+1) * 50"
+                           ng-model="vm.inputPageRangeStart"
+                           ng-value="$index"
+                >
+                    {{::start}} - {{::end}} 頁
+                </ion-radio>
+                <!--Offset-->
+                <div style="height:100px"></div>
+            </div>
+        </ion-scroll>
 
-    <ion-scroll style="margin: 0;">
-      <div class="list" >
-        <div class="item text-center"
-             ng-repeat="any in vm.getTimes(50) track by $index"
-             ng-show="page <= vm.totalPageNum"
-             ng-click="vm.inputPage = page; vm.doJumpPage()"
-             ng-class="page == vm.inputPage ? 'active' : '' "
-        >
-          第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
+        <ion-scroll style="margin: 0;">
+            <div class="list">
+                <div class="item text-center"
+                     ng-repeat="any in vm.getTimes(50) track by $index"
+                     ng-show="page <= vm.totalPageNum"
+                     ng-click="vm.inputPage = page; vm.doJumpPage()"
+                     ng-class="page == vm.inputPage ? 'active' : '' "
+                >
+                    第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
+                </div>
+                <!--Offset-->
+                <div style="height:100px"></div>
+            </div>
+        </ion-scroll>
+        <div class="bottom-row">
+            <button class="action-button action-button-small button-rounded"
+                    ng-click="vm.inputPage = 1; vm.doJumpPage()">
+                首頁
+            </button>
+            <button class="action-button action-button-small button-rounded"
+                    ng-click="vm.doLoadPreviousPage()">
+                上一頁
+            </button>
+            <button class="action-button action-button-small button-rounded"
+                    ng-click="vm.inputPage = vm.totalPageNum; vm.doJumpPage()">最後一頁</button>
         </div>
-        <!--Offset-->
-        <div style="height:100px"></div>
-      </div>
-    </ion-scroll>
-  </ion-content>
+    </ion-content>
 
 </ion-popover-view>

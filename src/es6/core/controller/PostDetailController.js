@@ -294,9 +294,8 @@ export class PostDetailController {
           }
         }
 
-        this.$timeout(() => {
+        requestAnimationFrame(() => {
           this.scope.$broadcast('scroll.infiniteScrollComplete')
-          swal.close()
         })
 
         this.loadingPrevious = false
@@ -305,15 +304,10 @@ export class PostDetailController {
         this.end = page >= this.totalPageNum
 
         if (this.focus) {
-          this.$timeout(() => {
+          requestAnimationFrame(() => {
             console.debug('detected focus object')
             const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
-            console.log('ready to scroll to ', document.querySelector(`#message-${this.focus}`), focusPosition)
-
-            this.$timeout(() => {
-              this.ionicScrollDelegate.scrollTo(0, focusPosition)
-            })
-
+            this.ionicScrollDelegate.scrollTo(0, focusPosition - 16, false)
             this.focus = undefined
           })
         }
@@ -505,30 +499,16 @@ export class PostDetailController {
 
     this.inputPage = minPageNum === 1 ? 1 : minPageNum - 1
 
-    const spinnerHtml = `
-          <div>
-              <div class="text-center">加載上一頁中</div>
-          </div>
-        `
-
-    swal({
-      animation: false,
-      html: spinnerHtml,
-      allowOutsideClick: false,
-      showCancelButton: false,
-      showConfirmButton: false
-    })
-
-    swal.showLoading()
+    this.ionicScrollDelegate.scrollTop(true)
+    this.currentPage = minPageNum
 
     this.$timeout(() => {
-      this.currentPage = minPageNum
       this.doJumpPage()
-    }, 400)
+    })
   }
 
   doJumpPage () {
-    this.pageSliderPopover.hide()
+    this.$timeout(() => requestAnimationFrame(() => this.pageSliderPopover.hide()), 100)
 
     if (this.inputPage === this.currentPage - 1) {
       this.loadingPrevious = true

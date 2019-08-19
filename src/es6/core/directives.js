@@ -382,3 +382,21 @@ export default angular.module('starter.directives', ['ngAnimate'])
 
     }
   })
+  .directive('pageIndicator', function () {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {
+        vm: '=',
+        currentPage: '=',
+        totalPage: '=',
+        click: '&onClick'
+      },
+      template: `
+        <div class="tab-bar-inset page-indicator-wrapper">
+            <button ng-click="vm && vm.openPageSliderPopover($event)" ng-if="totalPage" class="button-rounded action-button action-button-small">
+                第 {{currentPage == 0 ? 1 : currentPage}} 頁 / 共 {{totalPage}} 頁
+            </button>
+        </div>`
+    }
+  })

@@ -1,7 +1,5 @@
 <ion-view ng-init="vm.messages=[]" class="card-view">
-    <ion-nav-title ng-click="vm.openPageSliderPopover($event)">
-        第 {{vm.currentPage}} 頁 <i class="ion-android-arrow-dropdown"></i>
-    </ion-nav-title>
+    <ion-nav-title>帖子</ion-nav-title>
     <ion-nav-buttons side="left">
         <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
                 ng-click="::vm.onBack()"></button>
@@ -9,10 +7,6 @@
                 ng-click="::openDrawer()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a ng-if="vm.currentPage > 1 && !vm.loadingPrevious && vm.messages.length != 0"
-           class="button button-icon icon ion-ios-arrow-thin-up"
-           ng-click="::vm.doLoadPreviousPage()"></a>
-
         <a ng-if="vm.post.title && !vm.isLock"
            class="button button-icon icon ion-ios-compose-outline"
            ng-click="::vm.onQuickReply(vm.post)">
@@ -23,7 +17,6 @@
     <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="::vm.isLock"></i> {{vm.post.title}}</span>
 
     <ion-content lazy-scroll style="padding-top:15px" delegate-handle="post-detail">
-
         <div class="text-center" ng-if="vm.loadingPrevious">
             <ir-spinner></ir-spinner>
         </div>
@@ -128,7 +121,14 @@
         <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
         <div style="height:500px" ng-show="vm.messages.length < 2"></div>
 
+        <!--double inset for page-indicator-->
+        <div style="height: 48px"></div>
         <div class="tab-bar-inset"></div>
     </ion-content>
+
+    <page-indicator
+        vm="vm"
+        current-page="vm.currentPage"
+        total-page="vm.totalPageNum" />
 </ion-view>
 

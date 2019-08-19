@@ -1,14 +1,37 @@
-.page-picker-view{
-  left:5% !important;
+.page-picker-view {
   border-radius: 0;
 
   .popover-arrow {
     left:49% !important;
   }
+
   .item {
+    height: 36px;
+    padding: 8px 0;
     color: $text-color;
     &.active {
       background-color: $activated-color;
+    }
+
+  }
+
+  .range-pick {
+    .item {
+      padding: 0 0;
+    }
+
+    .radio-content {
+      .item-content {
+        padding: 8px 16px 8px 0;
+        height: 36px;
+        text-align: center;
+      }
+    }
+    .radio-icon {
+      padding: 0;
+      margin: 0 8px 0 8px;
+      height: 24px;
+      line-height: 36px;
     }
   }
 
@@ -27,9 +50,10 @@
   }
 
   ion-scroll{
-    height:100%;
+    height: calc(100% - 40px);
     width:50%;
     float:left;
+    border-bottom: 1px solid $border-color;
   }
 
   .row {
@@ -43,5 +67,18 @@
 
   .page-picker-view-container {
     margin-top: -20px;
+  }
+
+  .bottom-row {
+    position:absolute;
+    bottom: 8px;
+    display: flex;
+    width: 240px;
+    line-height: 44px;
+
+    > * {
+      flex: 1;
+      margin: 0 4px;
+    }
   }
 }

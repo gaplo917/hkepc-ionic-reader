@@ -53,12 +53,9 @@ export class PostListController {
     this.filter = undefined
     this.order = undefined
 
+    this.topicUiReady = false
+
     // .fromTemplateUrl() method
-    $ionicPopover.fromTemplateUrl('templates/modals/sub-forums.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.subTopicListPopover = popover
-    })
 
     $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html', {
       scope: $scope
@@ -66,16 +63,9 @@ export class PostListController {
       this.filterOrderPopover = popover
     })
 
-    $scope.openPopover = ($event) => {
-      if (this.subTopicList && this.subTopicList.length > 0) {
-        this.subTopicListPopover.show($event)
-      }
-    }
-
     // Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
       this.filterOrderPopover && this.filterOrderPopover.remove()
-      this.subTopicListPopover && this.subTopicListPopover.remove()
     })
 
     $scope.$eventToObservable('lastread')
@@ -101,7 +91,10 @@ export class PostListController {
     this.loadMore()
   }
 
-  updateFilterOpts () {
+  /**
+   * @return {Observable<{filterOpts: {}, filterMode}>}
+   */
+  getFilterOptsObs () {
     return this.rx.Observable.combineLatest(
       this.LocalStorageService.getObject('latestPostTopicFilters', []),
       this.LocalStorageService.getObject('latestReplyTopicFilters', []),
@@ -120,7 +113,7 @@ export class PostListController {
       const nextPage = parseInt(this.currentPageNum) + 1
 
       if (this.searchResp) {
-        this.updateFilterOpts()
+        this.getFilterOptsObs()
           .safeApply(this.scope, ({ filterOpts, filterMode }) => {
             this.renderPostListResponse(this.searchResp, filterOpts, filterMode)
             this.searchResp = undefined
@@ -134,7 +127,7 @@ export class PostListController {
             order: this.order,
             searchId: this.searchId
           }),
-          this.updateFilterOpts(),
+          this.getFilterOptsObs(),
           (resp, { filterOpts, filterMode }) => ({ resp, filterOpts, filterMode })
         )
           .safeApply(this.scope, ({ resp, filterOpts, filterMode }) => {
@@ -151,11 +144,6 @@ export class PostListController {
     // only extract the number
     this.totalPageNum = resp.totalPageNum
 
-    // use exiting list if there is
-    this.subTopicList = this.subTopicList.length === 0
-      ? resp.subTopicList
-      : this.subTopicList
-
     this.categories = resp.categories
 
     // better UX to highlight the searchText
@@ -167,7 +155,6 @@ export class PostListController {
       const { topicId: postTopicId, author, tag } = it
       const { id: authorId, name: authorName } = author
 
-      console.log(userIds)
       const hasFilteredAuthor = userIds.indexOf(authorId) >= 0
       const hasFilteredTopic = this.topicId === 'latestPost'
         ? latestPostTopicFilters.indexOf(postTopicId) >= 0
@@ -203,9 +190,25 @@ export class PostListController {
       }
     }
 
-    this.topic = {
-      id: this.topicId,
-      name: renderTopicName()
+    // use exiting list if there is
+    this.subTopicList = this.subTopicList.length === 0
+      ? [{
+        id: this.topicId,
+        name: renderTopicName()
+      }, ...resp.subTopicList]
+      : this.subTopicList
+
+    if (!this.topic) {
+      this.topic = this.subTopicList[0]
+    }
+
+    // FIXME: any better way?
+    // have to guarantee the view is positioned already before showing
+    if (!this.topicUiReady) {
+      requestAnimationFrame(() => {
+        this.centerTopic(this.topic, false)
+        this.topicUiReady = true
+      })
     }
 
     this.hasMoreData = this.currentPageNum < this.totalPageNum
@@ -230,11 +233,49 @@ export class PostListController {
     this.loadMore()
   }
 
+  centerTopic (subTopic, animated) {
+    //  t = current time
+    // b = start value
+    // c = change in value
+    // d = duration
+    Math.easeInOutQuad = function (t, b, c, d) {
+      t /= d / 2
+      if (t < 1) return c / 2 * t * t + b
+      t--
+      return -c / 2 * (t * (t - 2) - 1) + b
+    }
+
+    function scrollLeftTo (element, to, duration) {
+      const start = element.scrollLeft
+      const change = to - start
+      let currentTime = 0
+      const increment = 10
+
+      const animateScroll = function () {
+        currentTime += increment
+        element.scrollLeft = Math.easeInOutQuad(currentTime, start, change, duration)
+        if (currentTime < duration) {
+          setTimeout(() => requestAnimationFrame(animateScroll), increment)
+        }
+      }
+      animateScroll()
+    }
+
+    const container = document.getElementById('topics')
+    const elm = document.getElementById('subtopic-' + subTopic.id)
+    const to = elm.offsetLeft - container.offsetWidth / 2 + elm.offsetWidth / 2
+    if (animated) {
+      scrollLeftTo(container, to, 200)
+    } else {
+      container.scrollLeft = to
+    }
+  }
+
   goToSubTopic (index, subTopic) {
-    this.subTopicListPopover.hide()
+    this.centerTopic(subTopic, true)
 
     // swap the item in the list
-    this.subTopicList[index] = this.topic
+    // this.subTopicList[index] = this.topic
     this.topic = subTopic
 
     // override the topic id
@@ -292,10 +333,6 @@ export class PostListController {
     } else {
       return dateStr
     }
-  }
-
-  swipeLeft () {
-    this.onBack()
   }
 
   /**
