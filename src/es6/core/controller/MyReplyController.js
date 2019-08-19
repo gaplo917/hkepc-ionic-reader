@@ -147,6 +147,14 @@ export class MyReplyController {
     this.loadMyReplies()
   }
 
+  parseInt (i) {
+    return parseInt(i)
+  }
+
+  getTimes (i) {
+    return new Array(parseInt(i))
+  }
+
   findMessage (postId, messageId) {
     this.scope.$emit(FindMessageRequest.NAME, new FindMessageRequest(postId, messageId))
   }

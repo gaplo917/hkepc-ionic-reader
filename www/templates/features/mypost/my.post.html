@@ -1,7 +1,5 @@
 <ion-view class="mypost-view">
-    <ion-nav-title ng-click="vm.openPageSliderPopover($event)" ng-show="vm.page">
-        第 {{vm.page}} 頁 <i class="ion-android-arrow-dropdown"></i>
-    </ion-nav-title>
+    <ion-nav-title>我的帖子</ion-nav-title>
     <ion-content lazy-scroll>
         <div class="spinner" ng-if="vm.myposts.length == 0">
             <ir-spinner></ir-spinner>
@@ -31,5 +29,9 @@
             distance="7%">
         </ion-infinite-scroll>
     </ion-content>
+    <page-indicator
+        vm="vm"
+        current-page="vm.page"
+        total-page="vm.totalPageNum" />
 </ion-view>
 
