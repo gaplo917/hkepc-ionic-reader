@@ -3,13 +3,15 @@
         <div class="spinner" ng-if="vm.items.length == 0">
             <ir-spinner></ir-spinner>
         </div>
-        <div class="list list-inset">
-            <label class="item item-input">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="text"
-                       ng-model="vm.searchText"
-                       ng-change="vm.searchOnTextChange()"
-                       placeholder="搜尋 (例如: 吹水王國)">
+        <div class="list">
+            <label class="item item-input-inset">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text"
+                           ng-model="vm.searchText"
+                           ng-change="vm.searchOnTextChange()"
+                           placeholder="搜尋 (例如: 吹水王國)">
+                </label>
             </label>
         </div>
         <div class="less-important-info"
@@ -19,11 +21,21 @@
         </div>
         <ion-list>
             <ion-item
+                class="item-with-content-bg-color"
                 ng-repeat="item in vm.items"
                 style="height: 48px; padding: 0;"
-                ng-style="{ 'padding-left': item.isSubTopic ? '32px': 0 }"
             >
-                <ion-checkbox class="checkbox-assertive" ng-model="item.isSelected" ng-click="vm.onTopicSelected()">{{item.name}}</ion-checkbox>
+                <div class="widget-content"
+                     ng-style="{ 'padding-left': item.isSubTopic ? '32px': 0 }">
+                    <ion-checkbox
+                        class="checkbox-assertive"
+                        style="background-color: transparent"
+                        ng-model="item.isSelected"
+                        ng-click="vm.onTopicSelected()">
+                        {{item.name}}
+                    </ion-checkbox>
+                </div>
+
             </ion-item>
         </ion-list>
     </ion-content>

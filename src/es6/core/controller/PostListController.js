@@ -217,10 +217,10 @@ export class PostListController {
     // FIXME: any better way?
     // have to guarantee the view is positioned already before showing
     if (this.subTopicList.length > 1 && !this.topicUiReady) {
-      requestAnimationFrame(() => this.$timeout(() => {
+      this.$timeout(() => {
         this.centerSelectedTopic(this.topic, false)
         this.topicUiReady = true
-      }))
+      })
     }
 
     this.hasMoreData = this.currentPageNum < this.totalPageNum
@@ -256,7 +256,7 @@ export class PostListController {
         currentTime += increment
         element.scrollLeft = easeInOutQuad(currentTime, start, change, duration)
         if (currentTime < duration) {
-          setTimeout(() => requestAnimationFrame(animateScroll), increment)
+          this.$timeout(animateScroll, increment)
         }
       }
       animateScroll()

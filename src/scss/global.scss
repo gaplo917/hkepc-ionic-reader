@@ -42,6 +42,10 @@ input,textarea {
   width: 100%;
 }
 
+.widget-content {
+  background-color: lighten($bg-color,10%);
+}
+
 // common ionic content
 .item.active, .item.activated, .item-complex.active .item-content, .item-complex.activated .item-content, .item .item-content.active, .item .item-content.activated {
   background-color: $activated-color;
@@ -155,6 +159,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   .scroll-content {
     padding: 0;
     margin: 0;
+  }
+}
+.item-input-inset {
+  background-color: $bg-color;
+  border: 0;
+
+  .item-input-wrapper {
+    background-color: lighten($bg-color,10%);
   }
 }
 .item-checkbox, .item-input, .item-radio, .popover {
@@ -435,7 +447,7 @@ ion-infinite-scroll {
 .page-indicator-wrapper {
   opacity: 0.7;
   position: fixed;
-  bottom: 24px;
+  bottom: 16px;
   z-index: 10;
   width: 100%;
   text-align: center;

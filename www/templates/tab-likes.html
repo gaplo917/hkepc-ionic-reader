@@ -1,6 +1,6 @@
 <ion-view class="card-view">
     <ion-nav-title>
-        <i class="ion-ios-star"> 我的最愛</i>
+        我的最愛
     </ion-nav-title>
     <ion-nav-buttons side="left">
         <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
@@ -10,13 +10,17 @@
     </ion-nav-buttons>
     <ion-content lazy-scroll>
         <div class="text-center">
-            <label class="item item-input w100">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
+            <label class="item item-input-inset w100">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
+                </label>
             </label>
         </div>
-        <div class="text-center" ng-if="vm.messages.length == 0">
-            <h4 class="title">沒有任何我的最愛！</h4>
+        <div class="less-important-info"
+             ng-if="vm.messages.length === 0"
+             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
+            沒有任何我的最愛
         </div>
         <div class="list card" ng-repeat="message in vm.messages track by message.id">
 
@@ -46,9 +50,6 @@
             immediate-check="true"
             distance="7%">
         </ion-infinite-scroll>
-        <div class="text-center" ng-if="vm.end">
-            <h4 class="title">完</h4>
-        </div>
 
         <div class="tab-bar-inset"></div>
     </ion-content>

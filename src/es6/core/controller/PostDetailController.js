@@ -294,7 +294,7 @@ export class PostDetailController {
           }
         }
 
-        requestAnimationFrame(() => {
+        this.$timeout(() => {
           this.scope.$broadcast('scroll.infiniteScrollComplete')
         })
 
@@ -304,7 +304,7 @@ export class PostDetailController {
         this.end = page >= this.totalPageNum
 
         if (this.focus) {
-          requestAnimationFrame(() => {
+          this.$timeout(() => {
             console.debug('detected focus object')
             const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
             this.ionicScrollDelegate.scrollTo(0, focusPosition - 16, false)
@@ -508,7 +508,7 @@ export class PostDetailController {
   }
 
   doJumpPage () {
-    this.$timeout(() => requestAnimationFrame(() => this.pageSliderPopover.hide()), 100)
+    this.$timeout(() => this.pageSliderPopover.hide(), 100)
 
     if (this.inputPage === this.currentPage - 1) {
       this.loadingPrevious = true

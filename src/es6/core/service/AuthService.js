@@ -9,14 +9,15 @@ export class AuthService {
   static get NAME () { return 'AuthService' }
 
   static get DI () {
-    return (LocalStorageService, ngToast, rx, apiService) => new AuthService(LocalStorageService, ngToast, rx, apiService)
+    return (LocalStorageService, ngToast, rx, apiService, $timeout) => new AuthService(LocalStorageService, ngToast, rx, apiService, $timeout)
   }
 
-  constructor (LocalStorageService, ngToast, rx, apiService) {
+  constructor (LocalStorageService, ngToast, rx, apiService, $timeout) {
     this.localStorageService = LocalStorageService
     this.ngToast = ngToast
     this.rx = rx
     this.apiService = apiService
+    this.$timeout = $timeout
   }
 
   saveAuthority (authority) {
@@ -69,14 +70,14 @@ export class AuthService {
                 this.localStorageService.set(HKEPC.auth.token, authValue)
                 this.localStorageService.set(HKEPC.auth.expire, expire)
 
-                requestAnimationFrame(() => {
+                this.$timeout(() => {
                   this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
                 })
 
                 if (cb) cb(null, authority.username)
               }
             } else {
-              requestAnimationFrame(() => {
+              this.$timeout(() => {
                 this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
               })
               cb('Fail!')
@@ -91,12 +92,12 @@ export class AuthService {
               this.localStorageService.set(HKEPC.auth.id, 'dummy_val_for_non_proxied_client')
               this.localStorageService.set(HKEPC.auth.formhash, formhash)
 
-              requestAnimationFrame(() => {
+              this.$timeout(() => {
                 this.ngToast.success(`<i class="ion-ios-checkmark"> ${currentUsername} 登入成功! </i>`)
               })
               if (cb) cb(null, currentUsername)
             } else {
-              requestAnimationFrame(() => {
+              this.$timeout(() => {
                 this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
               })
               cb('Fail!')

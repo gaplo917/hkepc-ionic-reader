@@ -25,13 +25,14 @@ export class AccountController {
     }
   }
 
-  constructor ($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory) {
+  constructor ($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory, $timeout) {
     this.http = $http
     this.scope = $scope
     this.state = $state
     this.authService = AuthService
     this.version = HKEPC.version
     this.ionicHistory = $ionicHistory
+    this.$timeout = $timeout
     this.isLoggedIn = false
     this.isReady = false
     this.loginForm = {
@@ -86,7 +87,7 @@ export class AccountController {
 
       this.ionicHistory.clearCache()
 
-      requestAnimationFrame(() => {
+      this.$timeout(() => {
         this.onBack()
       })
     })

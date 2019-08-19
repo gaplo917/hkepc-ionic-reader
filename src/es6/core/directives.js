@@ -393,10 +393,11 @@ export default angular.module('starter.directives', ['ngAnimate'])
         click: '&onClick'
       },
       template: `
-        <div class="tab-bar-inset page-indicator-wrapper">
+        <div class="page-indicator-wrapper">
             <button ng-click="vm && vm.openPageSliderPopover($event)" ng-if="totalPage" class="button-rounded action-button action-button-small">
                 第 {{currentPage == 0 ? 1 : currentPage}} 頁 / 共 {{totalPage}} 頁
             </button>
+            <div class="tab-bar-inset"></div>
         </div>`
     }
   })

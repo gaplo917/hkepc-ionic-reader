@@ -22,11 +22,12 @@ export class ContentManageController {
     }
   }
 
-  constructor ($scope, $http, $state, ngToast, LocalStorageService, AuthService, $ionicHistory, observeOnScope) {
+  constructor ($scope, $http, $state, ngToast, LocalStorageService, AuthService, $ionicHistory, observeOnScope, $timeout) {
     this.http = $http
     this.scope = $scope
     this.state = $state
     this.ionicHistory = $ionicHistory
+    this.$timeout = $timeout
     this.filterMode = '1'
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -35,7 +36,7 @@ export class ContentManageController {
         if (isLoggedIn) {
           this.isReady = true
         } else {
-          requestAnimationFrame(() => {
+          this.$timeout(() => {
             ngToast.danger(`<i class="ion-alert-circled"> 論壞內容管理需要會員權限，請先登入！</i>`)
           })
         }
