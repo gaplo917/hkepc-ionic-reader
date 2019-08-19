@@ -10,7 +10,7 @@
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "cheerio": "^0.19.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.13",
     "moment": "^2.11.2",
     "node-sass": "^4.8.3",
     "showdown": "^1.8.0",
