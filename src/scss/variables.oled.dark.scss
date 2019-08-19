@@ -62,6 +62,10 @@ $highlight-text-color: #000;
 
 $action-button-bg-color: lighten($bg-color,2%) !default;
 
+// in post-list that list of button for user to select sub-topics
+$topic-select-button-bg-color: $less-important-color;
+$topic-select-button-active-bg-color: lighten($bg-color, 4%);
+$topic-select-button-active-color: $text-color;
 
 // override ionic css color
 $light:                           #fff !default;

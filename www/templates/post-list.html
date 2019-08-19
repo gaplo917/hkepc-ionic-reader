@@ -19,14 +19,16 @@
            ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
            ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
         </a>
-        <div id="topics" class="title">
+        <div id="topics" class="title" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
             <button ng-repeat="subTopic in vm.subTopicList track by $index"
                     ng-click="vm.goToSubTopic($index, subTopic)"
-                    ng-class="{'active': vm.topic === subTopic}"
+                    ng-class="{
+                    'active': vm.topic === subTopic,
+                    }"
                     id="subtopic-{{subTopic.id}}"
                     class="topic-btn"
                     ng-style="{
-                        'opacity': vm.topicUiReady ? 1 : 0
+                        'opacity': (vm.topicUiReady || vm.subTopicList.length <= 1) ? 1 : 0
                     }">
                 {{subTopic.name}}
             </button>

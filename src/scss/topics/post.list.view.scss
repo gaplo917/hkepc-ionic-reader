@@ -20,16 +20,16 @@
       width: calc(100% - 112px);
       margin-left: 56px;
       overflow-x: auto;
-      padding: 0 calc(33.3% - 16px);
+      padding: 0;
       -webkit-overflow-scrolling: touch;
 
       .topic-btn {
         border-radius: 32px;
         background-color: transparent;
-        border: 1px solid white;
+        border: 1px solid $topic-select-button-bg-color;
         font-size: 16px;
-        font-weight: bold;
-        color: #fff;
+        font-weight: 500;
+        color: $topic-select-button-bg-color;
         padding: 0 12px;
         height: auto;
         margin: 8px 8px;
@@ -37,9 +37,14 @@
         line-height: 24px;
 
         &.active {
-          background-color: #fff;
-          color: #000;
+          border: 1px solid $topic-select-button-active-bg-color;
+          background-color: $topic-select-button-active-bg-color;
+          color: $topic-select-button-active-color;
         }
+      }
+
+      &.scroll-x-padding {
+        padding: 0 calc(33.3% - 16px);
       }
     }
 

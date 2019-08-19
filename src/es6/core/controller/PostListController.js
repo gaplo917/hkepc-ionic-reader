@@ -5,6 +5,17 @@ import { PushHistoryRequest } from '../model/requests'
 import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
 
+//  t = current time
+// b = start value
+// c = change in value
+// d = duration
+function easeInOutQuad (t, b, c, d) {
+  t /= d / 2
+  if (t < 1) return c / 2 * t * t + b
+  t--
+  return -c / 2 * (t * (t - 2) - 1) + b
+}
+
 export class PostListController {
   static get STATE () { return 'tab.topics-posts' }
 
@@ -23,7 +34,7 @@ export class PostListController {
     }
   }
 
-  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $rootScope) {
+  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $timeout) {
     this.scope = $scope
     this.state = $state
     this.location = $location
@@ -36,6 +47,7 @@ export class PostListController {
     this.rx = rx
     this.$ionicModal = $ionicModal
     this.$ionicPopover = $ionicPopover
+    this.$timeout = $timeout
 
     this.topicId = $stateParams.topicId
     this.searchId = $stateParams.searchId
@@ -204,11 +216,11 @@ export class PostListController {
 
     // FIXME: any better way?
     // have to guarantee the view is positioned already before showing
-    if (!this.topicUiReady) {
-      requestAnimationFrame(() => {
-        this.centerTopic(this.topic, false)
+    if (this.subTopicList.length > 1 && !this.topicUiReady) {
+      requestAnimationFrame(() => this.$timeout(() => {
+        this.centerSelectedTopic(this.topic, false)
         this.topicUiReady = true
-      })
+      }))
     }
 
     this.hasMoreData = this.currentPageNum < this.totalPageNum
@@ -233,27 +245,16 @@ export class PostListController {
     this.loadMore()
   }
 
-  centerTopic (subTopic, animated) {
-    //  t = current time
-    // b = start value
-    // c = change in value
-    // d = duration
-    Math.easeInOutQuad = function (t, b, c, d) {
-      t /= d / 2
-      if (t < 1) return c / 2 * t * t + b
-      t--
-      return -c / 2 * (t * (t - 2) - 1) + b
-    }
-
-    function scrollLeftTo (element, to, duration) {
+  centerSelectedTopic (subTopic, animated) {
+    const scrollLeftTo = (element, to, duration) => {
       const start = element.scrollLeft
       const change = to - start
       let currentTime = 0
-      const increment = 10
+      const increment = 16
 
-      const animateScroll = function () {
+      const animateScroll = () => {
         currentTime += increment
-        element.scrollLeft = Math.easeInOutQuad(currentTime, start, change, duration)
+        element.scrollLeft = easeInOutQuad(currentTime, start, change, duration)
         if (currentTime < duration) {
           setTimeout(() => requestAnimationFrame(animateScroll), increment)
         }
@@ -265,14 +266,14 @@ export class PostListController {
     const elm = document.getElementById('subtopic-' + subTopic.id)
     const to = elm.offsetLeft - container.offsetWidth / 2 + elm.offsetWidth / 2
     if (animated) {
-      scrollLeftTo(container, to, 200)
+      scrollLeftTo(container, to, 250)
     } else {
       container.scrollLeft = to
     }
   }
 
   goToSubTopic (index, subTopic) {
-    this.centerTopic(subTopic, true)
+    this.centerSelectedTopic(subTopic, true)
 
     // swap the item in the list
     // this.subTopicList[index] = this.topic
