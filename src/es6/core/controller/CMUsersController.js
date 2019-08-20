@@ -1,5 +1,6 @@
 import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
+import swal from 'sweetalert2'
 
 export class CMUsersController {
   static get STATE () { return 'tab.features-contentmanage-users' }
@@ -47,6 +48,28 @@ export class CMUsersController {
     })
   }
 
+  showLoading () {
+    const spinnerHtml = `
+          <div>
+              <div class="text-center">驗証用戶資料中</div>
+          </div>
+        `
+
+    swal({
+      animation: false,
+      html: spinnerHtml,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showConfirmButton: false
+    })
+
+    swal.showLoading()
+  }
+
+  closeLoading () {
+    swal.close()
+  }
+
   addUser (event) {
     const { userIds, users } = this.userFilter
     if (!event || (event && event.which === 13)) {
@@ -55,6 +78,8 @@ export class CMUsersController {
         this.ngToast.danger(`<i class="ion-alert-circled"> 用戶「${name} (UID: ${uid})」已經存在</i>`)
         return
       }
+      this.showLoading()
+
       this.apiService.userProfile(this.userIdInput)
         .safeApply(this.scope, resp => {
           const { uid, name, rank, image } = resp
@@ -69,7 +94,10 @@ export class CMUsersController {
           const { users, userIds } = this.userFilter
           this.items = userIds.map(it => users[it])
           this.userIdInput = ''
-        }).subscribe()
+        },
+        () => {},
+        () => this.closeLoading()
+        ).subscribe()
     }
   }
 

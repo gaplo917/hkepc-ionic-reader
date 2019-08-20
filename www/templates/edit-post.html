@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view class="edit-view">
     <ion-nav-title>修改帖子</ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button-default" ng-click="vm.doEdit(vm.edit.subject, vm.edit.content, vm.images)">修改</button>
@@ -32,17 +32,19 @@
             <ir-spinner></ir-spinner>
         </div>
 
-        <textarea id="edit-content"
-                  placeholder="請輸入文字"
-                  ng-model="vm.edit.content"
-                  style="width: 100%;height: 50%; padding: 20px 20px 0 20px;"
-                  ng-if="vm.edit.content"
-        ></textarea>
+        <div class="row content-input">
+            <label class="item item-input-inset">
+                <label class="item-input-wrapper">
+                    <textarea id="edit-content"
+                              placeholder="請輸入內容"
+                              ng-model="vm.edit.content"
+                              ng-if="vm.edit.content"
+                    ></textarea>
+                </label>
+            </label>
+        </div>
 
         <div class="tab-bar-inset"></div>
-
-        <!--Let the view scrollable-->
-        <div style="height: 500px"></div>
     </ion-content>
 </ion-view>
 

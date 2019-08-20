@@ -1,4 +1,5 @@
-html, body {
+// sync all background color for ionic component
+html, body, .pane, .view, .view-container {
   background-color: $bg-color;
 }
 
@@ -43,11 +44,15 @@ input,textarea {
 }
 
 .widget-content {
-  background-color: lighten($bg-color,10%);
+  background-color: lighten($bg-color, 5%);
 }
 
 // common ionic content
 .item.active, .item.activated, .item-complex.active .item-content, .item-complex.activated .item-content, .item .item-content.active, .item .item-content.activated {
+  background-color: $activated-color;
+  border-color: $border-color;
+}
+.item.active.item-complex > .item-content, .item.activated.item-complex > .item-content, .item-complex.active .item-content.item-complex > .item-content, .item-complex.activated .item-content.item-complex > .item-content, .item .item-content.active.item-complex > .item-content, .item .item-content.activated.item-complex > .item-content {
   background-color: $activated-color;
   border-color: $border-color;
 }
@@ -166,7 +171,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   border: 0;
 
   .item-input-wrapper {
+    padding: 4px 16px;
     background-color: lighten($bg-color,10%);
+
+    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+      color:$text-color;
+      padding: 0;
+    }
   }
 }
 .item-checkbox, .item-input, .item-radio, .popover {
@@ -412,6 +423,13 @@ ion-infinite-scroll {
   color: $text-color;
   font-size: $font-size-large;
   border-color: $border-color;
+}
+
+.action-sheet .button.active, .action-sheet .input-helper .active.flow-button, .input-helper .action-sheet .active.flow-button, .action-sheet .button.activated, .action-sheet .input-helper .activated.flow-button, .input-helper .action-sheet .activated.flow-button {
+  color: $text-color;
+  font-size: $font-size-large;
+  border-color: $border-color;
+  background-color: $activated-color;
 }
 
 .action-sheet .button:hover, .action-sheet .input-helper .flow-button:hover, .input-helper .action-sheet .flow-button:hover {

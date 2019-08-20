@@ -31,7 +31,6 @@ export class ContentManageController {
     this.filterMode = '1'
 
     $scope.$on('$ionicView.loaded', (e) => {
-
       AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
         if (isLoggedIn) {
           this.isReady = true

@@ -87,8 +87,10 @@ export class AccountController {
 
       this.ionicHistory.clearCache()
 
-      this.$timeout(() => {
-        this.onBack()
+      requestAnimationFrame(() => {
+        this.$timeout(() => {
+          this.onBack()
+        })
       })
     })
   }

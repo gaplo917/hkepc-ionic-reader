@@ -1,0 +1,41 @@
+.edit-view {
+  .input-helper {
+    border-bottom: 1px solid $border-color;
+  }
+  .title-input {
+    margin: 0;
+    padding: 0;
+    .item-input-wrapper {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid $border-color;
+    }
+  }
+
+  .content-input {
+    margin: 0 0;
+    padding: 0;
+  }
+
+  .item-input-inset {
+    width:100%;
+    padding: 0;
+    margin: 0;
+
+    .item-input-wrapper {
+      border-radius: 0;
+      background-color: $card-bg-color;
+
+      textarea {
+        padding: 8px 0;
+        background-color: $card-bg-color;
+        width: 100%;
+        height: 2000px;
+        overflow-y: hidden;
+        resize: none;
+      }
+    }
+  }
+
+}
+

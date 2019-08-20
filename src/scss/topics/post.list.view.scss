@@ -127,7 +127,11 @@
     }
   }
 
+  .ion-bonfire, .ion-ios-eye {
+    font-size: 14px;
+  }
   .ion-ios-locked {
-    color: $danger-text-color;
+    color: $sub-epc-color;
+    font-size: 14px;
   }
 }

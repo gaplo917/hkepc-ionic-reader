@@ -1,10 +1,11 @@
-<ion-view class="card-view">
+<ion-view class="edit-view">
     <ion-nav-title>
         {{ vm.topic.name }}
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
     </ion-nav-buttons>
+
     <ion-content>
 
         <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top">
@@ -31,24 +32,25 @@
 
         <input-helper modal="vm" content-model="vm.post.content"></input-helper>
 
-        <div class="row">
-            <div class="col">
-                <label class="item item-input" style="width:100%">
+        <div class="row title-input">
+            <label class="item item-input-inset">
+                <label class="item-input-wrapper">
                     <input placeholder="請輸入標題" type="text" ng-model="vm.post.title">
                 </label>
-            </div>
+            </label>
+        </div>
+        <div class="row content-input">
+            <label class="item item-input-inset">
+                <label class="item-input-wrapper">
+                    <textarea id="new-content"
+                              placeholder="請輸入內容"
+                              ng-model="vm.post.content"
+                    ></textarea>
+                </label>
+            </label>
         </div>
 
-        <textarea id="new-content"
-                  placeholder="請輸入文字"
-                  ng-model="vm.post.content"
-                  style="width: 100%;height: 50%; padding: 20px;"
-        ></textarea>
-
         <div class="tab-bar-inset"></div>
-
-        <!--Let the view scrollable-->
-        <div style="height: 500px"></div>
     </ion-content>
 </ion-view>
 

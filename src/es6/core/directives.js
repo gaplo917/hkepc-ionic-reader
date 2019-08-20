@@ -130,7 +130,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
           if (urlText) {
             scope.contentModel = `${splits[0]}[url=${url}]${urlText}[/url]${splits[1]}`
           } else {
-            scope.contentModel = `${splits[0]}[url=${url}][/url]${splits[1]}`
+            scope.contentModel = `${splits[0]}[url]${url}[/url]${splits[1]}`
           }
 
           scope.url = undefined
@@ -387,14 +387,16 @@ export default angular.module('starter.directives', ['ngAnimate'])
       restrict: 'E',
       transclude: true,
       scope: {
-        vm: '=',
+        paginationPopoverDelegate: '=',
         currentPage: '=',
         totalPage: '=',
         click: '&onClick'
       },
       template: `
         <div class="page-indicator-wrapper">
-            <button ng-click="vm && vm.openPageSliderPopover($event)" ng-if="totalPage" class="button-rounded action-button action-button-small">
+            <button ng-click="paginationPopoverDelegate.show($event)" 
+                    ng-if="totalPage" 
+                    class="button-rounded action-button action-button-small">
                 第 {{currentPage == 0 ? 1 : currentPage}} 頁 / 共 {{totalPage}} 頁
             </button>
             <div class="tab-bar-inset"></div>

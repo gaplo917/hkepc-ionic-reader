@@ -1,5 +1,5 @@
 <ion-view class="mypost-view">
-    <ion-nav-title>我的帖子</ion-nav-title>
+    <ion-nav-title>{{vm.title()}}</ion-nav-title>
     <ion-content lazy-scroll>
         <div class="spinner" ng-if="vm.myposts.length == 0">
             <ir-spinner></ir-spinner>
@@ -28,9 +28,10 @@
             immediate-check="false"
             distance="7%">
         </ion-infinite-scroll>
+        <div class="tab-bar-inset"></div>
     </ion-content>
     <page-indicator
-        vm="vm"
+        pagination-popover-delegate="vm.paginationPopoverDelegate"
         current-page="vm.page"
         total-page="vm.totalPageNum" />
 </ion-view>

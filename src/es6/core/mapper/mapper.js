@@ -32,6 +32,92 @@ export default class Mapper {
   }
 
   static fullTopicListFromSearchHtmlToTopicList (html) {
+    const blackList = [
+      { id: '118', name: '熱點投票', isSubTopic: false },
+      { id: '154', name: 'HKEPC X CoolerMaster Case Mod 2009', isSubTopic: false },
+      { id: '101', name: 'HKEPC X CoolerMaster Case Mod 2008', isSubTopic: true },
+      { id: '204', name: 'Galaxy GTS450 Jackpot 大賽賽區', isSubTopic: false },
+      { id: '242', name: '深水埗．灣仔腦場夏日電腦節2012', isSubTopic: false },
+      { id: '303', name: '腦場電腦節 2015', isSubTopic: false },
+      { id: '243', name: '香港電腦通訊節2012', isSubTopic: false },
+      { id: '216', name: '深水埗．灣仔腦場冬日電腦節2011', isSubTopic: false },
+      { id: '273', name: '香港電腦通訊節2013', isSubTopic: false },
+      { id: '285', name: '香港腦場電腦節2014', isSubTopic: false },
+      { id: '286', name: '香港電腦通訊節2014', isSubTopic: false },
+      { id: '196', name: '香港電腦節 2010', isSubTopic: false },
+      { id: '302', name: '香港電腦通訊節 2015', isSubTopic: false },
+      { id: '245', name: '完結活動記錄區', isSubTopic: false },
+      { id: '227', name: 'Sapphire HD 7770 組別', isSubTopic: true },
+      { id: '276', name: 'SEAGATE Wireless Plus 試用體驗分享', isSubTopic: true },
+      { id: '288', name: 'XFX R9 系列繪圖卡使用體驗分享', isSubTopic: true },
+      { id: '295', name: 'NVIDIA x Inno3D 繪圖卡超頻比賽', isSubTopic: true },
+      { id: '299', name: 'Linksys 「WRT1200AC」試用分享', isSubTopic: true },
+      { id: '300', name: '「SAPPHIRE Next Gen 2015」徵文活動', isSubTopic: true },
+      { id: '301', name: '「 ASUS ROG Insight 2015 」徵文活動專區', isSubTopic: true },
+      { id: '304', name: 'Linksys WRT 用家專享禮遇', isSubTopic: true },
+      { id: '305', name: '「 ASROCK OCF 2015 」徵文活動專區', isSubTopic: true },
+      { id: '309', name: '「LINKSYS EA7500．開箱」專區', isSubTopic: true },
+      { id: '310', name: 'Synology DSM 6.0 開箱文活動', isSubTopic: true },
+      { id: '314', name: 'LINKSYS EA9500 旗艦開箱文專區', isSubTopic: true },
+      { id: '315', name: 'LINKSYS MaxStream 系列‧無縫連接新體驗', isSubTopic: true },
+      { id: '319', name: 'HyperX Cloud Stinger 開箱試用專區', isSubTopic: true },
+      { id: '320', name: '「 Antec 30 週年慶 !! 第十彈」活動專區', isSubTopic: true },
+      { id: '321', name: 'LINKSYS WRT1900ACS ．技術開箱活動專區', isSubTopic: true },
+      { id: '322', name: '「 LINKSYS VELOP  ．開箱文專區」', isSubTopic: true },
+      { id: '323', name: '「 ASUS Tech Forum 2017 」徵文活動專區', isSubTopic: true },
+      { id: '324', name: '「升級三年保 !TP-Link 熱賣路由器」', isSubTopic: true },
+      { id: '327', name: '「INNO3D Ichill 1070TI 開箱文活動」專區', isSubTopic: true },
+      { id: '328', name: 'LINKSYS MaxStream EA9500S．開箱文提交專區', isSubTopic: true },
+      { id: '224', name: 'Sapphire HD 7700 超頻比賽(完結)', isSubTopic: true },
+      { id: '228', name: 'Sapphire HD 7750 組別', isSubTopic: true },
+      { id: '249', name: '免費升級Galaxy GTX660', isSubTopic: true },
+      { id: '250', name: 'Everbest x HKEPC「ECS MOD」取消', isSubTopic: true },
+      { id: '254', name: '舊"U" 迎新春 - 升級「Piledriver」', isSubTopic: true },
+      { id: '263', name: '分享、教學精華文投稿', isSubTopic: true },
+      { id: '292', name: 'Plextor M6Pro SSD 開箱文比賽', isSubTopic: true },
+      { id: '229', name: 'AsRock Z77主機板開箱賞(完結)', isSubTopic: true },
+      { id: '252', name: 'Ducky Zero DK2108 試用徵文', isSubTopic: true },
+      { id: '255', name: 'WD Connected to Life 口號創作比賽', isSubTopic: true },
+      { id: '260', name: '協助美女挑選 Plextor SSD', isSubTopic: true },
+      { id: '264', name: 'CM女郎「邊個夠佢靚」攝影比賽', isSubTopic: true },
+      { id: '265', name: 'WD Computex2013 大激賞', isSubTopic: true },
+      { id: '278', name: 'ANTEC TruePower Classic 550W 開箱文專區', isSubTopic: true },
+      { id: '280', name: 'WD Black2雙硬碟試用體驗」', isSubTopic: true },
+      { id: '283', name: 'XFX R9 系列 Benchmark 競猜活動', isSubTopic: true },
+      { id: '293', name: 'GALAX GTX970 / 980 開箱文分享', isSubTopic: true },
+      { id: '306', name: 'Synology RT1900ac 試用評測', isSubTopic: true },
+      { id: '231', name: '我的 Antec 電源供應器包裝盒設計(完結)', isSubTopic: true },
+      { id: '253', name: 'Antec 產品聖誕寫真大激賞', isSubTopic: true },
+      { id: '257', name: 'GALAXY 送你全新3D Mark 序號', isSubTopic: true },
+      { id: '267', name: 'WD 包裝盒環保設計比賽', isSubTopic: true },
+      { id: '279', name: 'NVIDIA SHIELD 體驗會分享區', isSubTopic: true },
+      { id: '281', name: 'Plextor M6S 雙重賞', isSubTopic: true },
+      { id: '284', name: 'ASUS 主機板至尊十年霸', isSubTopic: true },
+      { id: '289', name: '「 ASUS ROG Insight 2014 」分享活動專區', isSubTopic: true },
+      { id: '238', name: 'Inno3D GAME PACK 開箱文(已完結)', isSubTopic: true },
+      { id: '266', name: 'WD My Book Live 個人雲端 "智"幫手', isSubTopic: true },
+      { id: '269', name: 'Antec GX700 試用大激賞', isSubTopic: true },
+      { id: '282', name: 'ASUS Tech Forum 體驗會分享', isSubTopic: true },
+      { id: '290', name: 'Inno3D iChill 9 系繪圖卡開箱分享', isSubTopic: true },
+      { id: '239', name: 'Philips 揚聲器、耳機使用分享', isSubTopic: true },
+      { id: '275', name: 'NVIDIA SHIELD 體驗分享', isSubTopic: true },
+      { id: '291', name: 'ASUS STRIX Techday2015徵文活動專區', isSubTopic: true },
+      { id: '241', name: 'HKEPC足球挑戰賽', isSubTopic: true },
+      { id: '244', name: 'Plextor 「 M5 Pro 系列發佈會後感」分享', isSubTopic: true },
+      { id: '247', name: 'ZOTAC 「開箱文」分享', isSubTopic: true },
+      { id: '332', name: 'ASUSTOR AS6302T ．開箱文提交專區', isSubTopic: false },
+      { id: '331', name: 'ASUSTOR AS4004T．開箱文提交專區', isSubTopic: false },
+      { id: '333', name: 'Synology MR2200ac 開箱文開箱文試用體驗', isSubTopic: false },
+      { id: '214', name: 'ADATA SSD + WareMax Cache HybridDrive 效能試用報告', isSubTopic: true },
+      { id: '220', name: '[QNAP 3.6 韌體應用方案] 徵文比賽', isSubTopic: true },
+      { id: '144', name: 'OCZ Vertex 3 / Agility 3問題處理區', isSubTopic: true },
+      { id: '193', name: 'OCZ Vertex 2 SSD Master 比賽專區 - Performance Master', isSubTopic: true },
+      { id: '194', name: 'OCZ Vertex 2 SSD Master 比賽專區 - Tips Master', isSubTopic: true },
+      { id: '213', name: 'HKEPC會員試用Gadmei T820', isSubTopic: true },
+      { id: '287', name: 'and M811 開發及分享專區', isSubTopic: false },
+      { id: '208', name: '日本地震賑災義賣', isSubTopic: false }
+    ]
+    const blIds = blackList.map(it => it.id)
     const $ = html.getCheerio()
 
     return $('#srchfid optgroup option').map((i, elem) => {
@@ -46,6 +132,7 @@ export default class Mapper {
         isSubTopic
       }
     }).get()
+      .filter(({ id }) => blIds.indexOf(id) === -1)
   }
 
   static postListHtmlToPostListPage (html, pageNum) {
@@ -56,7 +143,7 @@ export default class Mapper {
 
     const titles = $('#nav').text().split('»')
     const topicName = titles[titles.length - 1]
-    const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages a').not('.next').last().text()
+    const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages').not('.next').last().text()
     const subTopicList = $('#subforum table h2 a').map((i, elem) => {
       const obj = $(elem)
       const name = obj.text()
@@ -77,7 +164,7 @@ export default class Mapper {
 
     // only extract the number
     const totalPageNum = totalPageNumText
-      ? totalPageNumText.match(/\d/g).join('')
+      ? Math.min(parseInt(totalPageNumText.match(/\d/g).join('') || 1), 1000)
       : 1
 
     const posts = $('.threadlist table tbody').map((i, elem) => {
@@ -159,7 +246,7 @@ export default class Mapper {
 
     const totalPageNum = pageNumArr.length === 0
       ? 1
-      : Math.max(...pageNumArr)
+      : Math.min(Math.max(...pageNumArr), 1000)
 
     const messages = $('#postlist > div')
       .filter((i, elem) => {

@@ -15,22 +15,22 @@
     </ion-nav-buttons>
     <div class="bar bar-subheader">
         <a class="button button-icon icon ion-bonfire"
-           ng-if="vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
+           ng-if="::(vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
            ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
            ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
         </a>
         <div id="topics" class="title" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
             <button ng-repeat="subTopic in vm.subTopicList track by $index"
-                    ng-click="vm.goToSubTopic($index, subTopic)"
+                    ng-click="::vm.goToSubTopic($index, subTopic)"
                     ng-class="{
                     'active': vm.topic === subTopic,
                     }"
-                    id="subtopic-{{subTopic.id}}"
+                    id="subtopic-{{::subTopic.id}}"
                     class="topic-btn"
                     ng-style="{
                         'opacity': (vm.topicUiReady || vm.subTopicList.length <= 1) ? 1 : 0
                     }">
-                {{subTopic.name}}
+                {{::subTopic.name}}
             </button>
         </div>
         <a ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
@@ -49,7 +49,7 @@
                 class="item-icon-right item-text-wrap"
                 ng-repeat="post in vm.posts track by $index"
                 ng-class="{'partial-hide': post.isMatchedFilter && post.filterMode === '1', 'complete-hide': post.isMatchedFilter && post.filterMode === '2'}"
-                ng-if="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
+                ng-if="post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky)"
                 ng-click="::vm.onGoToPost(post)"
                 ng-href="{{vm.postInAppUrl(post)}}"
                 id="post-{{::post.id}}"
@@ -62,8 +62,8 @@
                 <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>
                 <div>
                     <i class="ion-bonfire" ng-show="::post.isSticky"></i>
-                    <i class="ion-ios-locked" ng-if="::post.isLock" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
-                    <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="post.isRead && {'color' : '#8BC34A'}"></i>
+                    <i class="ion-ios-locked" ng-if="::post.isLock"></i>
+                    <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
                     <span class="less-important-info ion-person"> {{::post.author.name}}</span>
                 </div>
                 <div>
@@ -89,6 +89,7 @@
     </ion-content>
 
     <page-indicator
-        current-page="vm.pointingPage"
+        pagination-popover-delegate="vm.paginationPopoverDelegate"
+        current-page="vm.currentPageNum"
         total-page="vm.totalPageNum" />
 </ion-view>

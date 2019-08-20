@@ -5,10 +5,12 @@ import * as Controllers from './index'
 import * as HKEPC from '../../data/config/hkepc'
 import { HKEPCHtml } from '../model/hkepc-html'
 import { FindMessageRequest } from '../model/requests'
+import { PaginationPopoverDelegates } from '../delegates'
+import { IRLifecycleOwner } from './base/IRLifecycleOwner'
 
 const cheerio = require('cheerio')
 
-export class MyReplyController {
+export class MyReplyController extends IRLifecycleOwner {
   static get STATE () { return 'tab.features-myreply' }
 
   static get NAME () { return 'MyReplyController' }
@@ -26,7 +28,8 @@ export class MyReplyController {
     }
   }
 
-  constructor (HistoryService, $ionicHistory, $state, $scope, $ionicPopover, apiService, $sce, AuthService, ngToast) {
+  constructor (HistoryService, $ionicHistory, $state, $scope, $ionicPopover, $ionicScrollDelegate, apiService, $sce, AuthService, ngToast, $timeout) {
+    super($scope)
     this.historyService = HistoryService
     this.state = $state
     this.scope = $scope
@@ -34,35 +37,48 @@ export class MyReplyController {
     this.apiService = apiService
     this.sce = $sce
     this.ngToast = ngToast
+    this.authService = AuthService
 
     this.page = 1
     this.myreplies = []
 
-    $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.pageSliderPopover = popover
+    this.paginationPopoverDelegate = PaginationPopoverDelegates({
+      $scope,
+      $ionicPopover,
+      $timeout,
+      $ionicScrollDelegate
+    }, {
+      getCurrentPage: () => this.page,
+      getTotalPage: () => this.totalPageNum,
+      getLocalMinPage: () => (this.myreplies[0] && this.myreplies[0].page) || 1,
+      onJumpPage: ({ to }) => {
+        this.reset()
+        this.page = to
+        this.loadMyReplies()
+      }
     })
+  }
 
-    $scope.$on('$destroy', () => {
-      this.pageSliderPopover.remove()
-    })
+  onViewLoaded () {
+    const { authService, scope } = this
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
+      if (isLoggedIn) {
+        this.loadMyReplies()
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
+      }
+    }).subscribe()
+  }
 
-    $scope.$on('$ionicView.loaded', (e) => {
-      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        if (isLoggedIn) {
-          this.loadMyReplies()
-        } else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
-        }
-      }).subscribe()
-    })
+  onViewDestroy () {
+    this.paginationPopoverDelegate.remove()
   }
 
   loadMyReplies () {
     this.refreshing = true
+    const { page } = this
 
-    this.apiService.myReplies(this.page)
+    this.apiService.myReplies(page)
       .safeApply(this.scope, resp => {
         const html = new HKEPCHtml(cheerio.load(resp.data))
 
@@ -111,7 +127,10 @@ export class MyReplyController {
 
         const mergedMyReplies = myreplies.filter(x => x.timestamp !== 0)
 
-        this.myreplies = this.myreplies.concat(mergedMyReplies)
+        this.myreplies = this.myreplies.concat(mergedMyReplies.map(it => ({
+          ...it,
+          page
+        })))
 
         this.refreshing = false
         this.scope.$broadcast('scroll.infiniteScrollComplete')
@@ -133,26 +152,6 @@ export class MyReplyController {
   reset () {
     this.myreplies = []
     this.end = false
-  }
-
-  openPageSliderPopover ($event) {
-    this.inputPage = this.page
-    this.pageSliderPopover.show($event)
-  }
-
-  doJumpPage () {
-    this.pageSliderPopover.hide()
-    this.reset()
-    this.page = this.inputPage
-    this.loadMyReplies()
-  }
-
-  parseInt (i) {
-    return parseInt(i)
-  }
-
-  getTimes (i) {
-    return new Array(parseInt(i))
   }
 
   findMessage (postId, messageId) {

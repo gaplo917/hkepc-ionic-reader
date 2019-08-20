@@ -4,6 +4,7 @@
 import { PushHistoryRequest } from '../model/requests'
 import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
+import { PaginationPopoverDelegates } from '../delegates'
 
 //  t = current time
 // b = start value
@@ -58,7 +59,6 @@ export class PostListController {
     this.page = $stateParams.page
     this.categories = []
     this.currentPageNum = this.page - 1
-    this.pointingPage = this.currentPageNum
     this.subTopicList = []
     this.posts = []
     this.hasMoreData = true
@@ -67,8 +67,23 @@ export class PostListController {
 
     this.topicUiReady = false
 
-    // .fromTemplateUrl() method
+    this.paginationPopoverDelegate = PaginationPopoverDelegates({
+      $scope,
+      $ionicPopover,
+      $timeout,
+      $ionicScrollDelegate
+    }, {
+      getCurrentPage: () => this.currentPageNum,
+      getTotalPage: () => this.totalPageNum,
+      getLocalMinPage: () => (this.posts[0] && this.posts[0].pageNum) || 1,
+      onJumpPage: ({ to }) => {
+        this.reset()
+        this.currentPageNum = to
+        this.loadPosts(to)
+      }
+    })
 
+    // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html', {
       scope: $scope
     }).then((popover) => {
@@ -84,7 +99,7 @@ export class PostListController {
       .throttle(300)
       .safeApply($scope, ([event, { page, id }]) => {
         console.log('received broadcast lastread', page, id)
-        this.pointingPage = page
+        this.currentPageNum = page
       })
       .subscribe()
 
@@ -120,32 +135,35 @@ export class PostListController {
     )
   }
 
-  loadMore (cb) {
+  loadPosts (page) {
+    if (this.searchResp) {
+      this.getFilterOptsObs()
+        .safeApply(this.scope, ({ filterOpts, filterMode }) => {
+          this.renderPostListResponse(this.searchResp, filterOpts, filterMode)
+          this.searchResp = undefined
+        }).subscribe()
+    } else {
+      this.rx.Observable.combineLatest(
+        this.apiService.postListPage({
+          topicId: this.topicId,
+          pageNum: page,
+          filter: this.filter,
+          order: this.order,
+          searchId: this.searchId
+        }),
+        this.getFilterOptsObs(),
+        (resp, { filterOpts, filterMode }) => ({ resp, filterOpts, filterMode })
+      )
+        .safeApply(this.scope, ({ resp, filterOpts, filterMode }) => {
+          this.renderPostListResponse(resp, filterOpts, filterMode)
+        }).subscribe()
+    }
+  }
+
+  loadMore () {
     if (this.hasMoreData) {
       const nextPage = parseInt(this.currentPageNum) + 1
-
-      if (this.searchResp) {
-        this.getFilterOptsObs()
-          .safeApply(this.scope, ({ filterOpts, filterMode }) => {
-            this.renderPostListResponse(this.searchResp, filterOpts, filterMode)
-            this.searchResp = undefined
-          }).subscribe()
-      } else {
-        this.rx.Observable.combineLatest(
-          this.apiService.postListPage({
-            topicId: this.topicId,
-            pageNum: nextPage,
-            filter: this.filter,
-            order: this.order,
-            searchId: this.searchId
-          }),
-          this.getFilterOptsObs(),
-          (resp, { filterOpts, filterMode }) => ({ resp, filterOpts, filterMode })
-        )
-          .safeApply(this.scope, ({ resp, filterOpts, filterMode }) => {
-            this.renderPostListResponse(resp, filterOpts, filterMode)
-          }).subscribe()
-      }
+      this.loadPosts(nextPage)
     }
   }
 
@@ -217,19 +235,21 @@ export class PostListController {
     // FIXME: any better way?
     // have to guarantee the view is positioned already before showing
     if (this.subTopicList.length > 1 && !this.topicUiReady) {
-      this.$timeout(() => {
-        this.centerSelectedTopic(this.topic, false)
-        this.topicUiReady = true
+      requestAnimationFrame(() => {
+        this.$timeout(() => {
+          this.centerSelectedTopic(this.topic, false)
+          this.topicUiReady = true
+        })
       })
     }
 
-    this.hasMoreData = this.currentPageNum < this.totalPageNum
+    this.hasMoreData = this.currentPageNum <= this.totalPageNum
 
     this.scope.$broadcast('scroll.infiniteScrollComplete')
   }
 
   reset () {
-    this.currentPageNum = 0
+    this.currentPageNum = 1
     this.posts = []
     this.searchId = null
   }
@@ -239,10 +259,14 @@ export class PostListController {
     if (this.filter) {
       const category = this.categories.find(c => c.id === this.filter)
       if (category) {
-        this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
+        requestAnimationFrame(() => {
+          this.$timeout(() => {
+            this.ngToast.success(`<i class="ion-ios-checkmark-outline"> 正在使用分類 - #${category.name} </i>`)
+          })
+        })
       }
     }
-    this.loadMore()
+    this.loadPosts(this.currentPageNum)
   }
 
   centerSelectedTopic (subTopic, animated) {

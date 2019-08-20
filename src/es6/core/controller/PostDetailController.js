@@ -1,26 +1,24 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-// import * as cheerio from 'cheerio';
 import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
 import { FindMessageRequest } from '../model/requests'
 
 import * as _ from 'lodash'
 import * as Controllers from './index'
-import swal from 'sweetalert2'
 import { userFilterSchema } from '../schema'
-
+import { PaginationPopoverDelegates } from '../delegates/pagination-popover-delegates'
+import { IRLifecycleOwner } from './base/IRLifecycleOwner'
 const cheerio = require('cheerio')
 
-export class PostDetailController {
+export class PostDetailController extends IRLifecycleOwner {
   static get STATE () { return 'tab.topics-posts-detail' }
 
   static get NAME () { return 'PostDetailController' }
 
   static get CONFIG () {
     return {
-      url: '/topics/:topicId/posts/:postId/page/:page?delayRender=&focus=',
+      url: '/topics/:topicId/posts/:postId/page/:page?focus=',
       views: {
         main: {
           templateUrl: 'templates/post-detail.html',
@@ -32,7 +30,9 @@ export class PostDetailController {
   }
 
   constructor ($scope, $stateParams, $sce, $state, $location, MessageService, $ionicHistory, $ionicModal, $ionicPopover, ngToast, AuthService, $ionicScrollDelegate, LocalStorageService, $ionicActionSheet, apiService, rx, $timeout, $ionicPopup, $rootScope, $compile) {
+    super($scope)
     this.scope = $scope
+    this.stateParams = $stateParams
     this.rx = rx
     this.messageService = MessageService
     this.state = $state
@@ -41,44 +41,56 @@ export class PostDetailController {
     this.ionicHistory = $ionicHistory
     this.ionicModal = $ionicModal
     this.ionicPopover = $ionicPopover
-    this.ionicPopup = $ionicPopup
     this.ngToast = ngToast
     this.authService = AuthService
     this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('post-detail')
-    this.LocalStorageService = LocalStorageService
+    this.localStorageService = LocalStorageService
     this.ionicActionSheet = $ionicActionSheet
     this.apiService = apiService
     this.$timeout = $timeout
     this.compile = $compile
     this.isAutoLoadImage = true
+    this.currentPage = undefined
+    this.totalPageNum = undefined
+    this.isLoggedIn = false
+
+    // to control the post is end
+    this.end = false
 
     this.messages = []
-    this.postUrl = URLUtils.buildUrlFromState($state, $stateParams)
 
-    // .fromTemplateUrl() method
-    $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.pageSliderPopover = popover
+    this.paginationPopoverDelegate = PaginationPopoverDelegates({
+      $scope,
+      $ionicPopover,
+      $timeout,
+      $ionicScrollDelegate
+    }, {
+      getCurrentPage: () => this.currentPage,
+      getTotalPage: () => this.totalPageNum,
+      getLocalMinPage: () => (this.messages[0] && this.messages[0].post.page) || 1,
+      onJumpPage: ({ to }) => {
+        if (to === this.currentPage - 1) {
+          this.loadingPrevious = true
+          this.loadMessages('previous', to)
+        } else {
+          this.reset()
+          this.loadMessages('next', to)
+        }
+      }
     })
 
     // Cleanup the popover when we're done with it!
-    $scope.$on('$destroy', () => {
-      this.pageSliderPopover.remove()
-      if (this.postTaskSubscription) this.postTaskSubscription.dispose()
-      this.deregisterReportModal()
-    })
-
     $scope.$eventToObservable('lastread')
       .observeOn(rx.Scheduler.async)
       .throttle(500)
       .doOnNext(([event, { page, id }]) => {
         console.log('received broadcast lastread', page, id)
-        const postId = id.replace('message-', '')
+        const { topicId, postId } = this
+        const messageId = id.replace('message-', '')
 
-        this.LocalStorageService.setObject(`${this.topicId}/${this.postId}/lastPosition`, {
+        this.localStorageService.setObject(`${topicId}/${postId}/lastPosition`, {
           page: page,
-          postId: postId
+          messageId
         })
       })
       .map(([event, { page, id }]) => page)
@@ -88,70 +100,79 @@ export class PostDetailController {
       })
       .subscribe()
 
-    // to control the post is end
-    this.end = false
+    AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    }).subscribe()
+  }
 
-    // add action
+  onViewEnter () {
+    if (this.leaveView) {
+      this.loadMessages('silent')
+      this.leaveView = false
+    }
+  }
 
-    $scope.$on('$ionicView.loaded', (e) => {
-      this.topicId = $stateParams.topicId
-      this.postId = $stateParams.postId
-      this.delayRender = $stateParams.delayRender ? parseInt($stateParams.delayRender) : -1
-      this.focus = $stateParams.focus
-      this.currentPage = $stateParams.page
+  onViewBeforeLeave () {
+    console.log("before leave")
+    this.leaveView = true
+  }
 
-      // check to see if from a focus request
-      if (!this.focus) {
-        // if not , jump to last reading page position
-        this.rx.Observable.combineLatest(
-          this.LocalStorageService.getObject(`${this.topicId}/${this.postId}/lastPosition`),
-          this.LocalStorageService.get('loadImageMethod'),
-          (lastPosition, loadImageMethod) => {
-            return { lastPosition, loadImageMethod }
-          }
-        )
-          .safeApply(this.scope, ({ lastPosition, loadImageMethod }) => {
-            console.log('loadImageMethod from db', loadImageMethod)
+  onViewDestroy () {
+    this.paginationPopoverDelegate.remove()
+    if (this.postTaskSubscription) this.postTaskSubscription.dispose()
+    this.deregisterReportModal()
+  }
 
-            const _lastPosition = lastPosition || {}
-            const lastPage = _lastPosition.page || $stateParams.page
-            const lastPostId = _lastPosition.postId || $stateParams.focus
+  onViewLoaded () {
+    const { scope, rx, localStorageService } = this
+    const { topicId, postId, focus, page } = this.stateParams
+    this.topicId = topicId
+    this.postId = postId
+    this.focus = focus
+    this.currentPage = page
 
-            this.currentPage = lastPage
-            this.focus = lastPostId
-            this.isAutoLoadImage = loadImageMethod !== 'block'
-
-            this.loadMessages()
-          })
-          .subscribe()
-      } else {
-        this.LocalStorageService.get('loadImageMethod').safeApply(this.scope, loadImageMethod => {
+    // check to see if from a focus request
+    if (!focus) {
+      // if not , jump to last reading page position
+      rx.Observable.combineLatest(
+        localStorageService.getObject(`${topicId}/${postId}/lastPosition`),
+        localStorageService.get('loadImageMethod'),
+        (lastPosition, loadImageMethod) => ({ lastPosition, loadImageMethod })
+      )
+        .safeApply(scope, ({ lastPosition, loadImageMethod }) => {
           console.log('loadImageMethod from db', loadImageMethod)
+
+          const _lastPosition = lastPosition || {}
+          const lastPage = _lastPosition.page || page
+          const lastMessageId = _lastPosition.messageId ||
+            _lastPosition.postId || // legacy field
+            focus
+
+          this.currentPage = lastPage
+          this.focus = lastMessageId
           this.isAutoLoadImage = loadImageMethod !== 'block'
 
           this.loadMessages()
-        }).subscribe()
-      }
-    })
+        })
+        .subscribe()
+    } else {
+      localStorageService.get('loadImageMethod').safeApply(scope, loadImageMethod => {
+        console.log('loadImageMethod from db', loadImageMethod)
+        this.isAutoLoadImage = loadImageMethod !== 'block'
 
-    $scope.$on('$ionicView.beforeLeave', (e) => {
-      this.leaveView = true
-    })
-    $scope.$on('$ionicView.enter', (e) => {
-      if (this.leaveView) {
-        this.loadMessages('silent')
-        this.leaveView = false
-      }
-    })
+        this.loadMessages()
+      }).subscribe()
+    }
   }
 
   updateFilterOpts () {
-    return this.rx.Observable.combineLatest(
-      this.LocalStorageService.getObject('latestPostTopicFilters', []),
-      this.LocalStorageService.getObject('latestReplyTopicFilters', []),
-      this.LocalStorageService.getObject('hlKeywords', []),
-      this.LocalStorageService.getObject('userFilter', userFilterSchema).map(it => it.userIds),
-      this.LocalStorageService.get('filterMode', '1'),
+    const { rx, localStorageService } = this
+    return rx.Observable.combineLatest(
+      localStorageService.getObject('latestPostTopicFilters', []),
+      localStorageService.getObject('latestReplyTopicFilters', []),
+      localStorageService.getObject('hlKeywords', []),
+      localStorageService.getObject('userFilter', userFilterSchema).map(it => it.userIds),
+      localStorageService.get('filterMode', '1'),
       (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds, filterMode) => ({
         filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds },
         filterMode
@@ -160,13 +181,18 @@ export class PostDetailController {
   }
 
   loadMore () {
-    if (!this.end) {
-      // update the page count
-      this.currentPage = _.max(this.messages.filter(_ => _.type !== 'POST_PAGE_DIVIDER').map(_ => parseInt(_.post.page))) || 0
+    const { end, messages, totalPageNum } = this
+    if (!end) {
+      const existingPages = messages
+        .filter(it => it.type !== 'POST_PAGE_DIVIDER')
+        .map(it => parseInt(it.post.page))
 
-      if (this.currentPage < this.totalPageNum) {
-        this.currentPage += 1
-      }
+      // update the page count
+      const maxPageNum = _.max(existingPages) || 0
+
+      this.currentPage = maxPageNum < totalPageNum
+        ? maxPageNum + 1
+        : maxPageNum
 
       this.loadMessages()
     }
@@ -174,140 +200,167 @@ export class PostDetailController {
 
   forceLoadMore () {
     this.end = false
+    this.loadMore()
   }
 
   /**
    *
    * @param style 'previous' or 'next'
+   * @param page
    */
   loadMessages (style = 'next', page = this.currentPage) {
-    if (this.refreshing) return
+    const { refreshing } = this
+    if (refreshing) return
 
     this.refreshing = true
 
-    this.postTaskSubscription && this.postTaskSubscription.dispose()
+    const {
+      scope,
+      rx,
+      $timeout,
+      postTaskSubscription,
+      apiService,
+      topicId,
+      postId,
+      reversePostOrder,
+      filterOnlyAuthorId,
+      isAutoLoadImage,
+      messageService,
+      messages,
+      ionicScrollDelegate
+    } = this
 
-    this.postTaskSubscription = this.rx.Observable.combineLatest(
+    postTaskSubscription && postTaskSubscription.dispose()
+
+    this.postTaskSubscription = rx.Observable.combineLatest(
       // api call
-      this.apiService.postDetails({
-        topicId: this.topicId,
-        postId: this.postId,
-        page: page,
-        orderType: this.reversePostOrder ? 1 : 0,
-        filterOnlyAuthorId: this.filterOnlyAuthorId,
-        isAutoLoadImage: this.isAutoLoadImage
+      apiService.postDetails({
+        topicId,
+        postId,
+        page,
+        orderType: reversePostOrder ? 1 : 0,
+        filterOnlyAuthorId: filterOnlyAuthorId,
+        isAutoLoadImage: isAutoLoadImage
       }),
       // local db access
       this.updateFilterOpts(),
       (post, { filterOpts, filterMode }) => ({ post, filterOpts, filterMode })
     )
-      .safeApply(this.scope, ({ post, filterOpts, filterMode }) => {
+      .safeApply(scope, ({ post, filterOpts, filterMode }) => {
         const { userIds: userIdFilters } = filterOpts
-        this.post = post
-
-        this.totalPageNum = post.totalPageNum
-        this.isLock = post.isLock
+        const { totalPageNum, isLock } = post
 
         post.messages.forEach(message => {
-          this.messageService.isLikedPost(message).subscribe(isLiked => {
+          messageService.isLikedPost(message).subscribe(isLiked => {
             message.liked = isLiked
           })
 
-          // delayRender == -1 => not from find message
-          message.focused = this.delayRender !== -1 && message.id === this.focus
+          // no focus must not from find message
+          message.focused = message.id === focus
           message.isMatchedFilter = userIdFilters.indexOf(message.author.uid) >= 0
           message.filterMode = filterMode
           message.filterReason = `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子)`
         })
 
-        if (page > this.totalPageNum) {
-          page = this.totalPageNum
+        if (page > totalPageNum) {
+          page = totalPageNum
 
           // maybe have duplicate message
-          const messageIds = this.messages.map(_ => _.id)
-          const filtered = post.messages.filter(msg => {
-            return messageIds.indexOf(msg.id) === -1
-          })
+          const messageIds = messages.map(it => it.id)
 
-          this.messages = this.messages.concat(filtered)
+          const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
+
+          this.messages = messages.concat(newMessages)
         } else {
           if (style === 'previous') {
-            const messageIds = this.messages.map(_ => _.id)
-            const filtered = post.messages.filter(msg => {
-              return messageIds.indexOf(msg.id) === -1
-            })
+            const messageIds = messages.map(it => it.id)
+            const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
 
             const nextFocusId = `divider-previous-${page}`
 
             // add on the top
-            this.messages.unshift({
+            messages.unshift({
               id: nextFocusId,
               post: { page: parseInt(page) + 1 },
               type: 'POST_PAGE_DIVIDER',
               content: `<i class="ion-android-arrow-up"></i> 上一頁加載完成 <i class="ion-ios-checkmark-outline" ></i>`
             })
 
-            this.messages = filtered.concat(this.messages)
+            const merged = newMessages.concat(messages)
 
-            this.messages.unshift({
+            merged.unshift({
               id: `divider-${page}`,
               post: { page: page },
               type: 'POST_PAGE_DIVIDER'
             })
 
+            this.messages = merged
+
             // focus one the finish loading previous message
             this.focus = nextFocusId
           } else if (style === 'silent') {
-          // slient update the content only
-            for (let i = 0; i < this.messages.length; i++) {
+            // slient update the content only
+            for (let i = 0; i < messages.length; i++) {
               for (let j = 0; j < post.messages.length; j++) {
-                if (this.messages[i].id === post.messages[j].id && this.messages[i].pstatus !== post.messages[j].pstatus) {
-                  this.messages[i].content = post.messages[j].content
+                if (messages[i].id === post.messages[j].id && messages[i].pstatus !== post.messages[j].pstatus) {
+                  messages[i].content = post.messages[j].content
                 }
               }
             }
 
             // maybe have new post, filter duplicate and concat new post to tail
-            const messageIds = this.messages.map(_ => _.id)
-            const filtered = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
+            const messageIds = messages.map(it => it.id)
+            const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
 
-            if (filtered.length > 0) {
-              this.messages = this.messages.concat(filtered)
+            if (newMessages.length > 0) {
+              this.messages = messages.concat(newMessages)
             }
           } else {
-          // normal style (next)
+            // normal style (next)
+            const messageIds = messages.map(it => it.id)
+            const hasThisPageDivider = messages
+              .filter(it => it.type === 'POST_PAGE_DIVIDER')
+              .filter(it => parseInt(it.post.page) === page)
+              .length > 0
+            const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
+            const newPage = _.max(newMessages.map(it => it.post.page)) || page
 
-            if (this.messages.filter(_ => _.type === 'POST_PAGE_DIVIDER' && _.post.page === page).length === 0) {
-            // prevent F5 loading will duplicate the result
-              this.messages.push({
+            if (newPage > page) {
+              // only newPage will add page divider to prevent F5 loading duplicate the result
+              messages.push({
+                post: { page: page },
+                type: 'POST_PAGE_DIVIDER'
+              })
+            } else if (!hasThisPageDivider) {
+              // add page divider
+              messages.push({
                 post: { page: page },
                 type: 'POST_PAGE_DIVIDER'
               })
             }
-
-            const messageIds = this.messages.map(_ => _.id)
-            const filtered = post.messages.filter(msg => {
-              return messageIds.indexOf(msg.id) === -1
-            })
-
-            this.messages = this.messages.concat(filtered)
+            this.messages = messages.concat(newMessages)
           }
         }
 
-        this.$timeout(() => {
-          this.scope.$broadcast('scroll.infiniteScrollComplete')
+        const { focus } = this
+
+        $timeout(() => {
+          scope.$broadcast('scroll.infiniteScrollComplete')
         })
 
         this.loadingPrevious = false
         this.refreshing = false
         this.currentPage = page
-        this.end = page >= this.totalPageNum
+        this.end = page >= totalPageNum
+        this.post = post
+        this.totalPageNum = totalPageNum
+        this.isLock = this.isLoggedIn && isLock
 
-        if (this.focus) {
-          this.$timeout(() => {
+        if (focus) {
+          $timeout(() => {
             console.debug('detected focus object')
-            const focusPosition = angular.element(document.querySelector(`#message-${this.focus}`)).prop('offsetTop')
-            this.ionicScrollDelegate.scrollTo(0, focusPosition - 16, false)
+            const focusPosition = angular.element(document.querySelector(`#message-${focus}`)).prop('offsetTop')
+            ionicScrollDelegate.scrollTo(0, focusPosition - 16, false)
             this.focus = undefined
           })
         }
@@ -315,13 +368,14 @@ export class PostDetailController {
   }
 
   like (message) {
+    const { messageService } = this
     console.log('like', message)
 
     if (message.liked) {
-      this.messageService.remove(message)
+      messageService.remove(message)
       message.liked = false
     } else {
-      this.messageService.add(message)
+      messageService.add(message)
       message.liked = true
     }
   }
@@ -338,65 +392,71 @@ export class PostDetailController {
   }
 
   onQuickReply (post) {
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+    const { scope, state, authService, postId, topicId, currentPage, ngToast } = this
+    const { title } = post
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
         const reply = {
           id: null,
-          postId: this.postId,
-          topicId: post.topicId,
+          postId,
+          topicId,
           type: 1 // default to use none
         }
 
         const message = {
           post: {
-            id: this.postId,
-            topicId: this.topicId,
-            title: post.title
+            id: postId,
+            topicId,
+            title
           }
         }
 
-        this.state.go(Controllers.WriteReplyPostController.STATE, {
-          topicId: this.topicId,
-          postId: this.postId,
-          page: this.currentPage,
+        state.go(Controllers.WriteReplyPostController.STATE, {
+          topicId,
+          postId,
+          page: currentPage,
           message: JSON.stringify(message),
           reply: JSON.stringify(reply)
         })
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+        ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
     }).subscribe()
   }
 
   onReply (message) {
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+    const { scope, state, authService, currentPage, ngToast, isLock } = this
+    const { id: messageId, post } = message
+    const { id: postId, topicId } = post
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
-        if (this.isLock) {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 主題已被封鎖，無法回覆！</i>`)
+        if (isLock) {
+          ngToast.danger(`<i class="ion-alert-circled"> 主題已被封鎖，無法回覆！</i>`)
           return
         }
         const reply = {
-          id: message.id,
-          postId: message.post.id,
-          topicId: message.post.topicId,
+          id: messageId,
+          postId,
+          topicId,
           type: 3 // default to use quote
         }
 
-        this.state.go(Controllers.WriteReplyPostController.STATE, {
-          topicId: this.topicId,
-          postId: this.postId,
-          page: this.currentPage,
+        state.go(Controllers.WriteReplyPostController.STATE, {
+          topicId,
+          postId,
+          page: currentPage,
           message: JSON.stringify(message),
           reply: JSON.stringify(reply)
         })
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+        ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
       }
     }).subscribe()
   }
 
   onReport (message) {
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+    const { scope, authService, ngToast } = this
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
         this.registerReportModal().then(reportModal => {
           reportModal.message = message
@@ -406,16 +466,19 @@ export class PostDetailController {
           reportModal.show()
         })
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
+        ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
       }
     }).subscribe()
   }
 
   onEdit (message) {
-    this.state.go(Controllers.EditPostController.STATE, {
-      topicId: this.topicId,
-      postId: this.postId,
-      page: this.currentPage,
+    const { state, currentPage } = this
+    const { post } = message
+    const { id: postId, topicId } = post
+    state.go(Controllers.EditPostController.STATE, {
+      topicId,
+      postId,
+      page: currentPage,
       message: JSON.stringify(message)
     })
   }
@@ -489,64 +552,27 @@ export class PostDetailController {
     this.reportModal && this.reportModal.remove()
   }
 
-  openPageSliderPopover ($event) {
-    this.inputPage = this.currentPage
-    this.pageSliderPopover.show($event)
-  }
-
-  doLoadPreviousPage () {
-    const minPageNum = Math.min(...this.messages.map(msg => msg.post.page))
-
-    this.inputPage = minPageNum === 1 ? 1 : minPageNum - 1
-
-    this.ionicScrollDelegate.scrollTop(true)
-    this.currentPage = minPageNum
-
-    this.$timeout(() => {
-      this.doJumpPage()
-    })
-  }
-
-  doJumpPage () {
-    this.$timeout(() => this.pageSliderPopover.hide(), 100)
-
-    if (this.inputPage === this.currentPage - 1) {
-      this.loadingPrevious = true
-      this.loadMessages('previous', this.inputPage)
-    } else {
-      this.reset()
-      this.loadMessages('next', this.inputPage)
-    }
-  }
-
   findMessage (postId, messageId) {
     console.log(`findMessage(${postId},${messageId})`)
     this.scope.$emit(FindMessageRequest.NAME, new FindMessageRequest(postId, messageId))
   }
 
   onBack () {
-    if (this.ionicHistory.viewHistory().currentView.index !== 0) {
-      this.ionicHistory.goBack()
+    const { ionicHistory, state, topicId } = this
+    if (ionicHistory.viewHistory().currentView.index !== 0) {
+      ionicHistory.goBack()
     } else {
-      this.ionicHistory.nextViewOptions({
+      ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
         historyRoot: true
 
       })
-      this.state.go(Controllers.PostListController.STATE, {
-        topicId: this.topicId,
+      state.go(Controllers.PostListController.STATE, {
+        topicId,
         page: 1
       })
     }
-  }
-
-  parseInt (i) {
-    return parseInt(i)
-  }
-
-  getTimes (i) {
-    return new Array(parseInt(i))
   }
 
   relativeMomentize (dateStr) {
@@ -560,20 +586,22 @@ export class PostDetailController {
   }
 
   onUserProfilePic (author) {
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+    const { scope, authService, state, ngToast } = this
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
-        this.state.go(Controllers.UserProfileController.STATE, {
+        state.go(Controllers.UserProfileController.STATE, {
           author: JSON.stringify(author)
         })
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
+        ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
       }
     }).subscribe()
   }
 
   onMore (message) {
+    const { scope, apiService, ngToast, ionicActionSheet } = this
     // Show the action sheet
-    var hideSheet = this.ionicActionSheet.show({
+    const hideSheet = ionicActionSheet.show({
       buttons: [
         { text: '開啟 HKEPC 原始連結' },
         { text: `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
@@ -595,22 +623,22 @@ export class PostDetailController {
         } else if (index === 1) {
           this.reversePostOrder = !this.reversePostOrder
           if (this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
-          else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
+          else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
 
           this.doRefresh()
         } else if (index === 2) {
           this.filterOnlyAuthorId = this.filterOnlyAuthorId === undefined ? message.author.uid : undefined
-          if (this.filterOnlyAuthorId !== undefined) this.ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
-          else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
+          if (this.filterOnlyAuthorId !== undefined) ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
+          else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
 
           this.doRefresh()
         } else if (index === 3) {
-          this.apiService.subscribeNewReply(this.postId).safeApply(this.scope, () => {
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
+          apiService.subscribeNewReply(this.postId).safeApply(scope, () => {
+            ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
           }).subscribe()
         } else if (index === 4) {
-          this.apiService.addFavPost(this.postId).safeApply(this.scope, () => {
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
+          apiService.addFavPost(this.postId).safeApply(scope, () => {
+            ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
           }).subscribe()
         } else if (index === 5) {
           this.onReport(message)
@@ -623,7 +651,12 @@ export class PostDetailController {
     })
   }
 
+  getTimes (n) {
+    return new Array(parseInt(n))
+  }
+
   loadLazyImage (uid, imageSrc) {
+    const { scope, compile } = this
     const image = document.getElementById(uid)
     const $element = angular.element(image)
 
@@ -632,11 +665,11 @@ export class PostDetailController {
     } else {
       // hide the image
       image.setAttribute('style', 'display: none')
-      const loader = this.compile(`
+      const loader = compile(`
           <div class='image-loader-container'>
               <ion-spinner class='image-loader' icon='${image.getAttribute('image-lazy-loader')}'/>
           </div>
-      `)(this.scope)
+      `)(scope)
 
       $element.after(loader)
 

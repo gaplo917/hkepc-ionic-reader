@@ -2,8 +2,10 @@
  * Created by Gaplo917 on 6/3/2016.
  */
 import * as Controllers from './index'
+import { PaginationPopoverDelegates } from '../delegates/pagination-popover-delegates'
+import { IRLifecycleOwner } from './base/IRLifecycleOwner'
 
-export class MyPostController {
+export class MyPostController extends IRLifecycleOwner {
   static get STATE () { return 'tab.features-mypost' }
 
   static get NAME () { return 'MyPostController' }
@@ -21,44 +23,71 @@ export class MyPostController {
     }
   }
 
-  constructor ($ionicHistory, $state, $scope, $ionicPopover, apiService, AuthService, ngToast, $stateParams) {
+  constructor ($ionicHistory, $state, $scope, $ionicPopover, $ionicScrollDelegate, apiService, AuthService, ngToast, $stateParams, $timeout) {
+    super($scope)
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.apiService = apiService
+    this.authService = AuthService
     this.ngToast = ngToast
 
     this.type = $stateParams.type
     this.page = 1
     this.myposts = []
 
-    $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.pageSliderPopover = popover
-    })
-
-    $scope.$on('$destroy', () => {
-      this.pageSliderPopover.remove()
-    })
-
-    $scope.$on('$ionicView.loaded', (e) => {
-      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        if (isLoggedIn) {
-          this.loadMyPosts()
-        } else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
-        }
-      }).subscribe()
+    this.paginationPopoverDelegate = PaginationPopoverDelegates({
+      $scope,
+      $ionicPopover,
+      $timeout,
+      $ionicScrollDelegate
+    }, {
+      getCurrentPage: () => this.page,
+      getTotalPage: () => this.totalPageNum,
+      getLocalMinPage: () => (this.myposts[0] && this.myposts[0].page) || 1,
+      onJumpPage: ({ to }) => {
+        this.reset()
+        this.page = to
+        this.loadMyPosts()
+      }
     })
   }
 
+  onViewLoaded () {
+    const { authService, scope } = this
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
+      if (isLoggedIn) {
+        this.loadMyPosts()
+      } else {
+        this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
+      }
+    }).subscribe()
+  }
+
+  onViewDestroy () {
+    this.paginationPopoverDelegate.remove()
+  }
+
+  title () {
+    switch (this.type) {
+      case 'threads': return '我的帖子'
+      case 'favorites': return '我的收藏'
+      case 'attention': return '我的關注'
+      default:
+        return ''
+    }
+  }
+
   loadMyPosts () {
-    this.apiService.myPosts(this.page, this.type)
+    const { page } = this
+    this.apiService.myPosts(page, this.type)
       .safeApply(this.scope, resp => {
         const { posts, totalPageNum } = resp
         this.totalPageNum = totalPageNum
-        this.myposts = this.myposts.concat(posts)
+        this.myposts = this.myposts.concat(posts.map(it => ({
+          ...it,
+          page
+        })))
 
         this.scope.$broadcast('scroll.infiniteScrollComplete')
       }).subscribe()
@@ -79,26 +108,6 @@ export class MyPostController {
   reset () {
     this.myposts = []
     this.end = false
-  }
-
-  openPageSliderPopover ($event) {
-    this.inputPage = this.page
-    this.pageSliderPopover.show($event)
-  }
-
-  doJumpPage () {
-    this.pageSliderPopover.hide()
-    this.reset()
-    this.page = this.inputPage
-    this.loadMyPosts()
-  }
-
-  parseInt (i) {
-    return parseInt(i)
-  }
-
-  getTimes (i) {
-    return new Array(parseInt(i))
   }
 
   loadMore () {
