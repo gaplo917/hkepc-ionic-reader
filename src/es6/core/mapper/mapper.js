@@ -268,6 +268,12 @@ export default class Mapper {
         content('blockquote a').attr('ng-click', '')
         content('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
 
+        // auto add embedded youtube before the link
+        content('a[youtube-embed]').each((i, e) => {
+          const elm = $(e)
+          elm.before(elm.attr('youtube-embed'))
+        })
+
         const rank = postSource.find('.postauthor > p > img').attr('alt')
 
         const avatarImage = postSource.find('.postauthor .avatar img')

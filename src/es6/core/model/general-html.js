@@ -108,7 +108,7 @@ export class GeneralHtml {
     this.source('a').each((i, e) => {
       const elm = this.source(e)
 
-      const url = this.source(e).attr('href')
+      const url = elm.attr('href')
 
       if (url && !url.startsWith('#') && url.indexOf(DEFAULT_IMAGE_PLACEHOLDER) === -1) {
         // remove action attr on img
@@ -120,10 +120,25 @@ export class GeneralHtml {
         elm.attr('target', `_system`)
         elm.attr('onclick', `window.open('${url}', '_system', 'location=yes'); return false;`)
         elm.attr('raw-href', url)
+
+        const youtubeId = this.getYoutubeIdByUrl(url)
+        if (youtubeId) {
+          elm.addClass('youtube')
+          elm.attr('youtube-embed', `<iframe class="youtube" width="640" height="385" src="https://www.youtube.com/embed/${youtubeId}?fs=1&enablejsapi=1&origin=http://www.hkepc.com" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+        }
       }
     })
 
     return this
+  }
+
+  getYoutubeIdByUrl (url) {
+    if (url.match(/(https:\/\/.*youtube.com\/)/)) {
+      return URLUtils.getQueryVariable(url, 'v')
+    } else if (url.indexOf('https://youtu.be/') >= 0) {
+      return url.replace(/(https:\/\/youtu.be\/)|(https:\/\/*youtube.com\/)/, '')
+    }
+    return null
   }
 
   getTitle () {
