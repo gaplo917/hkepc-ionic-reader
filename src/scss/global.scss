@@ -5,7 +5,7 @@ html, body, .pane, .view, .view-container {
 
 // word break
 * {
-  word-break: break-all;
+  word-break: break-word;
   -webkit-text-size-adjust: none!important;
   text-rendering: optimizeSpeed;
 }
@@ -284,20 +284,6 @@ textarea {
     min-height: 240px;
     width: 100%;
   }
-}
-
-
-.sticky-title {
-  background-color:$bg-color;
-  color:$text-color;
-  -webkit-font-smoothing: subpixel-antialiased;
-  font-size:11px;
-  width:100%;
-  white-space: nowrap ;
-  padding: 0 5px;
-  height:20px;
-  text-align: center;
-  display:block;
 }
 
 .default-text-color {

@@ -2,6 +2,20 @@
 .card-view {
   background-color: $card-holder-bg-color;
 
+  .sticky-title {
+    background-color:$bg-color;
+    color:$text-color;
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-size: 10.5px;
+    width:100%;
+    white-space: nowrap ; // normal to break
+    padding: 0 5px;
+    height:auto;
+    text-align: center;
+    display:block;
+    word-break: break-word;
+  }
+
   .list {
     margin: 0;
   }

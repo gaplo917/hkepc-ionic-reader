@@ -142,7 +142,7 @@ export class GeneralHtml {
   }
 
   getTitle () {
-    return this.source('title').text()
+    return this.source('meta[property="og:title"]').attr('content')
   }
 
   getCheerio () {
