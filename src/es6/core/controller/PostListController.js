@@ -177,11 +177,11 @@ export class PostListController {
     this.categories = resp.categories
 
     // better UX to highlight the searchText
-    this.posts = this.topicId === 'search'
+    const posts = this.topicId === 'search'
       ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
       : this.posts.concat(this.highlightSearchText(resp.posts, hlKeywords.join(' ')))
 
-    this.posts = this.posts.map(it => {
+    this.posts = posts.map(it => {
       const { topicId: postTopicId, author, tag } = it
       const { id: authorId, name: authorName } = author
 
@@ -205,7 +205,7 @@ export class PostListController {
         filterMode,
         filterReason
       }
-    })
+    }).filter(it => !(it.isMatchedFilter && String(it.filterMode) === '2'))
 
     console.log('filtered postList', this.posts)
 

@@ -51,17 +51,7 @@
       }
     }
 
-    &.complete-hide {
-      margin: 0;
-      padding: 0;
-      display: none;
-
-      > * {
-        display: none;
-      }
-    }
-
-    .card-button{
+    .card-button {
       color: $tab-item-stoke-color;
     }
 

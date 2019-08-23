@@ -31,9 +31,9 @@
              ng-class="{
                'shake-notice shake-constant': message.focused,
                'card': message.type === 'POST_MESSAGE',
-               'partial-hide': message.isMatchedFilter && message.filterMode === '1',
-               'complete-hide': message.isMatchedFilter && message.filterMode === '2'
+               'partial-hide': message.isMatchedFilter && message.filterMode === '1'
              }"
+             ng-if="!(message.isMatchedFilter && message.filterMode === '2')"
              ng-repeat="message in vm.messages"
              ng-click="message.focused = false; message.filterMode = '0'"
              lastread>
