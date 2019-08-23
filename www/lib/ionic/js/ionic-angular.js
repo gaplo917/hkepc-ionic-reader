@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
  * Copyright 2015 Drifty Co.
  * http://drifty.com/
@@ -161,7 +162,7 @@ function($rootScope, $compile, $animate, $timeout, $ionicTemplateLoader, $ionicP
         // wait to remove this due to a 300ms delay native
         // click which would trigging whatever was underneath this
         $ionicBody.removeClass('action-sheet-open');
-      }, 400);
+      });
       scope.$deregisterBackButton();
       stateChangeListenDone();
 
@@ -187,7 +188,7 @@ function($rootScope, $compile, $animate, $timeout, $ionicTemplateLoader, $ionicP
       $timeout(function() {
         if (scope.removed) return;
         sheetEl.addClass('action-sheet-up');
-      }, 20, false);
+      }, 0, false);
     };
 
     // registerBackButtonAction returns a callback to deregister the action
@@ -338,11 +339,11 @@ IonicModule
 .factory('$ionicBackdrop', [
   '$document', '$timeout', '$$rAF', '$rootScope',
 function($document, $timeout, $$rAF, $rootScope) {
-
-  var el = jqLite('<div class="backdrop">');
-  var backdropHolds = 0;
-
-  $document[0].body.appendChild(el[0]);
+  //
+  // var el = jqLite('<div class="backdrop">');
+  // var backdropHolds = 0;
+  //
+  // $document[0].body.appendChild(el[0]);
 
   return {
     /**
@@ -362,34 +363,34 @@ function($document, $timeout, $$rAF, $rootScope) {
     getElement: getElement,
 
     // exposed for testing
-    _element: el
+    _element: null
   };
 
   function retain() {
-    backdropHolds++;
-    if (backdropHolds === 1) {
-      el.addClass('visible');
-      $rootScope.$broadcast('backdrop.shown');
-      $$rAF(function() {
-        // If we're still at >0 backdropHolds after async...
-        if (backdropHolds >= 1) el.addClass('active');
-      });
-    }
+    // backdropHolds++;
+    // if (backdropHolds === 1) {
+    //   el.addClass('visible');
+    //   $rootScope.$broadcast('backdrop.shown');
+    //   $$rAF(function() {
+    //     // If we're still at >0 backdropHolds after async...
+    //     if (backdropHolds >= 1) el.addClass('active');
+    //   });
+    // }
   }
   function release() {
-    if (backdropHolds === 1) {
-      el.removeClass('active');
-      $rootScope.$broadcast('backdrop.hidden');
-      $timeout(function() {
-        // If we're still at 0 backdropHolds after async...
-        if (backdropHolds === 0) el.removeClass('visible');
-      }, 400, false);
-    }
-    backdropHolds = Math.max(0, backdropHolds - 1);
+    // if (backdropHolds === 1) {
+    //   el.removeClass('active');
+    //   $rootScope.$broadcast('backdrop.hidden');
+    //   $timeout(function() {
+    //     // If we're still at 0 backdropHolds after async...
+    //     if (backdropHolds === 0) el.removeClass('visible');
+    //   }, 400, false);
+    // }
+    // backdropHolds = Math.max(0, backdropHolds - 1);
   }
 
   function getElement() {
-    return el;
+    // return el;
   }
 
 }]);
@@ -538,44 +539,44 @@ IonicModule
   '$ionicBody',
   '$timeout',
 function($document, $ionicBody, $timeout) {
-  var CSS_HIDE = 'click-block-hide';
-  var cbEle, fallbackTimer, pendingShow;
+  // var CSS_HIDE = 'click-block-hide';
+  // var cbEle, fallbackTimer, pendingShow;
 
   function preventClick(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
+    // ev.preventDefault();
+    // ev.stopPropagation();
   }
 
   function addClickBlock() {
-    if (pendingShow) {
-      if (cbEle) {
-        cbEle.classList.remove(CSS_HIDE);
-      } else {
-        cbEle = $document[0].createElement('div');
-        cbEle.className = 'click-block';
-        $ionicBody.append(cbEle);
-        cbEle.addEventListener('touchstart', preventClick);
-        cbEle.addEventListener('mousedown', preventClick);
-      }
-      pendingShow = false;
-    }
+    // if (pendingShow) {
+    //   if (cbEle) {
+    //     cbEle.classList.remove(CSS_HIDE);
+    //   } else {
+    //     cbEle = $document[0].createElement('div');
+    //     cbEle.className = 'click-block';
+    //     $ionicBody.append(cbEle);
+    //     cbEle.addEventListener('touchstart', preventClick);
+    //     cbEle.addEventListener('mousedown', preventClick);
+    //   }
+    //   pendingShow = false;
+    // }
   }
 
   function removeClickBlock() {
-    cbEle && cbEle.classList.add(CSS_HIDE);
+    // cbEle && cbEle.classList.add(CSS_HIDE);
   }
 
   return {
     show: function(autoExpire) {
-      pendingShow = true;
-      $timeout.cancel(fallbackTimer);
-      fallbackTimer = $timeout(this.hide, autoExpire || 310, false);
-      addClickBlock();
+      // pendingShow = true;
+      // $timeout.cancel(fallbackTimer);
+      // fallbackTimer = $timeout(this.hide, autoExpire || 310, false);
+      // addClickBlock();
     },
     hide: function() {
-      pendingShow = false;
-      $timeout.cancel(fallbackTimer);
-      removeClickBlock();
+      // pendingShow = false;
+      // $timeout.cancel(fallbackTimer);
+      // removeClickBlock();
     }
   };
 }]);
@@ -2545,7 +2546,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       $timeout(function() {
         if (!self._isShown) return;
         $ionicBody.addClass(self.viewType + '-open');
-      }, 400, false);
+      }, 0, false);
 
       if (!self.el.parentElement) {
         modalEl.addClass(self.animation);
@@ -2587,7 +2588,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
         self.scope.$broadcast('$ionicHeader.align');
         self.scope.$broadcast('$ionicFooter.align');
         self.scope.$broadcast('$ionic.modalPresented');
-      }, 20);
+      }, 16);
 
       return $timeout(function() {
         if (!self._isShown) return;
@@ -2604,7 +2605,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
             self.hide();
           }
         });
-      }, 400);
+      });
     },
 
     /**
@@ -2631,7 +2632,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
                .removeClass('ng-enter ng-enter-active active');
 
         self.scope.$broadcast('$ionic.modalRemoved');
-      }, 20, false);
+      }, 16, false);
 
       self.$el.off('click');
       self._isShown = false;
@@ -2650,7 +2651,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
           $ionicBody.removeClass(self.viewType + '-open');
         }
         self.el.classList.add('hide');
-      }, self.hideDelay || 320);
+      });
     },
 
     /**
@@ -3625,7 +3626,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
       self.isShown = false;
       self.element.removeClass('active');
       self.element.addClass('popup-hidden');
-      $timeout(callback, 250, false);
+      $timeout(callback, 0, false);
     };
 
     self.remove = function() {
@@ -3699,7 +3700,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
             if (!popupStack.length) {
               $ionicBody.removeClass('popup-open');
             }
-          }, 400, false);
+          }, 0, false);
           ($ionicPopup._backButtonActionDone || noop)();
         }
 
