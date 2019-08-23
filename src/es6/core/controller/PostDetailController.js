@@ -113,7 +113,6 @@ export class PostDetailController extends IRLifecycleOwner {
   }
 
   onViewBeforeLeave () {
-    console.log("before leave")
     this.leaveView = true
   }
 
@@ -360,7 +359,7 @@ export class PostDetailController extends IRLifecycleOwner {
           $timeout(() => {
             console.debug('detected focus object')
             const focusPosition = angular.element(document.querySelector(`#message-${focus}`)).prop('offsetTop')
-            ionicScrollDelegate.scrollTo(0, focusPosition - 16, false)
+            ionicScrollDelegate.scrollTo(0, focusPosition - 24, false)
             this.focus = undefined
           })
         }
