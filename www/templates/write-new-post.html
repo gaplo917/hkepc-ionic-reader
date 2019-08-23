@@ -1,56 +1,58 @@
 <ion-view class="edit-view">
-    <ion-nav-title>
-        {{ vm.topic.name }}
-    </ion-nav-title>
-    <ion-nav-buttons side="right">
-        <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
-    </ion-nav-buttons>
+  <ion-nav-title>
+    {{ vm.topic.name }}
+  </ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
+  </ion-nav-buttons>
 
-    <ion-content>
+  <ion-content>
 
-        <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top">
-            點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
+    <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top">
+      點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
+    </div>
+    <!--TODO: Refactor to scss-->
+    <div style="overflow: auto;white-space: nowrap;">
+      <div style="width:70px;height: 70px;display: inline-block;"
+           ng-repeat="eImage in vm.existingImages track by $index"
+           on-long-press="vm.confirmDeleteImage(eImage)"
+           on-short-press="vm.addImageToContent(eImage)"
+      >
+        <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
+        <span class="less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
+      </div>
+    </div>
+
+    <ion-list>
+      <div ng-show="vm.categories.length > 0" class="item item-divider" style="text-align: center"
+           ng-click="vm.openCategoryPopover($event)">
+        {{vm.post.category.name || '新帖類別'}} <i class="ion-android-arrow-dropdown"></i>
+      </div>
+    </ion-list>
+
+    <input-helper modal="vm" content-model="vm.post.content"></input-helper>
+
+    <div class="row title-input">
+      <label class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input placeholder="請輸入標題" type="text" ng-model="vm.post.title">
+        </label>
+      </label>
+    </div>
+    <div class="row content-input">
+      <div class="item item-input-inset">
+        <div class="item-input-wrapper">
+          <textarea id="{{vm.id}}"
+                    placeholder="請輸入內容"
+                    ng-model="vm.post.content"
+          ></textarea>
         </div>
-        <!--TODO: Refactor to scss-->
-        <div style="overflow: auto;white-space: nowrap;">
-            <div style="width:70px;height: 70px;display: inline-block;"
-                 ng-repeat="eImage in vm.existingImages track by $index"
-                 on-long-press="vm.confirmDeleteImage(eImage)"
-                 on-short-press="vm.addImageToContent(eImage)"
-            >
-                <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
-                <span class="less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
-            </div>
-        </div>
+      </div>
+    </div>
+    <!--Let the view scrollable-->
+    <div style="height: 500px"></div>
 
-        <ion-list>
-            <div ng-show="vm.categories.length > 0" class="item item-divider" style="text-align: center"
-                 ng-click="vm.openCategoryPopover($event)">
-                {{vm.post.category.name || '新帖類別'}} <i class="ion-android-arrow-dropdown"></i>
-            </div>
-        </ion-list>
-
-        <input-helper modal="vm" content-model="vm.post.content"></input-helper>
-
-        <div class="row title-input">
-            <label class="item item-input-inset">
-                <label class="item-input-wrapper">
-                    <input placeholder="請輸入標題" type="text" ng-model="vm.post.title">
-                </label>
-            </label>
-        </div>
-        <div class="row content-input">
-            <label class="item item-input-inset">
-                <label class="item-input-wrapper">
-                    <textarea id="new-content"
-                              placeholder="請輸入內容"
-                              ng-model="vm.post.content"
-                    ></textarea>
-                </label>
-            </label>
-        </div>
-
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>
 

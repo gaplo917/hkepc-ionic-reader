@@ -1,50 +1,50 @@
 <ion-view class="edit-view">
-    <ion-nav-title>修改帖子</ion-nav-title>
-    <ion-nav-buttons side="right">
-        <button class="button-default" ng-click="vm.doEdit(vm.edit.subject, vm.edit.content, vm.images)">修改</button>
-    </ion-nav-buttons>
-    <ion-content>
-        <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center">
-            點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
-        </div>
-        <!--TODO: Refactor to scss-->
-        <div style="overflow: auto;white-space: nowrap;">
-            <div style="width:70px;height: 70px;display: inline-block;"
-                 ng-repeat="eImage in vm.existingImages track by $index"
-                 on-long-press="vm.confirmDeleteImage(eImage)"
-                 on-short-press="vm.addImageToContent(eImage)"
-            >
-                <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
-                <span class="super-less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
-            </div>
-        </div>
-        <input-helper modal='vm' content-model='vm.edit.content'></input-helper>
+  <ion-nav-title>修改帖子</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button-default" ng-click="vm.doEdit(vm.edit.subject, vm.edit.content, vm.images)">修改</button>
+  </ion-nav-buttons>
+  <ion-content>
+    <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center">
+      點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
+    </div>
+    <!--TODO: Refactor to scss-->
+    <div style="overflow: auto;white-space: nowrap;">
+      <div style="width:70px;height: 70px;display: inline-block;"
+           ng-repeat="eImage in vm.existingImages track by $index"
+           on-long-press="vm.confirmDeleteImage(eImage)"
+           on-short-press="vm.addImageToContent(eImage)"
+      >
+        <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
+        <span class="super-less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
+      </div>
+    </div>
+    <input-helper modal='vm' content-model='vm.edit.content'></input-helper>
+    <div class="row title-input" ng-show="vm.edit.subject">
+      <label class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input placeholder="請輸入標題" type="text" ng-model="vm.edit.subject">
+        </label>
+      </label>
+    </div>
+    <div class="spinner" ng-if="!vm.edit.content">
+      <ir-spinner></ir-spinner>
+    </div>
 
-        <div class="row" ng-show="vm.edit.subject">
-            <div class="col">
-                <label class="item item-input" style="width:100%">
-                    <input placeholder="請輸入標題" type="text" ng-model="vm.edit.subject">
-                </label>
-            </div>
-        </div>
-
-        <div class="spinner" ng-if="!vm.edit.content">
-            <ir-spinner></ir-spinner>
-        </div>
-
-        <div class="row content-input">
-            <label class="item item-input-inset">
-                <label class="item-input-wrapper">
-                    <textarea id="edit-content"
+    <div class="row content-input">
+      <div class="item item-input-inset">
+        <div class="item-input-wrapper">
+                    <textarea id="{{vm.id}}"
                               placeholder="請輸入內容"
                               ng-model="vm.edit.content"
                               ng-if="vm.edit.content"
                     ></textarea>
-                </label>
-            </label>
         </div>
+      </div>
+    </div>
+    <!--Let the view scrollable-->
+    <div style="height: 500px"></div>
 
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>
 
