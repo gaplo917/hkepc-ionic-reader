@@ -12,41 +12,38 @@ export const PaginationPopoverDelegates = ({
 }) => {
   let pageSliderPopover = null
 
-  const load = () => {
-    return $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html').then((popover) => {
-      popover.scope.vm = {}
+  // force init, ionic will cache it underlying
+  $ionicPopover.fromTemplateUrl('templates/modals/page-slider.html').then((popover) => {
+    pageSliderPopover = popover
+    pageSliderPopover.scope.vm = {}
+    const vm = pageSliderPopover.scope.vm
 
-      const vm = popover.scope.vm
+    vm.doJumpPage = () => {
+      requestAnimationFrame(() => {
+        $timeout(() => pageSliderPopover.hide(), 100)
+      })
 
-      vm.doJumpPage = () => {
-        requestAnimationFrame(() => {
-          $timeout(() => popover.hide(), 100)
-        })
+      onJumpPage({ to: vm.inputPage })
+    }
 
-        onJumpPage({ to: vm.inputPage })
-      }
+    vm.doLoadPreviousPage = () => {
+      requestAnimationFrame(() => {
+        $timeout(() => pageSliderPopover.hide(), 100)
+      })
 
-      vm.doLoadPreviousPage = () => {
-        requestAnimationFrame(() => {
-          $timeout(() => popover.hide(), 100)
-        })
+      const minPageNum = getLocalMinPage()
 
-        const minPageNum = getLocalMinPage()
+      vm.inputPage = minPageNum === 1 ? 1 : minPageNum - 1
 
-        vm.inputPage = minPageNum === 1 ? 1 : minPageNum - 1
+      $ionicScrollDelegate.scrollTop(true)
+      onJumpPage({ to: vm.inputPage })
+    }
 
-        $ionicScrollDelegate.scrollTop(true)
-        onJumpPage({ to: vm.inputPage })
-      }
+    vm.floor = (i) => Math.floor(i)
+    vm.ceil = (i) => Math.ceil(i)
 
-      vm.floor = (i) => Math.floor(i)
-      vm.ceil = (i) => Math.ceil(i)
-
-      vm.getTimes = (i) => new Array(parseInt(i))
-
-      return popover
-    })
-  }
+    vm.getTimes = (i) => new Array(parseInt(i))
+  })
 
   return {
     instance: pageSliderPopover,
@@ -61,13 +58,13 @@ export const PaginationPopoverDelegates = ({
       }
     },
     show: async ($event) => {
-      if (pageSliderPopover === null) {
-        pageSliderPopover = await load()
+      if (pageSliderPopover) {
+        const vm = pageSliderPopover.scope.vm
+        vm.inputPage = getCurrentPage()
+        vm.totalPageNum = getTotalPage()
+        pageSliderPopover.show($event)
       }
-      const vm = pageSliderPopover.scope.vm
-      vm.inputPage = getCurrentPage()
-      vm.totalPageNum = getTotalPage()
-      pageSliderPopover.show($event)
+
     }
   }
 }
