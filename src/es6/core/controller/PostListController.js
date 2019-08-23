@@ -84,15 +84,24 @@ export class PostListController {
     })
 
     // .fromTemplateUrl() method
-    $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html', {
-      scope: $scope
-    }).then((popover) => {
+    $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html').then((popover) => {
       this.filterOrderPopover = popover
+      this.filterOrderPopover.scope.vm = {}
+      const vm = this.filterOrderPopover.scope.vm
+      vm.hide = () => {
+        popover.hide()
+      }
+      vm.doRefresh = ({ order, filter }) => {
+        this.order = order
+        this.filter = filter
+        this.doRefresh()
+      }
     })
 
     // Cleanup the popover when we're done with it!
     $scope.$on('$destroy', () => {
       this.filterOrderPopover && this.filterOrderPopover.remove()
+      this.paginationPopoverDelegate.remove()
     })
 
     $scope.$eventToObservable('lastread')
@@ -322,6 +331,10 @@ export class PostListController {
   }
 
   doFilterOrder ($event) {
+    const vm = this.filterOrderPopover.scope.vm
+    vm.categories = this.categories
+    vm.filter = this.filter
+    vm.order = this.order
     this.filterOrderPopover.show($event)
   }
 

@@ -11,9 +11,9 @@
 
   </ion-content>
   <ion-footer-bar class="bar bar-clear">
-      <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.filterOrderPopover.hide()"></button>
+      <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.hide()"></button>
       <span class="col-20"></span>
-      <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doRefresh();vm.filterOrderPopover.hide()"> </button>
+      <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doRefresh({order: vm.order, filter: vm.filter});vm.hide()"> </button>
 
   </ion-footer-bar>
 </ion-popover-view>
