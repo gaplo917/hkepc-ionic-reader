@@ -35,10 +35,11 @@ export class ApiService {
 
     // make a extension to bridge global web worker
     this.rx.Observable.prototype.flatMapApiFromCheerioworker = function (topicKey, data = {}) {
-      return this.do(resp => cheerioWorker.postMessage(
-        Object.assign({ topic: topicKey, data: resp.data }, data)
-      )
-      )
+      return this.do(resp => {
+        if (!resp.data) throw new Error('response is not valid')
+
+        cheerioWorker.postMessage(Object.assign({ topic: topicKey, data: resp.data }, data))
+      })
         .flatMap(() => rx.Observable.fromWebWorkerAndTopic(cheerioWorker, topicKey).take(1))
         .do(result => console.log(topicKey, result))
     }

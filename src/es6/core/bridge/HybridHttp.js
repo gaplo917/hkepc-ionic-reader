@@ -10,6 +10,10 @@ export class HybridHttp {
     this.ngToast = ngToast
   }
 
+  /**
+   * @param opt
+   * @returns {Observable}
+   */
   request (opt) {
     if (Bridge.isAvailable()) {
       return this.rx.Observable.create((observer) => {
@@ -40,7 +44,7 @@ export class HybridHttp {
       console.log(nOpt)
 
       // Use Rx to wrap Angular httpPromise for better data modeling
-      return this.rx.Observable.fromPromise(this.http(nOpt))
+      return this.rx.Observable.fromPromise(this.http(nOpt)).filter(_ => _.status === 200)
     }
   }
 
