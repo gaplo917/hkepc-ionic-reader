@@ -123,8 +123,8 @@ export class GeneralHtml {
 
         const youtubeId = this.getYoutubeIdByUrl(url)
         if (youtubeId) {
-          elm.addClass('youtube')
-          elm.attr('youtube-embed', `<iframe class="youtube" width="640" height="385" src="https://www.youtube.com/embed/${youtubeId}?fs=1&enablejsapi=1&origin=http://www.hkepc.com" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+          elm.addClass('youtube-link')
+          elm.attr('youtube-embed', `<iframe class="youtube-embed" width="640" height="385" src="https://www.youtube.com/embed/${youtubeId}?fs=1&enablejsapi=1&origin=http://www.hkepc.com" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
         }
       }
     })
