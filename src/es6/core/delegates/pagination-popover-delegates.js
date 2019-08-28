@@ -43,6 +43,8 @@ export const PaginationPopoverDelegates = ({
     vm.ceil = (i) => Math.ceil(i)
 
     vm.getTimes = (i) => new Array(parseInt(i))
+
+    vm.dismiss = () => pageSliderPopover.hide()
   })
 
   return {
