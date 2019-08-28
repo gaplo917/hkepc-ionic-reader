@@ -19,19 +19,22 @@
            ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
            ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
         </a>
-        <div id="topics" class="title" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
-            <button ng-repeat="subTopic in vm.subTopicList track by $index"
-                    ng-click="::vm.goToSubTopic($index, subTopic)"
-                    ng-class="{
+        <div class="title">
+            <div id="topics" class="wrapper" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
+                <button ng-repeat="subTopic in vm.subTopicList track by $index"
+                        ng-click="::vm.goToSubTopic($index, subTopic)"
+                        ng-class="{
                     'active': vm.topic === subTopic,
                     }"
-                    id="subtopic-{{::subTopic.id}}"
-                    class="topic-btn"
-                    ng-style="{
+                        id="subtopic-{{::subTopic.id}}"
+                        class="topic-btn"
+                        ng-style="{
                         'opacity': (vm.topicUiReady || vm.subTopicList.length <= 1) ? 1 : 0
                     }">
-                {{::subTopic.name}}
-            </button>
+                    {{::subTopic.name}}
+                </button>
+            </div>
+
         </div>
         <a ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
            class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>

@@ -279,17 +279,25 @@ export class PostListController {
   }
 
   centerSelectedTopic (subTopic, animated) {
+    const getCurrentTime = () => {
+      if (window.performance && window.performance.now) {
+        return performance.now()
+      } else if (Date.now) {
+        return Date.now()
+      } else {
+        return new Date().getTime()
+      }
+    }
     const scrollLeftTo = (element, to, duration) => {
       const start = element.scrollLeft
       const change = to - start
-      let currentTime = 0
-      const increment = 16
+      const startTime = getCurrentTime()
 
       const animateScroll = () => {
-        currentTime += increment
-        element.scrollLeft = easeInOutQuad(currentTime, start, change, duration)
-        if (currentTime < duration) {
-          this.$timeout(animateScroll, increment)
+        const deltaT = getCurrentTime() - startTime
+        if (deltaT < duration) {
+          element.scrollLeft = easeInOutQuad(deltaT, start, change, duration)
+          requestAnimationFrame(animateScroll)
         }
       }
       animateScroll()

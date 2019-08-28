@@ -19,9 +19,7 @@
       color: $text-on-epc-color;
       width: calc(100% - 112px);
       margin-left: 56px;
-      overflow-x: auto;
       padding: 0;
-      -webkit-overflow-scrolling: touch;
 
       .topic-btn {
         border-radius: 32px;
@@ -43,9 +41,14 @@
         }
       }
 
-      &.scroll-x-padding {
-        padding: 0 calc(33.3% - 16px);
+      .wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        &.scroll-x-padding {
+          padding: 0 calc(33.3% - 16px);
+        }
       }
+
     }
 
     .icon.ion-bonfire {
