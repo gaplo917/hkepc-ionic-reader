@@ -4,15 +4,15 @@
             <ir-spinner></ir-spinner>
         </div>
         <div class="list">
-            <label class="item item-input-inset">
-                <label class="item-input-wrapper">
+            <div class="item item-input-inset">
+                <div class="item-input-wrapper">
                     <i class="icon ion-search placeholder-icon"></i>
                     <input type="text"
                            ng-model="vm.searchText"
                            ng-change="vm.searchOnTextChange()"
                            placeholder="搜尋 (例如: 吹水王國)">
-                </label>
-            </label>
+                </div>
+            </div>
         </div>
         <div class="less-important-info"
              ng-if="vm.items.length > 0"

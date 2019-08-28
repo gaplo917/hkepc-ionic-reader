@@ -20,11 +20,11 @@
     </div>
     <input-helper modal='vm' content-model='vm.edit.content'></input-helper>
     <div class="row title-input" ng-show="vm.edit.subject">
-      <label class="item item-input-inset">
-        <label class="item-input-wrapper">
+      <div class="item item-input-inset">
+        <div class="item-input-wrapper">
           <input placeholder="請輸入標題" type="text" ng-model="vm.edit.subject">
-        </label>
-      </label>
+        </div>
+      </div>
     </div>
     <div class="spinner" ng-if="!vm.edit.content">
       <ir-spinner></ir-spinner>

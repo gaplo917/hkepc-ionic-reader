@@ -10,14 +10,14 @@
             <ir-spinner></ir-spinner>
         </div>
         <div class="item item-input-inset">
-            <label class="item-input-wrapper">
+            <div class="item-input-wrapper">
                 <input type="text"
                        ng-model="vm.keywordInput"
                        ng-keypress="vm.addKeyword($event)"
                        placeholder="輸入關鍵字 (例如 Ryzen, Intel)"
                        style="width: 100%;"
                 >
-            </label>
+            </div>
             <button class="button button-small icon ion-android-add button-assertive"
                     ng-click="vm.addKeyword()">
             </button>

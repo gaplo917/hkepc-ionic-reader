@@ -170,10 +170,10 @@ export class PostDetailController extends IRLifecycleOwner {
       localStorageService.getObject('latestPostTopicFilters', []),
       localStorageService.getObject('latestReplyTopicFilters', []),
       localStorageService.getObject('hlKeywords', []),
-      localStorageService.getObject('userFilter', userFilterSchema).map(it => it.userIds),
+      localStorageService.getObject('userFilter', userFilterSchema),
       localStorageService.get('filterMode', '1'),
-      (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds, filterMode) => ({
-        filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds },
+      (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter, filterMode) => ({
+        filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter },
         filterMode
       })
     )
@@ -246,7 +246,8 @@ export class PostDetailController extends IRLifecycleOwner {
       (post, { filterOpts, filterMode }) => ({ post, filterOpts, filterMode })
     )
       .safeApply(scope, ({ post, filterOpts, filterMode }) => {
-        const { userIds: userIdFilters } = filterOpts
+        const { userFilter } = filterOpts
+        const { userIds: userIdFilters, users: filteredUserInfos } = userFilter
         const { totalPageNum, isLock } = post
 
         post.messages.forEach(message => {
@@ -254,11 +255,16 @@ export class PostDetailController extends IRLifecycleOwner {
             message.liked = isLiked
           })
 
+          const isMatchedFilter = userIdFilters.indexOf(message.author.uid) >= 0
+          const remark = (isMatchedFilter && filteredUserInfos[message.author.uid].remark) || ''
+          const remarkContent = remark ? `, ${remark}` : ''
+          const filterReason = isMatchedFilter && `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子${remarkContent})`
+
           // no focus must not from find message
           message.focused = message.id === focus
-          message.isMatchedFilter = userIdFilters.indexOf(message.author.uid) >= 0
+          message.isMatchedFilter = isMatchedFilter
           message.filterMode = filterMode
-          message.filterReason = `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子)`
+          message.filterReason = filterReason
         })
 
         if (page > totalPageNum) {

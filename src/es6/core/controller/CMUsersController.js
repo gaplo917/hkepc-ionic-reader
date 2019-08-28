@@ -33,6 +33,7 @@ export class CMUsersController {
     this.items = []
     this.isReady = false
     this.userIdInput = ''
+    this.remarkInput = ''
     this.editMode = false
     this.userFilter = userFilterSchema
 
@@ -73,27 +74,32 @@ export class CMUsersController {
   addUser (event) {
     const { userIds, users } = this.userFilter
     if (!event || (event && event.which === 13)) {
-      if (userIds.indexOf(this.userIdInput) >= 0) {
-        const { uid, name } = users[this.userIdInput]
+      const { userIdInput, remarkInput } = this
+      if (userIds.indexOf(userIdInput) >= 0) {
+        const { uid, name } = users[userIdInput]
         this.ngToast.danger(`<i class="ion-alert-circled"> 用戶「${name} (UID: ${uid})」已經存在</i>`)
         return
       }
       this.showLoading()
 
-      this.apiService.userProfile(this.userIdInput)
+      this.apiService.userProfile(userIdInput)
         .safeApply(this.scope, resp => {
           const { uid, name, rank, image } = resp
           if (!name) {
             this.ngToast.danger(`<i class="ion-alert-circled"> 用戶編號 ${uid} 不存在</i>`)
             return
           }
-          this.userFilter.users[uid] = { uid, name, rank, image }
+          // mutate
+          this.userFilter.users[uid] = { uid, name, rank, image, remark: remarkInput }
+
+          // use the mutated object
           this.userFilter.userIds = [uid, ...this.userFilter.userIds]
           this.LocalStorageService.setObject('userFilter', this.userFilter)
 
           const { users, userIds } = this.userFilter
           this.items = userIds.map(it => users[it])
           this.userIdInput = ''
+          this.remarkInput = ''
         },
         () => {},
         () => this.closeLoading()

@@ -1,4 +1,19 @@
 .contentmanage-users-view {
+
+  // uid
+  .item-input-wrapper > input:first-child {
+    width: 50%;
+    border-right: 1px solid $border-color;
+    border-radius: 0;
+  }
+
+  // remark
+  .item-input-wrapper > input:nth-child(2) {
+    width: 50%;
+    padding-left: 16px;
+    border-radius: 0;
+  }
+
   .odd {
     &.item, .item-content {
       background-color: $odd-color;
@@ -24,6 +39,15 @@
         color: red;
       }
       padding: 0;
+    }
+  }
+
+  .item {
+    .remark {
+      flex:2;
+      text-align: right;
+      word-break: break-word;
+      white-space: normal;
     }
   }
 }

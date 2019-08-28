@@ -10,12 +10,12 @@
     </ion-nav-buttons>
     <ion-content lazy-scroll>
         <div class="text-center">
-            <label class="item item-input-inset w100">
-                <label class="item-input-wrapper">
+            <div class="item item-input-inset w100">
+                <div class="item-input-wrapper">
                     <i class="icon ion-ios-search-strong placeholder-icon"></i>
                     <input placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.searchOnTextChange()">
-                </label>
-            </label>
+                </div>
+            </div>
         </div>
         <div class="less-important-info"
              ng-if="vm.messages.length === 0"

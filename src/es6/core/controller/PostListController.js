@@ -135,10 +135,10 @@ export class PostListController {
       this.LocalStorageService.getObject('latestPostTopicFilters', []),
       this.LocalStorageService.getObject('latestReplyTopicFilters', []),
       this.LocalStorageService.getObject('hlKeywords', []),
-      this.LocalStorageService.getObject('userFilter', userFilterSchema).map(it => it.userIds),
+      this.LocalStorageService.getObject('userFilter', userFilterSchema),
       this.LocalStorageService.get('filterMode', '1'),
-      (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds, filterMode) => ({
-        filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userIds },
+      (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter, filterMode) => ({
+        filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter },
         filterMode
       })
     )
@@ -177,7 +177,9 @@ export class PostListController {
   }
 
   renderPostListResponse (resp, filterOpts, filterMode) {
-    const { userIds, latestPostTopicFilters, latestReplyTopicFilters, hlKeywords } = filterOpts
+    const { userFilter, latestPostTopicFilters, latestReplyTopicFilters, hlKeywords } = filterOpts
+    const { userIds: userIdsFilter, users: filteredUserInfos } = userFilter
+    const { topicId: topicTypeOrId } = this
 
     this.searchId = resp.searchId
     // only extract the number
@@ -186,7 +188,7 @@ export class PostListController {
     this.categories = resp.categories
 
     // better UX to highlight the searchText
-    const posts = this.topicId === 'search'
+    const posts = topicTypeOrId === 'search'
       ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
       : this.posts.concat(this.highlightSearchText(resp.posts, hlKeywords.join(' ')))
 
@@ -194,16 +196,19 @@ export class PostListController {
       const { topicId: postTopicId, author, tag } = it
       const { id: authorId, name: authorName } = author
 
-      const hasFilteredAuthor = userIds.indexOf(authorId) >= 0
-      const hasFilteredTopic = this.topicId === 'latestPost'
+      const hasFilteredAuthor = userIdsFilter.indexOf(authorId) >= 0
+      const hasFilteredTopic = topicTypeOrId === 'latestPost'
         ? latestPostTopicFilters.indexOf(postTopicId) >= 0
-        : this.topicId === 'latest'
+        : topicTypeOrId === 'latest'
           ? latestReplyTopicFilters.indexOf(postTopicId) >= 0
           : false
       const isMatchedFilter = hasFilteredAuthor || hasFilteredTopic
 
+      const remark = (hasFilteredAuthor && filteredUserInfos[authorId].remark) || ''
+      const remarkContent = remark ? `, ${remark}` : ''
+
       const filterReason = hasFilteredAuthor
-        ? `(已隱藏｜原因：${authorName} 的帖子)`
+        ? `(已隱藏｜原因：${authorName} 的帖子${remarkContent})`
         : hasFilteredTopic
           ? `(已隱藏｜原因：${tag}版塊內的帖子)`
           : ``
@@ -221,7 +226,7 @@ export class PostListController {
     this.currentPageNum = parseInt(this.currentPageNum) + 1
 
     const renderTopicName = () => {
-      switch (this.topicId) {
+      switch (topicTypeOrId) {
         case 'search': return `${resp.topicName} ${this.searchText}`
         case 'latest': return '最新帖子'
         case 'latestPost': return '最新發佈'
@@ -232,7 +237,7 @@ export class PostListController {
     // use exiting list if there is
     this.subTopicList = this.subTopicList.length === 0
       ? [{
-        id: this.topicId,
+        id: topicTypeOrId,
         name: renderTopicName()
       }, ...resp.subTopicList]
       : this.subTopicList
