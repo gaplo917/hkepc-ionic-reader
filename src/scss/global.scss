@@ -172,7 +172,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   background-color:  $popover-bg-color;
 }
 
-.popover-backdrop.active {
+.popover-backdrop.active, .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.6);
 }
 .popover, .range.range-positive {
