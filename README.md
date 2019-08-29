@@ -10,14 +10,16 @@
 * The native projects host this web app internally and are written in pure Swift(iOS) and Kotlin(Android). 
 * This web app connects native via a pure tailor-made message bridge. i.e. pick images, compress images, upload images, HTTP proxy to prevent CORS
 * The native projects (iOS & Android) will be available later. Stay calm.
-* A seperated tailor-made native message bridge will also be available later.
+* A separated tailor-made native message bridge will also be available later.
 
 # 簡介
 [1.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/1.x) Branch 完全依賴 Cordova
 
 [2.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/2.x) Branch 已經完全移除 Cordova 並自行重制某部份功能，此 Project 將會作 Native Project 的 Submodules 運行
 
-3.x Branch 效能先決．重新出發！Code review 及自行重製部份功能(發現部份 `ionic-angular.js` 提供的功能是拖低流暢度的主要成因)
+[3.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/3.x) Branch 效能先決．重新出發！Code review 及自行重製部份功能(發現部份 `ionic-angular.js` 提供的功能是拖低流暢度的主要成因)
+
+[4.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/4.x) Branch 內容自主．優化體驗！加入 HKEPC 討論區不能提供的功能，繼續 Fine-tune `ionic-angular.js`
 
 # 3.x - 效能先決．重新出發 (21 Jan 2019 Updated)
 Ionic V1 - 雖然係第一代比較完整嘅 HTML 5 Mobile framework 並以 Cordova 為基礎去做，但 Ionic V1 其實有好多 Performance 問題其實仲未 Optimize，更甚其實根本冇好好咁同 Native integrate。  

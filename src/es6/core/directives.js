@@ -23,7 +23,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
       )
     }
   })
-  .directive('inputHelper', (Upload, $timeout) => {
+  .directive('inputHelper', ($timeout) => {
     return {
       restrict: 'E',
       scope: {
@@ -34,14 +34,18 @@ export default angular.module('starter.directives', ['ngAnimate'])
         const modal = scope.modal
 
         scope.selectTab = (index) => {
-          if (index === 4 && Bridge.isAvailable()) {
-            Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
-              modal.onImageUploadSuccess(attachmentIds)
+          if (index === 4) {
+            if (Bridge.isAvailable()) {
+              Bridge.callHandler(Channel.uploadImage, modal.hiddenAttachFormInputs, (attachmentIds) => {
+                modal.onImageUploadSuccess(attachmentIds)
 
-              $timeout(() => {
-                scope.$apply()
+                $timeout(() => {
+                  scope.$apply()
+                })
               })
-            })
+            } else {
+              alert('This feature only support in mobile app')
+            }
           } else {
             modal.showInputHelperAt = index
           }
@@ -51,72 +55,6 @@ export default angular.module('starter.directives', ['ngAnimate'])
         }
         scope.isSelectedTab = () => {
           return modal.showInputHelperAt >= 0
-        }
-
-        scope.prepareUpload = function (file) {
-          scope.imageErr = undefined
-          scope.imageErrSuggestion = undefined
-          scope.previewUploadImage = undefined
-
-          if (file) {
-            var reader = new FileReader()
-
-            reader.onload = function (e) {
-              const fileSizeInKB = e.total / 1000
-              if (fileSizeInKB >= 150) {
-                scope.imageErr = `圖片(${fileSizeInKB} KB) 大於 HKEPC 限制(150KB)`
-                scope.imageErrSuggestion = `建議使用具有自動壓縮功能的 iOS 或 Android (6.0 或以上) HKEPC IR Pro App`
-              } else {
-                // image is valid to upload
-                scope.file = file
-              }
-
-              scope.previewUploadImage = e.target.result
-              scope.$apply()
-            }
-
-            reader.readAsDataURL(file)
-          }
-        }
-
-        scope.upload = function () {
-          console.log('modal.hiddenAttachFormInputs', modal.hiddenAttachFormInputs)
-          if (!modal.hiddenAttachFormInputs) {
-            throw new Error('Modal Missing hiddenAttachFormInputs')
-          }
-
-          const data = modal.hiddenAttachFormInputs
-          data.Filedata = scope.file
-
-          Upload.upload({
-            url: data.action,
-            data: data
-          }).then(function (resp) {
-            console.log('Success uploaded. Response: ', resp.data)
-
-            // DISCUZUPLOAD|0|1948831|1
-            const attactmentId = resp.data.split('|')[2]
-
-            modal.onImageUploadSuccess([attactmentId])
-
-            scope.imageUploadSuccess = `上傳成功 ${attactmentId}！`
-
-            // release the file
-            scope.file = undefined
-          }, function (resp) {
-            console.log('Error status: ' + resp.status)
-          }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total)
-            console.log('progress: ' + progressPercentage + '%')
-          })
-        }
-
-        scope.resetUpload = function () {
-          scope.imageErr = undefined
-          scope.imageErrSuggestion = undefined
-          scope.previewUploadImage = undefined
-          scope.file = undefined
-          scope.imageUploadSuccess = undefined
         }
 
         modal.gifs = HKEPC.data.gifs

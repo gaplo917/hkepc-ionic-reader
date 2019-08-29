@@ -47,8 +47,7 @@ function dynamicModules () {
       'starter.services',
       'starter.directives',
       'ngToast',
-      'rx',
-      'ngFileUpload'
+      'rx'
     ]
   } else {
     return [
@@ -58,8 +57,7 @@ function dynamicModules () {
       'starter.directives',
       'ngToast',
       'LocalForageModule',
-      'rx',
-      'ngFileUpload'
+      'rx'
     ]
   }
 }
