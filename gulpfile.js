@@ -88,7 +88,7 @@ gulp.task('sass', function () {
 })
 
 gulp.task('watchDependencies', function () {
-  return gulp.watch(['./src/dependencies.js'], gulp.series(['bundle-dependencies']))
+  return gulp.watch(['./src/dependencies.js', './src/ionic/**/*.js'], gulp.series(['bundle-dependencies']))
 })
 
 gulp.task('watchJs', function () {
