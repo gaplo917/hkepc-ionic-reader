@@ -53,7 +53,7 @@ export class FindMessageController {
   }
 
   relativeMomentize (dateStr) {
-    const momentDate = moment(dateStr)
+    const momentDate = moment(dateStr, 'YYYY-M-D hh:mm')
 
     if (momentDate.diff(new Date(), 'days') >= -3) {
       return momentDate.fromNow()

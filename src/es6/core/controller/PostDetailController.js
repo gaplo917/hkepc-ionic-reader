@@ -124,14 +124,14 @@ export class PostDetailController extends IRLifecycleOwner {
 
   onViewLoaded () {
     const { scope, rx, localStorageService } = this
-    const { topicId, postId, focus, page } = this.stateParams
+    const { topicId, postId, focus: focusId, page } = this.stateParams
     this.topicId = topicId
     this.postId = postId
-    this.focus = focus
+    this.focus = { id: focusId, fromLastPosition: false }
     this.currentPage = page
 
     // check to see if from a focus request
-    if (!focus) {
+    if (!focusId) {
       // if not , jump to last reading page position
       rx.Observable.combineLatest(
         localStorageService.getObject(`${topicId}/${postId}/lastPosition`),
@@ -144,11 +144,10 @@ export class PostDetailController extends IRLifecycleOwner {
           const _lastPosition = lastPosition || {}
           const lastPage = _lastPosition.page || page
           const lastMessageId = _lastPosition.messageId ||
-            _lastPosition.postId || // legacy field
-            focus
+            _lastPosition.postId // legacy field
 
           this.currentPage = lastPage
-          this.focus = lastMessageId
+          this.focus = { id: lastMessageId, fromLastPosition: true }
           this.isAutoLoadImage = loadImageMethod !== 'block'
 
           this.loadMessages()
@@ -261,7 +260,7 @@ export class PostDetailController extends IRLifecycleOwner {
           const filterReason = isMatchedFilter && `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子${remarkContent})`
 
           // no focus must not from find message
-          message.focused = message.id === this.focus
+          message.focused = message.id === this.focus.id && !this.focus.fromLastPosition
           message.isMatchedFilter = isMatchedFilter
           message.filterMode = filterMode
           message.filterReason = filterReason
@@ -302,7 +301,7 @@ export class PostDetailController extends IRLifecycleOwner {
             this.messages = merged
 
             // focus one the finish loading previous message
-            this.focus = nextFocusId
+            this.focus = { id: nextFocusId, fromLastPosition: false }
           } else if (style === 'silent') {
             // slient update the content only
             for (let i = 0; i < messages.length; i++) {
@@ -348,6 +347,7 @@ export class PostDetailController extends IRLifecycleOwner {
         }
 
         const { focus } = this
+        const { id: focusId } = focus
 
         $timeout(() => {
           scope.$broadcast('scroll.infiniteScrollComplete')
@@ -361,12 +361,12 @@ export class PostDetailController extends IRLifecycleOwner {
         this.totalPageNum = totalPageNum
         this.isLock = this.isLoggedIn && isLock
 
-        if (focus) {
+        if (focusId) {
           $timeout(() => {
-            console.debug('detected focus object')
-            const focusPosition = angular.element(document.querySelector(`#message-${focus}`)).prop('offsetTop')
+            console.debug('detected focus object', focus)
+            const focusPosition = angular.element(document.querySelector(`#message-${focusId}`)).prop('offsetTop')
             ionicScrollDelegate.scrollTo(0, focusPosition - 24, false)
-            this.focus = undefined
+            this.focus = { id: undefined, fromLastPosition: false }
           })
         }
       }).subscribe()
@@ -581,7 +581,7 @@ export class PostDetailController extends IRLifecycleOwner {
   }
 
   relativeMomentize (dateStr) {
-    const momentDate = moment(dateStr)
+    const momentDate = moment(dateStr, 'YYYY-M-D hh:mm')
 
     if (momentDate.diff(new Date(), 'days') >= -3) {
       return momentDate.fromNow()
