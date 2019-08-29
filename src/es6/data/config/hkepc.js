@@ -1,11 +1,11 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
 */
-const PROXY_URL = 'https://ionic-reader.xyz:8443'
+const PROXY_URL = 'http://0.0.0.0:1337/www.hkepc.com' // default proxy url (only local development use)
 const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
-const VERSION = "3.5.2"
+const VERSION = '3.6.0'
 function getMobileOperatingSystem(userAgent){
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera;
 

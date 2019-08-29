@@ -1,4 +1,4 @@
-@import "../../../www/lib/csshake/scss/tools";
+@import "../../../node_modules/csshake/scss/tools";
 
 .shake-notice {
   @include do-shake(

@@ -1,6 +1,6 @@
-import controllerModules from './controllers'
-import directivesModules from './directives'
-import servicesModules from './services'
+import './controllers'
+import './directives'
+import './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
@@ -44,8 +44,7 @@ function dynamicModules() {
       'starter.services',
       'starter.directives',
       'ngToast',
-      'rx',
-      'ngFileUpload',
+      'rx'
     ]
   } else {
     return [
@@ -55,8 +54,7 @@ function dynamicModules() {
       'starter.directives',
       'ngToast',
       'LocalForageModule',
-      'rx',
-      'ngFileUpload',
+      'rx'
     ]
   }
 }

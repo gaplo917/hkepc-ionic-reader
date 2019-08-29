@@ -2546,7 +2546,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       $timeout(function() {
         if (!self._isShown) return;
         $ionicBody.addClass(self.viewType + '-open');
-      }, 0, false);
+      }, 100, false);
 
       if (!self.el.parentElement) {
         modalEl.addClass(self.animation);
@@ -2555,40 +2555,39 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
 
       // if modal was closed while the keyboard was up, reset scroll view on
       // next show since we can only resize it once it's visible
-      var scrollCtrl = modalEl.data('$$ionicScrollController');
-      scrollCtrl && scrollCtrl.resize();
+      // var scrollCtrl = modalEl.data('$$ionicScrollController');
+      // scrollCtrl && scrollCtrl.resize();
 
       if (target && self.positionView) {
         self.positionView(target, modalEl);
         // set up a listener for in case the window size changes
 
-        self._onWindowResize = function() {
-          if (self._isShown) self.positionView(target, modalEl);
-        };
-        ionic.on('resize', self._onWindowResize, window);
+        // self._onWindowResize = function() {
+        //   if (self._isShown) self.positionView(target, modalEl);
+        // };
+        // ionic.on('resize', self._onWindowResize, window);
       }
 
       modalEl.addClass('ng-enter active')
              .removeClass('ng-leave ng-leave-active');
 
       self._isShown = true;
-      self._deregisterBackButton = $ionicPlatform.registerBackButtonAction(
-        self.hardwareBackButtonClose ? angular.bind(self, self.hide) : noop,
-        IONIC_BACK_PRIORITY.modal
-      );
+      // self._deregisterBackButton = $ionicPlatform.registerBackButtonAction(
+      //   self.hardwareBackButtonClose ? angular.bind(self, self.hide) : noop,
+      //   IONIC_BACK_PRIORITY.modal
+      // );
+      self.el.classList.add('active');
 
       ionic.views.Modal.prototype.show.call(self);
 
       $timeout(function() {
         if (!self._isShown) return;
         modalEl.addClass('ng-enter-active');
-        ionic.trigger('resize');
         self.scope.$parent && self.scope.$parent.$broadcast(self.viewType + '.shown', self);
-        self.el.classList.add('active');
         self.scope.$broadcast('$ionicHeader.align');
         self.scope.$broadcast('$ionicFooter.align');
         self.scope.$broadcast('$ionic.modalPresented');
-      }, 16);
+      }, 0);
 
       return $timeout(function() {
         if (!self._isShown) return;
@@ -4496,7 +4495,7 @@ function($compile, $controller, $http, $q, $rootScope, $templateCache) {
   function loadAndCompile(options) {
     options = extend({
       template: '',
-      templateUrl: '',
+      templateUrl: 'ionic-angular',
       scope: null,
       controller: null,
       locals: {},
@@ -5721,7 +5720,7 @@ function($scope, $attrs, $element, $timeout, $compile) {
       $element[0].classList.add('active');
 
       $timeout(function(){
-        $scope.$parent && $scope.$parent.$apply($attrs.onInfinite || '');
+        $scope.$parent && $scope.$parent.$evalAsync($attrs.onInfinite || '');
       });
 
     });
@@ -6232,7 +6231,7 @@ function($scope, $element, $attrs, $compile, $timeout, $ionicNavBarDelegate, $io
           self.showBackButton(cancelData.showBackButton);
         }
         if (runApply) {
-          $scope.$apply();
+          $scope.$evalAsync();
         }
       },
       complete: function(shouldAnimate, speed) {
@@ -8717,14 +8716,14 @@ IonicModule
       var keyUp = function(e) {
         if (e.which == 27) {
           $scope.cancel();
-          $scope.$apply();
+          $scope.$evalAsync();
         }
       };
 
       var backdropClick = function(e) {
         if (e.target == $element[0]) {
           $scope.cancel();
-          $scope.$apply();
+          $scope.$evalAsync();
         }
       };
       $scope.$on('$destroy', function() {
@@ -10058,7 +10057,7 @@ IonicModule.directive('exposeAsideWhen', ['$window', function($window) {
       }
 
       var debouncedCheck = ionic.debounce(function() {
-        $scope.$apply(checkAsideExpose);
+        $scope.$evalAsync(checkAsideExpose);
       }, 300, false);
 
       $scope.$evalAsync(checkAsideExpose);
@@ -10354,7 +10353,7 @@ function gestureDirective(directiveName) {
       var fn = $parse( attr[directiveName] );
 
       var listener = function(ev) {
-        scope.$apply(function() {
+        scope.$evalAsync(function() {
           fn(scope, {
             $event: ev
           });
@@ -12201,7 +12200,7 @@ IonicModule
       $parse(clickExpr);
 
     element.on('click', function(event) {
-      scope.$apply(function() {
+      scope.$evalAsync(function() {
         clickHandler(scope, {$event: (event)});
       });
     });
@@ -13019,443 +13018,6 @@ IonicModule
 
 
 /**
- * @ngdoc directive
- * @name ionSlideBox
- * @module ionic
- * @codepen AjgEB
- * @deprecated will be removed in the next Ionic release in favor of the new ion-slides component.
- * Don't depend on the internal behavior of this widget.
- * @delegate ionic.service:$ionicSlideBoxDelegate
- * @restrict E
- * @description
- * The Slide Box is a multi-page container where each page can be swiped or dragged between:
- *
- *
- * @usage
- * ```html
- * <ion-slide-box on-slide-changed="slideHasChanged($index)">
- *   <ion-slide>
- *     <div class="box blue"><h1>BLUE</h1></div>
- *   </ion-slide>
- *   <ion-slide>
- *     <div class="box yellow"><h1>YELLOW</h1></div>
- *   </ion-slide>
- *   <ion-slide>
- *     <div class="box pink"><h1>PINK</h1></div>
- *   </ion-slide>
- * </ion-slide-box>
- * ```
- *
- * @param {string=} delegate-handle The handle used to identify this slideBox
- * with {@link ionic.service:$ionicSlideBoxDelegate}.
- * @param {boolean=} does-continue Whether the slide box should loop.
- * @param {boolean=} auto-play Whether the slide box should automatically slide. Default true if does-continue is true.
- * @param {number=} slide-interval How many milliseconds to wait to change slides (if does-continue is true). Defaults to 4000.
- * @param {boolean=} show-pager Whether a pager should be shown for this slide box. Accepts expressions via `show-pager="{{shouldShow()}}"`. Defaults to true.
- * @param {expression=} pager-click Expression to call when a pager is clicked (if show-pager is true). Is passed the 'index' variable.
- * @param {expression=} on-slide-changed Expression called whenever the slide is changed.  Is passed an '$index' variable.
- * @param {expression=} active-slide Model to bind the current slide index to.
- */
-IonicModule
-.directive('ionSlideBox', [
-  '$animate',
-  '$timeout',
-  '$compile',
-  '$ionicSlideBoxDelegate',
-  '$ionicHistory',
-  '$ionicScrollDelegate',
-function($animate, $timeout, $compile, $ionicSlideBoxDelegate, $ionicHistory, $ionicScrollDelegate) {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: {
-      autoPlay: '=',
-      doesContinue: '@',
-      slideInterval: '@',
-      showPager: '@',
-      pagerClick: '&',
-      disableScroll: '@',
-      onSlideChanged: '&',
-      activeSlide: '=?',
-      bounce: '@'
-    },
-    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
-      var _this = this;
-
-      var continuous = $scope.$eval($scope.doesContinue) === true;
-      var bouncing = ($scope.$eval($scope.bounce) !== false); //Default to true
-      var shouldAutoPlay = isDefined($attrs.autoPlay) ? !!$scope.autoPlay : false;
-      var slideInterval = shouldAutoPlay ? $scope.$eval($scope.slideInterval) || 4000 : 0;
-
-      var slider = new ionic.views.Slider({
-        el: $element[0],
-        auto: slideInterval,
-        continuous: continuous,
-        startSlide: $scope.activeSlide,
-        bouncing: bouncing,
-        slidesChanged: function() {
-          $scope.currentSlide = slider.currentIndex();
-
-          // Try to trigger a digest
-          $timeout(function() {});
-        },
-        callback: function(slideIndex) {
-          $scope.currentSlide = slideIndex;
-          $scope.onSlideChanged({ index: $scope.currentSlide, $index: $scope.currentSlide});
-          $scope.$parent.$broadcast('slideBox.slideChanged', slideIndex);
-          $scope.activeSlide = slideIndex;
-          // Try to trigger a digest
-          $timeout(function() {});
-        },
-        onDrag: function() {
-          freezeAllScrolls(true);
-        },
-        onDragEnd: function() {
-          freezeAllScrolls(false);
-        }
-      });
-
-      function freezeAllScrolls(shouldFreeze) {
-        if (shouldFreeze && !_this.isScrollFreeze) {
-          $ionicScrollDelegate.freezeAllScrolls(shouldFreeze);
-
-        } else if (!shouldFreeze && _this.isScrollFreeze) {
-          $ionicScrollDelegate.freezeAllScrolls(false);
-        }
-        _this.isScrollFreeze = shouldFreeze;
-      }
-
-      slider.enableSlide($scope.$eval($attrs.disableScroll) !== true);
-
-      $scope.$watch('activeSlide', function(nv) {
-        if (isDefined(nv)) {
-          slider.slide(nv);
-        }
-      });
-
-      $scope.$on('slideBox.nextSlide', function() {
-        slider.next();
-      });
-
-      $scope.$on('slideBox.prevSlide', function() {
-        slider.prev();
-      });
-
-      $scope.$on('slideBox.setSlide', function(e, index) {
-        slider.slide(index);
-      });
-
-      //Exposed for testing
-      this.__slider = slider;
-
-      var deregisterInstance = $ionicSlideBoxDelegate._registerInstance(
-        slider, $attrs.delegateHandle, function() {
-          return $ionicHistory.isActiveScope($scope);
-        }
-      );
-      $scope.$on('$destroy', function() {
-        deregisterInstance();
-        slider.kill();
-      });
-
-      this.slidesCount = function() {
-        return slider.slidesCount();
-      };
-
-      this.onPagerClick = function(index) {
-        $scope.pagerClick({index: index});
-      };
-
-      $timeout(function() {
-        slider.load();
-      });
-    }],
-    template: '<div class="slider">' +
-      '<div class="slider-slides" ng-transclude>' +
-      '</div>' +
-    '</div>',
-
-    link: function($scope, $element, $attr) {
-      // Disable ngAnimate for slidebox and its children
-      $animate.enabled($element, false);
-
-      // if showPager is undefined, show the pager
-      if (!isDefined($attr.showPager)) {
-        $scope.showPager = true;
-        getPager().toggleClass('hide', !true);
-      }
-
-      $attr.$observe('showPager', function(show) {
-        if (show === undefined) return;
-        show = $scope.$eval(show);
-        getPager().toggleClass('hide', !show);
-      });
-
-      var pager;
-      function getPager() {
-        if (!pager) {
-          var childScope = $scope.$new();
-          pager = jqLite('<ion-pager></ion-pager>');
-          $element.append(pager);
-          pager = $compile(pager)(childScope);
-        }
-        return pager;
-      }
-    }
-  };
-}])
-.directive('ionSlide', function() {
-  return {
-    restrict: 'E',
-    require: '?^ionSlideBox',
-    compile: function(element) {
-      element.addClass('slider-slide');
-    }
-  };
-})
-
-.directive('ionPager', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    require: '^ionSlideBox',
-    template: '<div class="slider-pager"><span class="slider-pager-page" ng-repeat="slide in numSlides() track by $index" ng-class="{active: $index == currentSlide}" ng-click="pagerClick($index)"><i class="icon ion-record"></i></span></div>',
-    link: function($scope, $element, $attr, slideBox) {
-      var selectPage = function(index) {
-        var children = $element[0].children;
-        var length = children.length;
-        for (var i = 0; i < length; i++) {
-          if (i == index) {
-            children[i].classList.add('active');
-          } else {
-            children[i].classList.remove('active');
-          }
-        }
-      };
-
-      $scope.pagerClick = function(index) {
-        slideBox.onPagerClick(index);
-      };
-
-      $scope.numSlides = function() {
-        return new Array(slideBox.slidesCount());
-      };
-
-      $scope.$watch('currentSlide', function(v) {
-        selectPage(v);
-      });
-    }
-  };
-
-});
-
-
-/**
- * @ngdoc directive
- * @name ionSlides
- * @module ionic
- * @restrict E
- * @description
- * The Slides component is a powerful multi-page container where each page can be swiped or dragged between.
- *
- * Note: this is a new version of the Ionic Slide Box based on the [Swiper](http://www.idangero.us/swiper/#.Vmc1J-ODFBc) widget from
- * [idangerous](http://www.idangero.us/).
- *
- * ![SlideBox](http://ionicframework.com.s3.amazonaws.com/docs/controllers/slideBox.gif)
- *
- * @usage
- * ```html
- * <ion-content scroll="false">
- *   <ion-slides  options="options" slider="data.slider">
- *     <ion-slide-page>
- *       <div class="box blue"><h1>BLUE</h1></div>
- *     </ion-slide-page>
- *     <ion-slide-page>
- *       <div class="box yellow"><h1>YELLOW</h1></div>
- *     </ion-slide-page>
- *     <ion-slide-page>
- *       <div class="box pink"><h1>PINK</h1></div>
- *     </ion-slide-page>
- *   </ion-slides>
- * </ion-content>
- * ```
- *
- * ```js
- * $scope.options = {
- *   loop: false,
- *   effect: 'fade',
- *   speed: 500,
- * }
- *
- * $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
- *   // data.slider is the instance of Swiper
- *   $scope.slider = data.slider;
- * });
- *
- * $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
- *   console.log('Slide change is beginning');
- * });
- *
- * $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
- *   // note: the indexes are 0-based
- *   $scope.activeIndex = data.slider.activeIndex;
- *   $scope.previousIndex = data.slider.previousIndex;
- * });
- *
- * ```
- *
- * ## Slide Events
- *
- * The slides component dispatches events when the active slide changes
- *
- * <table class="table">
- *   <tr>
- *     <td><code>$ionicSlides.slideChangeStart</code></td>
- *     <td>This event is emitted when a slide change begins</td>
- *   </tr>
- *   <tr>
- *     <td><code>$ionicSlides.slideChangeEnd</code></td>
- *     <td>This event is emitted when a slide change completes</td>
- *   </tr>
- *   <tr>
- *     <td><code>$ionicSlides.sliderInitialized</code></td>
- *     <td>This event is emitted when the slider is initialized. It provides access to an instance of the slider.</td>
- *   </tr>
- * </table>
- *
- *
- * ## Updating Slides Dynamically
- * When applying data to the slider at runtime, typically everything will work as expected.
- *
- * In the event that the slides are looped, use the `updateLoop` method on the slider to ensure the slides update correctly.
- *
- * ```
- * $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
- *   // grab an instance of the slider
- *   $scope.slider = data.slider;
- * });
- *
- * function dataChangeHandler(){
- *   // call this function when data changes, such as an HTTP request, etc
- *   if ( $scope.slider ){
- *     $scope.slider.updateLoop();
- *   }
- * }
- * ```
- *
- */
-IonicModule
-.directive('ionSlides', [
-  '$animate',
-  '$timeout',
-  '$compile',
-function($animate, $timeout, $compile) {
-  return {
-    restrict: 'E',
-    transclude: true,
-    scope: {
-      options: '=',
-      slider: '='
-    },
-    template: '<div class="swiper-container">' +
-      '<div class="swiper-wrapper" ng-transclude>' +
-      '</div>' +
-        '<div ng-hide="!showPager" class="swiper-pagination"></div>' +
-      '</div>',
-    controller: ['$scope', '$element', function($scope, $element) {
-      var _this = this;
-
-      this.update = function() {
-        $timeout(function() {
-          if (!_this.__slider) {
-            return;
-          }
-
-          _this.__slider.update();
-          if (_this._options.loop) {
-            _this.__slider.createLoop();
-          }
-
-          var slidesLength = _this.__slider.slides.length;
-
-          // Don't allow pager to show with > 10 slides
-          if (slidesLength > 10) {
-            $scope.showPager = false;
-          }
-
-          // When slide index is greater than total then slide to last index
-          if (_this.__slider.activeIndex > slidesLength - 1) {
-            _this.__slider.slideTo(slidesLength - 1);
-          }
-        });
-      };
-
-      this.rapidUpdate = ionic.debounce(function() {
-        _this.update();
-      }, 50);
-
-      this.getSlider = function() {
-        return _this.__slider;
-      };
-
-      var options = $scope.options || {};
-
-      var newOptions = angular.extend({
-        pagination: $element.children().children()[1],
-        paginationClickable: true,
-        lazyLoading: true,
-        preloadImages: false
-      }, options);
-
-      this._options = newOptions;
-
-      $timeout(function() {
-        var slider = new ionic.views.Swiper($element.children()[0], newOptions, $scope, $compile);
-
-        $scope.$emit("$ionicSlides.sliderInitialized", { slider: slider });
-
-        _this.__slider = slider;
-        $scope.slider = _this.__slider;
-
-        $scope.$on('$destroy', function() {
-          slider.destroy();
-          _this.__slider = null;
-        });
-      });
-
-      $timeout(function() {
-        // if it's a loop, render the slides again just incase
-        _this.rapidUpdate();
-      }, 200);
-
-    }],
-
-    link: function($scope) {
-      $scope.showPager = true;
-      // Disable ngAnimate for slidebox and its children
-      //$animate.enabled(false, $element);
-    }
-  };
-}])
-.directive('ionSlidePage', [function() {
-  return {
-    restrict: 'E',
-    require: '?^ionSlides',
-    transclude: true,
-    replace: true,
-    template: '<div class="swiper-slide" ng-transclude></div>',
-    link: function($scope, $element, $attr, ionSlidesCtrl) {
-      ionSlidesCtrl.rapidUpdate();
-
-      $scope.$on('$destroy', function() {
-        ionSlidesCtrl.rapidUpdate();
-      });
-    }
-  };
-}]);
-
-/**
 * @ngdoc directive
 * @name ionSpinner
 * @module ionic
@@ -13895,7 +13457,7 @@ IonicModule
       };
       if (!$attrs.ngClick) {
         $element.on('click', function(event) {
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.selectTab(event);
           });
         });
@@ -14166,7 +13728,7 @@ function($timeout, $ionicConfig) {
           onChange: function() {
             if (ngModelController) {
               ngModelController.$setViewValue(checkbox.checked);
-              $scope.$apply();
+              $scope.$evalAsync();
             }
           }
         });
