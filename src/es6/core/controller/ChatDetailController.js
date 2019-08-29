@@ -9,8 +9,8 @@ import * as Controllers from './index'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
-const cheerio = require('cheerio')
-const moment = require('moment')
+import cheerio from 'cheerio'
+import moment from 'moment'
 
 export class ChatDetailController {
   static get STATE () { return 'tab.features-chat-detail' }

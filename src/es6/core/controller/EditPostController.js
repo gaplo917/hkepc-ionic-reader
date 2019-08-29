@@ -3,7 +3,7 @@ import * as Controllers from './index'
 import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import swal from 'sweetalert2'
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class EditPostController {
   static get STATE () { return 'tab.topics-posts-edit' }

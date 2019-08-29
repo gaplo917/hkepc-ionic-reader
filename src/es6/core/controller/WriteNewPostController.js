@@ -4,8 +4,7 @@ import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class WriteNewPostController {
   static get STATE () { return 'tab.topics-posts-new' }

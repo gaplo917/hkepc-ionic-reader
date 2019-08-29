@@ -15,6 +15,31 @@ function onError (err) {
   console.log(err.message)
   this.emit('end')
 }
+gulp.task('bundle-dependencies', function () {
+  const b = browserify({
+    entries: './src/dependencies.js',
+    insertGlobals: true,
+    debug: false,
+    // defining transforms here will avoid crashing your stream
+    transform: [
+      babelify.configure({
+        plugins: ['transform-object-rest-spread', 'transform-async-to-generator'],
+        presets: ['es2015']
+      })
+    ]
+  })
+
+  return b
+    .bundle()
+    .on('error', onError)
+    .pipe(source('dependencies.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    // Add transformation tasks to the pipeline here.
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./www/js/'))
+})
+
 gulp.task('browserify', function () {
   // set up the browserify instance on a task basis
   const b = browserify({
@@ -47,7 +72,7 @@ gulp.task('webserver', () => {
       host: '0.0.0.0',
       port: 3000,
       livereload: true,
-      open: true
+      open: false
     }))
 })
 
@@ -58,6 +83,10 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('./www/css/'))
 })
 
+gulp.task('watchDependencies', function () {
+  return gulp.watch(['./src/dependencies.js'], gulp.series(['bundle-dependencies']))
+})
+
 gulp.task('watchJs', function () {
   return gulp.watch(['./src/es6/**/*'], gulp.series(['browserify']))
 })
@@ -66,7 +95,7 @@ gulp.task('watchSass', function () {
   return gulp.watch(['./src/scss/**/*'], gulp.series(['sass']))
 })
 
-gulp.task('watch', gulp.parallel(['watchJs', 'watchSass']))
+gulp.task('watch', gulp.parallel(['watchDependencies', 'watchJs', 'watchSass']))
 
 gulp.task('compressCss', function () {
   return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css'])
@@ -83,7 +112,7 @@ gulp.task('compressJs', function () {
     .pipe(gulp.dest('./www/js/'))
 })
 
-gulp.task('build', gulp.series(['browserify', 'sass']))
+gulp.task('build', gulp.parallel(['bundle-dependencies', 'browserify', 'sass']))
 
 gulp.task('release', gulp.series(['compressJs', 'compressCss']))
 

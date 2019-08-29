@@ -5,8 +5,7 @@ import * as HKEPC from '../../data/config/hkepc'
 import { HKEPCHtml } from '../model/hkepc-html'
 import { FindMessageRequest } from '../model/requests'
 import * as Controllers from './index'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class NotificationController {
   static get STATE () { return 'tab.features-notifications' }

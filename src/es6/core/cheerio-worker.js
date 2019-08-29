@@ -1,7 +1,6 @@
 import { HKEPCHtml } from './model/hkepc-html'
 import Mapper from './mapper/mapper'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 module.exports = function (self) {
   self.addEventListener('message', function (ev) {

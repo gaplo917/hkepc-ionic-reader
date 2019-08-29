@@ -1,7 +1,7 @@
 // Bridge wrapper
 // Designed for wrapping both iOS & Android bridge
 import { Channel } from './Channel'
-const uuid = require('uuid-v4')
+import uuid from 'uuid-v4'
 
 export class Bridge {
   static get instance () {

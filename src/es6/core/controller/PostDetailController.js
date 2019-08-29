@@ -9,7 +9,7 @@ import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
 import { PaginationPopoverDelegates } from '../delegates/pagination-popover-delegates'
 import { IRLifecycleOwner } from './base/IRLifecycleOwner'
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class PostDetailController extends IRLifecycleOwner {
   static get STATE () { return 'tab.topics-posts-detail' }
@@ -261,7 +261,7 @@ export class PostDetailController extends IRLifecycleOwner {
           const filterReason = isMatchedFilter && `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子${remarkContent})`
 
           // no focus must not from find message
-          message.focused = message.id === focus
+          message.focused = message.id === this.focus
           message.isMatchedFilter = isMatchedFilter
           message.filterMode = filterMode
           message.filterReason = filterReason

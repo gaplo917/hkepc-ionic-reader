@@ -10,8 +10,7 @@ import {
 } from '../model/requests'
 import swal from 'sweetalert2'
 import { NativeUpdateNotificationRequest } from '../bridge/requests'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class FeatureRouteController {
   static get STATE () { return 'tab.features' }

@@ -1,7 +1,6 @@
 import { HKEPCHtml } from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)

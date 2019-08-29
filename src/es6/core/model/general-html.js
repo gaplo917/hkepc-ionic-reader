@@ -2,7 +2,7 @@
  * Created by Gaplo917 on 10/1/2016.
  */
 import * as URLUtils from '../../utils/url'
-const uuid = require('uuid-v4')
+import uuid from 'uuid-v4'
 
 const DEFAULT_IMAGE_PLACEHOLDER = 'img/default-placeholder.png'
 const DEFAULT_AVATAR_PLACEHOLDER = 'img/default-avatar.png'

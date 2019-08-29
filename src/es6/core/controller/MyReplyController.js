@@ -7,8 +7,7 @@ import { HKEPCHtml } from '../model/hkepc-html'
 import { FindMessageRequest } from '../model/requests'
 import { PaginationPopoverDelegates } from '../delegates'
 import { IRLifecycleOwner } from './base/IRLifecycleOwner'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class MyReplyController extends IRLifecycleOwner {
   static get STATE () { return 'tab.features-myreply' }

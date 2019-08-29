@@ -4496,7 +4496,7 @@ function($compile, $controller, $http, $q, $rootScope, $templateCache) {
   function loadAndCompile(options) {
     options = extend({
       template: '',
-      templateUrl: '',
+      templateUrl: 'ionic-angular',
       scope: null,
       controller: null,
       locals: {},

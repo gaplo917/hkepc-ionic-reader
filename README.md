@@ -99,8 +99,6 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
     cd hkepc-ionic-reader
     
     yarn install
-    
-    yarn run bower install
 ```
 
 # Create Proxy server for Dev

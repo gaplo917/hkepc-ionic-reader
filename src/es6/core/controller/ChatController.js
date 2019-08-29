@@ -5,8 +5,7 @@ import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
 import { GeneralHtml } from '../model/general-html'
 import * as Controllers from './index'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class ChatController {
   static get STATE () { return 'tab.features-chats' }

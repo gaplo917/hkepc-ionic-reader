@@ -3,8 +3,7 @@ import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import * as HKEPC from '../../data/config/hkepc'
 import swal from 'sweetalert2'
-
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class UserProfileController {
   static get STATE () {

@@ -1,9 +1,6 @@
-// eslint-disable-next-line no-unused-vars
-import controllerModules from './controllers'
-// eslint-disable-next-line no-unused-vars
-import directivesModules from './directives'
-// eslint-disable-next-line no-unused-vars
-import servicesModules from './services'
+import './controllers'
+import './directives'
+import './services'
 import * as Controllers from './controller/index'
 import * as HKEPC from '../data/config/hkepc'
 import * as URLUtils from '../utils/url'
@@ -23,8 +20,8 @@ import {
   createAndroidNativeBridge
 } from './bridge/index'
 
-const moment = require('moment')
-require('moment/locale/zh-tw')
+import moment from 'moment'
+import 'moment/locale/zh-tw'
 
 // identify weather is proxy client before loading the angular app
 const isProxied = URLUtils.isProxy()

@@ -73,7 +73,7 @@ crashlytics-build.properties
 # Confidential
 *.keystore
 
-!/www/lib/ionic
+!/src/ionic
 .firebase
 dist.zip
 yarn-error.log

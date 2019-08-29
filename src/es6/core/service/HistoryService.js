@@ -2,8 +2,9 @@
  * Created by Gaplo917 on 10/1/2016.
  */
 
-const moment = require('moment')
-const uuid = require('uuid-v4')
+import moment from 'moment'
+import uuid from 'uuid-v4'
+
 export class HistoryService {
   static get NAME () { return 'HistoryService' }
 

@@ -66,7 +66,6 @@ export const PaginationPopoverDelegates = ({
         vm.totalPageNum = getTotalPage()
         pageSliderPopover.show($event)
       }
-
     }
   }
 }

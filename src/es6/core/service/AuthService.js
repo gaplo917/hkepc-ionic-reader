@@ -3,7 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import * as URLUtils from '../../utils/url'
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
 export class AuthService {
   static get NAME () { return 'AuthService' }

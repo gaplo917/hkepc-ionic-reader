@@ -1,5 +1,5 @@
 import * as Controllers from './index'
-const showdown = require('showdown')
+import showdown from 'showdown'
 
 export class VersionController {
   static get STATE () { return 'tab.about-version' }
