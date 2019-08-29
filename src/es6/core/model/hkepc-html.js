@@ -33,7 +33,7 @@ export class HKEPCHtml extends GeneralHtml {
         elm.attr('pid', messageId)
         elm.attr('ptid', postId)
 
-        elm.attr('in-app-url', `#/tab/topics//posts/${postId}/page/1`)
+        elm.attr('in-app-url', `#!/tab/topics//posts/${postId}/page/1`)
 
         elm.attr('ng-click', `vm.findMessage(${postId},${messageId})`)
       } else if (url && url.indexOf('redirect.php?') >= 0 && url.indexOf('goto=lastpost') >= 0) {
@@ -41,20 +41,20 @@ export class HKEPCHtml extends GeneralHtml {
         elm.removeAttr('target')
         elm.attr('tid', postId)
 
-        elm.attr('href', `#/tab/topics//posts/${postId}/page/1`)
+        elm.attr('href', `#!/tab/topics//posts/${postId}/page/1`)
       } else if (url && url.indexOf('forumdisplay.php') >= 0) {
         const topicId = URLUtils.getQueryVariable(url, 'fid')
 
         elm.removeAttr('target')
 
-        elm.attr('href', `#/tab/topics/${topicId}/page/1`)
+        elm.attr('href', `#!/tab/topics/${topicId}/page/1`)
       } else if (url && url.indexOf('viewthread.php?') >= 0) {
         const postId = URLUtils.getQueryVariable(url, 'tid')
 
         elm.removeAttr('target')
 
         // detect the tab
-        elm.attr('href', `#/tab/topics//posts/${postId}/page/1`)
+        elm.attr('href', `#!/tab/topics//posts/${postId}/page/1`)
       } else if (url && url.indexOf('space.php?') >= 0) {
         // if(this.source(e).children('img').attr('src') == undefined){
         //   // confirm there are no image inside the link tag
@@ -63,7 +63,7 @@ export class HKEPCHtml extends GeneralHtml {
         //   this.source(e).replaceWith(spanText)
         // }
       } else if (url && url.indexOf('logging.php') >= 0) {
-        elm.attr('href', `#/tab/features/account`)
+        elm.attr('href', `#!/tab/features/account`)
 
         elm.removeAttr('target')
       } else if (url && url.indexOf('attachment.php?') >= 0) {

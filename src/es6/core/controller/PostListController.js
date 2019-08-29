@@ -366,7 +366,7 @@ export class PostListController {
   }
 
   postInAppUrl (post) {
-    return post.isMatchedFilter ? '' : `#/tab/topics/${post.topicId}/posts/${post.id}/page/1`
+    return post.isMatchedFilter ? '' : `#!/tab/topics/${post.topicId}/posts/${post.id}/page/1`
   }
 
   onGoToPost (post) {

@@ -13670,7 +13670,7 @@ IonicModule
  * <ion-tab
  *   title="Tab!"
  *   icon="my-icon"
- *   href="#/tab/tab-link"
+ *   href="#!/tab/tab-link"
  *   on-select="onTabSelected()"
  *   on-deselect="onTabDeselected()">
  * </ion-tab>

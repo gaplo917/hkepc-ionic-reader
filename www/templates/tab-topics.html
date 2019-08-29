@@ -29,7 +29,7 @@
                     ng-show='vm.isLoggedIn'
                     class="odd item-remove-animate item-avatar item-icon-right "
                     type="item-text-wrap"
-                    href="#/tab/topics/latestPost/page/1">
+                    href="#!/tab/topics/latestPost/page/1">
                   <i class="ion-ios-clock-outline icon"
                      style="position: absolute;
                             top: 16px;
@@ -48,7 +48,7 @@
                     ng-show='vm.isLoggedIn'
                     class="even item-remove-animate item-avatar item-icon-right "
                     type="item-text-wrap"
-                    href="#/tab/topics/latest/page/1">
+                    href="#!/tab/topics/latest/page/1">
                   <i class="ion-ios-chatboxes-outline icon"
                      style="position: absolute;
                             top: 16px;
@@ -67,7 +67,7 @@
                     ng-show='vm.isLoggedIn'
                     class="odd item-remove-animate item-avatar item-icon-right "
                     type="item-text-wrap"
-                    href="#/tab/topics/search">
+                    href="#!/tab/topics/search">
                   <i class="ion-ios-search icon"
                      style="position: absolute;
                             top: 16px;
@@ -173,7 +173,7 @@
                     ng-class-odd="'odd'" ng-class-even="'even'"
                     class="editable-item item-remove-animate item-avatar item-icon-right "
                     type="item-text-wrap"
-                    href="#/tab/topics/{{topic.id}}/page/1">
+                    href="#!/tab/topics/{{topic.id}}/page/1">
                   <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
                   <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.editMode && vm.topicRankMap.get(topic.id) > 0" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
                   <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
@@ -194,7 +194,7 @@
                     ng-class-odd="'odd'" ng-class-even="'even'"
                     class="editable-item item-remove-animate item-avatar item-icon-right "
                     type="item-text-wrap"
-                    href="#/tab/topics/{{topic.id}}/page/1">
+                    href="#!/tab/topics/{{topic.id}}/page/1">
                   <img class="topic-icon" ng-src="{{topic.image}}" ng-show="vm.canShowIniOSReview(topic.id)"/>
                   <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.topicRankMap.get(topic.id) > 0 && vm.editMode" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
                   <i class="icon ion-chevron-right icon-accessory"></i>
