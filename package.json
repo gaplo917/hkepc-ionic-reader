@@ -35,6 +35,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
+    "browser-sync": "^2.26.7",
     "browserify": "^13.1.0",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
@@ -50,7 +51,6 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^2.0.0",
-    "gulp-webserver": "^0.9.1",
     "sass": "^1.1.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"

@@ -1,7 +1,6 @@
 const browserify = require('browserify')
 const babelify = require('babelify')
 const gulp = require('gulp')
-const webserver = require('gulp-webserver')
 const stripDebug = require('gulp-strip-debug')
 const sass = require('gulp-sass')
 const source = require('vinyl-source-stream')
@@ -10,6 +9,7 @@ const uglify = require('gulp-uglify')
 const sourcemaps = require('gulp-sourcemaps')
 const ngAnnotate = require('gulp-ng-annotate')
 const minifyCss = require('gulp-minify-css')
+const browserSync = require('browser-sync').create()
 
 function onError (err) {
   console.log(err.message)
@@ -66,14 +66,17 @@ gulp.task('browserify', function () {
     .pipe(gulp.dest('./www/js/'))
 })
 
-gulp.task('webserver', () => {
-  return gulp.src('./www')
-    .pipe(webserver({
-      host: '0.0.0.0',
-      port: 3000,
-      livereload: true,
-      open: false
-    }))
+gulp.task('webserver', function () {
+  return browserSync.init({
+    server: {
+      baseDir: './www'
+    }
+  })
+})
+
+gulp.task('webserverReload', function (done) {
+  browserSync.reload()
+  done()
 })
 
 gulp.task('sass', function () {
@@ -81,6 +84,7 @@ gulp.task('sass', function () {
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(gulp.dest('./www/css/'))
+    .pipe(browserSync.stream())
 })
 
 gulp.task('watchDependencies', function () {
@@ -95,7 +99,11 @@ gulp.task('watchSass', function () {
   return gulp.watch(['./src/scss/**/*'], gulp.series(['sass']))
 })
 
-gulp.task('watch', gulp.parallel(['watchDependencies', 'watchJs', 'watchSass']))
+gulp.task('watchAsset', function () {
+  return gulp.watch(['./www/**/*.html', './www/**/*.js']).on('change', browserSync.reload)
+})
+
+gulp.task('watch', gulp.parallel(['watchDependencies', 'watchJs', 'watchSass', 'watchAsset']))
 
 gulp.task('compressCss', function () {
   return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css'])
@@ -114,6 +122,6 @@ gulp.task('compressJs', function () {
 
 gulp.task('build', gulp.parallel(['bundle-dependencies', 'browserify', 'sass']))
 
-gulp.task('release', gulp.series(['compressJs', 'compressCss']))
+gulp.task('release', gulp.series(['build', 'compressJs', 'compressCss']))
 
 gulp.task('run', gulp.parallel(['build', 'watch', 'webserver']))
