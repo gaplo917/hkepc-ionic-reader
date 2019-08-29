@@ -8,8 +8,7 @@ import { Bridge, Channel } from './bridge/index'
 /**
  * Register the directives
  */
-export default angular.module('starter.directives', ['ngAnimate'])
-
+export default angular.module('starter.directives', [])
   .directive('compile', ($compile) => {
     return (scope, element, attrs) => {
       scope.$watch(
@@ -40,7 +39,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
                 modal.onImageUploadSuccess(attachmentIds)
 
                 $timeout(() => {
-                  scope.$apply()
+                  scope.$evalAsync()
                 })
               })
             } else {
@@ -74,7 +73,7 @@ export default angular.module('starter.directives', ['ngAnimate'])
           scope.url = undefined
           scope.urlText = undefined
           $timeout(() => {
-            scope.$apply()
+            scope.$evalAsync()
           })
         }
 

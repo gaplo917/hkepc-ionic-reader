@@ -16,11 +16,11 @@
                 ng-repeat="post in vm.histories | orderBy : post.createdAt track by $index"
                 href="#!/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1">
                 <span class="fright less-important-info">{{::vm.relativeMomentizeTimestamp(post.createdAt)}}</span>
-                <h2 class="bigger-title">{{::post.name}} <a ng-show="::post.tag">
+                <h2 class="bigger-title">{{::post.name}} <a ng-if="::post.tag">
                     <small class="tag">#{{::post.tag}}</small>
                 </a></h2>
                 <div>
-                    <i class="ion-bonfire" ng-show="::post.isSticky"></i>
+                    <i class="ion-bonfire" ng-if="::post.isSticky"></i>
                     <i class="ion-ios-eye" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
                     <span class="less-important-info ion-person"> {{::post.author.name}}</span>
                     <span class="fright less-important-info">{{::post.count.reply}} / {{::post.count.view}}</span>

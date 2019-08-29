@@ -24,13 +24,13 @@
                 <button ng-repeat="subTopic in vm.subTopicList track by $index"
                         ng-click="::vm.goToSubTopic($index, subTopic)"
                         ng-class="{
-                    'active': vm.topic === subTopic,
-                    }"
+                            'active': vm.topic === subTopic
+                        }"
                         id="subtopic-{{::subTopic.id}}"
                         class="topic-btn"
                         ng-style="{
-                        'opacity': (vm.topicUiReady || vm.subTopicList.length <= 1) ? 1 : 0
-                    }">
+                            'opacity': vm.topicUiReady || vm.subTopicList.length <= 1 ? 1 : 0
+                        }">
                     {{::subTopic.name}}
                 </button>
             </div>
@@ -64,20 +64,20 @@
                 page="{{::post.pageNum}}"
                 lastread>
                 <h2 class="bigger-title filter-reason"><span compile="::post.filterReason"></span></h2>
-                <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-show="::post.tag">
+                <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-if="::post.tag">
                     <small class="tag">#{{::post.tag}}</small>
                 </a></h2>
                 <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>
                 <div>
-                    <i class="ion-bonfire" ng-show="::post.isSticky"></i>
+                    <i class="ion-bonfire" ng-if="::post.isSticky"></i>
                     <i class="ion-ios-locked" ng-if="::post.isLock"></i>
                     <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
                     <span class="less-important-info ion-person"> {{::post.author.name}}</span>
                 </div>
                 <div>
                     <span class="super-less-important-info">
-                        <span ng-show="::post.count.reply > 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-undo"></i> {{::post.lastPost.name}}</span>
-                        <span ng-show="::post.count.reply == 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-redo"></i></span>
+                        <span ng-if="::post.count.reply > 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-undo"></i> {{::post.lastPost.name}}</span>
+                        <span ng-if="::post.count.reply == 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-redo"></i></span>
                     </span>
                 </div>
 

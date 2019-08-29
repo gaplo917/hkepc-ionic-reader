@@ -47,7 +47,7 @@
                 </div>
 
                 <div style="margin-left:10px">私人訊息</div>
-                <span ng-show="vm.notification.pm > 0"
+                <span ng-if="vm.notification.pm > 0"
                       class="fright badge badge-assertive">{{vm.notification.pm}}</span>
                 <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
             </a>
@@ -57,7 +57,7 @@
                     <i class="ion-android-notifications inner-icon" style="background-color: #43A047;"></i>
                 </div>
                 <div style="margin-left:10px">帖子消息</div>
-                <span ng-show="vm.notification.post > 0"
+                <span ng-if="vm.notification.post > 0"
                       class="fright badge badge-assertive">{{vm.notification.post}}</span>
                 <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
             </a>
@@ -113,7 +113,7 @@
 
         </div>
 
-        <div class="list card" ng-show="vm.isLoggedIn">
+        <div class="list card" ng-if="vm.isLoggedIn">
 
             <div class="feature-route item item-icon-left selectable">
                 <div class="icon">
@@ -129,7 +129,7 @@
                             <option value="29">HKEPC 2.0（beta）</option>
                         </select>
                     </div>
-                    <p class="forum-style-warning" ng-show="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
+                    <p class="forum-style-warning" ng-if="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
                 </div>
 
             </div>

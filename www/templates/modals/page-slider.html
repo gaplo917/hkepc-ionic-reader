@@ -21,12 +21,12 @@
         <ion-scroll style="margin: 0;">
             <div class="list">
                 <div class="item text-center"
-                     ng-repeat="any in vm.getTimes(50) track by $index"
-                     ng-show="page <= vm.totalPageNum"
+                     ng-repeat="page in vm.getRange(vm.inputPageRangeStart * 50 + 1, (vm.inputPageRangeStart + 1) * 50) track by $index"
+                     ng-if="page <= vm.totalPageNum "
                      ng-click="vm.inputPage = page; vm.doJumpPage()"
-                     ng-class="page == vm.inputPage ? 'active' : '' "
+                     ng-class="vm.inputPage == page ? 'active' : '' "
                 >
-                    第 {{ page = 50 * vm.inputPageRangeStart + $index + 1}} 頁
+                    第 {{page}} 頁
                 </div>
             </div>
         </ion-scroll>

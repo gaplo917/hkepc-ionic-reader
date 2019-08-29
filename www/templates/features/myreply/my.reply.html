@@ -19,7 +19,7 @@
                 </div>
                 <div>
                     <span class="less-important-info">#{{$index + 1}} <i class="ion-ios-locked"
-                                                                         ng-show="::myreply.status == '關閉'"></i> {{::myreply.topic.title}}</span>
+                                                                         ng-if="::myreply.status == '關閉'"></i> {{::myreply.topic.title}}</span>
                     <span class="fright less-important-info">{{::myreply.timestamp}}</span>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>

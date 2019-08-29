@@ -1,7 +1,7 @@
 <ion-view ng-init="vm.messages=[]" class="card-view">
     <ion-nav-title>
         <div class="wrapper" ng-if="vm.post.title">
-            <p ng-class="{'long-title': vm.post.isLongTitle }"><i class="ion-ios-locked" ng-if="::vm.isLock"></i>{{::vm.post.title}}</p>
+            <p ng-class="{'long-title': vm.post.isLongTitle }"><i class="ion-ios-locked" ng-if="::vm.isLock"></i>{{' '}}{{::vm.post.title}}</p>
         </div>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -13,7 +13,7 @@
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="::vm.doRefresh()"></a>
     </ion-nav-buttons>
-    <span class="bar bar-subheader text-center sticky-title" ng-show="vm.post.topicStr">
+    <span class="bar bar-subheader text-center sticky-title" ng-if="vm.post.topicStr">
         {{::vm.post.topicStr}}<span ng-if="::vm.post.topicCategory">{{' » '}}{{::vm.post.topicCategory}}</span>
     </span>
 
@@ -78,7 +78,7 @@
 
                     <span class="ultra-less-important-info">
                         <!--When banned-->
-                        <i class="ion-close-circled" style="color:red" ng-show="::message.author.rank == 0">
+                        <i class="ion-close-circled" style="color:red" ng-if="::message.author.rank == 0">
                             <small> Banned</small>
                         </i>
                         <!--Normal User-->
@@ -120,7 +120,7 @@
         </div>
 
         <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
-        <div style="height:500px" ng-show="vm.messages.length < 2"></div>
+        <div style="height:500px" ng-if="vm.messages.length < 2"></div>
 
         <!--double inset for page-indicator-->
         <div style="height: 48px"></div>

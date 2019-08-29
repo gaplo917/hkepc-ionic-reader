@@ -19,7 +19,7 @@
 
                 <span class="super-less-important-info">
                 <!--When banned-->
-                <i class="ion-close-circled" style="color:red" ng-show="::vm.message.author.rank == 0">
+                <i class="ion-close-circled" style="color:red" ng-if="::vm.message.author.rank == 0">
                     <small>Banned</small>
                 </i>
                     <!--Normal User-->

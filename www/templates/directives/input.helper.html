@@ -26,14 +26,14 @@
                 ng-class="isTab(4) ? 'active': ''">
             <i class="ion ion-images"></i>
         </button>
-        <button class="button" ng-show="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
+        <button class="button" ng-if="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
             <i class="ion ion-ios-close-empty"></i>
         </button>
     </div>
 
     <ion-scroll class="asessory-view"
                 zooming="false"
-                ng-show="isSelectedTab()"
+                ng-if="isSelectedTab()"
                 direction="y">
         <img class="gif"
              ng-if="isTab(0)"

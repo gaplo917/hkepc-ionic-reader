@@ -190,6 +190,9 @@ function initAngular () {
         combineDuplications: true
       })
     }])
+    .config(['$compileProvider', function ($compileProvider) {
+      $compileProvider.debugInfoEnabled(false);
+    }])
 
   // partial init for Web and legacy android
   if (!isiOSNative() && !isAndroidNative()) {

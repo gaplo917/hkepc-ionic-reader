@@ -5,7 +5,7 @@
       <ion-radio name="order" ng-model="vm.order" ng-value="'dateline'">日期</ion-radio>
       <ion-radio name="order" ng-model="vm.order" ng-value="'lastpost'">最後發表</ion-radio>
 
-      <div class="item item-divider" ng-show="vm.categories.length > 0">分類</div>
+      <div class="item item-divider" ng-if="vm.categories.length > 0">分類</div>
       <ion-radio name="category" ng-repeat="c in vm.categories" ng-model="vm.filter" ng-value="c.id">#{{c.name}}</ion-radio>
     </div>
 

@@ -24,7 +24,7 @@
     </div>
 
     <ion-list>
-      <div ng-show="vm.categories.length > 0" class="item item-divider" style="text-align: center"
+      <div ng-if="vm.categories.length > 0" class="item item-divider" style="text-align: center"
            ng-click="vm.openCategoryPopover($event)">
         {{vm.post.category.name || '新帖類別'}} <i class="ion-android-arrow-dropdown"></i>
       </div>
