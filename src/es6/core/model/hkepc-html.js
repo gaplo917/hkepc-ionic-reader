@@ -102,4 +102,11 @@ export class HKEPCHtml extends GeneralHtml {
       formhash: this.source('input[name=formhash]').attr('value')
     }
   }
+
+  getEPCTopicFromTitle () {
+    const title = this.source('title').text()
+    const filteredTitle = title.split(' -  電腦領域')[0]
+    const [, ...tail] = filteredTitle.split(' - ').map(it => it.trim())
+    return tail ? tail.reverse().join(' » ') : ''
+  }
 }

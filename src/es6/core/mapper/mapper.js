@@ -3,6 +3,11 @@ import * as URLUtils from '../../utils/url'
 
 const cheerio = require('cheerio')
 
+const matchCount = (str, regex) => {
+  const result = str.match(regex)
+  return result ? result.length : 0
+}
+
 export default class Mapper {
   static apiSuccess (o) { return { message: o.message } }
 
@@ -230,10 +235,18 @@ export default class Mapper {
 
     const isLock = !$('.replybtn').text()
 
-    // remove the hkepc forum text
-    const postTitle = html
-      .getTitle()
-      .split(' -  電腦領域')[0]
+    const postTitle = html.getTitle()
+
+    const chiFullWidthCharCount = matchCount(postTitle, /[\uff00-\uff60]|[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/ug)
+    const engCharacterCount = matchCount(postTitle, /[0-9]|[a-z]|[-!$%^&*()_+|~=`{}[\]:";'<>?,./\s]/gi)
+
+    console.log('word count', { chiFullWidthCharCount, engCharacterCount })
+
+    const isLongTitle = (chiFullWidthCharCount * 2 + engCharacterCount) >= 50
+
+    const topicStr = html.getEPCTopicFromTitle()
+
+    const topicCategory = $('#threadtitle h1 a').text().replace(/[[\]]/g, '')
 
     const pageNumSource = $('.forumcontrol .pages a, .forumcontrol .pages strong')
 
@@ -308,8 +321,11 @@ export default class Mapper {
 
     return {
       title: postTitle,
+      isLongTitle,
       id: postId,
       topicId: topicId,
+      topicStr: topicStr,
+      topicCategory,
       totalPageNum: totalPageNum,
       messages: messages,
       isLock: isLock

@@ -98,7 +98,7 @@
 
     &.partial-hide {
       .item-content {
-        height: 48px;
+        min-height: 48px;
         > * {
           display: none;
         }

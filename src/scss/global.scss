@@ -123,9 +123,35 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
 }
 
 .bar {
-  //&.bar-header{
-  //  background-color: $bg-color;
-  //}
+  .title.title-center.header-item {
+    left: 40px !important; // FIXME: override ionic css
+    right: 40px !important;
+    .wrapper {
+      white-space: normal;
+      word-break: break-word;
+      height: 43px;
+      overflow: hidden;
+      position: relative;
+      p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; // this is the magic part
+        max-height: 32px;
+        font-size: 14px;
+        line-height: 16px;
+        overflow: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+
+        &.long-title {
+          font-size: 12px
+        }
+      }
+    }
+  }
   &.bar-subheader{
     border:0;
   }
@@ -463,7 +489,7 @@ ion-infinite-scroll {
 }
 
 .page-indicator-wrapper {
-  opacity: 0.7;
+  opacity: 0.8;
   position: fixed;
   bottom: 16px;
   z-index: 10;
@@ -473,6 +499,24 @@ ion-infinite-scroll {
     padding: 4px 12px;
     height: 28px;
     line-height: 16px;
+  }
+}
+
+.floating-action-btn {
+  opacity: 0.8;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 11;
+  .button-rounded {
+    height: 44px;
+    width: 44px;
+    border-radius: 44px;
+    line-height: 16px;
+
+    i {
+      font-size: 24px;
+    }
   }
 }
 

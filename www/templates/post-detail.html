@@ -1,5 +1,9 @@
 <ion-view ng-init="vm.messages=[]" class="card-view">
-    <ion-nav-title>帖子</ion-nav-title>
+    <ion-nav-title>
+        <div class="wrapper" ng-if="vm.post.title">
+            <p ng-class="{'long-title': vm.post.isLongTitle }"><i class="ion-ios-locked" ng-if="::vm.isLock"></i>{{::vm.post.title}}</p>
+        </div>
+    </ion-nav-title>
     <ion-nav-buttons side="left">
         <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
                 ng-click="::vm.onBack()"></button>
@@ -7,16 +11,13 @@
                 ng-click="::openDrawer()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a ng-if="vm.post.title && !vm.isLock"
-           class="button button-icon icon ion-ios-compose-outline"
-           ng-click="::vm.onQuickReply(vm.post)">
-        </a>
-
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="::vm.doRefresh()"></a>
     </ion-nav-buttons>
-    <span class="bar bar-subheader text-center sticky-title"><i class="ion-ios-locked" ng-if="::vm.isLock"></i> {{vm.post.title}}</span>
+    <span class="bar bar-subheader text-center sticky-title" ng-show="vm.post.topicStr">
+        {{::vm.post.topicStr}}<span ng-if="::vm.post.topicCategory">{{' » '}}{{::vm.post.topicCategory}}</span>
+    </span>
 
-    <ion-content lazy-scroll style="padding-top:15px" delegate-handle="post-detail">
+    <ion-content lazy-scroll style="padding-top:16px" delegate-handle="post-detail">
         <div class="text-center" ng-if="vm.loadingPrevious">
             <ir-spinner></ir-spinner>
         </div>
@@ -126,9 +127,16 @@
         <div class="tab-bar-inset"></div>
     </ion-content>
 
+    <div class="floating-action-btn" ng-if="vm.messages.length > 0">
+        <button class="button-rounded action-button action-button-small"  ng-click="vm.onQuickReply(vm.post)">
+            <i class="ion-ios-undo-outline"></i>
+        </button>
+        <div class="tab-bar-inset"></div>
+    </div>
     <page-indicator
         pagination-popover-delegate="vm.paginationPopoverDelegate"
         current-page="vm.currentPage"
         total-page="vm.totalPageNum" />
+
 </ion-view>
 
