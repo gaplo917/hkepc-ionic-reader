@@ -90,18 +90,31 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 
 
 # Getting Start
+```
+    // Clone Repo
+    git clone https://github.com/gaplo917/hkepc-ionic-reader
+    
+    cd hkepc-ionic-reader
+    
+    yarn install
+```
 
-		// Clone Repo
-		git clone https://github.com/gaplo917/hkepc-ionic-reader
+# Create Proxy server for Dev
+```
+    git clone https://github.com/gaplo917/CORS-Proxy hkepc-proxy
+    
+    cd hkepc-proxy
+    
+    npm ci
+    
+    npm start
+```
 
-		cd hkepc-ionic-reader
-
-		yarn install
-
-		yarn run bower install
 # Run
-		// run in web / dev with Native Project
-		yarn run dev
-
-		// build production / for Native Project
-		yarn run build
+```
+    // run in web / dev with Native Project
+    yarn run dev
+    
+    // build production / for Native Project
+    yarn run build
+```
