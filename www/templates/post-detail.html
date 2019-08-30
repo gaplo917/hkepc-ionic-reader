@@ -43,7 +43,7 @@
             <!--Section Header to show the page number-->
             <h5 ng-if="::(message.type == 'POST_PAGE_DIVIDER')"
                 class="page-divider text-center">
-                <div ng-if="::message.content" compile="::message.content"></div>
+                <div ng-if="::message.content" ng-bind-html="::message.hlContent"></div>
                 <div ng-if="::!message.content">第 {{ ::message.post.page }} 頁 <i class="ion-android-arrow-down"></i></div>
             </h5>
 
@@ -89,7 +89,7 @@
                         <span style="margin-left:3px">{{::vm.relativeMomentize(message.createdAt)}}</span>
                     </span>
                 </div>
-                <div class="item item-body" compile="::message.content"></div>
+                <div class="item item-body" compile="::message.hlContent"></div>
 
                 <div class="item tabs tabs-secondary tabs-icon-left" ng-if="message.extraReplyBtn">
                     <a class="tab-item card-button" ng-click="::vm.like(message)">

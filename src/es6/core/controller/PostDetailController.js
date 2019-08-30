@@ -10,6 +10,7 @@ import { userFilterSchema } from '../schema'
 import { PaginationPopoverDelegates } from '../delegates/pagination-popover-delegates'
 import { IRLifecycleOwner } from './base/IRLifecycleOwner'
 import cheerio from 'cheerio'
+import { searchMultipleKeyword } from '../../utils/search'
 
 export class PostDetailController extends IRLifecycleOwner {
   static get STATE () { return 'tab.topics-posts-detail' }
@@ -245,7 +246,7 @@ export class PostDetailController extends IRLifecycleOwner {
       (post, { filterOpts, filterMode }) => ({ post, filterOpts, filterMode })
     )
       .safeApply(scope, ({ post, filterOpts, filterMode }) => {
-        const { userFilter } = filterOpts
+        const { userFilter, hlKeywords } = filterOpts
         const { userIds: userIdFilters, users: filteredUserInfos } = userFilter
         const { totalPageNum, isLock } = post
 
@@ -257,7 +258,7 @@ export class PostDetailController extends IRLifecycleOwner {
           const isMatchedFilter = userIdFilters.indexOf(message.author.uid) >= 0
           const remark = (isMatchedFilter && filteredUserInfos[message.author.uid].remark) || ''
           const remarkContent = remark ? `, ${remark}` : ''
-          const filterReason = isMatchedFilter && `#${message.pos} (已隱藏｜原因：${message.author.name} 的帖子${remarkContent})`
+          const filterReason = isMatchedFilter && `#${message.pos} (已隱藏｜原因：${message.author.name}的帖子${remarkContent})`
 
           // no focus must not from find message
           message.focused = message.id === this.focus.id && !this.focus.fromLastPosition
@@ -274,7 +275,7 @@ export class PostDetailController extends IRLifecycleOwner {
 
           const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
 
-          this.messages = messages.concat(newMessages)
+          this.messages = this.highlightSearchText(messages.concat(newMessages), hlKeywords)
         } else {
           if (style === 'previous') {
             const messageIds = messages.map(it => it.id)
@@ -298,7 +299,7 @@ export class PostDetailController extends IRLifecycleOwner {
               type: 'POST_PAGE_DIVIDER'
             })
 
-            this.messages = merged
+            this.messages = this.highlightSearchText(merged, hlKeywords)
 
             // focus one the finish loading previous message
             this.focus = { id: nextFocusId, fromLastPosition: false }
@@ -317,7 +318,7 @@ export class PostDetailController extends IRLifecycleOwner {
             const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
 
             if (newMessages.length > 0) {
-              this.messages = messages.concat(newMessages)
+              this.messages = this.highlightSearchText(messages.concat(newMessages), hlKeywords)
             }
           } else {
             // normal style (next)
@@ -342,7 +343,7 @@ export class PostDetailController extends IRLifecycleOwner {
                 type: 'POST_PAGE_DIVIDER'
               })
             }
-            this.messages = messages.concat(newMessages)
+            this.messages = this.highlightSearchText(messages.concat(newMessages), hlKeywords)
           }
         }
 
@@ -698,5 +699,22 @@ export class PostDetailController extends IRLifecycleOwner {
 
   openImage (uid, imageSrc) {
     window.open(imageSrc, '_system', 'location=yes')
+  }
+
+  highlightSearchText (messages, hlKeywords) {
+    return messages.map(message => {
+      if (message.content) {
+        console.log('hlKeywords', hlKeywords)
+        const { hlContent } = searchMultipleKeyword(hlKeywords, message.content)
+        return {
+          ...message,
+          hlContent
+        }
+      }
+      return {
+        ...message,
+        hlContent: message.content
+      }
+    })
   }
 }

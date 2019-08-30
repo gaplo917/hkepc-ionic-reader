@@ -64,7 +64,7 @@
                 page="{{::post.pageNum}}"
                 lastread>
                 <h2 class="bigger-title filter-reason"><span compile="::post.filterReason"></span></h2>
-                <h2 class="bigger-title"><span compile="::post.name"></span> <a ng-if="::post.tag">
+                <h2 class="bigger-title"><span compile="::post.hlContent"></span> <a ng-if="::post.tag">
                     <small class="tag">#{{::post.tag}}</small>
                 </a></h2>
                 <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>

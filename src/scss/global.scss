@@ -316,9 +316,9 @@ textarea {
   color: $text-color;
 }
 
-.search-highlight{
+span.search-highlight{
   background-color: $highlight-background;
-  color: $highlight-text-color;
+  color: $highlight-text-color !important;
   padding: 0 3px;
 }
 
