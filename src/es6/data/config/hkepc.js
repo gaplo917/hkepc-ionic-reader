@@ -119,11 +119,11 @@ module.exports = {
   signature: (opt) => {
     const { androidVersion, iosVersion } = opt
     if (androidVersion) {
-      return `[size=1][color=Silver]via HKEPC IR Pro ${VERSION} - Android(${androidVersion})[/color][/size]`
+      return `[size=1][color=Silver]via HKEPC IR Extreme ${VERSION} - Android(${androidVersion})[/color][/size]`
     } else if (iosVersion) {
-      return `[size=1][color=Silver]via HKEPC IR Pro ${VERSION} - iOS(${iosVersion})[/color][/size]`
+      return `[size=1][color=Silver]via HKEPC IR Extreme ${VERSION} - iOS(${iosVersion})[/color][/size]`
     } else {
-      return `[size=1][color=Silver]via HKEPC IR Pro ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
+      return `[size=1][color=Silver]via HKEPC IR Extreme ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
     }
   },
   data: {
