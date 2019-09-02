@@ -206,6 +206,13 @@
       font[size="5"]{
         line-height:1.2em;
       }
+
+      .blockcode {
+        background-color: darken($bg-color, 5%);
+        margin: 8px 0;
+        padding: 8px 16px;
+        font-family: monospace;
+      }
     }
 
     .ads {
