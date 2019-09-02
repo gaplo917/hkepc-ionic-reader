@@ -96,7 +96,7 @@ gulp.task('watchJs', function () {
 })
 
 gulp.task('watchSass', function () {
-  return gulp.watch(['./src/scss/**/*'], gulp.series(['sass']))
+  return gulp.watch(['./src/scss/**/*', './src/ionic/scss/**/*'], gulp.series(['sass']))
 })
 
 gulp.task('watchAsset', function () {
