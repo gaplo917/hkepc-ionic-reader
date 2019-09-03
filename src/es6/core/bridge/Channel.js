@@ -10,6 +10,10 @@ export class Channel {
 
   static get version () { return 'VERSION' }
 
+  static get share () { return 'SHARE' }
+
+  static get actionSheet () { return 'ACTION_SHEET' }
+
   // from Native
   static get nativeStorageUpdated () { return 'NATIVE_STORAGE_UPDATE' }
 

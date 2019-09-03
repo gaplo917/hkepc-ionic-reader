@@ -3,6 +3,7 @@
  */
 import * as HKEPC from '../../data/config/hkepc'
 import { FindMessageRequest } from '../model/requests'
+import { Bridge, Channel } from '../bridge/index'
 
 import * as _ from 'lodash'
 import * as Controllers from './index'
@@ -30,7 +31,7 @@ export class PostDetailController extends IRLifecycleOwner {
     }
   }
 
-  constructor ($scope, $stateParams, $sce, $state, $location, MessageService, $ionicHistory, $ionicModal, $ionicPopover, ngToast, AuthService, $ionicScrollDelegate, LocalStorageService, $ionicActionSheet, apiService, rx, $timeout, $ionicPopup, $rootScope, $compile) {
+  constructor ($scope, $stateParams, $sce, $state, $location, MessageService, $ionicHistory, $ionicModal, $ionicPopover, ngToast, AuthService, $ionicScrollDelegate, LocalStorageService, apiService, rx, $timeout, $ionicPopup, $rootScope, $compile) {
     super($scope)
     this.scope = $scope
     this.stateParams = $stateParams
@@ -46,7 +47,6 @@ export class PostDetailController extends IRLifecycleOwner {
     this.authService = AuthService
     this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('post-detail')
     this.localStorageService = LocalStorageService
-    this.ionicActionSheet = $ionicActionSheet
     this.apiService = apiService
     this.$timeout = $timeout
     this.compile = $compile
@@ -399,7 +399,6 @@ export class PostDetailController extends IRLifecycleOwner {
 
   onQuickReply (post) {
     const { scope, state, authService, postId, topicId, currentPage, ngToast } = this
-    const { title } = post
     authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
         const reply = {
@@ -409,19 +408,11 @@ export class PostDetailController extends IRLifecycleOwner {
           type: 1 // default to use none
         }
 
-        const message = {
-          post: {
-            id: postId,
-            topicId,
-            title
-          }
-        }
-
         state.go(Controllers.WriteReplyPostController.STATE, {
           topicId,
           postId,
           page: currentPage,
-          message: JSON.stringify(message),
+          post: JSON.stringify(post),
           reply: JSON.stringify(reply)
         })
       } else {
@@ -431,8 +422,8 @@ export class PostDetailController extends IRLifecycleOwner {
   }
 
   onReply (message) {
-    const { scope, state, authService, currentPage, ngToast, isLock } = this
-    const { id: messageId, post } = message
+    const { scope, state, authService, currentPage, ngToast, isLock, post } = this
+    const { id: messageId } = message
     const { id: postId, topicId } = post
     authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
@@ -451,7 +442,7 @@ export class PostDetailController extends IRLifecycleOwner {
           topicId,
           postId,
           page: currentPage,
-          message: JSON.stringify(message),
+          post: JSON.stringify(post),
           reply: JSON.stringify(reply)
         })
       } else {
@@ -605,54 +596,46 @@ export class PostDetailController extends IRLifecycleOwner {
   }
 
   onMore (message) {
-    const { scope, apiService, ngToast, ionicActionSheet } = this
-    // Show the action sheet
-    const hideSheet = ionicActionSheet.show({
+    const { scope, apiService, ngToast } = this
+
+    Bridge.callHandler(Channel.actionSheet, {
       buttons: [
-        { text: '開啟 HKEPC 原始連結' },
-        { text: `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
-        { text: `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
-        { text: `關注此主題的新回覆` },
-        { text: `收藏此主題` },
-        { text: `舉報` }
+        '分享到 ...',
+        `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖`,
+        `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖`,
+        `關注此主題的新回覆`,
+        `收藏此主題`,
+        `舉報`
       ],
       titleText: '更多功能',
-      cancelText: '取消',
-      cancel: () => {
-        // add cancel code..
-        hideSheet()
-        return true
-      },
-      buttonClicked: (index) => {
-        if (index === 0) {
-          window.open(HKEPC.forum.findMessage(message.post.id, message.id))
-        } else if (index === 1) {
-          this.reversePostOrder = !this.reversePostOrder
-          if (this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
-          else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
+      cancelText: '取消'
+    }, (index) => {
+      if (index === 0) {
+        Bridge.callHandler(Channel.share, {
+          url: HKEPC.forum.findMessage(message.post.id, message.id)
+        })
+      } else if (index === 1) {
+        this.reversePostOrder = !this.reversePostOrder
+        if (this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
+        else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
 
-          this.doRefresh()
-        } else if (index === 2) {
-          this.filterOnlyAuthorId = this.filterOnlyAuthorId === undefined ? message.author.uid : undefined
-          if (this.filterOnlyAuthorId !== undefined) ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
-          else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
+        this.doRefresh()
+      } else if (index === 2) {
+        this.filterOnlyAuthorId = this.filterOnlyAuthorId === undefined ? message.author.uid : undefined
+        if (this.filterOnlyAuthorId !== undefined) ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
+        else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
 
-          this.doRefresh()
-        } else if (index === 3) {
-          apiService.subscribeNewReply(this.postId).safeApply(scope, () => {
-            ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
-          }).subscribe()
-        } else if (index === 4) {
-          apiService.addFavPost(this.postId).safeApply(scope, () => {
-            ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
-          }).subscribe()
-        } else if (index === 5) {
-          this.onReport(message)
-        }
-        return true
-      },
-      destructiveButtonClicked: (index) => {
-        return true
+        this.doRefresh()
+      } else if (index === 3) {
+        apiService.subscribeNewReply(this.postId).safeApply(scope, () => {
+          ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
+        }).subscribe()
+      } else if (index === 4) {
+        apiService.addFavPost(this.postId).safeApply(scope, () => {
+          ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
+        }).subscribe()
+      } else if (index === 5) {
+        this.onReport(message)
       }
     })
   }

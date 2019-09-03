@@ -13,7 +13,7 @@ export class WriteReplyPostController {
 
   static get CONFIG () {
     return {
-      url: '/topics/:topicId/posts/:postId/page/:page/reply?message=&reply=',
+      url: '/topics/:topicId/posts/:postId/page/:page/reply?post=&reply=',
       cache: false,
       views: {
         main: {
@@ -27,7 +27,7 @@ export class WriteReplyPostController {
 
   constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $compile, LocalStorageService) {
     this.id = 'reply-content'
-    this.message = JSON.parse($stateParams.message)
+    this.post = JSON.parse($stateParams.post)
     this.reply = JSON.parse($stateParams.reply)
     this.isHideSelectType = this.reply.type === 1
     this.reply.content = ''
