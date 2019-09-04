@@ -8,8 +8,6 @@
                 ng-click="::openDrawer()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
-           class="button button-icon icon ion-ios-compose-outline" ng-click="vm.doNewPost(vm.topic)"></a>
         <a ng-if="vm.topicId != 'search' " class="button button-icon icon ion-ios-refresh-empty"
            ng-click="::vm.doRefresh()"></a>
     </ion-nav-buttons>
@@ -95,7 +93,14 @@
 
         <div class="tab-bar-inset"></div>
     </ion-content>
-
+    <div class="floating-action-btn">
+        <button class="button-rounded action-button action-button-small"
+                ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
+                ng-click="vm.doNewPost(vm.topic)">
+            <i class="ion-ios-compose-outline"></i>
+        </button>
+        <div class="tab-bar-inset"></div>
+    </div>
     <page-indicator
         pagination-popover-delegate="vm.paginationPopoverDelegate"
         current-page="vm.currentPageNum"

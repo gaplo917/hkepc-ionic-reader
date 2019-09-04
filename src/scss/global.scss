@@ -489,7 +489,7 @@ ion-infinite-scroll {
 }
 
 .page-indicator-wrapper {
-  opacity: 0.8;
+  opacity: 0.9;
   position: fixed;
   bottom: 16px;
   z-index: 10;
@@ -503,7 +503,7 @@ ion-infinite-scroll {
 }
 
 .floating-action-btn {
-  opacity: 0.8;
+  opacity: 0.9;
   position: fixed;
   bottom: 16px;
   right: 16px;
@@ -517,7 +517,12 @@ ion-infinite-scroll {
     i {
       font-size: 24px;
     }
+
+    &.edit-activated {
+      color: $sub-epc-color;
+    }
   }
+
 }
 
 .overlay-fix {

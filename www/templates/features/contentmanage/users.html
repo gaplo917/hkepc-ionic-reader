@@ -1,4 +1,4 @@
-<ion-view view-title="帖子及回覆設定" class="contentmanage-users-view">
+<ion-view view-title="過濾帖子及回覆名單" class="contentmanage-users-view">
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-edit"
            ng-click="vm.editMode = !vm.editMode"
@@ -29,7 +29,7 @@
         <div class="less-important-info"
              ng-if="vm.isReady && vm.items.length === 0"
              style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            沒有被隱藏的用戶
+            名單沒有資料
         </div>
         <div class="less-important-info"
              ng-if="vm.isReady && vm.items.length > 0"
