@@ -10,7 +10,7 @@ export class CMUsersController {
   static get CONFIG () {
     return {
       // topicType: 'latestPostTopicFilters' | 'latestReplyTopicFilters'
-      url: '/features/contentmanage/users',
+      url: '/features/contentmanage/users?prefill=',
       views: {
         main: {
           templateUrl: 'templates/features/contentmanage/users.html',
@@ -32,7 +32,7 @@ export class CMUsersController {
     this.authService = AuthService
     this.items = []
     this.isReady = false
-    this.userIdInput = ''
+    this.userIdInput = $stateParams.prefill || ''
     this.remarkInput = ''
     this.editMode = false
     this.userFilter = userFilterSchema

@@ -1,8 +1,17 @@
 .user-profile{
 
-  ion-content{
 
+  ion-content{
     padding:20px;
+
+    .sub-action-bar {
+      display: flex;
+      button {
+        flex: 1;
+        margin: 0 16px 16px 16px;
+        padding: 8px;
+      }
+    }
 
     .dashline{
       @extend .ir-divider;

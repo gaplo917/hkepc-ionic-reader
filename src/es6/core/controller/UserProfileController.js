@@ -1,9 +1,5 @@
 import * as Controllers from './index'
-import { XMLUtils } from '../../utils/xml'
-import * as _ from 'lodash'
-import * as HKEPC from '../../data/config/hkepc'
-import swal from 'sweetalert2'
-import cheerio from 'cheerio'
+import { userFilterSchema } from '../schema'
 
 export class UserProfileController {
   static get STATE () {
@@ -28,13 +24,15 @@ export class UserProfileController {
     }
   }
 
-  constructor ($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile) {
+  constructor ($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile, LocalStorageService) {
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.ngToast = ngToast
     this.apiService = apiService
     this.compile = $compile
+    this.localStorageService = LocalStorageService
+    this.isInUserFilter = false
 
     const author = JSON.parse($stateParams.author || '{}')
 
@@ -45,81 +43,47 @@ export class UserProfileController {
         this.content = data.content
       }).subscribe()
     })
+
+    $scope.$on('$ionicView.enter', (e) => {
+      this.localStorageService.getObject('userFilter', userFilterSchema)
+        .safeApply($scope, (userFilter) => {
+          const { userIds } = userFilter
+          this.isInUserFilter = userIds.indexOf(String(this.author.uid)) >= 0
+        })
+        .subscribe()
+    })
   }
 
-  async sendPm (author) {
-    const { value: inputText } = await swal({
-      title: `發訊息給 ${author.name}`,
-      input: 'textarea',
-      inputPlaceholder: '輸入你的訊息',
-      confirmButtonText: '發送',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-      showCancelButton: true,
-      customClass: 'message',
-      focusConfirm: true
+  sendPm (author) {
+    this.state.go(Controllers.ChatDetailController.STATE, {
+      id: author.uid
     })
+  }
 
-    if (inputText === undefined) {
-      // cancel case
-      return
-    }
+  addToFilterList () {
+    this.state.go(Controllers.CMUsersController.STATE, {
+      prefill: this.author.uid
+    })
+  }
 
-    if (inputText === '') {
-      // empty input
-      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
-      return
-    }
+  removeFromFilterList () {
+    this.localStorageService.getObject('userFilter', userFilterSchema)
+      .safeApply(this.scope, (userFilter) => {
+        const { uid: userId } = this.author
+        const index = userFilter.userIds.indexOf(String(this.author.uid))
 
-    this.apiService.preSendPm(author.uid)
-      .flatMap((resp) => {
-        const xml = cheerio.load(resp.data, { xmlMode: true })
-        const rawHtml = _.replace(
-          _.replace(xml('root').html(), '<![CDATA[', '')
-          , ']]>', '')
-        const $ = cheerio.load(rawHtml)
-        const relativeUrl = $('#sendpmform').attr('action')
-        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
-        const formSource = cheerio.load($('#sendpmform').html())
+        if (index >= 0) {
+          userFilter.userIds.splice(index, 1)
+          try {
+            delete userFilter.users[userId]
+          } catch (e) {
+            console.log('data corrupted. nothing can handle')
+          }
 
-        const hiddenFormInputs = {}
-        formSource(`input[type='hidden']`).map((i, elem) => {
-          const k = formSource(elem).attr('name')
-          const v = formSource(elem).attr('value')
-
-          hiddenFormInputs[k] = encodeURIComponent(v)
-        }).get()
-
-        return this.apiService.dynamicRequest({
-          method: 'POST',
-          url: postUrl,
-          data: {
-            msgto: author.name,
-            message: inputText,
-            ...hiddenFormInputs
-          },
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-      })
-      .safeApply(this.scope, (resp) => {
-        const responseText = cheerio.load(XMLUtils.removeCDATA(resp.data), { xmlMode: true }).html()
-        const isSuccess = _.includes(responseText, '成功')
-        if (isSuccess) {
-          swal({
-            animation: false,
-            title: '發送成功',
-            type: 'success',
-            confirmButtonText: '確定'
-          })
-        } else {
-          swal({
-            animation: false,
-            title: '發送失敗',
-            text: `HKEPC 傳回:「${responseText}`,
-            type: 'error',
-            confirmButtonText: '確定'
-          })
+          this.localStorageService.setObject('userFilter', userFilter)
         }
+
+        this.isInUserFilter = false
       })
       .subscribe()
   }
