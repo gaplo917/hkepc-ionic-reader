@@ -1425,11 +1425,6 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
   'IONIC_BACK_PRIORITY',
 function($rootScope, $state, $location, $document, $ionicPlatform, $ionicHistory, IONIC_BACK_PRIORITY) {
 
-  // always reset the keyboard state when change stage
-  $rootScope.$on('$ionicView.beforeEnter', function() {
-    ionic.keyboard && ionic.keyboard.hide && ionic.keyboard.hide();
-  });
-
   $rootScope.$on('$ionicHistory.change', function(e, data) {
     if (!data) return null;
 
@@ -10065,7 +10060,9 @@ IonicModule.directive('exposeAsideWhen', ['$window', function($window) {
   };
 }]);
 
-var GESTURE_DIRECTIVES = 'onHold onTap onDoubleTap onTouch onRelease onDragStart onDrag onDragEnd onDragUp onDragRight onDragDown onDragLeft onSwipe onSwipeUp onSwipeRight onSwipeDown onSwipeLeft'.split(' ');
+// var GESTURE_DIRECTIVES = 'onHold onTap onDoubleTap onTouch onRelease onDragStart onDrag onDragEnd onDragUp onDragRight onDragDown onDragLeft onSwipe onSwipeUp onSwipeRight onSwipeDown onSwipeLeft'.split(' ');
+// remove unused gesture
+var GESTURE_DIRECTIVES = 'onHold onTap onTouch onRelease'.split(' ');
 
 GESTURE_DIRECTIVES.forEach(function(name) {
   IonicModule.directive(name, gestureDirective(name));
