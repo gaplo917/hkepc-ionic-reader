@@ -10,7 +10,7 @@
             <ir-spinner></ir-spinner>
         </div>
 
-        <ion-list>
+        <ion-list ng-if="vm.chats.length > 0">
             <ion-item class="item-remove-animate item-avatar item-icon-right"
                       ng-class-odd="'odd'" ng-class-even="'even'"
                       ng-repeat="chat in vm.chats track by $index"

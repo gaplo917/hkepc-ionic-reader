@@ -1,19 +1,15 @@
 <ion-view class="chats-view">
     <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-paperplane-outline" ng-click="vm.onNewMessage()">
-        </a>
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
     </ion-nav-buttons>
     <ion-nav-title>
-        <span>{{::vm.sender.username}}</span>
+        <span>{{vm.recipient.username}}</span>
     </ion-nav-title>
 
-    <div class="spinner" ng-if="vm.messages.length == 0">
-        <ir-spinner></ir-spinner>
-    </div>
 
     <ion-content has-bouncing="true" class="has-header" lazy-scroll>
-        <div class="spinner" ng-if="vm.messages.length == 0">
+
+        <div class="spinner" ng-if="vm.messages == null">
             <ir-spinner></ir-spinner>
         </div>
 
@@ -58,7 +54,22 @@
             <div class="cf"></div>
 
         </div>
-
+        <div style="height:88px"></div>
         <div class="tab-bar-inset"></div>
     </ion-content>
+    <div class="floating-input-bar" ng-if="vm.messages != null">
+        <div class="item item-input-inset">
+            <div class="item-input-wrapper">
+              <textarea placeholder="訊息"
+                        ng-focus="vm.setIsFocused(true)"
+                        ng-blur="vm.setIsFocused(false)"
+                        ng-model="vm.messageInput"
+              ></textarea>
+            </div>
+            <button class="button icon ion-ios-paperplane-outline button-assertive"
+                    ng-click="vm.onSendMessage()">
+            </button>
+        </div>
+        <div class="tab-bar-inset" ng-if="!vm.isFocused"></div>
+    </div>
 </ion-view>

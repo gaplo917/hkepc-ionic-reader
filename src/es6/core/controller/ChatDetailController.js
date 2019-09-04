@@ -40,9 +40,10 @@ export class ChatDetailController {
     this.ionicHistory = $ionicHistory
     this.state = $state
     this.compile = $compile
+    this.messageInput = ''
 
-    this.senderId = $stateParams.id
-    this.messages = []
+    this.recipientId = $stateParams.id
+    this.messages = null
     this.ionicReaderSign = HKEPC.signature({
       androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
       iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
@@ -55,8 +56,10 @@ export class ChatDetailController {
 
   loadMessages () {
     this.apiService
-      .chatDetails(this.senderId)
+      .chatDetails(this.recipientId)
       .safeApply(this.scope, (resp) => {
+        swal.close()
+
         const html = new GeneralHtml(cheerio.load(resp.data))
 
         const $ = html
@@ -72,13 +75,12 @@ export class ChatDetailController {
           return this.parseChat($(elem).html(), isSelf)
         }).get()
 
+        const username = $('.itemtitle .left strong').text()
+
         // must exist in the list
-        const senderMessage = messages.filter((m) => !m.isSelf)[0]
-        if (senderMessage) {
-          this.sender = {
-            id: senderMessage.id,
-            username: senderMessage.username
-          }
+        this.recipient = {
+          id: this.recipientId,
+          username: username
         }
 
         this.messages = messages
@@ -134,9 +136,8 @@ export class ChatDetailController {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
           }).safeApply(this.scope, (resp) => {
             setTimeout(() => {
-              swal.close()
               this.doRefresh()
-            }, 500)
+            }, 1000)
           }).subscribe()
         }
       }).subscribe()
@@ -173,11 +174,18 @@ export class ChatDetailController {
     }
   }
 
-  onSendMessage (sender, message) {
-    this.sendMessage(message)
+  onSendMessage () {
+    const { messageInput } = this
+    if (messageInput === '') {
+      // empty input
+      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
+      return
+    }
+    this.sendMessage(messageInput)
   }
 
   doRefresh () {
+    this.messageInput = ''
     this.loadMessages()
   }
 
@@ -193,33 +201,8 @@ export class ChatDetailController {
     }
   }
 
-  async onNewMessage () {
-    // FIXME: Not a good way. just a work arround
-    const { value: inputText } = await swal({
-      title: `發訊息給 ${this.sender.username}`,
-      animation: false,
-      input: 'textarea',
-      inputPlaceholder: '輸入你的訊息',
-      confirmButtonText: '發送',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-      showCancelButton: true,
-      customClass: 'message',
-      focusConfirm: true
-    })
-
-    if (inputText === undefined) {
-      // cancel case
-      return
-    }
-
-    if (inputText === '') {
-      // empty input
-      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
-      return
-    }
-
-    this.onSendMessage(this.sender, inputText)
+  setIsFocused (bool) {
+    this.isFocused = bool
   }
 
   loadLazyImage (uid, imageSrc) {
