@@ -24,9 +24,8 @@
                     <div class="message" ng-bind-html="::message.content">
                     </div>
 
-                    <div class="message-detail">
-                        <span class="bold">{{::message.username}}</span> -
-                        <small ng-bind="::message.date"></small>
+                    <div class="message-detail text-right">
+                        <span ng-bind="::message.date"></span>
                     </div>
 
                 </div>
@@ -42,9 +41,8 @@
                     <div class="message" compile="::message.content">
                     </div>
 
-                    <div class="message-detail">
-                        <span class="bold">{{::message.username}}</span> -
-                        <small ng-bind="::message.date"></small>
+                    <div class="message-detail text-right">
+                        <span ng-bind="::message.date"></span>
                     </div>
 
                 </div>

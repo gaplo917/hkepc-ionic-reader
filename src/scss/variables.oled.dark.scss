@@ -43,9 +43,9 @@ $card-selection-color: lighten($card-bg-color,2%);
 
 
 // chart view
-$left-bubble-bg-color: #FAFAFA;
-$right-bubble-bg-color: #8BC34A;
-$signature-color: #444444;
+$left-bubble-bg-color: #000;
+$right-bubble-bg-color: #000;
+$signature-color: $less-important-color;
 $chat-input-bg-color: #444;
 
 // post list view

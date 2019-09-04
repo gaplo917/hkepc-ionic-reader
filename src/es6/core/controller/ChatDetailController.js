@@ -44,10 +44,6 @@ export class ChatDetailController {
 
     this.recipientId = $stateParams.id
     this.messages = null
-    this.ionicReaderSign = HKEPC.signature({
-      androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-      iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
-    })
 
     $scope.$on('$ionicView.loaded', (e) => {
       this.loadMessages()
@@ -104,10 +100,8 @@ export class ChatDetailController {
             hiddenFormInputs[k] = encodeURIComponent(v)
           }).get()
 
-          const ionicReaderSign = this.ionicReaderSign
-
           // build the reply message
-          const chatMessage = `${message}\n\n${ionicReaderSign}`
+          const chatMessage = `${message}`
 
           const spinnerHtml = `
               <div>
@@ -153,13 +147,6 @@ export class ChatDetailController {
     chatSource('cite').remove()
 
     const date = chatSource('.cite').text()
-    let mDate
-    try {
-      mDate = moment(date, 'YYYY-M-D hh:mm').fromNow()
-    } catch (e) {
-      console.warn('date format not correct', e)
-      mDate = '幾秒前'
-    }
 
     const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
     return {
@@ -169,7 +156,7 @@ export class ChatDetailController {
         text
       ),
       username: username,
-      date: mDate,
+      date: date.trim(),
       isSelf: isSelf
     }
   }
