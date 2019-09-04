@@ -15,8 +15,8 @@
     <div style="overflow: auto;white-space: nowrap;">
       <div style="width:70px;height: 70px;display: inline-block;"
            ng-repeat="eImage in vm.existingImages track by $index"
-           on-long-press="vm.confirmDeleteImage(eImage)"
-           on-short-press="vm.addImageToContent(eImage)"
+           on-hold="vm.confirmDeleteImage(eImage)"
+           on-tap="vm.addImageToContent(eImage)"
       >
         <img style="height: 70px; display:block; margin: auto" ng-src="{{eImage.src}}">
         <span class="less-important-info" style="text-align: center;display: block;"> {{eImage.id}}</span>
