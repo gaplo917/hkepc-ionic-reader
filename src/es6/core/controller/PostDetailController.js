@@ -671,7 +671,6 @@ export class PostDetailController extends IRLifecycleOwner {
   highlightSearchText (messages, hlKeywords) {
     return messages.map(message => {
       if (message.content) {
-        console.log('hlKeywords', hlKeywords)
         const { hlContent } = searchMultipleKeyword(hlKeywords, message.content)
         return {
           ...message,
