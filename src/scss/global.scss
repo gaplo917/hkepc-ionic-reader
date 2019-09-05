@@ -111,6 +111,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
   color:$text-color;
 }
 
+code, kbd, pre, samp {
+  font-family: Hack, monospace, serif;
+}
+
 .bar.bar-stable {
   border-color: $border-color;
   background-color: $header-bg-color;

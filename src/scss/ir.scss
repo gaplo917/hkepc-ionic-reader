@@ -18,6 +18,35 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../fonts" !default;
 
+@font-face {
+  font-family: 'Hack';
+  src: url($ionicons-font-path + '/hack-regular-subset.woff2') format('woff2'), url($ionicons-font-path + 'fonts/hack-regular-subset.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url($ionicons-font-path + 'fonts/hack-bold-subset.woff2') format('woff2'), url($ionicons-font-path + 'fonts/hack-bold-subset.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url($ionicons-font-path + 'fonts/hack-italic-subset.woff2') format('woff2'), url($ionicons-font-path + 'fonts/hack-italic-webfont.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url($ionicons-font-path + 'fonts/hack-bolditalic-subset.woff2') format('woff2'), url($ionicons-font-path + 'fonts/hack-bolditalic-subset.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+
+
 // Include all of Ionic
 @import "../ionic/scss/ionic";
 
