@@ -1,4 +1,16 @@
 .about-version-view {
+  -webkit-font-smoothing: subpixel-antialiased;
+  strong {
+    font-weight: 800;
+  }
+  em {
+    font-style: italic;
+  }
+
+  h4 {
+    text-decoration: underline;
+  }
+
   ion-content {
     background-color: $bg-color;
     color: $text-color;
@@ -15,11 +27,23 @@
     }
     ul li {
       list-style-position: outside;
+      padding: 8px 0;
     }
 
     hr {
       margin: 10px -30px;
       border-color: $border-color;
+    }
+
+    img[src$=".gif"] {
+      padding: 1px;
+      margin: 1px;
+      background-color: #ffffff;
+      border-radius: 100px;
+    }
+
+    blockquote {
+      border-left: 5px solid $epc-color;
     }
   }
 
