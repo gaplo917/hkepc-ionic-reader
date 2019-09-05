@@ -513,4 +513,41 @@ export default class Mapper {
       hiddenFormInputs
     }
   }
+
+  static settings (html, opt) {
+    const $ = html.getCheerio()
+    const form = $(`form[name='reg']`)
+    const formSource = cheerio.load(form.html() || '')
+    const relativeUrl = form.attr('action')
+    const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
+
+    const hiddenFormInputs = {}
+
+    formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i, elem) => {
+      const k = formSource(elem).attr('name')
+      const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    const forumStyles = $(`select[name='styleidnew'] option`).map((i, elem) => {
+      const obj = $(elem)
+      const isSelected = obj.attr('selected') === 'selected'
+      const value = obj.attr('value')
+      // const name = obj.text()
+
+      return {
+        isSelected,
+        value
+      }
+    }).get()
+
+    const [forumStyle] = forumStyles.filter(it => it.isSelected).map(it => it.value)
+    return {
+      actionUrl,
+      forumStyle,
+      forumStyles,
+      hiddenFormInputs
+    }
+  }
 }

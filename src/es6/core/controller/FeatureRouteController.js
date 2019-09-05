@@ -1,7 +1,6 @@
 /**
  * Created by Gaplo917 on 29/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
 import {
   NotificationBadgeUpdateRequest,
   ChangeThemeRequest,
@@ -10,7 +9,6 @@ import {
 } from '../model/requests'
 import swal from 'sweetalert2'
 import { NativeUpdateNotificationRequest } from '../bridge/requests'
-import cheerio from 'cheerio'
 
 export class FeatureRouteController {
   static get STATE () { return 'tab.features' }
@@ -30,10 +28,9 @@ export class FeatureRouteController {
     }
   }
 
-  constructor ($scope, apiService, AuthService, $state, $sce, ngToast, LocalStorageService, observeOnScope, $rootScope) {
+  constructor ($scope, apiService, AuthService, $state, ngToast, LocalStorageService, observeOnScope, $rootScope) {
     this.apiService = apiService
     this.scope = $scope
-    this.sce = $sce
     this.state = $state
     this.ngToast = ngToast
     this.localStorageService = LocalStorageService
@@ -129,69 +126,48 @@ export class FeatureRouteController {
   registerOnChangeForumStyle () {
     // TODO: move to web-worker
     this.apiService.settings()
-      .safeApply(this.scope, (resp) => {
-        const $ = cheerio.load(resp.data)
-        const form = $(`form[name='reg']`)
-        const formSource = cheerio.load(form.html() || '')
-        const relativeUrl = form.attr('action')
-        const postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
+      .safeApply(this.scope, ({ actionUrl, forumStyle, forumStyles, hiddenFormInputs }) => {
+        this.forumStyle = forumStyle
+        this.actionUrl = actionUrl
+        this.hiddenFormInputs = hiddenFormInputs
+      }).subscribe()
+  }
 
-        const formInputs = {}
-
-        formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i, elem) => {
-          const k = formSource(elem).attr('name')
-          const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
-
-          formInputs[k] = encodeURIComponent(v)
-        }).get()
-
-        $(`select[name='styleidnew'] option`).each((i, elem) => {
-          const obj = $(elem)
-          const isSelected = obj.attr('selected') === 'selected'
-          const value = obj.attr('value')
-          // const name = obj.text()
-
-          if (isSelected) {
-            this.forumStyle = value
-          }
-        })
-
-        this.onChangeForumStyle = (newStyle) => {
-          const spinnerHtml = `
+  onChangeForumStyle (newStyle) {
+    const { actionUrl, hiddenFormInputs } = this
+    const spinnerHtml = `
           <div>
               <div class="text-center">傳送到 HKEPC 伺服器中</div>
           </div>
         `
 
-          swal({
-            animation: false,
-            html: spinnerHtml,
-            allowOutsideClick: false,
-            showCancelButton: false,
-            showConfirmButton: false
-          })
+    swal({
+      animation: false,
+      html: spinnerHtml,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showConfirmButton: false
+    })
 
-          swal.showLoading()
+    swal.showLoading()
 
-          // Post to the server
-          this.apiService.dynamicRequest({
-            method: 'POST',
-            url: postUrl,
-            data: {
-              styleidnew: newStyle,
-              ...formInputs
-            },
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-          }).safeApply(this.scope, (resp) => {
-            swal({
-              animation: false,
-              title: '成功更改',
-              text: '',
-              type: 'success'
-            })
-          }).subscribe()
-        }
-      }).subscribe()
+    // Post to the server
+    this.apiService.dynamicRequest({
+      method: 'POST',
+      url: actionUrl,
+      data: {
+        styleidnew: newStyle,
+        ...hiddenFormInputs
+      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).safeApply(this.scope, (resp) => {
+      swal({
+        animation: false,
+        title: '成功更改',
+        text: '',
+        type: 'success'
+      })
+    }).subscribe()
   }
 
   doRefresh () {

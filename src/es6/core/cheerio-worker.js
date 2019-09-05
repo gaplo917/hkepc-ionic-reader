@@ -93,6 +93,11 @@ module.exports = function (self) {
           data: Mapper.chatDetails(html, ev.data.opt)
         })
         break
+      case 'settings':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.settings(html, ev.data.opt)
+        })
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({

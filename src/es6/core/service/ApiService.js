@@ -227,6 +227,7 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.settings()
     })
+      .flatMapApiFromCheerioworker('settings')
   }
 
   myPosts (page, type) {
