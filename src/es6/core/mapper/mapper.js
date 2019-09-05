@@ -648,4 +648,53 @@ export default class Mapper {
     }
   }
 
+  static myReplies (html, opt) {
+    const $ = html.getCheerio()
+
+    const pageNumSource = $('.pages a, .pages strong')
+
+    const pageNumArr = pageNumSource
+      .map((i, elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length === 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    const myreplies = $('.datalist > table > tbody > tr').map((i, elem) => {
+      const postSource = cheerio.load($(elem).html())
+
+      return {
+        post: {
+          title: postSource('th a').text(),
+          messageId: postSource('th a').attr('pid'),
+          postId: postSource('th a').attr('ptid'),
+          inAppUrl: postSource('th a').attr('in-app-url')
+        },
+        topic: {
+          url: postSource('.forum a').attr('href'),
+          title: postSource('.forum a').text()
+        },
+        status: postSource('.nums').text(),
+        timestamp: postSource('.lastpost > em > span').attr('title') || postSource('.lastpost > em').text() || 0,
+        brief: postSource('.lighttxt').text()
+      }
+    }).get()
+
+    // merge array
+    for (let i = 0; i < myreplies.length; i += 2) {
+      myreplies[i].brief = myreplies[i + 1].brief
+    }
+
+    const replies = myreplies.filter(x => x.timestamp !== 0)
+
+    return {
+      replies,
+      totalPageNum
+    }
+
+  }
 }

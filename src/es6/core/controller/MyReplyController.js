@@ -2,12 +2,9 @@
  * Created by Gaplo917 on 6/3/2016.
  */
 import * as Controllers from './index'
-import * as HKEPC from '../../data/config/hkepc'
-import { HKEPCHtml } from '../model/hkepc-html'
 import { FindMessageRequest } from '../model/requests'
 import { PaginationPopoverDelegates } from '../delegates'
 import { IRLifecycleOwner } from './base/IRLifecycleOwner'
-import cheerio from 'cheerio'
 
 export class MyReplyController extends IRLifecycleOwner {
   static get STATE () { return 'tab.features-myreply' }
@@ -78,55 +75,10 @@ export class MyReplyController extends IRLifecycleOwner {
     const { page } = this
 
     this.apiService.myReplies(page)
-      .safeApply(this.scope, resp => {
-        const html = new HKEPCHtml(cheerio.load(resp.data))
+      .safeApply(this.scope, ({ replies, totalPageNum }) => {
+        this.totalPageNum = totalPageNum
 
-        const $ = html.processImgUrl(HKEPC.imageUrl)
-          .processEpcUrl(window.location.hash)
-          .processExternalUrl()
-          .getCheerio()
-
-        const pageNumSource = $('.pages a, .pages strong')
-
-        const pageNumArr = pageNumSource
-          .map((i, elem) => $(elem).text())
-          .get()
-          .map(e => e.match(/\d/g)) // array of string with digit
-          .filter(e => e != null) // filter null value
-          .map(e => parseInt(e.join(''))) // join the array and parseInt
-
-        this.totalPageNum = pageNumArr.length === 0
-          ? 1
-          : Math.max(...pageNumArr)
-
-        const myreplies = $('.datalist > table > tbody > tr').map((i, elem) => {
-          const postSource = cheerio.load($(elem).html())
-
-          return {
-            post: {
-              title: postSource('th a').text(),
-              messageId: postSource('th a').attr('pid'),
-              postId: postSource('th a').attr('ptid'),
-              inAppUrl: postSource('th a').attr('in-app-url')
-            },
-            topic: {
-              url: postSource('.forum a').attr('href'),
-              title: postSource('.forum a').text()
-            },
-            status: postSource('.nums').text(),
-            timestamp: postSource('.lastpost > em > span').attr('title') || postSource('.lastpost > em').text() || 0,
-            brief: postSource('.lighttxt').text()
-          }
-        }).get()
-
-        // merge array
-        for (let i = 0; i < myreplies.length; i += 2) {
-          myreplies[i].brief = myreplies[i + 1].brief
-        }
-
-        const mergedMyReplies = myreplies.filter(x => x.timestamp !== 0)
-
-        this.myreplies = this.myreplies.concat(mergedMyReplies.map(it => ({
+        this.myreplies = this.myreplies.concat(replies.map(it => ({
           ...it,
           page
         })))

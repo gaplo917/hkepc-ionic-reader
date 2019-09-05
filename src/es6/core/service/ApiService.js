@@ -241,7 +241,7 @@ export class ApiService {
     return this.http.request({
       method: 'GET',
       url: HKEPC.forum.myReply(page)
-    })
+    }).flatMapApiFromCheerioworker('myReplies')
   }
 
   epcNews (page) {

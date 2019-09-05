@@ -127,6 +127,12 @@ module.exports = function (self) {
           data: { responseText, result }
         })
         break
+      case 'myReplies' :
+        self.postMessage({
+          topic: topic,
+          data: Mapper.myReplies(html, ev.data.opt)
+        })
+        break
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({
