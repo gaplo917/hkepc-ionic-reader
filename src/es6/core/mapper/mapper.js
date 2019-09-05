@@ -550,4 +550,33 @@ export default class Mapper {
       hiddenFormInputs
     }
   }
+
+  static notifications (html, opt) {
+    const $ = html.getCheerio()
+
+    const pageNumSource = $('.pages a, .pages strong')
+
+    const pageNumArr = pageNumSource
+      .map((i, elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length === 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread').map((i, elem) => {
+      return {
+        isRead: $(elem).find('img').attr('alt') !== 'NEW',
+        content: $(elem).html()
+      }
+    }).get()
+
+    return {
+      totalPageNum,
+      notifications
+    }
+  }
 }

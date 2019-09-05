@@ -98,6 +98,13 @@ module.exports = function (self) {
           topic: topic,
           data: Mapper.settings(html, ev.data.opt)
         })
+        break
+      case 'notifications':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.notifications(html, ev.data.opt)
+        })
+        break
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({

@@ -255,7 +255,7 @@ export class ApiService {
     return this.http.request({
       method: 'GET',
       url: HKEPC.forum.notifications(page)
-    })
+    }).flatMapApiFromCheerioworker('notifications')
   }
 
   preNewPost (topicId) {

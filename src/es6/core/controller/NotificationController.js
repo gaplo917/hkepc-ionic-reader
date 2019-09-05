@@ -1,11 +1,8 @@
 /**
  * Created by Gaplo917 on 29/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
-import { HKEPCHtml } from '../model/hkepc-html'
 import { FindMessageRequest } from '../model/requests'
 import * as Controllers from './index'
-import cheerio from 'cheerio'
 
 export class NotificationController {
   static get STATE () { return 'tab.features-notifications' }
@@ -29,7 +26,6 @@ export class NotificationController {
   constructor ($scope, apiService, AuthService, $state, $sce, ngToast, $ionicHistory) {
     this.apiService = apiService
     this.scope = $scope
-    this.sce = $sce
     this.notifications = []
     this.state = $state
     this.ngToast = ngToast
@@ -53,40 +49,13 @@ export class NotificationController {
     this.refreshing = true
 
     this.apiService.notifications(this.page)
-      .safeApply(this.scope, (resp) => {
-        const html = new HKEPCHtml(cheerio.load(resp.data))
+      .safeApply(this.scope, ({ totalPageNum, notifications }) => {
+        this.totalPageNum = totalPageNum
 
-        const $ = html
-          .removeAds()
-          .processEpcUrl(window.location.hash)
-          .processExternalUrl()
-          .processImgUrl(HKEPC.baseForumUrl)
-          .getCheerio()
-
-        const pageNumSource = $('.pages a, .pages strong')
-
-        const pageNumArr = pageNumSource
-          .map((i, elem) => $(elem).text())
-          .get()
-          .map(e => e.match(/\d/g)) // array of string with digit
-          .filter(e => e != null) // filter null value
-          .map(e => parseInt(e.join(''))) // join the array and parseInt
-
-        this.totalPageNum = pageNumArr.length === 0
-          ? 1
-          : Math.max(...pageNumArr)
-
-        const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread').map((i, elem) => {
-          return {
-            isRead: $(elem).find('img').attr('alt') !== 'NEW',
-            content: this.sce.trustAsHtml($(elem).html())
-          }
-        }).get()
-
-        console.log(notifications)
         this.notifications = this.notifications.concat(notifications)
 
         this.refreshing = false
+
         this.scope.$broadcast('scroll.infiniteScrollComplete')
       }).subscribe()
   }
