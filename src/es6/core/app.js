@@ -191,7 +191,7 @@ function initAngular () {
       })
     }])
     .config(['$compileProvider', function ($compileProvider) {
-      $compileProvider.debugInfoEnabled(false);
+      $compileProvider.debugInfoEnabled(false)
     }])
 
   // partial init for Web and legacy android

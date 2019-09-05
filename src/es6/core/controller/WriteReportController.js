@@ -1,6 +1,5 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import * as _ from 'lodash'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 

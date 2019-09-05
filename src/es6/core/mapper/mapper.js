@@ -3,7 +3,6 @@ import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
 import * as HKEPC from '../../data/config/hkepc'
 import * as _ from 'lodash'
-import { XMLUtils } from '../../utils/xml'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)

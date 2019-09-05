@@ -69,7 +69,7 @@ export class WriteReplyPostController {
   preFetchContent () {
     // useful for determine none|reply|quote type
     return this.apiService.replyPage(this.reply)
-      .safeApply(this.scope, (resp => {
+      .safeApply(this.scope, resp => {
         const {
           actionUrl,
           preText,
@@ -88,7 +88,7 @@ export class WriteReplyPostController {
 
         // the text showing the effects of reply / quote
         this.preText = preText
-      }))
+      })
   }
 
   doReply (reply) {
