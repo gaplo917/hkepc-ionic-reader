@@ -2,6 +2,7 @@
  * Created by Gaplo917 on 23/1/2016.
  */
 import {
+  AndroidBottomFixRequest,
   ChangeFontSizeRequest,
   ChangeThemeRequest,
   CommonInfoExtractRequest,
@@ -226,6 +227,14 @@ export class TabController {
         console.debug(`[${TabController.NAME}] Received MHeadFixRequest`, req)
         this.mHeadFix = String(req.mHeadFix) === 'true'
         this.localStorageService.set('mHeadFix', req.mHeadFix ? 'true' : 'false')
+      }).subscribe()
+
+    $scope.$eventToObservable(AndroidBottomFixRequest.NAME)
+      .filter(([event, req]) => req instanceof AndroidBottomFixRequest)
+      .safeApply(this.scope, ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received AndroidBottomFixRequest`, req)
+        this.androidBottomFix = String(req.androidBottomFix) === 'true'
+        this.localStorageService.set('androidBottomFix', req.androidBottomFix ? 'true' : 'false')
       }).subscribe()
   }
 

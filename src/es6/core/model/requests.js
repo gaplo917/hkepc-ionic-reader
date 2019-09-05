@@ -69,10 +69,19 @@ export class PushHistoryRequest {
     this.historyObj = any
   }
 }
+
 export class MHeadFixRequest {
   static get NAME () { return 'MHeadFixRequest' }
 
   constructor (mHeadFix) {
     this.mHeadFix = mHeadFix
+  }
+}
+
+export class AndroidBottomFixRequest {
+  static get NAME () { return 'AndroidBottomFixRequest' }
+
+  constructor (androidBottomFix) {
+    this.androidBottomFix = androidBottomFix
   }
 }
