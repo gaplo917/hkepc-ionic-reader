@@ -67,7 +67,7 @@ export class NativeStorageService {
         key: key
       }, (responseData) => {
         const jsObj = JSON.parse(responseData)
-        if (jsObj !== null) {
+        if (jsObj !== null && jsObj !== undefined) {
           observer.onNext(jsObj)
         } else {
           observer.onNext(defaultValue)
