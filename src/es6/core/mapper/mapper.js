@@ -2,6 +2,8 @@ import { HKEPCHtml } from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
 import * as HKEPC from '../../data/config/hkepc'
+import * as _ from 'lodash'
+import { XMLUtils } from '../../utils/xml'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)
@@ -579,4 +581,71 @@ export default class Mapper {
       notifications
     }
   }
+
+  static epcEditorData (html, opt) {
+    const $ = html.getCheerio()
+    const postForm = $('#postform')
+    const relativeUrl = postForm.attr('action')
+    const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+
+    // ---------- Upload image preparation ----------------------------------------------
+    const imgattachform = $('#imgattachform')
+    const existingImages = $('img').map((i, e) => {
+      const img = $(e)
+      const src = img.attr('raw-src')
+      const rawId = img.attr('id')
+      const isAttachment = _.startsWith(src, '//forum.hkepc.net')
+      const id = _.replace(rawId, 'image_', '')
+      return {
+        src: src.replace('//forum.hkepc.net', 'https://forum.hkepc.net'),
+        id: id,
+        isAttachment: isAttachment
+      }
+    }).get()
+      .filter(existingImage => existingImage.isAttachment)
+
+    console.log('existingImages', existingImages)
+    const attachFormSource = cheerio.load(imgattachform.html())
+
+    const hiddenAttachFormInputs = {}
+
+    hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
+
+    attachFormSource(`input[type='hidden']`).map((i, elem) => {
+      const k = attachFormSource(elem).attr('name')
+      const v = attachFormSource(elem).attr('value')
+      hiddenAttachFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    // ---------- End of Upload image preparation -----------------------------------------------
+
+    const formSource = cheerio.load(postForm.html())
+    const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
+
+    const hiddenFormInputs = {}
+    formSource(`input[type='hidden']`).map((i, elem) => {
+      const k = formSource(elem).attr('name')
+      const v = formSource(elem).attr('value')
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    const edit = {
+      subject: formSource('#subject').attr('value'),
+      content: formSource('#e_textarea').text()
+    }
+
+    const preText = formSource('#e_textarea').text()
+
+    return {
+      actionUrl,
+      edit,
+      subTopicTypeId,
+      hiddenFormInputs,
+      existingImages,
+      hiddenAttachFormInputs,
+      preText
+    }
+  }
+
 }

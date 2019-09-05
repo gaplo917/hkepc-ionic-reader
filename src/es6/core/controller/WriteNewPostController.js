@@ -1,10 +1,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
-import cheerio from 'cheerio'
 
 export class WriteNewPostController {
   static get STATE () { return 'tab.topics-posts-new' }
@@ -78,66 +76,28 @@ export class WriteNewPostController {
   preFetchContent () {
     return this.apiService.preNewPost(this.topicId)
       .safeApply(this.scope, resp => {
-        const $ = cheerio.load(resp.data)
+        const {
+          actionUrl,
+          hiddenFormInputs,
+          existingImages,
+          hiddenAttachFormInputs
+        } = resp
 
-        const relativeUrl = $('#postform').attr('action')
-        this.postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
-
-        // ---------- Upload image preparation ----------------------------------------------
-        const imgattachform = $('#imgattachform')
-
-        const existingImages = $('img').map((i, e) => {
-          const img = $(e)
-          const src = img.attr('src')
-          const rawId = img.attr('id')
-          const isAttachment = _.startsWith(src, '//forum.hkepc.net')
-          const id = _.replace(rawId, 'image_', '')
-          return {
-            src: src.replace('//forum.hkepc.net', 'https://forum.hkepc.net'),
-            id: id,
-            isAttachment: isAttachment
-          }
-        }).get()
-          .filter(existingImage => existingImage.isAttachment)
-
-        const attachFormSource = cheerio.load(imgattachform.html())
-
-        const hiddenAttachFormInputs = {}
-
-        hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-        attachFormSource(`input[type='hidden']`).map((i, elem) => {
-          const k = attachFormSource(elem).attr('name')
-          const v = attachFormSource(elem).attr('value')
-
-          hiddenAttachFormInputs[k] = encodeURIComponent(v)
-        }).get()
+        this.actionUrl = actionUrl
 
         // assign hiddenAttachFormInputs to modal
         this.hiddenAttachFormInputs = hiddenAttachFormInputs
         this.existingImages = existingImages
-        // ---------- End of Upload image preparation -----------------------------------------------
-
-        const hiddenFormInputs = {}
-        $(`input[type='hidden']`).map((i, elem) => {
-          const k = $(elem).attr('name')
-          const v = $(elem).attr('value')
-
-          hiddenFormInputs[k] = encodeURIComponent(v)
-        }).get()
 
         this.hiddenFormInputs = hiddenFormInputs
       })
   }
 
   doPublishNewPost (post) {
-    const postUrl = this.postUrl
-    console.log('do publist new post')
-
     const isValidInput = post.title && post.content
 
     if (isValidInput) {
-      const hiddenFormInputs = this.hiddenFormInputs
+      const { actionUrl, hiddenFormInputs, ionicReaderSign } = this
 
       const imageFormData = {}
       const deleteImageFormData = {}
@@ -151,8 +111,6 @@ export class WriteNewPostController {
       this.deleteImageIds.forEach((id, i) => {
         deleteImageFormData[`attachdel[${i}]`] = id
       })
-
-      const ionicReaderSign = this.ionicReaderSign
 
       const subject = post.title
       const replyMessage = `${post.content}\n\n${ionicReaderSign}`
@@ -176,7 +134,7 @@ export class WriteNewPostController {
       // Post to the server
       this.apiService.dynamicRequest({
         method: 'POST',
-        url: postUrl,
+        url: actionUrl,
         data: {
           subject: subject,
           message: replyMessage,
@@ -188,35 +146,33 @@ export class WriteNewPostController {
           ...deleteImageFormData
         },
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }).safeApply(this.scope, (resp) => {
-        const responseText = resp && resp.data && cheerio.load(XMLUtils.removeCDATA(resp.data), { xmlMode: true }).html()
-        const isNewPostSuccess = _.includes(responseText, '主題已經發佈')
+      }).flatMapApiFromCheerioworker('responseContainText', { text: '主題已經發佈', isXml: true })
+        .safeApply(this.scope, ({ responseText, result }) => {
+          if (result) {
+            swal.close()
 
-        if (isNewPostSuccess) {
-          swal.close()
+            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
 
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
-
-          this.onBack()
-        } else {
-          swal({
+            this.onBack()
+          } else {
+            swal({
+              animation: false,
+              title: '發佈失敗',
+              text: `HKEPC 傳回:「${responseText}」`,
+              type: 'error',
+              confirmButtonText: '確定'
+            })
+          }
+        }).subscribe(
+          () => {},
+          () => swal({
             animation: false,
             title: '發佈失敗',
-            text: `HKEPC 傳回:「${responseText}」`,
+            text: `網絡異常，請重新嘗試！`,
             type: 'error',
             confirmButtonText: '確定'
           })
-        }
-      }).subscribe(
-        () => {},
-        () => swal({
-          animation: false,
-          title: '發佈失敗',
-          text: `網絡異常，請重新嘗試！`,
-          type: 'error',
-          confirmButtonText: '確定'
-        })
-      )
+        )
     } else {
       this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
     }

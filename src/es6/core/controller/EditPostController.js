@@ -1,9 +1,6 @@
-import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import swal from 'sweetalert2'
-import cheerio from 'cheerio'
 
 export class EditPostController {
   static get STATE () { return 'tab.topics-posts-edit' }
@@ -39,6 +36,7 @@ export class EditPostController {
 
     this.message = JSON.parse($stateParams.message)
 
+    this.actionUrl = ''
     this.deleteImageIds = []
     this.attachImageIds = []
     this.existingImages = []
@@ -58,74 +56,34 @@ export class EditPostController {
   preFetchContent () {
     return this.apiService.preEditMessage(this.message.post.topicId, this.message.post.id, this.message.id)
       .safeApply(this.scope, (resp) => {
-        const $ = cheerio.load(resp.data)
-        const relativeUrl = $('#postform').attr('action')
-        this.postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+        const {
+          actionUrl,
+          edit,
+          subTopicTypeId,
+          hiddenFormInputs,
+          existingImages,
+          hiddenAttachFormInputs
+        } = resp
 
-        // ---------- Upload image preparation ----------------------------------------------
-        const imgattachform = $('#imgattachform')
-        const existingImages = $('img').map((i, e) => {
-          const img = $(e)
-          const src = img.attr('src')
-          const rawId = img.attr('id')
-          const isAttachment = _.startsWith(src, '//forum.hkepc.net')
-          const id = _.replace(rawId, 'image_', '')
-          return {
-            src: src.replace('//forum.hkepc.net', 'https://forum.hkepc.net'),
-            id: id,
-            isAttachment: isAttachment
-          }
-        }).get()
-          .filter(existingImage => existingImage.isAttachment)
-
-        console.log('existingImages', existingImages)
-        const attachFormSource = cheerio.load(imgattachform.html())
-
-        const hiddenAttachFormInputs = {}
-
-        hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-        attachFormSource(`input[type='hidden']`).map((i, elem) => {
-          const k = attachFormSource(elem).attr('name')
-          const v = attachFormSource(elem).attr('value')
-          hiddenAttachFormInputs[k] = encodeURIComponent(v)
-        }).get()
+        this.actionUrl = actionUrl
 
         // assign hiddenAttachFormInputs to modal
         this.hiddenAttachFormInputs = hiddenAttachFormInputs
         this.existingImages = existingImages
-
-        // ---------- End of Upload image preparation -----------------------------------------------
-
-        const formSource = cheerio.load($('#postform').html())
-        const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
-
-        const hiddenFormInputs = {}
-        formSource(`input[type='hidden']`).map((i, elem) => {
-          const k = formSource(elem).attr('name')
-          const v = formSource(elem).attr('value')
-
-          hiddenFormInputs[k] = encodeURIComponent(v)
-        }).get()
 
         this.hiddenFormInputs = hiddenFormInputs
         this.subTopicTypeId = subTopicTypeId
 
         // the text showing the effects of reply / quote
         if (!this.edit) {
-          this.edit = {
-            subject: formSource('#subject').attr('value'),
-            content: formSource('#e_textarea').text()
-          }
+          this.edit = edit
         }
       })
   }
 
   doEdit (subject, content) {
     console.log(content)
-    const postUrl = this.postUrl
-    const hiddenFormInputs = this.hiddenFormInputs
-    const subTopicTypeId = this.subTopicTypeId
+    const { actionUrl, hiddenFormInputs, subTopicTypeId } = this
     const imageFormData = {}
     const deleteImageFormData = {}
 
@@ -158,7 +116,7 @@ export class EditPostController {
     // Post to the server
     this.apiService.dynamicRequest({
       method: 'POST',
-      url: postUrl,
+      url: actionUrl,
       data: {
         editsubmit: true,
         message: content,
@@ -169,37 +127,36 @@ export class EditPostController {
         ...deleteImageFormData
       },
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).safeApply(this.scope, (resp) => {
-      const responseText = resp && resp.data && cheerio.load(XMLUtils.removeCDATA(resp.data), { xmlMode: true }).html()
-      const isEditSuccess = _.includes(responseText, '成功')
-      if (isEditSuccess) {
-        swal.close()
+    }).flatMapApiFromCheerioworker('responseContainText', { text: '成功', isXml: true })
+      .safeApply(this.scope, ({ responseText, result }) => {
+        if (result) {
+          swal.close()
 
-        this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
+          this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
 
-        // set the page to the message page
-        this.currentPage = this.message.post.page
+          // set the page to the message page
+          this.currentPage = this.message.post.page
 
-        this.onBack()
-      } else {
-        swal({
+          this.onBack()
+        } else {
+          swal({
+            animation: false,
+            title: '修改失敗',
+            text: `HKEPC 傳回:「${responseText}」`,
+            type: 'error',
+            confirmButtonText: '確定'
+          })
+        }
+      }).subscribe(
+        () => {},
+        () => swal({
           animation: false,
-          title: '修改失敗',
-          text: `HKEPC 傳回:「${responseText}」`,
+          title: '發佈失敗',
+          text: `網絡異常，請重新嘗試！`,
           type: 'error',
           confirmButtonText: '確定'
         })
-      }
-    }).subscribe(
-      () => {},
-      () => swal({
-        animation: false,
-        title: '發佈失敗',
-        text: `網絡異常，請重新嘗試！`,
-        type: 'error',
-        confirmButtonText: '確定'
-      })
-    )
+      )
   }
 
   addImageToContent (existingImage) {

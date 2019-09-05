@@ -1,24 +1,31 @@
 import { HKEPCHtml } from './model/hkepc-html'
 import Mapper from './mapper/mapper'
 import cheerio from 'cheerio'
+import { XMLUtils } from '../utils/xml'
+import * as _ from 'lodash'
 
 module.exports = function (self) {
   self.addEventListener('message', function (ev) {
-    const { topic, data, currentHash, isAutoLoadImage } = ev.data
+    const { topic, data, currentHash, isAutoLoadImage, isXml } = ev.data
 
-    const html = new HKEPCHtml(cheerio.load(data))
-      .removeAds()
-      .processImgUrl('https://www.hkepc.com/forum')
-      .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
-      .processEpcUrl(currentHash || '')
-      .processExternalUrl()
+    const html = isXml
+      ? cheerio.load(XMLUtils.removeCDATA(data), { xmlMode: true }).html()
+      : new HKEPCHtml(cheerio.load(data))
+        .removeAds()
+        .processImgUrl('https://www.hkepc.com/forum')
+        .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
+        .processEpcUrl(currentHash || '')
+        .processExternalUrl()
 
-    self.postMessage({
-      topic: 'commonInfo',
-      data: html.getLoggedInUserInfo()
-    })
+    if (!isXml) {
+      self.postMessage({
+        topic: 'commonInfo',
+        data: html.getLoggedInUserInfo()
+      })
 
-    console.log(html.getLoggedInUserInfo())
+      console.log(html.getLoggedInUserInfo())
+    }
+
     switch (topic) {
       case 'topicList':
 
@@ -103,6 +110,21 @@ module.exports = function (self) {
         self.postMessage({
           topic: topic,
           data: Mapper.notifications(html, ev.data.opt)
+        })
+        break
+      case 'epcEditorData':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.epcEditorData(html, ev.data.opt)
+        })
+        break
+      case 'responseContainText':
+        const { text } = ev.data
+        const responseText = html
+        const result = _.includes(responseText, text)
+        self.postMessage({
+          topic: topic,
+          data: { responseText, result }
         })
         break
       default:

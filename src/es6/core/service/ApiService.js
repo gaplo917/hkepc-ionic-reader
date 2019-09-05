@@ -262,14 +262,14 @@ export class ApiService {
     return this.http.request({
       method: 'GET',
       url: HKEPC.forum.newPost(topicId)
-    })
+    }).flatMapApiFromCheerioworker('epcEditorData')
   }
 
   preEditMessage (topicId, postId, messageId) {
     return this.http.request({
       method: 'GET',
       url: HKEPC.forum.editMessage(topicId, postId, messageId)
-    })
+    }).flatMapApiFromCheerioworker('epcEditorData')
   }
 
   reportPage (topicId, postId, messageId) {
@@ -283,7 +283,7 @@ export class ApiService {
     return this.http.request({
       method: 'GET',
       url: HKEPC.forum.replyPage(reply)
-    })
+    }).flatMapApiFromCheerioworker('epcEditorData')
   }
 
   preSendPm (uid) {

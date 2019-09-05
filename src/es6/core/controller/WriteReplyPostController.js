@@ -1,10 +1,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import { XMLUtils } from '../../utils/xml'
 import * as _ from 'lodash'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
-import cheerio from 'cheerio'
 
 export class WriteReplyPostController {
   static get STATE () { return 'tab.topics-posts-detail-reply' }
@@ -71,63 +69,26 @@ export class WriteReplyPostController {
   preFetchContent () {
     // useful for determine none|reply|quote type
     return this.apiService.replyPage(this.reply)
-      .doOnNext(resp => {
-        const $ = cheerio.load(resp.data)
-        const relativeUrl = $('#postform').attr('action')
+      .safeApply(this.scope, (resp => {
+        const {
+          actionUrl,
+          preText,
+          hiddenFormInputs,
+          existingImages,
+          hiddenAttachFormInputs
+        } = resp
 
-        // ---------- Upload image preparation ----------------------------------------------
-        const imgattachform = $('#imgattachform')
-
-        const existingImages = $('img').map((i, e) => {
-          const img = $(e)
-          const src = img.attr('src')
-          const rawId = img.attr('id')
-          const isAttachment = _.startsWith(src, '//forum.hkepc.net')
-          const id = _.replace(rawId, 'image_', '')
-          return {
-            src: src.replace('//forum.hkepc.net', 'https://forum.hkepc.net'),
-            id: id,
-            isAttachment: isAttachment
-          }
-        }).get()
-          .filter(existingImage => existingImage.isAttachment)
-
-        const attachFormSource = cheerio.load(imgattachform.html())
-
-        const hiddenAttachFormInputs = {}
-
-        hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
-
-        attachFormSource(`input[type='hidden']`).map((i, elem) => {
-          const k = attachFormSource(elem).attr('name')
-          const v = attachFormSource(elem).attr('value')
-
-          hiddenAttachFormInputs[k] = encodeURIComponent(v)
-        }).get()
+        this.actionUrl = actionUrl
 
         // assign hiddenAttachFormInputs to modal
         this.hiddenAttachFormInputs = hiddenAttachFormInputs
         this.existingImages = existingImages
 
-        // ---------- End of Upload image preparation -----------------------------------------
-
-        this.postUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
-
-        const formSource = cheerio.load($('#postform').html())
-
-        const hiddenFormInputs = {}
-        formSource(`input[type='hidden']`).map((i, elem) => {
-          const k = formSource(elem).attr('name')
-          const v = formSource(elem).attr('value')
-
-          hiddenFormInputs[k] = encodeURIComponent(v)
-        }).get()
-
         this.hiddenFormInputs = hiddenFormInputs
 
         // the text showing the effects of reply / quote
-        this.preText = formSource('#e_textarea').text()
-      })
+        this.preText = preText
+      }))
   }
 
   doReply (reply) {
@@ -151,7 +112,7 @@ export class WriteReplyPostController {
 
     this.preFetchContent()
       .flatMap(() => {
-        const postUrl = this.postUrl
+        const actionUrl = this.actionUrl
         const preText = this.preText
         const hiddenFormInputs = this.hiddenFormInputs
         const ionicReaderSign = this.ionicReaderSign
@@ -175,7 +136,7 @@ export class WriteReplyPostController {
         // Post to the server
         return this.apiService.dynamicRequest({
           method: 'POST',
-          url: postUrl,
+          url: actionUrl,
           data: {
             message: replyMessage,
             ...hiddenFormInputs,
@@ -185,11 +146,9 @@ export class WriteReplyPostController {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
       })
-      .safeApply(this.scope, (resp) => {
-        const responseText = resp && resp.data && cheerio.load(XMLUtils.removeCDATA(resp.data), { xmlMode: true }).html()
-        const isReplySuccess = _.includes(responseText, '回覆已經發佈')
-
-        if (isReplySuccess) {
+      .flatMapApiFromCheerioworker('responseContainText', { text: '回覆已經發佈', isXml: true })
+      .safeApply(this.scope, ({ responseText, result }) => {
+        if (result) {
           swal.close()
           this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
 
