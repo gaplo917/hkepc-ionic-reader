@@ -198,7 +198,6 @@ export class ApiService {
       'srchfid[]=all'
     ].join('&')
 
-    console.log(postData)
     return this.http.request({
       method: 'POST',
       url: `${postUrl}?${postData}`
@@ -272,11 +271,11 @@ export class ApiService {
     }).flatMapApiFromCheerioworker('epcEditorData')
   }
 
-  reportPage (topicId, postId, messageId) {
+  getReportDialog (topicId, postId, messageId) {
     return this.http.request({
       method: 'GET',
-      url: HKEPC.forum.reportPage(topicId, postId, messageId)
-    })
+      url: HKEPC.forum.reportDialog(topicId, postId, messageId)
+    }).flatMapApiFromCheerioworker('reportEditorXmlData', { isXml: true })
   }
 
   replyPage (reply) {

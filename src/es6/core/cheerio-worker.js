@@ -118,6 +118,18 @@ module.exports = function (self) {
           data: Mapper.epcEditorData(html, ev.data.opt)
         })
         break
+      case 'reportEditorXmlData':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.reportEditorXmlData(html, ev.data.opt)
+        })
+        break
+      case 'myReplies' :
+        self.postMessage({
+          topic: topic,
+          data: Mapper.myReplies(html, ev.data.opt)
+        })
+        break
       case 'responseContainText':
         const { text } = ev.data
         const responseText = html
@@ -127,12 +139,7 @@ module.exports = function (self) {
           data: { responseText, result }
         })
         break
-      case 'myReplies' :
-        self.postMessage({
-          topic: topic,
-          data: Mapper.myReplies(html, ev.data.opt)
-        })
-        break
+
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({

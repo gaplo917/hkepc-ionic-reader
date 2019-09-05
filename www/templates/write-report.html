@@ -1,0 +1,23 @@
+<ion-view class="edit-view">
+  <ion-nav-title>舉報{{vm.meta.author.name}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button-default" ng-click="vm.doReport()">遞交</button>
+  </ion-nav-buttons>
+  <ion-content>
+    <h5>帖子：{{vm.meta.title}}</h5>
+    <div class="row content-input" style="margin-top: 8px">
+      <div class="item item-input-inset">
+        <div class="item-input-wrapper">
+          <textarea placeholder="舉報原因"
+                    ng-model="vm.reason"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <!--Let the view scrollable-->
+    <div style="height: 500px"></div>
+
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+</ion-view>
+

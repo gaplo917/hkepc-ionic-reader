@@ -82,7 +82,7 @@ module.exports = {
           return url
       }
     },
-    reportPage: (topicId, postId, messageId) => `${BASE_FORUM_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}`,
+    reportDialog: (topicId, postId, messageId) => `${BASE_FORUM_URL}/misc.php?action=report&fid=${topicId}&tid=${postId}&pid=${messageId}&infloat=yes&handlekey=report&inajax=1&ajaxtarget=fwin_content_report`,
     editMessage: (topicId, postId, messageId) => `${BASE_FORUM_URL}/post.php?action=edit&fid=${topicId}&tid=${postId}&pid=${messageId}`,
     pmList: (page) => `${BASE_FORUM_URL}/pm.php?filter=privatepm&page=${page}`,
     pm: (id) => `${BASE_FORUM_URL}/pm.php?uid=${id}&filter=privatepm&daterange=5#new`,

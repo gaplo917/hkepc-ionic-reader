@@ -695,6 +695,28 @@ export default class Mapper {
       replies,
       totalPageNum
     }
+  }
 
+  static reportEditorXmlData (html, opt) {
+    const $ = cheerio.load(html)
+    const formSource = $('#postform')
+    const relativeUrl = formSource.attr('action')
+    const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+
+    const hiddenFormInputs = {}
+    $(`input[type='hidden']`).map((i, elem) => {
+      const k = $(elem).attr('name')
+      const v = $(elem).attr('value')
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    // hard code that is report type
+    hiddenFormInputs['type'] = '1'
+
+    return {
+      actionUrl,
+      hiddenFormInputs
+    }
   }
 }
