@@ -211,6 +211,7 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.pmList(page)
     })
+      .flatMapApiFromCheerioworker('chatList')
   }
 
   chatDetails (senderId) {
@@ -218,10 +219,7 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.pm(senderId)
     })
-  }
-
-  postChatMessage (opt) {
-    return this.http.request(opt)
+      .flatMapApiFromCheerioworker('chatDetails')
   }
 
   settings () {

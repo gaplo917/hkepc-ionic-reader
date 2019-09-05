@@ -1,4 +1,4 @@
-.chats-view {
+.chats-details-view {
 
   ion-content {
     background-color: $bg-color;
@@ -19,8 +19,8 @@
 
     textarea {
       width: 100%;
-      min-height: 37px;
-      height: 37px;
+      min-height: 60px;
+      height: 60px;
     }
     button {
       min-height: 46px;

@@ -1,16 +1,12 @@
 /**
  * Created by Gaplo917 on 11/1/2016.
  */
-import * as HKEPC from '../../data/config/hkepc'
-import * as URLUtils from '../../utils/url'
-import { GeneralHtml } from '../model/general-html'
 import * as Controllers from './index'
-import cheerio from 'cheerio'
 
-export class ChatController {
+export class ChatListController {
   static get STATE () { return 'tab.features-chats' }
 
-  static get NAME () { return 'ChatController' }
+  static get NAME () { return 'ChatListController' }
 
   static get CONFIG () {
     return {
@@ -18,7 +14,7 @@ export class ChatController {
       views: {
         main: {
           templateUrl: 'templates/features/chats/chats.list.html',
-          controller: ChatController.NAME,
+          controller: ChatListController.NAME,
           controllerAs: 'vm'
         }
       }
@@ -59,53 +55,9 @@ export class ChatController {
 
   loadChats () {
     this.apiService.chatList(this.page)
-      .safeApply(this.scope, (resp) => {
-        const html = new GeneralHtml(cheerio.load(resp.data))
-
-        const $ = html
-          .removeAds()
-          .processImgUrl(HKEPC.baseForumUrl)
-          .getCheerio()
-
-        const pageNumSource = $('.pages a, .pages strong')
-
-        const pageNumArr = pageNumSource
-          .map((i, elem) => $(elem).text())
-          .get()
-          .map(e => e.match(/\d/g)) // array of string with digit
-          .filter(e => e != null) // filter null value
-          .map(e => parseInt(e.join(''))) // join the array and parseInt
-
-        this.totalPageNum = pageNumArr.length === 0
-          ? 1
-          : Math.max(...pageNumArr)
-
-        console.log('totalPageNum', this.totalPageNum)
-
-        const chats = $('.pm_list li').map((i, elem) => {
-          const chatSource = cheerio.load($(elem).html())
-
-          const avatarUrl = chatSource('.avatar img').attr('src')
-          const summary = chatSource('.summary').text()
-          const username = chatSource('.cite cite a').text()
-          const isRead = chatSource('.cite img').attr('alt') !== 'NEW'
-
-          chatSource('cite').remove()
-          const date = chatSource('.cite').text()
-
-          const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
-          return {
-            id: id,
-            avatarUrl: avatarUrl,
-            summary: summary,
-            username: username,
-            date: date,
-            isRead: isRead
-          }
-        }).get()
-
+      .safeApply(this.scope, ({ chats, totalPageNum }) => {
+        this.totalPageNum = totalPageNum
         this.chats = this.chats.concat(chats)
-
         this.scope.$broadcast('scroll.infiniteScrollComplete')
       })
       .subscribe()

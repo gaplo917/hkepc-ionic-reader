@@ -81,6 +81,18 @@ module.exports = function (self) {
           data: Mapper.myPost(html, ev.data.opt)
         })
         break
+      case 'chatList':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.chatList(html, ev.data.opt)
+        })
+        break
+      case 'chatDetails':
+        self.postMessage({
+          topic: topic,
+          data: Mapper.chatDetails(html, ev.data.opt)
+        })
+        break
       default:
         console.log(`No special handling of topic=${topic}`)
         self.postMessage({

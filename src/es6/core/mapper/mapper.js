@@ -1,6 +1,7 @@
 import { HKEPCHtml } from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
+import * as HKEPC from '../../data/config/hkepc'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)
@@ -411,6 +412,105 @@ export default class Mapper {
 
     return {
       totalPageNum, posts
+    }
+  }
+
+  static chatList (html, opt) {
+    const $ = html.getCheerio()
+
+    const pageNumSource = $('.pages a, .pages strong')
+
+    const pageNumArr = pageNumSource
+      .map((i, elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length === 0
+      ? 1
+      : Math.max(...pageNumArr)
+
+    const chats = $('.pm_list li').map((i, elem) => {
+      const chatSource = cheerio.load($(elem).html())
+
+      const avatarUrl = chatSource('.avatar img').attr('raw-src')
+      const summary = chatSource('.summary').text()
+      const username = chatSource('.cite cite a').text()
+      const isRead = chatSource('.cite img').attr('alt') !== 'NEW'
+
+      chatSource('cite').remove()
+      const date = chatSource('.cite').text()
+
+      const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
+      return {
+        id: id,
+        avatarUrl: avatarUrl,
+        summary: summary,
+        username: username,
+        date: date,
+        isRead: isRead
+      }
+    }).get()
+
+    return {
+      chats,
+      totalPageNum
+    }
+  }
+
+  static chatDetails (html, opt) {
+    const $ = html.getCheerio()
+    const parseChat = (chatHtml, isSelf) => {
+      const chatSource = cheerio.load(chatHtml)
+
+      const avatarUrl = chatSource('.avatar img').attr('raw-src')
+      const content = chatSource('.summary').html()
+      const username = chatSource('.cite cite').text()
+
+      chatSource('cite').remove()
+
+      const date = chatSource('.cite').text()
+
+      const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
+      return {
+        id: id,
+        avatarUrl: avatarUrl,
+        content: content,
+        username: username,
+        date: date.trim(),
+        isSelf: isSelf
+      }
+    }
+    const messages = $('.pm_list li.s_clear').map((i, elem) => {
+      const isSelf = $(elem).attr('class').indexOf('self') > 0
+
+      return parseChat($(elem).html(), isSelf)
+    }).get()
+
+    const username = $('.itemtitle .left strong').text()
+
+    // prepare the chat message
+    const pmForm = $('#pmform')
+    const relativeUrl = pmForm.attr('action')
+    const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&infloat=yes&inajax=1`
+
+    const formSource = cheerio.load(pmForm.html())
+
+    const hiddenFormInputs = {}
+
+    formSource(`input[type='hidden']`).map((i, elem) => {
+      const k = formSource(elem).attr('name')
+      const v = formSource(elem).attr('value')
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    return {
+      username,
+      messages,
+      actionUrl,
+      hiddenFormInputs
     }
   }
 }
