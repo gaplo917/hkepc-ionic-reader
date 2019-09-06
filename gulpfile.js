@@ -68,6 +68,7 @@ gulp.task('browserify', function () {
 
 gulp.task('webserver', function () {
   return browserSync.init({
+    ghostMode: false,
     server: {
       baseDir: './www'
     }
@@ -113,7 +114,7 @@ gulp.task('compressCss', function () {
     .pipe(gulp.dest('./www/css/'))
 })
 gulp.task('compressJs', function () {
-  return gulp.src('./www/js/app.js')
+  return gulp.src(['./www/js/app.js', './www/js/dependencies.js'])
     .pipe(ngAnnotate())
     .pipe(stripDebug())
     .pipe(uglify({ mangle: false }))
