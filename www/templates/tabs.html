@@ -43,12 +43,6 @@ navigation history that also transitions its views in and out.
         bottom: 0px;
     }
 
-    .action-sheet-wrapper {
-        bottom: 7.8vh;
-    }
-
-    .tab-bar-inset {
-    }
 </style>
 <style ng-if="isiOSNative">
 
@@ -78,6 +72,16 @@ navigation history that also transitions its views in and out.
 
     .has-tabs, .bar-footer.has-tabs {
         bottom: 0px;
+    }
+
+    /* default handling */
+    .tab-bar-inset {
+        width: 100%;
+        height: 60px;
+    }
+
+    .action-sheet-wrapper {
+        bottom: 60px;
     }
 
     /*iphone 5*/
@@ -307,6 +311,21 @@ navigation history that also transitions its views in and out.
 
         .action-sheet-wrapper {
             bottom: 7.7vh;
+        }
+    }
+
+    /*ipad pro 3rd gen 1024*768*/
+    @media only screen
+    and (min-device-width: 1024px)
+    and (max-device-height: 1366px)
+    and (-webkit-min-device-pixel-ratio: 2) {
+        .tab-bar-inset {
+            width: 100%;
+            height: 60px;
+        }
+
+        .action-sheet-wrapper {
+            bottom: 60px;
         }
     }
 
