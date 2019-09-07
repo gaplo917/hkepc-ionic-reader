@@ -3,6 +3,7 @@
  */
 import * as Controllers from './index'
 import swal from 'sweetalert2'
+import { Bridge, Channel } from '../bridge/index'
 
 export class ChatDetailController {
   static get STATE () { return 'tab.features-chat-detail' }
@@ -115,6 +116,23 @@ export class ChatDetailController {
         disableBack: true
       })
       this.state.go(Controllers.ChatListController.STATE)
+    }
+  }
+
+  requestComposeDialog () {
+    if (Bridge.isAvailable()) {
+      Bridge.callHandler(Channel.composeDialog, {
+        title: `發送訊息`,
+        positiveText: '發送',
+        cancelText: '取消'
+      }, (content) => {
+        if (content === null) {
+          // cancelled
+          return
+        }
+        this.messageInput = content
+        this.sendMessage()
+      })
     }
   }
 

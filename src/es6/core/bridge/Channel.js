@@ -14,6 +14,8 @@ export class Channel {
 
   static get actionSheet () { return 'ACTION_SHEET' }
 
+  static get composeDialog () { return 'COMPOSE_DIALOG' }
+
   // from Native
   static get nativeStorageUpdated () { return 'NATIVE_STORAGE_UPDATE' }
 

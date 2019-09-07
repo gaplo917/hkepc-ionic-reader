@@ -507,19 +507,19 @@ ion-infinite-scroll {
 }
 
 .floating-action-btn {
-  opacity: 0.9;
+  opacity: 1;
   position: fixed;
   bottom: 16px;
   right: 16px;
   z-index: 11;
   .button-rounded {
-    height: 44px;
-    width: 44px;
-    border-radius: 44px;
+    height: 56px;
+    width: 56px;
+    border-radius: 56px;
     line-height: 16px;
-
+    -webkit-box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
     i {
-      font-size: 24px;
+      font-size: 28px;
     }
 
     &.edit-activated {
