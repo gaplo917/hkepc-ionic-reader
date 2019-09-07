@@ -129,7 +129,7 @@
                             <option value="29">HKEPC 2.0（beta）</option>
                         </select>
                     </div>
-                    <p class="forum-style-warning" ng-if="vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
+                    <p class="forum-style-warning" ng-if="vm.forumStyle && vm.forumStyle != 28">** HKEPC IR 不支援此風格</p>
                 </div>
 
             </div>
@@ -231,7 +231,7 @@
                     <i class="text-icon inner-icon" style="background-color: #8b8b8b;">M</i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">M 字額修正 <span class="ultra-less-important-info">(適用於部份手機)</span>
+                <div style="margin-left:10px;line-height: 2;">M 字額修正 <span class="ultra-less-important-info"></span>
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-model="vm.mHeadFix">
                         <div class="track">
@@ -251,7 +251,7 @@
                     <i class="ion-social-android inner-icon" style="background-color: #23b1c8;"></i>
                 </div>
 
-                <div style="margin-left:10px;line-height: 2;">Android 全螢幕修正<span class="ultra-less-important-info">{{' '}}(適用於部份手機)</span>
+                <div style="margin-left:10px;line-height: 2;">Android 全螢幕修正<span class="ultra-less-important-info"></span>
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-model="vm.androidBottomFix">
                         <div class="track">
