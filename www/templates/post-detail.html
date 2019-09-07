@@ -56,20 +56,20 @@
                          ng-click="::vm.onUserProfilePic(message.author)">
 
                     <!--Control buttons-->
-                    <button class="button button-icon ion-ios-compose-outline on-more-button"
+                    <div class="button button-icon ion-ios-compose-outline on-more-button"
                             style="right: 105px;"
                             ng-if="::message.hasEdit"
-                            ng-click="::vm.onEdit(message)"></button>
-                    <button class="button button-icon on-more-button"
+                            ng-click="::vm.onEdit(message)"></div>
+                    <div class="button button-icon on-more-button"
                             ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "
                             style="right: 70px;"
-                            ng-click="::vm.onReply(message)"></button>
-                    <button class="button button-icon on-more-button"
+                            ng-click="::vm.onReply(message)"></div>
+                    <div class="button button-icon on-more-button"
                             ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "
                             style="right: 35px;"
-                            ng-click="::vm.like(message)"></button>
-                    <button class="button button-icon ion-android-more-vertical on-more-button"
-                            ng-click="::vm.onMore(message)"></button>
+                            ng-click="::vm.like(message)"></div>
+                    <div class="button button-icon ion-android-more-vertical on-more-button"
+                            ng-click="::vm.onMore(message)"></div>
 
                     <!--User name-->
                     <h2 ng-click="::vm.onUserProfilePic(message.author)">
