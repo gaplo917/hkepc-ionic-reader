@@ -11,9 +11,9 @@ navigation history that also transitions its views in and out.
 
 <ion-nav-view name="main"></ion-nav-view>
 
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
 <style ng-if="isAndroidNative">
     .bar.bar-header {
         height: 68px;

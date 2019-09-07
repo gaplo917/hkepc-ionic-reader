@@ -38,6 +38,12 @@ export class TabController {
   constructor ($scope, $state, $rootScope, $ionicModal, $stateParams, AuthService, ngToast, LocalStorageService, HistoryService, $ionicHistory, rx, apiService, observeOnScope, $ionicSideMenuDelegate, $timeout) {
     console.debug(`[${TabController.NAME}] init`)
 
+    this.initTheme = {
+      dark: document.getElementById('init-dark') !== null,
+      oled: document.getElementById('init-oled') !== null,
+      default: document.getElementById('init-default') !== null
+    }
+
     this.scope = $scope
     this.rootScope = $rootScope
     this.localStorageService = LocalStorageService
