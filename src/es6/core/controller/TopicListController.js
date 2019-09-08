@@ -2,10 +2,7 @@
  * Created by Gaplo917 on 11/1/2016.
  */
 import * as Controllers from './index'
-import {
-  isiOSNative,
-  isAndroidNative
-} from '../bridge/index'
+import { isAndroidNative, isiOSNative } from '../bridge/index'
 import swal from 'sweetalert2'
 
 export class TopicListController {
@@ -40,6 +37,7 @@ export class TopicListController {
     this.state = $state
     this.ngToast = ngToast
     this.editMode = false
+    this.isLoggedIn = false
 
     observeOnScope($scope, 'vm.topics')
       .delay(1000) // delay for saving topics
@@ -50,45 +48,36 @@ export class TopicListController {
       })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
-        this.isLoggedIn = isLoggedIn
-
-        if (isLoggedIn && this.firstLogin) {
-          // auto refresh for logged in user
-          this.loadList()
-
-          // unset to false to prevent next loading
-          this.firstLogin = false
-        } else if (!isLoggedIn && !this.firstLogin) {
-          // auto refresh for non logged in user
-          this.loadList()
-          this.firstLogin = true
-        }
-      }).subscribe()
-
-      this.localStorageService.getObject('topic-rank-map')
-        .safeApply($scope, topicRankMapObj => {
-          this.topicRankMap = new Map(topicRankMapObj)
-        }).flatMap(() => {
-          return this.localStorageService.getObject('topics')
-            .do(topics => {
-              if (topics) {
-                console.log('[TopicListController]', 'using cache')
-              }
-            })
-            .flatMap(topics => {
-              return topics
-                ? rx.Observable.just(topics)
-                : this.apiService.topicList()
-                  .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
-            })
-        }).safeApply($scope, topics => {
-          this.updateTopics(topics)
+      this.rx.Observable.combineLatest(
+        this.localStorageService.getObject('topic-rank-map'),
+        this.localStorageService.getObject('topics'),
+        (topicRankMapObj, topics) => ({ topicRankMapObj, topics })
+      )
+        .flatMap(({ topicRankMapObj, topics }) => {
+          if (topics.length > 0) {
+            console.log('[TopicListController]', 'using cache')
+          }
+          return topics.length > 0
+            ? this.rx.Observable.just({ topicRankMapObj, topics })
+            : this.apiService.topicList()
+              .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))
+              .map((topics) => ({ topicRankMapObj, topics }))
         })
-        .subscribe()
+        .safeApply($scope, ({ topicRankMapObj, topics }) => {
+          this.topicRankMap = new Map(topicRankMapObj)
+          this.updateTopics(topics)
+        }).subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {
+      this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
+        if (isLoggedIn !== this.isLoggedIn) {
+          // auto refresh when state changes
+          this.loadList()
+        }
+        this.isLoggedIn = isLoggedIn
+      }).subscribe()
+
       this.authService.getUsername().safeApply(this.scope, username => {
         this.username = username
       }).subscribe()
