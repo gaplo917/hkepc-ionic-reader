@@ -47,7 +47,7 @@
 * 修正無法舉報問題
 
 #### IR 營運狀態更新
-IR 一直致力為 HKEPC 用戶提供優質的手機瀏覽體驗，為希望更多 IR App 能讓更多 HKEPC 用戶能使用 IR，故設定為免費 [image](/img/gifs/icon_clap.gif)。
+IR 一直致力為 HKEPC 用戶提供優質的手機瀏覽體驗，為希望更多 IR App 能讓更多 HKEPC 用戶能使用 IR，故設定為免費 ![image](img/gifs/icon_clap.gif)。
 
 現時 IR App 只有用戶捐款這個單一收入來源，由於數量不多，三年來的總額約 $1200 HKD；獲得的收入連 iOS $99 USD/年 上架費都不足夠支付，更甚，
 每個大型更新所需的開發費用（作者的機會成本 - Opportunity cost）。
