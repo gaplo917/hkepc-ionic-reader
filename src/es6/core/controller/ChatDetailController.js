@@ -124,7 +124,8 @@ export class ChatDetailController {
       Bridge.callHandler(Channel.composeDialog, {
         title: `發送訊息`,
         positiveText: '發送',
-        cancelText: '取消'
+        cancelText: '取消',
+        placeholder: '訊息'
       }, (content) => {
         if (content === null) {
           // cancelled
