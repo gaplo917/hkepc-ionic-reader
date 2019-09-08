@@ -32,12 +32,20 @@ export class CMUsersController {
     this.authService = AuthService
     this.items = []
     this.isReady = false
-    this.userIdInput = $stateParams.prefill || ''
-    this.remarkInput = ''
+    this.prefill = JSON.parse($stateParams.prefill || null)
+    this.userIdInput = (this.prefill && this.prefill.id) || ''
+    this.remarkInput = (this.prefill && this.prefill.reason) || ''
     this.editMode = false
     this.userFilter = userFilterSchema
 
     $scope.$on('$ionicView.loaded', (e) => {
+      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
+        if (!isLoggedIn) {
+          ngToast.danger(`<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>`)
+          this.onBack()
+        }
+      }).subscribe()
+
       LocalStorageService.getObject('userFilter', userFilterSchema)
         .safeApply($scope, (userFilter) => {
           const { users, userIds } = userFilter

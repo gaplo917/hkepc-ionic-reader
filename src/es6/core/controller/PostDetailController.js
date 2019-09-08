@@ -539,6 +539,7 @@ export class PostDetailController extends IRLifecycleOwner {
           `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖`,
           `關注此主題的新回覆`,
           `收藏此主題`,
+          `隱藏並封鎖 ${message.author.name}`,
           `舉報`
         ],
         titleText: '更多功能',
@@ -569,6 +570,17 @@ export class PostDetailController extends IRLifecycleOwner {
             ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
           }).subscribe()
         } else if (index === 5) {
+          // this feature is made for apple review team, sosad
+          this.state.go(Controllers.CMUsersController.STATE, {
+            prefill: JSON.stringify({
+              id: message.author.uid,
+              reason: '帖子內容問題'
+            })
+          })
+          message.isMatchedFilter = true
+          message.filterMode = '1'
+          message.filterReason = '(已隱藏｜原因：帖子內容問題)'
+        } else if (index === 6) {
           this.onReport(message)
         }
       })

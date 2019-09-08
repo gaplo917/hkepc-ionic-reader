@@ -62,7 +62,10 @@ export class UserProfileController {
 
   addToFilterList () {
     this.state.go(Controllers.CMUsersController.STATE, {
-      prefill: this.author.uid
+      prefill: JSON.stringify({
+        id: this.author.uid,
+        reason: ''
+      })
     })
   }
 
