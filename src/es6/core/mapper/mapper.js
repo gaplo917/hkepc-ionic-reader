@@ -592,11 +592,11 @@ export default class Mapper {
     const existingImages = $('img').map((i, e) => {
       const img = $(e)
       const src = img.attr('raw-src')
-      const rawId = img.attr('id')
-      const isAttachment = _.startsWith(src, '//forum.hkepc.net')
+      const rawId = img.attr('raw-id')
+      const isAttachment = _.startsWith(src, 'https://forum.hkepc.net')
       const id = _.replace(rawId, 'image_', '')
       return {
-        src: src.replace('//forum.hkepc.net', 'https://forum.hkepc.net'),
+        src: src,
         id: id,
         isAttachment: isAttachment
       }

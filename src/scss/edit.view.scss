@@ -45,5 +45,27 @@
     }
   }
 
+  .attachment-row {
+    overflow: auto;
+    white-space: nowrap;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-left: 16px;
+    padding-right: 16px;
+
+    .attachment-image-wrapper {
+      min-width: 100px;
+      height: 70px;
+      display: inline-block;
+      img {
+        height: 70px; display:block; margin: auto
+      }
+      span {
+        text-align: center;
+        display: block;
+      }
+    }
+  }
+
 }
 

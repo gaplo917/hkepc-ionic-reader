@@ -56,6 +56,7 @@ export class GeneralHtml {
       }
 
       const imgSrc = elm.attr('src')
+      const rawId = elm.attr('id')
 
       if (URLUtils.isRelativeUrl(imgSrc)) {
         elm.attr('src', `${imagePrefix}/${imgSrc}`)
@@ -64,6 +65,7 @@ export class GeneralHtml {
       }
 
       elm.attr('raw-src', imgSrc)
+      elm.attr('raw-id', rawId)
 
       // remove action attr on img
       elm.removeAttr('onload')
