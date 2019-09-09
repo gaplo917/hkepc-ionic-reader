@@ -5,10 +5,9 @@ const stripDebug = require('gulp-strip-debug')
 const sass = require('gulp-sass')
 const source = require('vinyl-source-stream')
 const buffer = require('vinyl-buffer')
-const uglify = require('gulp-uglify')
+const terser = require('gulp-terser')
 const sourcemaps = require('gulp-sourcemaps')
-const ngAnnotate = require('gulp-ng-annotate')
-const minifyCss = require('gulp-minify-css')
+const cleanCSS = require('gulp-clean-css')
 const browserSync = require('browser-sync').create()
 
 function onError (err) {
@@ -107,17 +106,14 @@ gulp.task('watchAsset', function () {
 gulp.task('watch', gulp.parallel(['watchDependencies', 'watchJs', 'watchSass', 'watchAsset']))
 
 gulp.task('compressCss', function () {
-  return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css'])
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
+  return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css', './www/css/ionic.app.oled.dark.css'])
+    .pipe(cleanCSS())
     .pipe(gulp.dest('./www/css/'))
 })
 gulp.task('compressJs', function () {
   return gulp.src(['./www/js/app.js', './www/js/dependencies.js'])
-    .pipe(ngAnnotate())
     .pipe(stripDebug())
-    .pipe(uglify({ mangle: false }))
+    .pipe(terser({ mangle: false }))
     .pipe(gulp.dest('./www/js/'))
 })
 

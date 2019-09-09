@@ -271,19 +271,17 @@ export default class Mapper {
         const postSource = $(elem)
         const hasEdit = !!postSource.find('a.editpost').text()
 
-        const content = new HKEPCHtml(
-          cheerio.load(postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix').html() ||
-          postSource.find('.postcontent > .defaultpost > .postmessage').html())
-        ).getCheerio()
+        const content = postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix') ||
+          postSource.find('.postcontent > .defaultpost > .postmessage')
 
-        content('#threadtitle').remove()
-        content('.useraction').remove()
-        content('blockquote').attr('ng-click', content('blockquote a').attr('ng-click'))
-        content('blockquote a').attr('ng-click', '')
-        content('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
+        content.find('#threadtitle').remove()
+        content.find('.useraction').remove()
+        content.find('blockquote').attr('ng-click', content.find('blockquote a').attr('ng-click'))
+        content.find('blockquote a').attr('ng-click', '')
+        content.find('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
 
         // auto add embedded youtube before the link
-        content('a[youtube-embed]').each((i, e) => {
+        content.find('a[youtube-embed]').each((i, e) => {
           const elm = $(e)
           elm.before(elm.attr('youtube-embed'))
         })
@@ -295,7 +293,7 @@ export default class Mapper {
 
         // processed by general html (isAutoLoadImage features)
         const avatarImageUrl = avatarImage.attr('image-lazy-src')
-        const pstatus = content('.pstatus').text()
+        const pstatus = content.find('.pstatus').text()
 
         return {
           id: postSource.find('table').attr('id').replace('pid', ''),
@@ -387,24 +385,24 @@ export default class Mapper {
       : Math.max(...pageNumArr)
 
     const posts = $('.datalist table > tbody > tr').map((i, elem) => {
-      const postSource = cheerio.load($(elem).html())
+      const postSource = $(elem)
 
       return {
         post: {
-          title: postSource('th a').text(),
-          url: postSource('th a').attr('href')
+          title: postSource.find('th a').text(),
+          url: postSource.find('th a').attr('href')
         },
         topic: {
-          url: postSource('.forum a').attr('href'),
-          title: postSource('.forum a').text() || postSource('td.forum').text()
+          url: postSource.find('.forum a').attr('href'),
+          title: postSource.find('.forum a').text() || postSource.find('td.forum').text()
         },
-        status: postSource('.nums').text(),
+        status: postSource.find('.nums').text(),
         lastpost: {
-          by: postSource('.lastpost cite a').text() || postSource('.lastpost cite').text(),
-          timestamp: postSource('.lastpost > em > a > span').attr('title') ||
-                     postSource('.lastpost > em > a').text() ||
-                     postSource('.lastpost > em > span').text() ||
-                     postSource('.lastpost > em').text() ||
+          by: postSource.find('.lastpost cite a').text() || postSource.find('.lastpost cite').text(),
+          timestamp: postSource.find('.lastpost > em > a > span').attr('title') ||
+                     postSource.find('.lastpost > em > a').text() ||
+                     postSource.find('.lastpost > em > span').text() ||
+                     postSource.find('.lastpost > em').text() ||
                      0
         }
       }
@@ -433,15 +431,15 @@ export default class Mapper {
       : Math.max(...pageNumArr)
 
     const chats = $('.pm_list li').map((i, elem) => {
-      const chatSource = cheerio.load($(elem).html())
+      const chatSource = $(elem)
 
-      const avatarUrl = chatSource('.avatar img').attr('raw-src')
-      const summary = chatSource('.summary').text()
-      const username = chatSource('.cite cite a').text()
-      const isRead = chatSource('.cite img').attr('alt') !== 'NEW'
+      const avatarUrl = chatSource.find('.avatar img').attr('raw-src')
+      const summary = chatSource.find('.summary').text()
+      const username = chatSource.find('.cite cite a').text()
+      const isRead = chatSource.find('.cite img').attr('alt') !== 'NEW'
 
-      chatSource('cite').remove()
-      const date = chatSource('.cite').text()
+      chatSource.find('cite').remove()
+      const date = chatSource.find('.cite').text()
 
       const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
       return {
@@ -462,16 +460,14 @@ export default class Mapper {
 
   static chatDetails (html, opt) {
     const $ = html.getCheerio()
-    const parseChat = (chatHtml, isSelf) => {
-      const chatSource = cheerio.load(chatHtml)
+    const parseChat = (chatSource, isSelf) => {
+      const avatarUrl = chatSource.find('.avatar img').attr('raw-src')
+      const content = chatSource.find('.summary').html()
+      const username = chatSource.find('.cite cite').text()
 
-      const avatarUrl = chatSource('.avatar img').attr('raw-src')
-      const content = chatSource('.summary').html()
-      const username = chatSource('.cite cite').text()
+      chatSource.find('cite').remove()
 
-      chatSource('cite').remove()
-
-      const date = chatSource('.cite').text()
+      const date = chatSource.find('.cite').text()
 
       const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
       return {
@@ -486,7 +482,7 @@ export default class Mapper {
     const messages = $('.pm_list li.s_clear').map((i, elem) => {
       const isSelf = $(elem).attr('class').indexOf('self') > 0
 
-      return parseChat($(elem).html(), isSelf)
+      return parseChat($(elem), isSelf)
     }).get()
 
     const username = $('.itemtitle .left strong').text()
@@ -569,9 +565,10 @@ export default class Mapper {
       : Math.max(...pageNumArr)
 
     const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread').map((i, elem) => {
+      const source = $(elem)
       return {
-        isRead: $(elem).find('img').attr('alt') !== 'NEW',
-        content: $(elem).html()
+        isRead: source.find('img').attr('alt') !== 'NEW',
+        content: source.html()
       }
     }).get()
 
@@ -664,22 +661,22 @@ export default class Mapper {
       : Math.max(...pageNumArr)
 
     const myreplies = $('.datalist > table > tbody > tr').map((i, elem) => {
-      const postSource = cheerio.load($(elem).html())
+      const postSource = $(elem)
 
       return {
         post: {
-          title: postSource('th a').text(),
-          messageId: postSource('th a').attr('pid'),
-          postId: postSource('th a').attr('ptid'),
-          inAppUrl: postSource('th a').attr('in-app-url')
+          title: postSource.find('th a').text(),
+          messageId: postSource.find('th a').attr('pid'),
+          postId: postSource.find('th a').attr('ptid'),
+          inAppUrl: postSource.find('th a').attr('in-app-url')
         },
         topic: {
-          url: postSource('.forum a').attr('href'),
-          title: postSource('.forum a').text()
+          url: postSource.find('.forum a').attr('href'),
+          title: postSource.find('.forum a').text()
         },
-        status: postSource('.nums').text(),
-        timestamp: postSource('.lastpost > em > span').attr('title') || postSource('.lastpost > em').text() || 0,
-        brief: postSource('.lighttxt').text()
+        status: postSource.find('.nums').text(),
+        timestamp: postSource.find('.lastpost > em > span').attr('title') || postSource.find('.lastpost > em').text() || 0,
+        brief: postSource.find('.lighttxt').text()
       }
     }).get()
 
