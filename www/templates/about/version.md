@@ -1,4 +1,4 @@
-**30 Aug 2019 - Release IR Pro 內核 v3.6.0, iOS v3.0.0**
+**10 Sep 2019 - Release IR Pro 內核 v3.6.0, iOS v3.0.0**
 
 #### 內核更新：
 * ***提升瀏灠速度*** - 復審 ionic v1 內核，調整內核代碼；提升速度原因是移除了 IR App 不必要的 ~300ms 延遲及不必要的`click-block`，
