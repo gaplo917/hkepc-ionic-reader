@@ -1,0 +1,10 @@
+<ion-view class="about-version-view" view-title="更新日誌">
+    <ion-content>
+        <div class="spinner" ng-if="!vm.content">
+            <ir-spinner></ir-spinner>
+        </div>
+        <ion-scroll compile="vm.content">
+        </ion-scroll>
+        <div class="tab-bar-inset"></div>
+    </ion-content>
+</ion-view>

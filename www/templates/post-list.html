@@ -40,7 +40,7 @@
                 ng-repeat="post in vm.posts track by $index"
                 ng-if="(post.topicId == 'search' || post.topicId == 'latest' || (vm.showSticky && post.isSticky || !post.isSticky))"
                 ng-click="::vm.onGoToPost(post)"
-                href="#/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
+                href="#!/tab/topics/{{::post.topicId}}/posts/{{::post.id}}/page/1"
                 id="post-{{::post.id}}"
                 page="{{::post.pageNum}}"
                 lastread>

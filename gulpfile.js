@@ -5,10 +5,9 @@ const stripDebug = require('gulp-strip-debug')
 const sass = require('gulp-sass')
 const source = require('vinyl-source-stream')
 const buffer = require('vinyl-buffer')
-const uglify = require('gulp-uglify')
+const terser = require('gulp-terser')
 const sourcemaps = require('gulp-sourcemaps')
-const ngAnnotate = require('gulp-ng-annotate')
-const minifyCss = require('gulp-minify-css')
+const cleanCSS = require('gulp-clean-css')
 const browserSync = require('browser-sync').create()
 
 function onError (err) {
@@ -61,14 +60,14 @@ gulp.task('browserify', function () {
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    // Add transformation tasks to the pipeline here.
+  // Add transformation tasks to the pipeline here.
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./www/js/'))
 })
 
 gulp.task('webserver', function () {
   return browserSync.init({
-    port: 4000,
+    ghostMode: false,
     server: {
       baseDir: './www'
     }
@@ -97,7 +96,7 @@ gulp.task('watchJs', function () {
 })
 
 gulp.task('watchSass', function () {
-  return gulp.watch(['./src/scss/**/*'], gulp.series(['sass']))
+  return gulp.watch(['./src/scss/**/*', './src/ionic/scss/**/*'], gulp.series(['sass']))
 })
 
 gulp.task('watchAsset', function () {
@@ -107,17 +106,14 @@ gulp.task('watchAsset', function () {
 gulp.task('watch', gulp.parallel(['watchDependencies', 'watchJs', 'watchSass', 'watchAsset']))
 
 gulp.task('compressCss', function () {
-  return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css'])
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
+  return gulp.src(['./www/css/ionic.app.css', './www/css/ionic.app.dark.css', './www/css/ionic.app.oled.dark.css'])
+    .pipe(cleanCSS())
     .pipe(gulp.dest('./www/css/'))
 })
 gulp.task('compressJs', function () {
-  return gulp.src('./www/js/app.js')
-    .pipe(ngAnnotate())
+  return gulp.src(['./www/js/app.js', './www/js/dependencies.js'])
     .pipe(stripDebug())
-    .pipe(uglify({ mangle: false }))
+    .pipe(terser({ mangle: false }))
     .pipe(gulp.dest('./www/js/'))
 })
 
