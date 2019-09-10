@@ -12,7 +12,16 @@
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
     </ion-nav-buttons>
     <ion-content>
-
+        <div class="update-notice">
+            <a ng-if="isiOSNative" href="" target="_system"
+               onclick="window.open('https://apps.apple.com/hk/app/hkepc-ir-v4/id1478383428?l=en', '_system', 'location=yes'); return false;">
+                <div ng-if="vm.isPromote()">
+                    <p>[限時優惠] 由即日至10月31日起，</p>
+                    <p>$58 升級到 HKEPC IR Extreme v4 (原價 $68)</p>
+                </div>
+                <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
+            </a>
+        </div>
         <div class="list card">
 
             <a href="#!/tab/features/account" class="feature-route item item-icon-left">

@@ -203,4 +203,10 @@ export class FeatureRouteController{
       .flatMap(() => this.apiService.memberCenter())
       .subscribe()
   }
+
+  isPromote() {
+    const today = moment()
+    const promoteEnd = moment('2019-10-31')
+    return promoteEnd.diff(today) >= 0
+  }
 }

@@ -6,4 +6,19 @@
     background-color: $bg-color;
     color: $text-color;
   }
+
+  .update-notice {
+    text-align: center;
+    a {
+      color: $link-color !important;
+      div > p {
+        width: 100%;
+        text-align: center;
+        color: $link-color !important;
+      }
+      p {
+        color: $link-color !important;
+      }
+    }
+  }
 }

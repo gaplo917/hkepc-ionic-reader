@@ -76,13 +76,9 @@ export class AboutController {
     return URLUtils.isProxy()
   }
 
-  onIAP(){
-    if(Bridge.isAvailable()){
-      Bridge.callHandler(Channel.iap)
-    }
-    else {
-      this.ngToast.info(`<i class="ion-ios-timer-outline">請使用 iOS 或 Android App 訂閱</i>`)
-    }
-
+  isPromote() {
+    const today = moment()
+    const promoteEnd = moment('2019-10-31')
+    return promoteEnd.diff(today) >= 0
   }
 }

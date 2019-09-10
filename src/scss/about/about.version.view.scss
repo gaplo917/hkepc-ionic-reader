@@ -1,4 +1,21 @@
 .about-version-view {
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-weight: 300;
+
+  strong {
+    font-weight: 800;
+  }
+  em {
+    font-style: italic;
+  }
+
+  h1, h2, h3, h4 {
+    text-decoration: underline;
+  }
+  h1, h2, h3, h4 {
+    margin-top: 32px;
+  }
+
   ion-content {
     background-color: $bg-color;
     color: $text-color;
@@ -7,7 +24,8 @@
     pre {
       background-color: darken($bg-color,5%);
       color: $text-color;
-      padding: 10px
+      padding: 8px;
+      margin: 16px 8px;
     }
     ol, ul {
       list-style: initial !important;
@@ -15,12 +33,34 @@
     }
     ul li {
       list-style-position: outside;
+      padding: 8px 0;
     }
 
     hr {
       margin: 10px -30px;
       border-color: $border-color;
     }
+
+    img[src$=".gif"] {
+      padding: 1px;
+      margin: 1px;
+      background-color: #ffffff;
+      border-radius: 100px;
+    }
+
+    blockquote {
+      border-left: 5px solid $epc-color;
+    }
   }
 
+  .bar.bar-subheader{
+    background-color: $epc-color;
+    div {
+      word-break: break-all;
+    }
+    a {
+      color: $text-on-epc-color;
+      font-weight: 500;
+    }
+  }
 }

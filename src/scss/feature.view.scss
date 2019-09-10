@@ -75,4 +75,13 @@
     right:20px;
     bottom:0px
   }
+
+  .update-notice {
+    margin-top: 8px;
+    margin-bottom: -8px;
+    text-align: center;
+    a {
+      color: $link-color;
+    }
+  }
 }

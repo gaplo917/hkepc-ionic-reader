@@ -4,33 +4,34 @@
     </ion-nav-buttons>
     <ion-content>
         <div class="description">
-            <img src="img/Icon.png" height="50" style="display: block; margin: -10px auto 5px auto">
-            <p>HKEPC IR 是永久免費 (Freemium) 非官方的第三方瀏覧器。本程式不會記錄任何登入名稱或密碼，
+            <img src="img/Icon.png" height="50" style="display: block; margin: -10px auto 5px auto"></div>
+            <p>HKEPC IR Pro v3 是永久免費非官方的第三方瀏覧器。本程式不會記錄任何登入名稱或密碼，
                 作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！</p>
-
-            <p ng-show="vm.isProxy()">作者利用 Web 的技術開發跨平台，但因你使用的瀏灠器不允許 CORS，所以本程式必需連接 Proxy 伺服器去提取 hkepc.com 的 HTML。</p>
-            <p ng-show="vm.isProxy()"> Proxy 伺服器絕對不會記錄任何登入名稱或密碼。作者亦已經將 Proxy 伺服器的代碼 Open Source，如果不放心的用家可以自行架設 Proxy
-                伺服器！</p>
-            <a href="" target="_system"
-               onclick="window.open('https://github.com/gaplo917/CORS-Proxy/tree/feature/hkepc', '_system', 'location=yes'); return false;">
-                <p ng-show="vm.isProxy()"><i class="ion-social-github"></i>
-                    https://github.com/gaplo917/CORS-Proxy/tree/feature/hkepc</p>
-            </a>
+            <div class="update-notice">
+                <a ng-if="isiOSNative" href="" target="_system"
+                   onclick="window.open('https://apps.apple.com/hk/app/hkepc-ir-v4/id1478383428?l=en', '_system', 'location=yes'); return false;">
+                    <div ng-if="vm.isPromote()">
+                        <p>[限時優惠] 由即日至10月31日起，</p>
+                        <p>$58 升級到 HKEPC IR Extreme v4 (原價 $68)</p>
+                    </div>
+                    <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
+                </a>
+            </div>
         </div>
 
-        <a class="item item-icon-left" ng-click="vm.onIAP()">
-            <i class="icon ion-ios-personadd"></i>
-            IR 用戶組別
-            <span class="item-note">
-        IR Silver
-      </span>
-        </a>
         <a class="item item-icon-left" href="#!/tab/about/version">
-            <i class="icon ion-ios-loop-strong"></i>
-            更新日誌
+            <i class="icon ion-loop"></i>
+            v3 更新日誌
             <span class="item-note">
-          查看更新內容
-        </span>
+              查看更新內容
+            </span>
+        </a>
+        <a class="item item-icon-left" href="#!/tab/about/version-v4">
+            <i class="icon ion-ios-loop-strong"></i>
+            v4 更新日誌
+            <span class="item-note">
+              查看更新內容
+            </span>
         </a>
         <a class="item item-icon-left" ng-click="vm.showProxyPopup()" ng-show="vm.isProxy()">
             <i class="icon ion-link"></i>

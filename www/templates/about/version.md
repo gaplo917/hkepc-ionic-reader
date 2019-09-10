@@ -1,9 +1,14 @@
 **30 Aug 2019 - Release IR Pro 內核 v3.6.0, iOS v3.0.0**
 
-內核更新：
-* 「我的版塊」有時候無法按順序問題
+#### 內核更新：
+* ***提升瀏灠速度*** - 復審 ionic v1 內核，調整內核代碼；提升速度原因是移除了 IR App 不必要的 ~300ms 延遲及不必要的`click-block`，
+徹底解決了有機會 Freeze 的問題
+* 升級 `AngularJs` `v1.5.3 -> v1.7.8 LTS` 版本
+* 升級 `Gulp v3.9.3 -> v4.0.1` 以支援 `NodeJs v12+`
+* 使用 `browser-sync` 取代 `gulp-webserver` 改善開發環境
+* 移除 v1.x 遺留下來的 `bower`，直接使用 `npm modules + browserify` bundle dependencies
 
-App 更新： 
+#### App 更新： 
 * 修正於「黑夜」或「OLED 省電」模式時，開 App 時有時候出現白色畫面
 * 修正於「黑夜」或「OLED 省電」模式時，彈出鍵盤時有時候出現白色畫面
 

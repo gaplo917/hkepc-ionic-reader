@@ -295,4 +295,12 @@ export class ApiService {
       url: `templates/about/${versionMD}`
     }))
   }
+
+  githubVersionV4(isAndroid){
+    const versionMD = isAndroid ? 'version.android.md' : 'version.md'
+    return this.http.request({
+      method: 'GET',
+      url: `https://raw.githubusercontent.com/gaplo917/hkepc-ionic-reader/4.x/www/templates/about/${versionMD}`
+    })
+  }
 }
