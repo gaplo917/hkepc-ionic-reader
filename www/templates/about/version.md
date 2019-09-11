@@ -1,6 +1,7 @@
-**11 Sep 2019 - Release IR Extreme 內核 v4.1.0, iOS 4.0.1**
+**11 Sep 2019 - Release IR Extreme 內核 v4.1.1, iOS 4.0.1**
 #### 內核更新
 * ***改善「頁面控制器」顯示方式*** - 現在會根據滑動方向隱藏/顯示
+* 修正修改帖子時，若刪除全部內容後會不出現輸入欄
 
 #### App 更新
 * 修正 WebView Health Check 太進取導致有時候會白屏
