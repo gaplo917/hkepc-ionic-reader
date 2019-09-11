@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="spinner" ng-if="!vm.edit.content">
+    <div class="spinner" ng-if="vm.edit.content === undefined">
       <ir-spinner></ir-spinner>
     </div>
 
@@ -35,7 +35,7 @@
                     <textarea id="{{vm.id}}"
                               placeholder="請輸入內容"
                               ng-model="vm.edit.content"
-                              ng-if="vm.edit.content"
+                              ng-if="vm.edit.content !== undefined"
                     ></textarea>
         </div>
       </div>
