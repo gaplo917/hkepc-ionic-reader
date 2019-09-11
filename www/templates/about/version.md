@@ -3,6 +3,7 @@
 #### 內核更新：
 * ***提升瀏灠速度*** - 復審 ionic v1 內核，調整內核代碼；提升速度原因是移除了 IR App 不必要的 ~300ms 延遲及不必要的`click-block`，
 徹底解決了有機會 Freeze 的問題
+* 支援 iPad Pro 3gen
 * 升級 `AngularJs` `v1.5.3 -> v1.7.8 LTS` 版本
 * 升級 `Gulp v3.9.3 -> v4.0.1` 以支援 `NodeJs v12+`
 * 使用 `browser-sync` 取代 `gulp-webserver` 改善開發環境
