@@ -1,4 +1,4 @@
-**11 Sep 2019 - Release IR Extreme 內核 v4.1.0, Android 4.0.1**
+**11 Sep 2019 - Release IR Extreme 內核 v4.1.0, iOS 4.0.1**
 #### 內核更新
 * ***改善「頁面控制器」顯示方式*** - 現在會根據滑動方向隱藏/顯示
 

@@ -1,4 +1,4 @@
-<ion-view class="about-version-view" view-title="更新日誌">
+<ion-view class="about-version-view" view-title="更新日誌" ng-class="{ 'version-ios': isiOSNative }">
     <ion-content>
         <div class="spinner" ng-if="!vm.content">
             <ir-spinner></ir-spinner>
