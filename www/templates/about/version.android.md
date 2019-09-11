@@ -1,4 +1,10 @@
-**12 Sep 2019 - Release IR Pro 內核 v3.6.0, Android v3.3.0**
+**11 Sep 2019 - Release IR Pro 內核 v3.6.1, Android v3.3.1**
+#### 內核更新
+* 修正修改帖子時，若刪除全部內容後會不出現輸入欄
+
+---
+
+**11 Sep 2019 - Release IR Pro 內核 v3.6.0, Android v3.3.0**
 
 #### 內核更新
 * ***提升瀏灠速度*** - 復審 ionic v1 內核，調整內核代碼；提升速度原因是移除了 IR App 不必要的 ~300ms 延遲及不必要的`click-block`，
