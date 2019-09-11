@@ -9,9 +9,13 @@
 * 使用 `browser-sync` 取代 `gulp-webserver` 改善開發環境
 * 移除 v1.x 遺留下來的 `bower`，直接使用 `npm modules + browserify` bundle dependencies
 
-#### App 更新： 
+#### 修正
+* 修正開 App 載入時會閃兩下問題
+* 移除「回覆」/「查看」排序 （因為 HKEPC 方面已經移除）
 * 修正於「黑夜」或「OLED 省電」模式時，開 App 時有時候出現白色畫面
 * 修正於「黑夜」或「OLED 省電」模式時，彈出鍵盤時有時候出現白色畫面
+* 修正插入 URL 的快捷鍵功能於「只輸入地址」時使用了錯誤的 Discuz! 格式
+* 修正於查閱「引用」帖子功能時，圖片無法正常加載
 
 ---
 

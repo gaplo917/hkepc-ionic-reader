@@ -76,3 +76,11 @@ export class MHeadFixRequest {
     this.mHeadFix = mHeadFix
   }
 }
+
+export class AndroidBottomFixRequest {
+  static get NAME () { return 'AndroidBottomFixRequest' }
+
+  constructor (androidBottomFix) {
+    this.androidBottomFix = androidBottomFix
+  }
+}

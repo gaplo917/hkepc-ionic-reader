@@ -6,8 +6,9 @@ import {
   NotificationBadgeUpdateRequest,
   ChangeThemeRequest,
   ChangeFontSizeRequest,
-  MHeadFixRequest
-} from "../model/requests"
+  MHeadFixRequest,
+  AndroidBottomFixRequest
+} from '../model/requests'
 import swal from 'sweetalert2'
 import {NativeUpdateNotificationRequest} from "../bridge/requests";
 
@@ -69,6 +70,18 @@ export class FeatureRouteController{
       .subscribe(({oldValue, newValue}) => {
         this.scope.$emit(MHeadFixRequest.NAME, new MHeadFixRequest(newValue))
       })
+
+    observeOnScope($scope, 'vm.androidBottomFix')
+      .skip(1)
+      .subscribe(({ oldValue, newValue }) => {
+        this.scope.$emit(AndroidBottomFixRequest.NAME, new AndroidBottomFixRequest(newValue))
+      })
+
+    this.localStorageService.get('androidBottomFix').safeApply($scope, data => {
+      if (data) {
+        this.androidBottomFix = String(data) === 'true'
+      }
+    }).subscribe()
 
     this.localStorageService.get('loadImageMethod').safeApply($scope, loadImageMethod => {
       this.isAutoLoadImage = loadImageMethod !== 'block'

@@ -16,6 +16,15 @@
                     </div>
                     <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
                 </a>
+                <a ng-if="isAndroidNative" href="" target="_system"
+                   onclick="window.open('https://play.google.com/store/apps/details?id=com.gaplotech.hkepcir', '_system', 'location=yes'); return false;">
+                    <div ng-if="vm.isPromote()">
+                        <p>[限時優惠] 由即日至10月31日起，</p>
+                        <p>$58 升級到 HKEPC IR Extreme v4 (原價 $68)</p>
+                    </div>
+                    <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
+                </a>
+
             </div>
         </div>
 

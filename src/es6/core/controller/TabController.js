@@ -11,6 +11,7 @@ import {
   ChangeThemeRequest,
   ChangeFontSizeRequest,
   MHeadFixRequest,
+  AndroidBottomFixRequest
 } from '../model/requests'
 
 import {
@@ -244,6 +245,14 @@ export class TabController{
         console.debug(`[${TabController.NAME}] Received MHeadFixRequest`, req)
         this.mHeadFix = String(req.mHeadFix) === 'true'
         this.localStorageService.set('mHeadFix', req.mHeadFix ? 'true' : 'false')
+      }).subscribe()
+
+    $scope.$eventToObservable(AndroidBottomFixRequest.NAME)
+      .filter(([event, req]) => req instanceof AndroidBottomFixRequest)
+      .safeApply(this.scope, ([event, req]) => {
+        console.debug(`[${TabController.NAME}] Received AndroidBottomFixRequest`, req)
+        this.androidBottomFix = String(req.androidBottomFix) === 'true'
+        this.localStorageService.set('androidBottomFix', req.androidBottomFix ? 'true' : 'false')
       }).subscribe()
   }
 

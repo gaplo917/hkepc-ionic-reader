@@ -14,44 +14,6 @@ navigation history that also transitions its views in and out.
 <link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
 <link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
 <link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
-<style ng-if="isAndroidNative">
-    .bar.bar-header {
-        height: 59px;
-    }
-
-    .bar.bar-subheader {
-        top: 59px;
-    }
-
-    .bar.bar-header .title {
-        top: 15px;
-    }
-
-    .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 15px;
-    }
-
-    .has-header {
-        top: 59px;
-    }
-
-    .tab-nav {
-        display: none;
-    }
-
-    .has-tabs, .bar-footer.has-tabs {
-        bottom: 0px;
-    }
-
-    .action-sheet-wrapper {
-        bottom: 7.8vh;
-    }
-
-    .tab-bar-inset {
-        width: 100%;
-        height: 7.8vh;
-    }
-</style>
 <style ng-if="isiOSNative">
 
     .bar.bar-header {
@@ -327,7 +289,7 @@ navigation history that also transitions its views in and out.
         }
     }
 </style>
-<style ng-if="vm.mHeadFix">
+<style ng-if="vm.mHeadFix && isiOSNative">
     .ng-toast {
         margin-top: 94px;
     }
@@ -354,5 +316,42 @@ navigation history that also transitions its views in and out.
 
     .has-header {
         top: 90px;
+    }
+</style>
+<style ng-if="vm.mHeadFix && isAndroidNative">
+    .ng-toast {
+        margin-top: 6vh;
+    }
+
+    body {
+        top: 8.5vh;
+    }
+
+    .bar.bar-header {
+        height: 8.5vh;
+    }
+
+    .bar.bar-subheader {
+        top: 8.5vh;
+    }
+
+    .bar.bar-header .title {
+        top: 3.1vh;
+    }
+
+    .bar.bar-header > .buttons, .bar.bar-header > .button {
+        margin-top: 3.1vh;
+    }
+
+    .has-header {
+        top: 8.5vh;
+    }
+
+    .tab-nav {
+        display: none;
+    }
+
+    .has-tabs, .bar-footer.has-tabs {
+        bottom: 0px;
     }
 </style>

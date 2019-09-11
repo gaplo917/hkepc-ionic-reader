@@ -21,6 +21,15 @@
                 </div>
                 <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
             </a>
+            <a ng-if="isAndroidNative" href="" target="_system"
+               onclick="window.open('https://play.google.com/store/apps/details?id=com.gaplotech.hkepcir', '_system', 'location=yes'); return false;">
+                <div ng-if="vm.isPromote()">
+                    <p>[限時優惠] 由即日至10月31日起，</p>
+                    <p>$58 升級到 HKEPC IR Extreme v4 (原價 $68)</p>
+                </div>
+                <p ng-if="!vm.isPromote()" style="line-height: 32px">升級到 HKEPC IR Extreme v4</p>
+            </a>
+
         </div>
         <div class="list card">
 
@@ -197,7 +206,7 @@
 
             <div class="feature-route item item-icon-left selectable">
                 <div class="icon">
-                    <i class=" inner-icon" style="background-color: #212121;">A</i>
+                    <i class="text-icon inner-icon" style="background-color: #212121;">A</i>
                 </div>
 
                 <div style="margin-left:10px;line-height: 2;">界面大小
@@ -224,12 +233,32 @@
 
             <div class="feature-route item item-icon-left">
                 <div class="icon">
-                    <i class=" inner-icon" style="background-color: #212121;">M</i>
+                    <i class="text-icon inner-icon" style="background-color: #212121;">M</i>
                 </div>
 
                 <div style="margin-left:10px;line-height: 2;">M 字額修正 <span class="ultra-less-important-info">(適用於部份手機)</span>
                     <label class="toggle toggle-assertive fright">
                         <input type="checkbox" ng-model="vm.mHeadFix">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="list card" ng-if="isAndroidNative">
+
+            <div class="feature-route item item-icon-left toggleable">
+                <div class="icon">
+                    <i class="ion-social-android inner-icon" style="background-color: #23b1c8;"></i>
+                </div>
+
+                <div style="margin-left:10px;line-height: 2;">Android 全螢幕修正<span class="ultra-less-important-info"></span>
+                    <label class="toggle toggle-assertive fright">
+                        <input type="checkbox" ng-model="vm.androidBottomFix">
                         <div class="track">
                             <div class="handle"></div>
                         </div>
