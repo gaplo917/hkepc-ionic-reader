@@ -1,3 +1,10 @@
+**11 Sep 2019 - Release IR Extreme 內核 v4.1.0, Android 4.0.1**
+#### 內核更新
+* ***改善「頁面控制器」顯示方式*** - 現在會根據滑動方向隱藏/顯示
+* 修正 M 字額設定隔距問題
+
+---
+
 **5 Sep 2019 - Release IR Extreme 內核 v4.0.0, Android 4.0.0**
 
 首先，多謝你支持及購買 HKEPC IR Extreme v4！
