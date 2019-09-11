@@ -1,6 +1,10 @@
 .about-version-view {
-  -webkit-font-smoothing: subpixel-antialiased;
-  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+
+  .version-ios {
+    font-weight: 300;
+  }
 
   strong {
     font-weight: 800;
@@ -27,6 +31,12 @@
       padding: 8px;
       margin: 16px 8px;
     }
+
+    code {
+      background-color: darken($bg-color,5%);
+      padding: 0 4px;
+    }
+
     ol, ul {
       list-style: initial !important;
       padding:5px 20px 20px 20px;
