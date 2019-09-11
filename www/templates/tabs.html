@@ -11,9 +11,9 @@ navigation history that also transitions its views in and out.
 
 <ion-nav-view name="main"></ion-nav-view>
 
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
-<link ng-if="vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
 <style ng-if="isAndroidNative">
     .bar.bar-header {
         height: 59px;
@@ -312,6 +312,20 @@ navigation history that also transitions its views in and out.
         }
     }
 
+    /*ipad pro 3rd gen 1024*768*/
+    @media only screen
+    and (min-device-width: 1024px)
+    and (max-device-height: 1366px)
+    and (-webkit-min-device-pixel-ratio: 2) {
+        .tab-bar-inset {
+            width: 100%;
+            height: 60px;
+        }
+
+        .action-sheet-wrapper {
+            bottom: 60px;
+        }
+    }
 </style>
 <style ng-if="vm.mHeadFix">
     .ng-toast {
