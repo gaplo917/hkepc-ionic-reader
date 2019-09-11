@@ -5,6 +5,9 @@
 import * as HKEPC from '../data/config/hkepc'
 import { Bridge, Channel } from './bridge/index'
 
+const SCROLLING_UP = -1
+const SCROLLING_DOWN = 1
+
 /**
  * Register the directives
  */
@@ -155,7 +158,7 @@ export default angular.module('starter.directives', [])
       templateUrl: 'templates/directives/input.helper.html'
     }
   })
-  .directive('onLongerThanScreen', ($window, $document, $timeout) => {
+  .directive('onLongerThanScreen', ($window, $timeout) => {
     return {
       restrict: 'A',
       link: function ($scope, $elm, $attrs) {
@@ -177,12 +180,36 @@ export default angular.module('starter.directives', [])
     return {
       restrict: 'A',
       link: function ($scope, $element) {
-        $scope.$createObservableFunction('$onScroll')
+        const scrollEvents = $scope.$createObservableFunction('$onScroll')
+          .observeOn(rx.Scheduler.async)
+          .map(it => it.event)
+          .share()
+
+        const subscription1 = scrollEvents
+          .map(event => (event && event.target && event.target.scrollTop) || 0)
+          .bufferWithCount(2, 1) // https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithcount.md
+          .subscribe(([lastScrollTop, currentScrollTop]) => {
+            let scrollDirection = 0
+
+            if (currentScrollTop > 0 && currentScrollTop > lastScrollTop) {
+              scrollDirection = SCROLLING_DOWN
+            } else {
+              scrollDirection = SCROLLING_UP
+            }
+
+            $rootScope.$broadcast('scrollDirection', scrollDirection)
+          })
+
+        const subscription2 = scrollEvents
           .throttle(300, rx.Scheduler.async)
-          .doOnNext(() => console.debug('emit lazy scroll event'))
-          .subscribe(() => {
+          .subscribe(({ event }) => {
             $scope.$broadcast('lazyScrollEvent')
           })
+
+        $element.on('$destroy', function () {
+          subscription1.dispose()
+          subscription2.dispose()
+        })
       }
     }
   })
@@ -191,10 +218,9 @@ export default angular.module('starter.directives', [])
       restrict: 'A',
       scope: true,
       link: ($scope, $element, $attributes) => {
-        $scope.$eventToObservable('lazyScrollEvent')
+        const subscription = $scope.$eventToObservable('lazyScrollEvent')
           .startWith(1)
           .observeOn(rx.Scheduler.async)
-          .doOnNext(() => console.debug('[LAST_READ] rx lazy scroll event'))
           .filter(() => {
             const clientHeight = $document[0].documentElement.clientHeight
             const imageRect = $element[0].getBoundingClientRect()
@@ -203,10 +229,14 @@ export default angular.module('starter.directives', [])
           .subscribe(() => {
             $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
           })
+
+        $element.on('$destroy', function () {
+          subscription.dispose()
+        })
       }
     }
   })
-  .directive('imageLazySrc', ($document, $timeout, $ionicScrollDelegate, $compile, rx) => {
+  .directive('imageLazySrc', ($document, rx) => {
     return {
       restrict: 'A',
       scope: {
@@ -216,7 +246,6 @@ export default angular.module('starter.directives', [])
         const subscription = $scope.$eventToObservable('lazyScrollEvent')
           .startWith(1)
           .observeOn(rx.Scheduler.async)
-          .doOnNext(() => console.debug('[LAZY_IMAGE] rx lazy scroll event'))
           .filter(() => {
             const clientHeight = $document[0].documentElement.clientHeight
             const imageRect = $element[0].getBoundingClientRect()
@@ -226,9 +255,7 @@ export default angular.module('starter.directives', [])
           .safeApply($scope, () => {
             $element[0].src = $attributes.imageLazySrc // set src attribute on element (it will load image)
           })
-          .subscribe(() => {
-            subscription.dispose()
-          })
+          .subscribe()
 
         // wrap a container
         $element.wrap('<div class="lazy-loading-container"></div>')
@@ -254,7 +281,7 @@ export default angular.module('starter.directives', [])
 
     }
   })
-  .directive('pageIndicator', function () {
+  .directive('pageIndicator', (rx, $rootScope) => {
     return {
       restrict: 'E',
       transclude: true,
@@ -272,6 +299,28 @@ export default angular.module('starter.directives', [])
                 第 {{currentPage == 0 ? 1 : currentPage}} 頁 / 共 {{totalPage}} 頁
             </button>
             <div class="tab-bar-inset"></div>
-        </div>`
+        </div>`,
+      link: function ($scope, $element) {
+        const subscription = $rootScope.$eventToObservable('scrollDirection')
+          .observeOn(rx.Scheduler.async)
+          .skipUntil(rx.Observable.timer(1000))
+          .map(([, scrollDirection]) => scrollDirection)
+          .throttle(16, rx.Scheduler.async) // at least wait a frame after a changed value
+          .subscribe(scrollDirection => {
+            if (scrollDirection === SCROLLING_DOWN) {
+              if (!$element.hasClass('hidden')) {
+                requestAnimationFrame(() => $element.addClass('hidden'))
+              }
+            } else if (scrollDirection === SCROLLING_UP) {
+              if ($element.hasClass('hidden')) {
+                requestAnimationFrame(() => $element.removeClass('hidden'))
+              }
+            }
+          })
+
+        $scope.$on('$destroy', function() {
+          subscription.dispose()
+        })
+      }
     }
   })

@@ -492,26 +492,31 @@ ion-infinite-scroll {
   }
 }
 
-.page-indicator-wrapper {
-  opacity: 0.9;
+page-indicator {
   position: fixed;
   bottom: 16px;
-  z-index: 10;
+  z-index: 15;
   width: 100%;
   text-align: center;
+  transform: translate3d(0, 0, 0);
+  transition: transform 350ms;
+
   .button-rounded {
     padding: 4px 12px;
     height: 28px;
     line-height: 16px;
   }
+
+  &.hidden {
+    transform: translate3d(0, 56px, 0);
+  }
 }
 
 .floating-action-btn {
-  opacity: 1;
   position: fixed;
   bottom: 16px;
   right: 16px;
-  z-index: 11;
+  z-index: 15;
   .button-rounded {
     height: 56px;
     width: 56px;
