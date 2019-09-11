@@ -1,4 +1,4 @@
-**11 Sep 2019 - Release IR Extreme 內核 v4.1.1, Android 4.0.3**
+**11 Sep 2019 - Release IR Extreme 內核 v4.1.1, Android 4.0.4**
 #### App 更新
 * 更新 Splash Screen 圖案到 Extreme 版本
 
