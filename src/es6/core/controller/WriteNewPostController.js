@@ -23,7 +23,7 @@ export class WriteNewPostController {
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, $ionicPopover, ngToast, apiService, $ionicPopup, $rootScope, $compile, LocalStorageService) {
+  constructor ($scope, $state, $stateParams, $ionicHistory, $ionicPopover, ngToast, apiService, $ionicPopup, $rootScope, $compile, LocalStorageService, $ionicScrollDelegate) {
     this.id = 'new-content'
     this.post = { content: '' }
     this.topicId = $stateParams.topicId
@@ -36,6 +36,7 @@ export class WriteNewPostController {
     this.topic = JSON.parse($stateParams.topic)
     this.categories = JSON.parse($stateParams.categories)
     this.compile = $compile
+    this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('edit')
 
     this.deleteImageIds = []
     this.attachImageIds = []
@@ -225,6 +226,11 @@ export class WriteNewPostController {
   selectCategory (category) {
     this.categoryPopover.hide()
     this.post.category = category
+  }
+
+  onFocus () {
+    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 
   onBack () {

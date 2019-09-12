@@ -23,7 +23,7 @@ export class WriteReplyPostController {
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $compile, LocalStorageService) {
+  constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $compile, LocalStorageService, $ionicScrollDelegate) {
     this.id = 'reply-content'
     this.post = JSON.parse($stateParams.post)
     this.reply = JSON.parse($stateParams.reply)
@@ -33,6 +33,7 @@ export class WriteReplyPostController {
     this.postId = $stateParams.postId
     this.page = $stateParams.page
     this.compile = $compile
+    this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('edit')
 
     this.scope = $scope
     this.apiService = apiService
@@ -212,6 +213,11 @@ export class WriteReplyPostController {
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
+  }
+
+  onFocus () {
+    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 
   onBack () {

@@ -3,16 +3,15 @@
   <ion-nav-buttons side="right">
     <button class="button-default" ng-click="vm.doEdit(vm.edit.subject, vm.edit.content, vm.images)">修改</button>
   </ion-nav-buttons>
-  <ion-content>
+  <ion-content delegate-handle="edit">
     <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center">
       點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
     </div>
-    <div class="attachment-row">
+    <div class="attachment-row" ng-if="vm.existingImages.length > 0">
       <div class="attachment-image-wrapper"
            ng-repeat="eImage in vm.existingImages track by $index"
            on-hold="vm.confirmDeleteImage(eImage)"
-           on-tap="vm.addImageToContent(eImage)"
-      >
+           on-tap="vm.addImageToContent(eImage)">
         <img ng-src="{{eImage.src}}">
         <span class="super-less-important-info"> {{eImage.id}}</span>
       </div>
@@ -32,11 +31,12 @@
     <div class="row content-input">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-                    <textarea id="{{vm.id}}"
-                              placeholder="請輸入內容"
-                              ng-model="vm.edit.content"
-                              ng-if="vm.edit.content !== undefined"
-                    ></textarea>
+            <textarea id="{{vm.id}}"
+                      ng-focus="vm.onFocus()"
+                      placeholder="請輸入內容"
+                      ng-model="vm.edit.content"
+                      ng-if="vm.edit.content !== undefined"
+            ></textarea>
         </div>
       </div>
     </div>

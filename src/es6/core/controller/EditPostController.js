@@ -21,7 +21,7 @@ export class EditPostController {
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile) {
+  constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $rootScope, $compile, $ionicScrollDelegate) {
     this.id = 'edit-content'
     this.apiService = apiService
     this.scope = $scope
@@ -33,6 +33,7 @@ export class EditPostController {
     this.postId = $stateParams.postId
     this.page = $stateParams.page
     this.compile = $compile
+    this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('edit')
 
     this.message = JSON.parse($stateParams.message)
 
@@ -197,6 +198,11 @@ export class EditPostController {
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
+  }
+
+  onFocus () {
+    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 
   onBack () {
