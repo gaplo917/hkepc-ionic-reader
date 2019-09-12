@@ -32,7 +32,7 @@
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
             <textarea id="{{vm.id}}"
-                      ng-focus="vm.onFocus()"
+                      ng-focus="isAndroidNative && vm.onFocus()"
                       placeholder="請輸入內容"
                       ng-model="vm.edit.content"
                       ng-if="vm.edit.content !== undefined"
