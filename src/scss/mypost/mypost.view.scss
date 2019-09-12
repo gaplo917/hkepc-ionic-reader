@@ -6,4 +6,32 @@
   .even > a{
     background-color: $even-color
   }
+
+  .odd {
+    &.item, .item-content {
+      background-color: $odd-color;
+    }
+    &.editable-item, .item-reorder, .item-delete {
+      background-color: $odd-color;
+      .button.icon {
+        color: red;
+      }
+      padding: 0;
+    }
+
+  }
+
+  .even {
+    &.item, .item-content {
+      background-color: $even-color;
+    }
+    &.editable-item, .item-reorder, .item-delete {
+      background-color: $even-color;
+      .button.icon {
+        color: red;
+      }
+      padding: 0;
+    }
+  }
+
 }

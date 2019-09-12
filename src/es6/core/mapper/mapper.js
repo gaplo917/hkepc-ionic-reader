@@ -370,6 +370,24 @@ export default class Mapper {
 
   static myPost (html, opt) {
     const $ = html.getCheerio()
+    const formSource = $('.datalist > form')
+    const relativeUrl = formSource.attr('action')
+    const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
+
+    const hiddenFormInputs = {}
+    formSource.find(`input[type='hidden']`).map((i, elem) => {
+      const k = $(elem).attr('name')
+      const v = $(elem).attr('value')
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
+
+    formSource.find(`button[type='submit']`).map((i, elem) => {
+      const k = $(elem).attr('name')
+      const v = $(elem).attr('value')
+
+      hiddenFormInputs[k] = encodeURIComponent(v)
+    }).get()
 
     const pageNumSource = $('.pages a, .pages strong')
 
@@ -389,6 +407,7 @@ export default class Mapper {
 
       return {
         post: {
+          id: postSource.find('input.checkbox').attr('value'),
           title: postSource.find('th a').text(),
           url: postSource.find('th a').attr('href')
         },
@@ -410,7 +429,10 @@ export default class Mapper {
       .filter(it => it.post.title)
 
     return {
-      totalPageNum, posts
+      totalPageNum,
+      posts,
+      actionUrl,
+      hiddenFormInputs
     }
   }
 
@@ -689,7 +711,9 @@ export default class Mapper {
 
     return {
       replies,
-      totalPageNum
+      totalPageNum,
+      actionUrl,
+      hiddenFormInputs
     }
   }
 

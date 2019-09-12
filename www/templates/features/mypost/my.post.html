@@ -1,12 +1,19 @@
 <ion-view class="mypost-view">
     <ion-nav-title>{{vm.title()}}</ion-nav-title>
+    <ion-nav-buttons side="right">
+        <a ng-if="vm.type === 'favorites' || vm.type === 'attention'"
+           class="button button-icon icon ion-edit"
+           ng-click="vm.editMode = !vm.editMode"
+           ng-class="vm.editMode ? 'edit-mode-activated': '' "
+        ></a>
+    </ion-nav-buttons>
     <ion-content lazy-scroll>
         <div class="spinner" ng-if="vm.myposts.length == 0">
             <ir-spinner></ir-spinner>
         </div>
-        <ion-list>
+        <ion-list show-delete="vm.editMode">
             <ion-item class="item item-icon-right" href="{{::mypost.post.url}}"
-                      ng-repeat="mypost in vm.myposts track by $index"
+                      ng-repeat="mypost in vm.myposts track by mypost.post.id"
                       ng-class-odd="'odd'" ng-class-even="'even'">
                 <h2 class="item-text-wrap"><i class="ion-ios-locked" ng-if="::mypost.status == '關閉'"></i>
                     {{::mypost.post.title}}</h2>
@@ -17,6 +24,7 @@
                     </small>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
+                <ion-delete-button class="ion-android-remove-circle" ng-click="::vm.deleteItem(mypost.post.id)"/>
             </ion-item>
 
         </ion-list>

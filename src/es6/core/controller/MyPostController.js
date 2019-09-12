@@ -31,6 +31,7 @@ export class MyPostController extends IRLifecycleOwner {
     this.apiService = apiService
     this.authService = AuthService
     this.ngToast = ngToast
+    this.editMode = false
 
     this.type = $stateParams.type
     this.page = 1
@@ -82,7 +83,9 @@ export class MyPostController extends IRLifecycleOwner {
     const { page } = this
     this.apiService.myPosts(page, this.type)
       .safeApply(this.scope, resp => {
-        const { posts, totalPageNum } = resp
+        const { posts, totalPageNum, actionUrl, hiddenFormInputs } = resp
+        this.actionUrl = actionUrl
+        this.hiddenFormInputs = hiddenFormInputs
         this.totalPageNum = totalPageNum
         this.myposts = this.myposts.concat(posts.map(it => ({
           ...it,
@@ -127,5 +130,26 @@ export class MyPostController extends IRLifecycleOwner {
 
   hasMoreData () {
     return !this.end && !this.refreshing
+  }
+
+  deleteItem (id) {
+    const { actionUrl, hiddenFormInputs } = this
+    this.apiService.dynamicRequest({
+      method: 'POST',
+      url: actionUrl,
+      data: {
+        ...hiddenFormInputs,
+        'delete[]': id
+      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+      .safeApply(this.scope, resp => {
+        if (resp.status === 200) {
+          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功移除！</i>`)
+          this.myposts = this.myposts.filter(it => it.post.id !== id)
+        } else {
+          this.ngToast.danger(`<i class="ion-alert-circled"> 移除失敗！</i>`)
+        }
+      }).subscribe()
   }
 }
