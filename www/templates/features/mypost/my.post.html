@@ -13,7 +13,7 @@
         </div>
         <ion-list show-delete="vm.editMode">
             <ion-item class="item item-icon-right" href="{{::mypost.post.url}}"
-                      ng-repeat="mypost in vm.myposts track by mypost.post.id"
+                      ng-repeat="mypost in vm.myposts"
                       ng-class-odd="'odd'" ng-class-even="'even'">
                 <h2 class="item-text-wrap"><i class="ion-ios-locked" ng-if="::mypost.status == '關閉'"></i>
                     {{::mypost.post.title}}</h2>

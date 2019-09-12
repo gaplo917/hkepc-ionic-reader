@@ -711,9 +711,7 @@ export default class Mapper {
 
     return {
       replies,
-      totalPageNum,
-      actionUrl,
-      hiddenFormInputs
+      totalPageNum
     }
   }
 
