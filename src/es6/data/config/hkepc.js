@@ -5,7 +5,7 @@ const PROXY_URL = 'http://0.0.0.0:1337/www.hkepc.com' // default proxy url (only
 const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
-const VERSION = '4.2.1'
+const VERSION = '4.2.2'
 function getMobileOperatingSystem (userAgent) {
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera
 
