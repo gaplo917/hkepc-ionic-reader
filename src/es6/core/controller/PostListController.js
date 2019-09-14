@@ -180,18 +180,21 @@ export class PostListController {
   renderPostListResponse (resp, filterOpts, filterMode) {
     const { userFilter, latestPostTopicFilters, latestReplyTopicFilters, hlKeywords } = filterOpts
     const { userIds: userIdsFilter, users: filteredUserInfos } = userFilter
+    const { searchId, totalPageNum, categories, posts: nPosts, topicName, subTopicList, pageNum } = resp
     const { topicId: topicTypeOrId } = this
+    const existingPostIds = this.posts.map(it => it.id)
+    const deduplicatedPosts = nPosts.filter(it => existingPostIds.indexOf(it.id) === -1)
 
-    this.searchId = resp.searchId
+    this.searchId = searchId
     // only extract the number
-    this.totalPageNum = resp.totalPageNum
+    this.totalPageNum = totalPageNum
 
-    this.categories = resp.categories
+    this.categories = categories
 
     // better UX to highlight the searchText
     const posts = topicTypeOrId === 'search'
-      ? this.posts.concat(this.highlightSearchText(resp.posts, this.searchText))
-      : this.posts.concat(this.highlightSearchText(resp.posts, hlKeywords.join(' ')))
+      ? this.posts.concat(this.highlightSearchText(deduplicatedPosts, this.searchText))
+      : this.posts.concat(this.highlightSearchText(deduplicatedPosts, hlKeywords.join(' ')))
 
     this.posts = posts.map(it => {
       const { topicId: postTopicId, author, tag } = it
@@ -220,18 +223,19 @@ export class PostListController {
         filterMode,
         filterReason
       }
-    }).filter(it => !(it.isMatchedFilter && String(it.filterMode) === '2'))
+    })
+      .filter(it => !(it.isMatchedFilter && String(it.filterMode) === '2'))
 
     console.log('filtered postList', this.posts)
 
-    this.currentPageNum = parseInt(this.currentPageNum) + 1
+    this.currentPageNum = parseInt(pageNum) + 1
 
     const renderTopicName = () => {
       switch (topicTypeOrId) {
-        case 'search': return `${resp.topicName} ${this.searchText}`
+        case 'search': return `${topicName} ${this.searchText}`
         case 'latest': return '最新帖子'
         case 'latestPost': return '最新發佈'
-        default: return resp.topicName
+        default: return topicName
       }
     }
 
@@ -240,7 +244,7 @@ export class PostListController {
       ? [{
         id: topicTypeOrId,
         name: renderTopicName()
-      }, ...resp.subTopicList]
+      }, ...subTopicList]
       : this.subTopicList
 
     if (!this.topic) {

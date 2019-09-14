@@ -149,7 +149,6 @@ export default class Mapper {
 
     const titles = $('#nav').text().split('»')
     const topicName = titles[titles.length - 1]
-    const totalPageNumText = $('.pages_btns .pages .last').first().text() || $('.pages_btns .pages').not('.next').last().text()
     const subTopicList = $('#subforum table h2 a').map((i, elem) => {
       const obj = $(elem)
       const name = obj.text()
@@ -169,9 +168,18 @@ export default class Mapper {
     }).get()
 
     // only extract the number
-    const totalPageNum = totalPageNumText
-      ? Math.min(parseInt(totalPageNumText.match(/\d/g).join('') || 1), 1000)
-      : 1
+    const pageNumSource = $('.pages_btns .pages a')
+
+    const pageNumArr = pageNumSource
+      .map((i, elem) => $(elem).text())
+      .get()
+      .map(e => e.match(/\d/g)) // array of string with digit
+      .filter(e => e != null) // filter null value
+      .map(e => parseInt(e.join(''))) // join the array and parseInt
+
+    const totalPageNum = pageNumArr.length === 0
+      ? 1
+      : Math.min(Math.max(...pageNumArr), 1000)
 
     const posts = $('.threadlist table tbody').map((i, elem) => {
       const htmlId = $(elem).attr('id')

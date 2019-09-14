@@ -29,7 +29,7 @@ module.exports = {
       if (searchId) {
         return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
       } else {
-        return `${BASE_FORUM_URL}/search.php?srchfrom=16000&&orderby=lastpost&ascdesc=desc&searchsubmit=yes`
+        return `${BASE_FORUM_URL}/search.php?srchfrom=86400&&orderby=lastpost&ascdesc=desc&searchsubmit=yes`
       }
     },
     latestPostNext: (searchId, page) => {
@@ -46,14 +46,12 @@ module.exports = {
       return `${BASE_FORUM_URL}/search.php?searchid=${searchId}&orderby=lastpost&ascdesc=desc&searchsubmit=yes&page=${page}`
     },
     topics: (topicId, page, filter, orderby) => {
-      return topicId === 'latest'
-        ? `${BASE_FORUM_URL}/search.php?srchfrom=12000&searchsubmit=yes&page=${page}`
-        : [
-          `${BASE_FORUM_URL}/forumdisplay.php?fid=${topicId}`,
-          `page=${page}`,
-          `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
-          `orderby=${orderby || ''}`
-        ].join('&')
+      return [
+        `${BASE_FORUM_URL}/forumdisplay.php?fid=${topicId}`,
+        `page=${page}`,
+        `filter=${filter >= 0 ? `type&typeid=${filter}` : ''}`,
+        `orderby=${orderby || ''}`
+      ].join('&')
     },
     posts: (topicId, postId, page, orderType, filterOnlyAuthorId) => `${BASE_FORUM_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}&ordertype=${orderType}&authorid=${filterOnlyAuthorId}`,
     login: () => `${BASE_FORUM_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
