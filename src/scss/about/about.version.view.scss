@@ -17,13 +17,13 @@
     text-decoration: underline;
   }
   h1, h2, h3, h4 {
-    margin-top: 32px;
+    margin-top: 16px;
   }
 
   ion-content {
     background-color: $bg-color;
     color: $text-color;
-    padding: 10px 10px 0 10px;
+    padding: 10px 16px 0 16px;
 
     pre {
       background-color: darken($bg-color,5%);
@@ -39,8 +39,9 @@
 
     ol, ul {
       list-style: initial !important;
-      padding:5px 20px 20px 20px;
+      padding:4px 16px 4px 16px;
     }
+
     ul li {
       list-style-position: outside;
       padding: 8px 0;
