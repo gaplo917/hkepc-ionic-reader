@@ -62,6 +62,9 @@ export class GeneralHtml {
         elm.attr('src', `${imagePrefix}/${imgSrc}`)
       } else if (imgSrc.indexOf('//') === 0) {
         elm.attr('src', `https:${imgSrc}`)
+      } else if (imgSrc.indexOf('http://') === 0) {
+        // auto https upgrade, mainly for ios
+        elm.attr('src', imgSrc.replace('http://', 'https://'))
       }
 
       elm.attr('raw-src', imgSrc)
