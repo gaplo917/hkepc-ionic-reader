@@ -268,7 +268,7 @@ export default class Mapper {
 
     const totalPageNum = pageNumArr.length === 0
       ? 1
-      : Math.min(Math.max(...pageNumArr), 1000)
+      : Math.max(...pageNumArr)
 
     const messages = $('#postlist > div')
       .filter((i, elem) => {
