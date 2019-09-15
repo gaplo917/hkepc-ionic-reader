@@ -1,3 +1,10 @@
+**15 Sep 2019 - Release IR Extreme 內核 v4.2.3, Android 4.1.3**
+#### 內核更新
+* 修正帖子頁數不能超過 1000 頁問題
+* 將所有圖片連結自動升級到 https
+
+---
+
 **14 Sep 2019 - Release IR Extreme 內核 v4.2.2, Android 4.1.2**
 #### 內核更新
 * 修正「最新帖子」頁面總數不正確問題
