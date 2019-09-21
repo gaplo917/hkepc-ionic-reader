@@ -90,7 +90,6 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 而家 2.x Branch 已經完全移除 Ionic CLI、Cordova，只係繼續用 `ionic.css`, `ionic.js`, `ionic-angular.js`，並作為一個 Submodules Project 比 Native Project 用。
 
 
-
 # Getting Start
 ```
     // Clone Repo
@@ -99,24 +98,21 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
     cd hkepc-ionic-reader
     
     yarn install
-```
 
-# Create Proxy server for Dev
-```
-    git clone https://github.com/gaplo917/CORS-Proxy hkepc-proxy
-    
-    cd hkepc-proxy
-    
-    npm ci
-    
-    npm start
-```
-
-# Run
-```
     // run in web / dev with Native Project
     yarn run dev
     
     // build production / for Native Project
     yarn run build
+```
+
+# Create Proxy server for Dev
+```
+    git clone https://github.com/gaplo917/hkepc-cors-dev-proxy
+    
+    cd hkepc-cors-dev-proxy
+    
+    yarn install
+    
+    yarn start
 ```
