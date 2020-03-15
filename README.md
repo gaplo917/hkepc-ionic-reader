@@ -1,3 +1,5 @@
+![HKEPC IR App](meta/webpage_preview.png)
+
 # HKEPC IR Pro (https://hkepc.pro)
 <img src="https://storage.googleapis.com/hkepc-ir-public/hkepc-ir-pro-icon@512.png" height="200">
 <a href="https://appsto.re/hk/zAtDab.i"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50" target="_blank"> </a>
