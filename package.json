@@ -16,7 +16,7 @@
     "cheerio": "^1.0.0-rc.3",
     "csshake": "^1.5.3",
     "localforage": "^1.7.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.11.2",
     "ng-toast": "^2.0.0",
     "node-sass": "^4.12.0",
