@@ -113,7 +113,9 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
     git clone https://github.com/gaplo917/hkepc-cors-dev-proxy
     
     cd hkepc-cors-dev-proxy
-    
+
+    nvm use 12
+
     yarn install
     
     yarn start
