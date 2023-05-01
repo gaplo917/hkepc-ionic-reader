@@ -9,7 +9,7 @@
 # Brief Introduction in English
 * This project DON'T use Corodva.
 * This web app ONLY use customized `ionic.css`, `ionic.js`, `ionic-angular.js` (aka ionic v1). No `ionic-cli` used.
-* The native projects host this web app internally and are written in pure Swift(iOS) and Kotlin(Android). 
+* The native projects host this web app internally and are written in pure Swift(iOS) and Kotlin(Android).
 * This web app connects native via a pure tailor-made message bridge. i.e. pick images, compress images, upload images, HTTP proxy to prevent CORS
 * The native projects (iOS & Android) will be available later. Stay calm.
 * A separated tailor-made native message bridge will also be available later.
@@ -24,7 +24,7 @@
 [4.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/4.x) Branch 內容自主．優化體驗！加入 HKEPC 討論區不能提供的功能，繼續 Fine-tune `ionic-angular.js`
 
 # 3.x - 效能先決．重新出發 (21 Jan 2019 Updated)
-Ionic V1 - 雖然係第一代比較完整嘅 HTML 5 Mobile framework 並以 Cordova 為基礎去做，但 Ionic V1 其實有好多 Performance 問題其實仲未 Optimize，更甚其實根本冇好好咁同 Native integrate。  
+Ionic V1 - 雖然係第一代比較完整嘅 HTML 5 Mobile framework 並以 Cordova 為基礎去做，但 Ionic V1 其實有好多 Performance 問題其實仲未 Optimize，更甚其實根本冇好好咁同 Native integrate。
 
 > Ionic V1 有兩個嚴重影響效能嘅問題！
 
@@ -39,10 +39,10 @@ Disable 咗個 Cache 之後，基本上成個 Ionic V1 App 清爽咗好多，And
 ---
 
 > 另外，因為由 1.x 開始做嘅辛苦野先繼續到落去
- 
+
 * **AngularJs 1 + ES6 + AngularJS Rx** - Ionic V1 跟機係配 ES5，好多好開心嘅 ES6 功能用唔到；但因為自己深信寫 ES6 長遠一定有幫助，起手嘅時候我花咗好多時間搞 AngularJs + ES6 + Gulp + Babel + Browserify。
 呢個組合其實真係好少眾，網上亦冇乜資源。冇咁上下 Javascript 經歷其實好難做到。另外，自己係 ReactiveX 信徒加上 Angular 2 開始都用 RxJs，當然要用埋啦。
- 
+
 * **Web Worker** - Web Worker 呢兩隻字，好多人聽到都覺得離地。因為真正看待 Performance 嘅人，想唔 Block UI Thread 先會接觸搞並放資源去寫，因為放埋落 UI Thread 其實都只係疾一疾，唔理 Performance 其實無乜問題。
 但 HKEPC IR 係 Client-side parsing HTML，即係每一頁 HKEPC 拎落黎要抽取資料再去 Render，無可能下下都疾一下先去到下一版，就用 [Rx doOnNext 叫醒 WebWorker 做 Parsing，再 FlatMap 去等收番個 Message](https://github.com/gaplo917/hkepc-ionic-reader/blob/4be9b221b0d2dfa1b61dcb4a5bb6616a9e1c859a/src/es6/core/service/ApiService.js#L30-L59)
 ，無 Rx 加持真係好難寫得好。
@@ -96,14 +96,14 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 ```
     // Clone Repo
     git clone https://github.com/gaplo917/hkepc-ionic-reader
-    
+
     cd hkepc-ionic-reader
-    
+
     yarn install
 
     // run in web / dev with Native Project
     yarn run dev
-    
+
     // build production / for Native Project
     yarn run build
 ```
@@ -111,12 +111,12 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 # Create Proxy server for Dev
 ```
     git clone https://github.com/gaplo917/hkepc-cors-dev-proxy
-    
+
     cd hkepc-cors-dev-proxy
 
     nvm use 12
 
     yarn install
-    
+
     yarn start
 ```
