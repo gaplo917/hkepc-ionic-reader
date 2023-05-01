@@ -39,11 +39,14 @@
 
     </div>
     <ion-content lazy-scroll>
-        <div class="spinner" ng-if="vm.posts.length == 0">
-            <ir-spinner></ir-spinner>
+        <div class="spinner" ng-if="vm.posts === null">
+          <ir-spinner></ir-spinner>
+        </div>
+        <div class="spinner" ng-if="vm.posts !== null && vm.posts.length == 0">
+            沒有資料
         </div>
 
-        <div style="padding-top:44px;">
+        <div style="padding-top:44px;" ng-if="vm.posts !== null && vm.posts.length > 0">
 
             <ion-item
                 ng-class-odd="'odd'" ng-class-even="'even'"
@@ -85,7 +88,7 @@
         </div>
 
         <ion-infinite-scroll
-            ng-if="vm.posts.length > 0 && vm.hasMoreData"
+            ng-if="vm.posts !== null && vm.posts.length > 0 && vm.hasMoreData"
             on-infinite="vm.loadMore()"
             immediate-check="true"
             distance="10%">
@@ -102,6 +105,7 @@
         <div class="tab-bar-inset"></div>
     </div>
     <page-indicator
+        ng-if="vm.posts !== null && vm.posts.length > 0"
         pagination-popover-delegate="vm.paginationPopoverDelegate"
         current-page="vm.currentPageNum"
         total-page="vm.totalPageNum" />

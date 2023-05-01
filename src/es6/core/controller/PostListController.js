@@ -61,7 +61,7 @@ export class PostListController {
     this.categories = []
     this.currentPageNum = this.page - 1
     this.subTopicList = []
-    this.posts = []
+    this.posts = null
     this.hasMoreData = true
     this.filter = undefined
     this.order = undefined
@@ -76,7 +76,7 @@ export class PostListController {
     }, {
       getCurrentPage: () => this.currentPageNum,
       getTotalPage: () => this.totalPageNum,
-      getLocalMinPage: () => (this.posts[0] && this.posts[0].pageNum) || 1,
+      getLocalMinPage: () => (this.posts !== null && this.posts[0] && this.posts[0].pageNum) || 1,
       onJumpPage: ({ to }) => {
         this.reset()
         this.currentPageNum = to
@@ -182,7 +182,7 @@ export class PostListController {
     const { userIds: userIdsFilter, users: filteredUserInfos } = userFilter
     const { searchId, totalPageNum, categories, posts: nPosts, topicName, subTopicList, pageNum } = resp
     const { topicId: topicTypeOrId } = this
-    const existingPostIds = this.posts.map(it => it.id)
+    const existingPostIds = (this.posts || []).map(it => it.id)
     const deduplicatedPosts = nPosts.filter(it => existingPostIds.indexOf(it.id) === -1)
 
     this.searchId = searchId
@@ -193,8 +193,8 @@ export class PostListController {
 
     // better UX to highlight the searchText
     const posts = topicTypeOrId === 'search'
-      ? this.posts.concat(this.highlightSearchText(deduplicatedPosts, this.searchText))
-      : this.posts.concat(this.highlightSearchText(deduplicatedPosts, hlKeywords.join(' ')))
+      ? (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, this.searchText))
+      : (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, hlKeywords.join(' ')))
 
     this.posts = posts.map(it => {
       const { topicId: postTopicId, author, tag } = it
@@ -269,7 +269,7 @@ export class PostListController {
 
   reset () {
     this.currentPageNum = 1
-    this.posts = []
+    this.posts = null
     this.searchId = null
   }
 
@@ -380,7 +380,7 @@ export class PostListController {
   }
 
   hasStickyPost (posts) {
-    return posts && posts.filter(post => post.isSticky).length > 0
+    return posts != null && posts && posts.filter(post => post.isSticky).length > 0
   }
 
   relativeMomentize (dateStr) {
