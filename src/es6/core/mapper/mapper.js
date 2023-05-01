@@ -297,7 +297,6 @@ export default class Mapper {
         const rank = postSource.find('.postauthor > p > img').attr('alt')
 
         const avatarImage = postSource.find('.postauthor .avatar img')
-        const rawAvatarImageUrl = avatarImage.attr('raw-src')
 
         // processed by general html (isAutoLoadImage features)
         const avatarImageUrl = avatarImage.attr('image-lazy-src')
@@ -320,7 +319,7 @@ export default class Mapper {
           author: {
             rank: rank ? rank.replace('Rank: ', '') : 0,
             image: avatarImageUrl,
-            uid: URLUtils.getQueryVariable(rawAvatarImageUrl, 'uid'),
+            uid: URLUtils.getQueryVariable(postSource.find('.postauthor a').attr('raw-href'), 'uid'),
             name: postSource.find('.postauthor > .postinfo').text().trim()
           }
         }
