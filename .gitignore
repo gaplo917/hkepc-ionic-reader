@@ -77,3 +77,4 @@ crashlytics-build.properties
 .firebase
 *.zip
 yarn-error.log
+.DS_Store

@@ -2,13 +2,13 @@ const browserify = require('browserify')
 const babelify = require('babelify')
 const gulp = require('gulp')
 const stripDebug = require('gulp-strip-debug')
-const sass = require('gulp-sass')
 const source = require('vinyl-source-stream')
 const buffer = require('vinyl-buffer')
 const terser = require('gulp-terser')
 const sourcemaps = require('gulp-sourcemaps')
 const cleanCSS = require('gulp-clean-css')
 const browserSync = require('browser-sync').create()
+const sass = require('gulp-sass')(require('sass'));
 
 function onError (err) {
   console.log(err.message)

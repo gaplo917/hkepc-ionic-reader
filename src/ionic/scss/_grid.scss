@@ -10,7 +10,7 @@
 
 .row {
   @include display-flex();
-  padding: ($grid-padding-width / 2);
+  padding: ($grid-padding-width * 0.5);
   width: 100%;
 }
 
@@ -27,14 +27,14 @@
 }
 
 .row + .row {
-  margin-top: ($grid-padding-width / 2) * -1;
+  margin-top: ($grid-padding-width * 0.5) * -1;
   padding-top: 0;
 }
 
 .col {
   @include flex(1);
   display: block;
-  padding: ($grid-padding-width / 2);
+  padding: ($grid-padding-width * 0.5);
   width: 100%;
 }
 
