@@ -67,10 +67,10 @@ export default angular.module('starter.directives', [])
           const content = document.getElementById(selectorId).value
           const splits = [content.slice(0, selectionStart), content.slice(selectionStart)]
 
-          if (urlText) {
+          if (urlText && urlText !== '') {
             scope.contentModel = `${splits[0]}[url=${url}]${urlText}[/url]${splits[1]}`
           } else {
-            scope.contentModel = `${splits[0]}[url]${url}[/url]${splits[1]}`
+            scope.contentModel = `${splits[0]}[url=${url}]${url}[/url]${splits[1]}`
           }
 
           scope.url = undefined
@@ -115,6 +115,30 @@ export default angular.module('starter.directives', [])
 
           const openTag = `[size=${size}]`
           const closeTag = `[/size]`
+
+          scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
+
+          const nselectionStart = selectionStart + openTag.length
+          $timeout(() => {
+            scope.$apply(() => {
+              const elem = document.getElementById(selectorId)
+              elem.focus()
+
+              $timeout(() => {
+                elem.setSelectionRange(nselectionStart, nselectionStart)
+              }, 200)
+            })
+          })
+        }
+
+        modal.addFontColorTagToText = function (size) {
+          const selectorId = this.id
+          const selectionStart = document.getElementById(selectorId).selectionStart
+          const content = document.getElementById(selectorId).value
+          const splits = [content.slice(0, selectionStart), content.slice(selectionStart)]
+
+          const openTag = `[color=${size}]`
+          const closeTag = `[/color]`
 
           scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
 
@@ -293,8 +317,8 @@ export default angular.module('starter.directives', [])
       },
       template: `
         <div class="page-indicator-wrapper">
-            <button ng-click="paginationPopoverDelegate.show($event)" 
-                    ng-if="totalPage" 
+            <button ng-click="paginationPopoverDelegate.show($event)"
+                    ng-if="totalPage"
                     class="button-rounded action-button action-button-small">
                 第 {{currentPage == 0 ? 1 : currentPage}} 頁 / 共 {{totalPage}} 頁
             </button>
@@ -318,7 +342,7 @@ export default angular.module('starter.directives', [])
             }
           })
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
           subscription.dispose()
         })
       }
