@@ -212,8 +212,8 @@ function initAngular () {
 
               rx.Observable.combineLatest(
                 LocalStorageService.get('proxy', HKEPC.proxy),
-                LocalStorageService.get(HKEPC.auth.id),
-                LocalStorageService.get(HKEPC.auth.token),
+                LocalStorageService.get(HKEPC.auth.id, null),
+                LocalStorageService.get(HKEPC.auth.token, null),
                 (proxyInDb, authId, token) => {
                   return {
                     proxyInDb: proxyInDb,

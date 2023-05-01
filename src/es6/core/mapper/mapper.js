@@ -471,7 +471,7 @@ export default class Mapper {
       chatSource.find('cite').remove()
       const date = chatSource.find('.cite').text()
 
-      const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
+      const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
       return {
         id: id,
         avatarUrl: avatarUrl,
@@ -499,7 +499,8 @@ export default class Mapper {
 
       const date = chatSource.find('.cite').text()
 
-      const id = URLUtils.getQueryVariable(avatarUrl, 'uid')
+      const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
+
       return {
         id: id,
         avatarUrl: avatarUrl,
