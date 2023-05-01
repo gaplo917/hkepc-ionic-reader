@@ -53,9 +53,9 @@ export class NotificationController {
         this.totalPageNum = totalPageNum
 
         if (notifications.length > 0) {
-          this.notifications = this.notifications.concat(notifications)
+          this.notifications = (this.notifications || []).concat(notifications)
         } else {
-          this.notifications = notifications
+          this.notifications = []
         }
 
         this.refreshing = false
