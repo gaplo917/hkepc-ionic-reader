@@ -9,10 +9,12 @@
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
     </ion-nav-buttons>
     <ion-content>
-        <div class="spinner" ng-if="vm.notifications.length == 0">
-            <ir-spinner></ir-spinner>
+        <div class="spinner" ng-if="vm.notifications === null">
+          <ir-spinner></ir-spinner>
         </div>
-
+        <div class="spinner" ng-if="vm.notifications !== null && vm.notifications.length === 0">
+          沒有資料
+        </div>
         <ion-list>
             <ion-item class="item"
                       ng-class-odd="'odd'" ng-class-even="'even'"

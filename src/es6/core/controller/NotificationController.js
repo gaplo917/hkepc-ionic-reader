@@ -26,7 +26,7 @@ export class NotificationController {
   constructor ($scope, apiService, AuthService, $state, $sce, ngToast, $ionicHistory) {
     this.apiService = apiService
     this.scope = $scope
-    this.notifications = []
+    this.notifications = null
     this.state = $state
     this.ngToast = ngToast
     this.ionicHistory = $ionicHistory
@@ -52,7 +52,11 @@ export class NotificationController {
       .safeApply(this.scope, ({ totalPageNum, notifications }) => {
         this.totalPageNum = totalPageNum
 
-        this.notifications = this.notifications.concat(notifications)
+        if (notifications.length > 0) {
+          this.notifications = this.notifications.concat(notifications)
+        } else {
+          this.notifications = notifications
+        }
 
         this.refreshing = false
 
@@ -78,7 +82,7 @@ export class NotificationController {
   }
 
   doRefresh () {
-    this.notifications = []
+    this.notifications = null
     this.page = 1
     this.loadNotifications()
   }
