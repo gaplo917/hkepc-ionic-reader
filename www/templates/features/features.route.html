@@ -171,8 +171,7 @@
                     <span class="less-important-info" ng-if="::vm.isFree()">需升級到付費版本解鎖</span>
 
                     <label class="toggle toggle-assertive fright">
-                        <input ng-if="::vm.isFree()" disabled type="checkbox" ng-model="vm.signature">
-                        <input ng-if="!::vm.isFree()" type="checkbox" ng-model="vm.signature">
+                        <input ng-disabled="::vm.isFree()" type="checkbox" ng-model="vm.signature">
 
                         <div class="track">
                             <div class="handle"></div>
