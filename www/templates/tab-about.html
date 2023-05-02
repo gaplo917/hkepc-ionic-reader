@@ -3,9 +3,14 @@
         <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
     </ion-nav-buttons>
     <ion-content>
+        <div ng-if="(isiOSNative || isAndroidNative) && nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">
+          <button onclick="isiOSNative ? window.open('https://apps.apple.com/us/app/hkepc-ir-v3/id1081423513', '_system', 'location=yes') : window.open('https://play.google.com/store/apps/details?id=com.gaplotech.hkepcir', '_system', 'location=yes')"
+                  class="center button button-full button-assertive rounded bold" style="font-weight: bolder; margin-top: 0">升級到 HKEPC IR 無廣告版本
+          </button>
+        </div>
         <div class="description">
             <img src="img/icon.png" height="50" style="display: block; margin: -10px auto 5px auto">
-            <p>HKEPC IR Extreme v4 是非官方的第三方瀏覧器。本程式不會記錄任何登入名稱或密碼，
+            <p>HKEPC IR 是第三方開發的 HKEPC 討論區瀏覧器。本程式不會記錄任何登入名稱或密碼，
                 作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！</p>
         </div>
         <a class="item item-icon-left" href="#!/tab/about/version">
@@ -37,7 +42,7 @@
           </span>
         </a>
         <a class="item item-icon-left" href="" target="_system"
-           onclick="window.open('https://blog.gaplotech.com/about/', '_system', 'location=yes'); return false;">
+           onclick="window.open('https://blog.gaplo.tech/about/', '_system', 'location=yes'); return false;">
             <i class="icon ion-ios-at"></i>
             關於作者
             <span class="item-note">
@@ -49,7 +54,7 @@
             <i class="icon ion-social-github"></i>
             GitHub
             <span class="item-note">
-            HKEPC Ionic Reader
+            Web 內核開源代碼
           </span>
         </a>
         <div class="tab-bar-inset"></div>

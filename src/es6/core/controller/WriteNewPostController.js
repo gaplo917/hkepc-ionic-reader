@@ -54,7 +54,8 @@ export class WriteNewPostController {
 
     $scope.$on('$ionicView.loaded', (e) => {
       LocalStorageService.get('signature').subscribe(signature => {
-        if (signature === 'false') {
+        const isFree = $scope.nativeVersion && $scope.nativeVersion[$scope.nativeVersion.length - 1] === 'F'
+        if (signature === 'false' && !isFree) {
           this.ionicReaderSign = ''
         } else {
           this.ionicReaderSign = HKEPC.signature({

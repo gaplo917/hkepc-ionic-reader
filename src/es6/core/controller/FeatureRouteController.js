@@ -133,6 +133,10 @@ export class FeatureRouteController {
           this.registerOnChangeForumStyle()
         }
       }).subscribe()
+
+      if (this.isFree()) {
+        this.signature = true
+      }
     })
   }
 
@@ -188,5 +192,10 @@ export class FeatureRouteController {
     this.apiService.checkPM()
       .flatMap(() => this.apiService.memberCenter())
       .subscribe()
+  }
+
+  isFree () {
+    const version = this.scope.nativeVersion
+    return version && version[version.length - 1] === 'F'
   }
 }
