@@ -117,9 +117,13 @@ module.exports = {
   signature: (opt) => {
     const { androidVersion, iosVersion } = opt
     if (androidVersion) {
-      return `[size=1][color=Silver]via HKEPC IR ${VERSION} - Android(${androidVersion})[/color][/size]`
+      const isFree = androidVersion[androidVersion.length - 1] === 'F'
+      const appName = isFree ? 'HKEPC IR' : 'HKEPC IRF'
+      return `[size=1][color=Silver]via ${appName} ${VERSION} - Android(${androidVersion})[/color][/size]`
     } else if (iosVersion) {
-      return `[size=1][color=Silver]via HKEPC IR ${VERSION} - iOS(${iosVersion})[/color][/size]`
+      const isFree = iosVersion[iosVersion.length - 1] === 'F'
+      const appName = isFree ? 'HKEPC IR' : 'HKEPC IRF'
+      return `[size=1][color=Silver]via ${appName} ${VERSION} - iOS(${iosVersion})[/color][/size]`
     } else {
       return `[size=1][color=Silver]via HKEPC IR ${VERSION} - ${getMobileOperatingSystem()}[/color][/size]`
     }
