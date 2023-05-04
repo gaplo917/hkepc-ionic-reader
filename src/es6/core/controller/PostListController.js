@@ -36,7 +36,7 @@ export class PostListController {
     }
   }
 
-  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $timeout) {
+  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $timeout, AuthService) {
     this.scope = $scope
     this.state = $state
     this.location = $location
@@ -50,6 +50,7 @@ export class PostListController {
     this.$ionicModal = $ionicModal
     this.$ionicPopover = $ionicPopover
     this.$timeout = $timeout
+    this.authService = AuthService
 
     this.topicId = $stateParams.topicId
     this.searchId = $stateParams.searchId
@@ -341,11 +342,19 @@ export class PostListController {
   }
 
   doNewPost (topic) {
-    this.state.go(Controllers.WriteNewPostController.STATE, {
-      topicId: this.topicId,
-      topic: JSON.stringify(topic),
-      categories: JSON.stringify(this.categories)
-    })
+    const { scope, state, authService, ngToast } = this
+
+    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
+      if (isLoggedIn) {
+        state.go(Controllers.WriteNewPostController.STATE, {
+          topicId: this.topicId,
+          topic: JSON.stringify(topic),
+          categories: JSON.stringify(this.categories)
+        })
+      } else {
+        ngToast.danger(`<i class="ion-alert-circled"> 發佈新主題需要會員權限，請先登入！</i>`)
+      }
+    }).subscribe()
   }
 
   doFilterOrder ($event) {

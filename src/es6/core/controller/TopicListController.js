@@ -197,7 +197,7 @@ export class TopicListController {
   encourageTopicTutorial () {
     swal({
       animation: false,
-      html: `這個是範例版塊。你要點擊右上角 <i class="ion-ios-bookmarks-outline"></i> ，然後開始編緝你的論壇版塊喜好程度！`,
+      html: `這個是範例版塊。你要點擊右下角 <i class="ion-ios-bookmarks-outline"></i> ，然後開始編緝你的論壇版塊喜好程度！`,
       showCancelButton: false
     })
   }

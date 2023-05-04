@@ -48,6 +48,7 @@ export class ChatListController {
           this.loadChats()
         } else {
           this.ngToast.danger(`<i class="ion-alert-circled"> 私人訊息需要會員權限，請先登入！</i>`)
+          this.onBack()
         }
       }).subscribe()
     })
