@@ -98,7 +98,7 @@ export class ChatDetailController {
       },
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).safeApply(this.scope, (resp) => {
-      $timeout(() => this.doRefresh(), 500)
+      $timeout(() => this.doRefresh(), 2000)
     }).subscribe()
   }
 
