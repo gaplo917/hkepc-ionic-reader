@@ -1,10 +1,16 @@
-**1 May 2023 - Release IR Extreme 內核 v5.0.0, iOS 5.0.0**
+**1 May 2023 - Release IR Extreme 內核 v5.0.0, Android 5.0.0**
 #### 內核更新
 * 加入常用字體顏色功能
 * 修正「搜尋帖子」沒有資時仍顯示旋轉特效
 * 修正「帖子消息」沒有資時仍顯示旋轉特效
 * 修正私人訊息無法使用功能 (因為 HKEPC 更改了頭像連結)
-* 支援 iPhone 14 Pro 及 iPhone 14 Pro Max
+
+#### App 更新
+* 全面修正 Android 在不同裝置上的佈局安排 - 移除「全螢幕修正」功能
+* 升級 Android 代碼
+* 更新圖片選擇功能
+* 更新最低要求為 Android 9.0
+* 修正部份元件用色
 
 ---
 
