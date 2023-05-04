@@ -29,9 +29,9 @@
         </a>
         <a class="item item-icon-left" href="" ng-if="nativeVersion">
             <i class="icon ion-iphone"></i>
-            App 版本
+            App 版本<span ng-if="nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">(免費版)</span>
             <span class="item-note">
-            {{nativeVersion}}
+            {{nativeVersion.replace('F', '')}}
           </span>
         </a>
         <a class="item item-icon-left" href="">
