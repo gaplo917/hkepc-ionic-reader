@@ -31,7 +31,7 @@ if (isiOSNative()) {
 } else if (isAndroidNative()) {
   createAndroidNativeBridge(() => initAngular())
 } else {
-  requestAnimationFrame(() => {
+  document.addEventListener('DOMContentLoaded', () => {
     initAngular()
   })
 }
@@ -165,10 +165,6 @@ function initAngular () {
       $ionicConfigProvider.backButton.icon('ion-ios-arrow-thin-left')
       $ionicConfigProvider.backButton.text('')
       $ionicConfigProvider.backButton.previousTitleText(false)
-
-      if (isAndroidNative()) {
-        $ionicConfigProvider.templates.maxPrefetch(0)
-      }
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
       const stateProvider = $stateProvider

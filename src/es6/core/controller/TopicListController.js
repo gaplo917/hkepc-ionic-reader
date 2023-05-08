@@ -49,15 +49,15 @@ export class TopicListController {
 
     $scope.$on('$ionicView.loaded', (e) => {
       this.rx.Observable.combineLatest(
-        this.localStorageService.getObject('topic-rank-map'),
-        this.localStorageService.getObject('topics'),
+        this.localStorageService.getObject('topic-rank-map', []),
+        this.localStorageService.getObject('topics', []),
         (topicRankMapObj, topics) => ({ topicRankMapObj, topics })
       )
         .flatMap(({ topicRankMapObj, topics }) => {
-          if (topics.length > 0) {
+          if (topics && topics.length > 0) {
             console.log('[TopicListController]', 'using cache')
           }
-          return topics.length > 0
+          return topics && topics.length > 0
             ? this.rx.Observable.just({ topicRankMapObj, topics })
             : this.apiService.topicList()
               .do(() => this.localStorageService.set('topics-cache-timestamp', moment().unix()))

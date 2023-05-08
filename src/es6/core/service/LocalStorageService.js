@@ -116,6 +116,7 @@ export class LocalStorageService {
   getObject (key, defaultValue = null) {
     return this.rx.Observable
       .fromPromise(this.$localForage.getItem(key))
+      .defaultIfEmpty(defaultValue)
       .map(JSON.parse)
       .map(data => (data !== null) ? data : defaultValue)
   }
