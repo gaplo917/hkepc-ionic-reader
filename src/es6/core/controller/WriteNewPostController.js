@@ -1,6 +1,6 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import * as _ from 'lodash'
+import { get, replace } from 'lodash-es'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
@@ -138,9 +138,9 @@ export class WriteNewPostController {
         method: 'POST',
         url: actionUrl,
         data: {
-          subject: subject,
+          subject,
           message: replyMessage,
-          typeid: _.get(post, 'category.id', undefined),
+          typeid: get(post, 'category.id', undefined),
           handlekey: 'newthread',
           topicsubmit: true,
           ...hiddenFormInputs,
@@ -153,7 +153,7 @@ export class WriteNewPostController {
           if (result) {
             swal.close()
 
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈主題！</i>`)
+            this.ngToast.success('<i class="ion-ios-checkmark"> 成功發佈主題！</i>')
 
             this.onBack()
           } else {
@@ -170,13 +170,13 @@ export class WriteNewPostController {
           () => swal({
             animation: false,
             title: '發佈失敗',
-            text: `網絡異常，請重新嘗試！`,
+            text: '網絡異常，請重新嘗試！',
             type: 'error',
             confirmButtonText: '確定'
           })
         )
     } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
+      this.ngToast.danger('<i class="ion-alert-circled"> 標題或內容不能空白！</i>')
     }
   }
 
@@ -213,8 +213,8 @@ export class WriteNewPostController {
 
         this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
 
-        this.post.content = _.replace(this.post.content, id, '')
-        this.post.content = _.replace(this.post.content, '[attachimg][/attachimg]', '')
+        this.post.content = replace(this.post.content, id, '')
+        this.post.content = replace(this.post.content, '[attachimg][/attachimg]', '')
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
@@ -230,7 +230,7 @@ export class WriteNewPostController {
   }
 
   onFocus () {
-    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    const focusPosition = angular.element(document.querySelector('#input-helper')).prop('offsetTop')
     this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 

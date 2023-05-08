@@ -13,7 +13,7 @@ jobs:
       - name: Build Single Page application
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - run: npm ci && npm run build
 
         # publish to cloudflare pages
@@ -22,6 +22,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: hkepc-ir-app # e.g. 'my-project'
-          directory: www # e.g. 'dist'
+          projectName: hkepc-ir-app
+          directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

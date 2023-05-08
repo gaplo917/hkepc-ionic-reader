@@ -144,9 +144,29 @@ function initAngular () {
         }
       }
     })
-    .run(function ($ionicPlatform) {
-      // Any thing need to do??
-      $ionicPlatform.ready(function () {})
+    .run(function ($ionicPlatform, $templateCache, $http) {
+      $ionicPlatform.ready(function () {
+        const prefetchTemplateIds = [
+          'templates/post-detail.html',
+          'templates/post-list.html',
+          'templates/modals/page-slider.html',
+          'templates/modals/filter-order.html',
+          'templates/features/account/account.html',
+          'templates/features/chats/chats.details.html',
+          'templates/features/chats/chats.list.html',
+          'templates/features/mypost/my.post.html',
+          'templates/features/myreply/my.reply.html',
+          'templates/features/notification/notification.html'
+        ]
+        for (const templateId of prefetchTemplateIds) {
+          $http({
+            method: 'GET',
+            url: templateId
+          }).then(({ data }) => {
+            $templateCache.put(templateId, data)
+          }).catch((e) => console.error('prefetch fail', e))
+        }
+      })
     })
     .config(['$ionicConfigProvider', function ($ionicConfigProvider) {
       $ionicConfigProvider.scrolling.jsScrolling(false)
@@ -212,9 +232,9 @@ function initAngular () {
                 LocalStorageService.get(HKEPC.auth.token, null),
                 (proxyInDb, authId, token) => {
                   return {
-                    proxyInDb: proxyInDb,
-                    authId: authId,
-                    token: token
+                    proxyInDb,
+                    authId,
+                    token
                   }
                 }).subscribe(({ proxyInDb, authId, token }) => {
                 if (isProxied) {
@@ -242,19 +262,19 @@ function initAngular () {
               if (err.status === 404) {
                 ngToast.danger({
                   dismissOnTimeout: false,
-                  content: `<i class="ion-network"> 找不到相關的內容！</i>`,
+                  content: '<i class="ion-network"> 找不到相關的內容！</i>',
                   combineDuplications: true
                 })
               } else if (err.status === -1) {
                 ngToast.danger({
                   dismissOnTimeout: true,
-                  content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`,
+                  content: '<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>',
                   combineDuplications: true
                 })
               } else {
                 ngToast.danger({
                   dismissOnTimeout: true,
-                  content: `<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>`,
+                  content: '<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>',
                   combineDuplications: true
                 })
               }

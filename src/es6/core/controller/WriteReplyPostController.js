@@ -1,6 +1,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import * as _ from 'lodash'
+import {
+  replace
+} from 'lodash-es'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
@@ -152,7 +154,7 @@ export class WriteReplyPostController {
       .safeApply(this.scope, ({ responseText, result }) => {
         if (result) {
           swal.close()
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功發佈回覆！</i>`)
+          this.ngToast.success('<i class="ion-ios-checkmark"> 成功發佈回覆！</i>')
 
           this.onBack()
         } else {
@@ -169,7 +171,7 @@ export class WriteReplyPostController {
         () => swal({
           animation: false,
           title: '發佈失敗',
-          text: `網絡異常，請重新嘗試！`,
+          text: '網絡異常，請重新嘗試！',
           type: 'error',
           confirmButtonText: '確定'
         })
@@ -209,15 +211,15 @@ export class WriteReplyPostController {
 
         this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
 
-        this.reply.content = _.replace(this.reply.content, id, '')
-        this.reply.content = _.replace(this.reply.content, '[attachimg][/attachimg]', '')
+        this.reply.content = replace(this.reply.content, id, '')
+        this.reply.content = replace(this.reply.content, '[attachimg][/attachimg]', '')
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
   }
 
   onFocus () {
-    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    const focusPosition = angular.element(document.querySelector('#input-helper')).prop('offsetTop')
     this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 

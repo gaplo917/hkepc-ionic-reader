@@ -5,7 +5,9 @@ import * as HKEPC from '../../data/config/hkepc'
 import { FindMessageRequest } from '../model/requests'
 import { Bridge, Channel } from '../bridge/index'
 
-import * as _ from 'lodash'
+import {
+  max
+} from 'lodash-es'
 import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
 import { PaginationPopoverDelegates } from '../delegates/pagination-popover-delegates'
@@ -90,7 +92,7 @@ export class PostDetailController extends IRLifecycleOwner {
         const messageId = id.replace('message-', '')
 
         this.localStorageService.setObject(`${topicId}/${postId}/lastPosition`, {
-          page: page,
+          page,
           messageId
         })
       })
@@ -186,7 +188,7 @@ export class PostDetailController extends IRLifecycleOwner {
         .map(it => parseInt(it.post.page))
 
       // update the page count
-      const maxPageNum = _.max(existingPages) || 0
+      const maxPageNum = max(existingPages) || 0
 
       this.currentPage = maxPageNum < totalPageNum
         ? maxPageNum + 1
@@ -237,8 +239,8 @@ export class PostDetailController extends IRLifecycleOwner {
         postId,
         page,
         orderType: reversePostOrder ? 1 : 0,
-        filterOnlyAuthorId: filterOnlyAuthorId,
-        isAutoLoadImage: isAutoLoadImage
+        filterOnlyAuthorId,
+        isAutoLoadImage
       }),
       // local db access
       this.updateFilterOpts(),
@@ -287,14 +289,14 @@ export class PostDetailController extends IRLifecycleOwner {
               id: nextFocusId,
               post: { page: parseInt(page) + 1 },
               type: 'POST_PAGE_DIVIDER',
-              content: `<i class="ion-android-arrow-up"></i> 上一頁加載完成 <i class="ion-ios-checkmark-outline" ></i>`
+              content: '<i class="ion-android-arrow-up"></i> 上一頁加載完成 <i class="ion-ios-checkmark-outline" ></i>'
             })
 
             const merged = newMessages.concat(messages)
 
             merged.unshift({
               id: `divider-${page}`,
-              post: { page: page },
+              post: { page },
               type: 'POST_PAGE_DIVIDER'
             })
 
@@ -327,18 +329,18 @@ export class PostDetailController extends IRLifecycleOwner {
               .filter(it => parseInt(it.post.page) === page)
               .length > 0
             const newMessages = post.messages.filter(msg => messageIds.indexOf(msg.id) === -1)
-            const newPage = _.max(newMessages.map(it => it.post.page)) || page
+            const newPage = max(newMessages.map(it => it.post.page)) || page
 
             if (newPage > page) {
               // only newPage will add page divider to prevent F5 loading duplicate the result
               messages.push({
-                post: { page: page },
+                post: { page },
                 type: 'POST_PAGE_DIVIDER'
               })
             } else if (!hasThisPageDivider) {
               // add page divider
               messages.push({
-                post: { page: page },
+                post: { page },
                 type: 'POST_PAGE_DIVIDER'
               })
             }
@@ -415,7 +417,7 @@ export class PostDetailController extends IRLifecycleOwner {
           reply: JSON.stringify(reply)
         })
       } else {
-        ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+        ngToast.danger('<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>')
       }
     }).subscribe()
   }
@@ -427,7 +429,7 @@ export class PostDetailController extends IRLifecycleOwner {
     authService.isLoggedIn().safeApply(scope, isLoggedIn => {
       if (isLoggedIn) {
         if (isLock) {
-          ngToast.danger(`<i class="ion-alert-circled"> 主題已被封鎖，無法回覆！</i>`)
+          ngToast.danger('<i class="ion-alert-circled"> 主題已被封鎖，無法回覆！</i>')
           return
         }
         const reply = {
@@ -445,7 +447,7 @@ export class PostDetailController extends IRLifecycleOwner {
           reply: JSON.stringify(reply)
         })
       } else {
-        ngToast.danger(`<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>`)
+        ngToast.danger('<i class="ion-alert-circled"> 留言需要會員權限，請先登入！</i>')
       }
     }).subscribe()
   }
@@ -466,7 +468,7 @@ export class PostDetailController extends IRLifecycleOwner {
           })
         })
       } else {
-        ngToast.danger(`<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>`)
+        ngToast.danger('<i class="ion-alert-circled"> 舉報需要會員權限，請先登入！</i>')
       }
     }).subscribe()
   }
@@ -524,7 +526,7 @@ export class PostDetailController extends IRLifecycleOwner {
           author: JSON.stringify(author)
         })
       } else {
-        ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
+        ngToast.danger('<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>')
       }
     }).subscribe()
   }
@@ -537,10 +539,10 @@ export class PostDetailController extends IRLifecycleOwner {
           '分享到 ...',
           `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖`,
           `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖`,
-          `關注此主題的新回覆`,
-          `收藏此主題`,
+          '關注此主題的新回覆',
+          '收藏此主題',
           `隱藏並封鎖 ${message.author.name}`,
-          `舉報`
+          '舉報'
         ],
         titleText: '更多功能',
         cancelText: '取消'
@@ -551,8 +553,8 @@ export class PostDetailController extends IRLifecycleOwner {
           })
         } else if (index === 1) {
           this.reversePostOrder = !this.reversePostOrder
-          if (this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
-          else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
+          if (this.reversePostOrder) this.ngToast.success('<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>')
+          else ngToast.success('<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>')
 
           this.doRefresh()
         } else if (index === 2) {
@@ -563,11 +565,11 @@ export class PostDetailController extends IRLifecycleOwner {
           this.doRefresh()
         } else if (index === 3) {
           apiService.subscribeNewReply(this.postId).safeApply(scope, () => {
-            ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
+            ngToast.success('<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>')
           }).subscribe()
         } else if (index === 4) {
           apiService.addFavPost(this.postId).safeApply(scope, () => {
-            ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
+            ngToast.success('<i class="ion-ios-checkmark"> 成功收藏此主題！</i>')
           }).subscribe()
         } else if (index === 5) {
           // this feature is made for apple review team, sosad
@@ -590,9 +592,9 @@ export class PostDetailController extends IRLifecycleOwner {
           { text: '開啟 HKEPC 原始連結' },
           { text: `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖` },
           { text: `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖` },
-          { text: `關注此主題的新回覆` },
-          { text: `收藏此主題` },
-          { text: `舉報` }
+          { text: '關注此主題的新回覆' },
+          { text: '收藏此主題' },
+          { text: '舉報' }
         ],
         titleText: '更多功能',
         cancelText: '取消',
@@ -606,8 +608,8 @@ export class PostDetailController extends IRLifecycleOwner {
             window.open(HKEPC.forum.findMessage(message.post.id, message.id))
           } else if (index === 1) {
             this.reversePostOrder = !this.reversePostOrder
-            if (this.reversePostOrder) this.ngToast.success(`<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>`)
-            else this.ngToast.success(`<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>`)
+            if (this.reversePostOrder) this.ngToast.success('<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>')
+            else this.ngToast.success('<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>')
 
             this.doRefresh()
           } else if (index === 2) {
@@ -618,11 +620,11 @@ export class PostDetailController extends IRLifecycleOwner {
             this.doRefresh()
           } else if (index === 3) {
             this.apiService.subscribeNewReply(this.postId).safeApply(this.scope, () => {
-              this.ngToast.success(`<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>`)
+              this.ngToast.success('<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>')
             }).subscribe()
           } else if (index === 4) {
             this.apiService.addFavPost(this.postId).safeApply(this.scope, () => {
-              this.ngToast.success(`<i class="ion-ios-checkmark"> 成功收藏此主題！</i>`)
+              this.ngToast.success('<i class="ion-ios-checkmark"> 成功收藏此主題！</i>')
             }).subscribe()
           } else if (index === 5) {
             this.onReport(message)

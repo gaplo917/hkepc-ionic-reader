@@ -4,9 +4,7 @@
 import * as HKEPC from '../../data/config/hkepc'
 import { CommonInfoExtractRequest } from '../model/requests'
 import { HybridHttp } from '../bridge/HybridHttp'
-import work from 'webworkify'
-import worker from '../cheerio-worker'
-const cheerioWorker = work(worker)
+const cheerioWorker = new Worker(new URL('../cheerio-worker.js', import.meta.url));
 
 export class ApiService {
   /**

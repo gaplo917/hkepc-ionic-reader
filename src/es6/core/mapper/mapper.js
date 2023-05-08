@@ -2,7 +2,10 @@ import { HKEPCHtml } from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
 import * as HKEPC from '../../data/config/hkepc'
-import * as _ from 'lodash'
+import {
+  startsWith,
+  replace
+} from 'lodash-es'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)
@@ -30,8 +33,8 @@ export default class Mapper {
       return {
         id: topicId,
         name: topicName,
-        image: image,
-        groupName: groupName,
+        image,
+        groupName,
         description: description.replace('最後發表', ' -')
       }
     }).get()
@@ -154,8 +157,8 @@ export default class Mapper {
       const name = obj.text()
       const id = URLUtils.getQueryVariable(obj.attr('raw-href'), 'fid')
       return {
-        id: id,
-        name: name
+        id,
+        name
       }
     }).get()
 
@@ -192,7 +195,7 @@ export default class Mapper {
 
       return {
         id: URLUtils.getQueryVariable(postUrl, 'tid'),
-        topicId: topicId,
+        topicId,
         tag: postSource.find('tr .subject em a').text() || postSource.find('.forum a').text(),
         name: postSource.find('tr .subject span[id^=thread_] a ').text() || postSource.find('tr .subject > a ').text(),
         lastPost: {
@@ -208,7 +211,7 @@ export default class Mapper {
           reply: postSource.find('tr .nums strong').text()
         },
         publishDate: postSource.find('tr .author em').text(),
-        pageNum: pageNum,
+        pageNum,
         isSticky: htmlId ? htmlId.startsWith('stickthread') : false,
         isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false,
         isLock: postTitleImgUrl ? postTitleImgUrl.indexOf('lock') > 0 : false
@@ -216,13 +219,13 @@ export default class Mapper {
     }).get()
 
     return {
-      searchId: searchId,
-      totalPageNum: totalPageNum,
-      subTopicList: subTopicList,
+      searchId,
+      totalPageNum,
+      subTopicList,
       categories: postCategories,
       posts: posts.filter(_ => _.id && _.name),
-      topicName: topicName,
-      pageNum: pageNum
+      topicName,
+      pageNum
     }
   }
 
@@ -306,15 +309,15 @@ export default class Mapper {
           id: postSource.find('table').attr('id').replace('pid', ''),
           pos: postSource.find('.postinfo strong a em').text(),
           createdAt: postSource.find('.posterinfo .authorinfo em span').attr('title') || postSource.find('.posterinfo .authorinfo em').text().replace('發表於 ', ''),
-          pstatus: pstatus,
+          pstatus,
           content: content.html(),
           type: 'POST_MESSAGE',
-          hasEdit: hasEdit,
+          hasEdit,
           post: {
             id: postId,
-            topicId: topicId,
+            topicId,
             title: postTitle,
-            page: page
+            page
           },
           author: {
             rank: rank ? rank.replace('Rank: ', '') : 0,
@@ -329,12 +332,12 @@ export default class Mapper {
       title: postTitle,
       isLongTitle,
       id: postId,
-      topicId: topicId,
-      topicStr: topicStr,
+      topicId,
+      topicStr,
       topicCategory,
-      totalPageNum: totalPageNum,
-      messages: messages,
-      isLock: isLock
+      totalPageNum,
+      messages,
+      isLock
     }
   }
 
@@ -370,7 +373,7 @@ export default class Mapper {
       : Math.max(...pageNumArr)
 
     return {
-      currentPage: currentPage,
+      currentPage,
       message: result.messages.filter(_ => parseInt(_.id) === parseInt(messageId))[0]
     }
   }
@@ -382,14 +385,14 @@ export default class Mapper {
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
     const hiddenFormInputs = {}
-    formSource.find(`input[type='hidden']`).map((i, elem) => {
+    formSource.find('input[type=\'hidden\']').map((i, elem) => {
       const k = $(elem).attr('name')
       const v = $(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
     }).get()
 
-    formSource.find(`button[type='submit']`).map((i, elem) => {
+    formSource.find('button[type=\'submit\']').map((i, elem) => {
       const k = $(elem).attr('name')
       const v = $(elem).attr('value')
 
@@ -472,12 +475,12 @@ export default class Mapper {
 
       const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
       return {
-        id: id,
-        avatarUrl: avatarUrl,
-        summary: summary,
-        username: username,
-        date: date,
-        isRead: isRead
+        id,
+        avatarUrl,
+        summary,
+        username,
+        date,
+        isRead
       }
     }).get()
 
@@ -501,12 +504,12 @@ export default class Mapper {
       const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
 
       return {
-        id: id,
-        avatarUrl: avatarUrl,
-        content: content,
-        username: username,
+        id,
+        avatarUrl,
+        content,
+        username,
         date: date.trim(),
-        isSelf: isSelf
+        isSelf
       }
     }
     const messages = $('.pm_list li.s_clear').map((i, elem) => {
@@ -526,7 +529,7 @@ export default class Mapper {
 
     const hiddenFormInputs = {}
 
-    formSource(`input[type='hidden']`).map((i, elem) => {
+    formSource('input[type=\'hidden\']').map((i, elem) => {
       const k = formSource(elem).attr('name')
       const v = formSource(elem).attr('value')
 
@@ -543,21 +546,21 @@ export default class Mapper {
 
   static settings (html, opt) {
     const $ = html.getCheerio()
-    const form = $(`form[name='reg']`)
+    const form = $('form[name=\'reg\']')
     const formSource = cheerio.load(form.html() || '')
     const relativeUrl = form.attr('action')
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
 
     const hiddenFormInputs = {}
 
-    formSource(`input[type='hidden'], input[checked='checked'], #editsubmit, select`).not(`select[name='styleidnew']`).map((i, elem) => {
+    formSource('input[type=\'hidden\'], input[checked=\'checked\'], #editsubmit, select').not('select[name=\'styleidnew\']').map((i, elem) => {
       const k = formSource(elem).attr('name')
-      const v = formSource(elem).attr('value') || formSource(elem).find(`option[selected='selected']`).attr('value') || 0
+      const v = formSource(elem).attr('value') || formSource(elem).find('option[selected=\'selected\']').attr('value') || 0
 
       hiddenFormInputs[k] = encodeURIComponent(v)
     }).get()
 
-    const forumStyles = $(`select[name='styleidnew'] option`).map((i, elem) => {
+    const forumStyles = $('select[name=\'styleidnew\'] option').map((i, elem) => {
       const obj = $(elem)
       const isSelected = obj.attr('selected') === 'selected'
       const value = obj.attr('value')
@@ -620,12 +623,12 @@ export default class Mapper {
       const img = $(e)
       const src = img.attr('raw-src')
       const rawId = img.attr('raw-id')
-      const isAttachment = _.startsWith(src, 'https://forum.hkepc.net')
-      const id = _.replace(rawId, 'image_', '')
+      const isAttachment = startsWith(src, 'https://forum.hkepc.net')
+      const id = replace(rawId, 'image_', '')
       return {
-        src: src,
-        id: id,
-        isAttachment: isAttachment
+        src,
+        id,
+        isAttachment
       }
     }).get()
       .filter(existingImage => existingImage.isAttachment)
@@ -635,9 +638,9 @@ export default class Mapper {
 
     const hiddenAttachFormInputs = {}
 
-    hiddenAttachFormInputs['action'] = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
+    hiddenAttachFormInputs.action = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
 
-    attachFormSource(`input[type='hidden']`).map((i, elem) => {
+    attachFormSource('input[type=\'hidden\']').map((i, elem) => {
       const k = attachFormSource(elem).attr('name')
       const v = attachFormSource(elem).attr('value')
       hiddenAttachFormInputs[k] = encodeURIComponent(v)
@@ -646,10 +649,10 @@ export default class Mapper {
     // ---------- End of Upload image preparation -----------------------------------------------
 
     const formSource = cheerio.load(postForm.html())
-    const subTopicTypeId = formSource(`#typeid > option[selected='selected']`).attr('value')
+    const subTopicTypeId = formSource('#typeid > option[selected=\'selected\']').attr('value')
 
     const hiddenFormInputs = {}
-    formSource(`input[type='hidden']`).map((i, elem) => {
+    formSource('input[type=\'hidden\']').map((i, elem) => {
       const k = formSource(elem).attr('name')
       const v = formSource(elem).attr('value')
 
@@ -730,7 +733,7 @@ export default class Mapper {
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
     const hiddenFormInputs = {}
-    $(`input[type='hidden']`).map((i, elem) => {
+    $('input[type=\'hidden\']').map((i, elem) => {
       const k = $(elem).attr('name')
       const v = $(elem).attr('value')
 
@@ -738,7 +741,7 @@ export default class Mapper {
     }).get()
 
     // hard code that is report type
-    hiddenFormInputs['type'] = '1'
+    hiddenFormInputs.type = '1'
 
     return {
       actionUrl,

@@ -1,5 +1,5 @@
 import * as Controllers from './index'
-import * as _ from 'lodash'
+import { replace } from 'lodash-es'
 import swal from 'sweetalert2'
 
 export class EditPostController {
@@ -121,7 +121,7 @@ export class EditPostController {
       data: {
         editsubmit: true,
         message: content,
-        subject: subject,
+        subject,
         typeid: subTopicTypeId,
         ...hiddenFormInputs,
         ...imageFormData,
@@ -133,7 +133,7 @@ export class EditPostController {
         if (result) {
           swal.close()
 
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 修改成功！</i>`)
+          this.ngToast.success('<i class="ion-ios-checkmark"> 修改成功！</i>')
 
           // set the page to the message page
           this.currentPage = this.message.post.page
@@ -153,7 +153,7 @@ export class EditPostController {
         () => swal({
           animation: false,
           title: '發佈失敗',
-          text: `網絡異常，請重新嘗試！`,
+          text: '網絡異常，請重新嘗試！',
           type: 'error',
           confirmButtonText: '確定'
         })
@@ -193,15 +193,15 @@ export class EditPostController {
 
         this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
 
-        this.edit.content = _.replace(this.edit.content, id, '')
-        this.edit.content = _.replace(this.edit.content, '[attachimg][/attachimg]', '')
+        this.edit.content = replace(this.edit.content, id, '')
+        this.edit.content = replace(this.edit.content, '[attachimg][/attachimg]', '')
         setTimeout(() => this.scope.$apply(), 0)
       }
     })
   }
 
   onFocus () {
-    const focusPosition = angular.element(document.querySelector(`#input-helper`)).prop('offsetTop')
+    const focusPosition = angular.element(document.querySelector('#input-helper')).prop('offsetTop')
     this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 

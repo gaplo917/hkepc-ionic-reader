@@ -1,8 +1,12 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
 */
-const PROXY_URL = 'https://proxy.hkepc.pro/www.hkepc.com' // default proxy url (local development use 'http://0.0.0.0:1337/www.hkepc.com')
-const BASE_URL = `https://www.hkepc.com`
+// eslint-disable-next-line no-undef
+const PROXY_SERVER = IS_DEV
+  ? 'http://0.0.0.0:1337'
+  : 'https://proxy.hkepc.pro' // default proxy url (local development use 'http://0.0.0.0:1337/www.hkepc.com')
+const PROXY_URL = `${PROXY_SERVER}/www.hkepc.com`
+const BASE_URL = 'https://www.hkepc.com'
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
 const VERSION = '5.0.0'

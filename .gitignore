@@ -78,3 +78,4 @@ crashlytics-build.properties
 *.zip
 yarn-error.log
 .DS_Store
+dist
