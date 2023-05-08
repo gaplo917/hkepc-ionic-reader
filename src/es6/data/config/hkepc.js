@@ -1,7 +1,7 @@
 /**
  * Created by Gaplo917 on 9/1/2016.
 */
-const PROXY_URL = 'http://0.0.0.0:1337/www.hkepc.com' // default proxy url (only local development use)
+const PROXY_URL = 'https://proxy.hkepc.pro/www.hkepc.com' // default proxy url (local development use 'http://0.0.0.0:1337/www.hkepc.com')
 const BASE_URL = `https://www.hkepc.com`
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
