@@ -2,7 +2,7 @@
 
 # HKEPC IR Pro (https://hkepc.pro)
 <img src="https://storage.googleapis.com/hkepc-ir-public/hkepc-ir-pro-icon@512.png" height="200">
-<a href="https://appsto.re/hk/zAtDab.i"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50" target="_blank"> </a>
+<a href="https://apple.co/44zfmAV"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50" target="_blank"> </a>
 <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-googleplay.png" height="50" target="_blank"></a>
 
 
@@ -80,7 +80,7 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 
 
 ### 點解唔將啲時間做 React Native?
-* [「CPU 效能過剩」係自己 2016 年頭認為會發生嘅事](http://blog.gaplotech.com/hkepc-ionic-reader/) 所以當年先會揀 HTML 起手，2017 年尾睇完 iPhone 8/X 發佈會，見到粒 A11 效能已經拍得住 i5 Mobile CPU 級數，更加確信自己嘅睇法。
+* [「CPU 效能過剩」係自己 2016 年頭認為會發生嘅事](http://gaplo.tech/hkepc-ionic-reader/) 所以當年先會揀 HTML 起手，2017 年尾睇完 iPhone 8/X 發佈會，見到粒 A11 效能已經拍得住 i5 Mobile CPU 級數，更加確信自己嘅睇法。
 
 * 做呢個 Project 嘅目標不嬲都係將「長遠性」放第一位； 現時 HKEPC IR Pro 受惠於 HTML，直接將 HKEPC 拎番嘅 HTML 配合少量自製 CSS 去 Render，完全唔需要處理最複雜多變嘅 Content Parsing（因為要做到完美要花極大量嘅時間，只要 HKEPC 一改界面就要重新做過）。
 
