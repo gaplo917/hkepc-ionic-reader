@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Using in Native App",
   "scripts": {
-    "dev": "gulp run",
+    "dev": "NODE_ENV=development gulp run",
     "build": "gulp release",
     "lint": "eslint --fix ./src --ext .js gulpfile.js"
   },
@@ -36,6 +36,7 @@
     "babelify": "^7.3.0",
     "browser-sync": "^2.29.1",
     "browserify": "^13.1.0",
+    "del": "^6.1.1",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
@@ -50,6 +51,7 @@
     "gulp-terser": "^1.2.0",
     "sass": "^1.62.1",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "wrangler": "^2.19.0"
   }
 }

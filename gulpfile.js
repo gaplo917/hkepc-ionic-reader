@@ -8,7 +8,8 @@ const terser = require('gulp-terser')
 const sourcemaps = require('gulp-sourcemaps')
 const cleanCSS = require('gulp-clean-css')
 const browserSync = require('browser-sync').create()
-const sass = require('gulp-sass')(require('sass'));
+const sass = require('gulp-sass')(require('sass'))
+const del = require('del')
 
 function onError (err) {
   console.log(err.message)
@@ -33,8 +34,7 @@ gulp.task('bundle-dependencies', function () {
     .on('error', onError)
     .pipe(source('dependencies.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    // Add transformation tasks to the pipeline here.
+    .pipe(sourcemaps.init({ loadMaps: process.env.NODE_ENV === 'development' }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./www/js/'))
 })
@@ -59,8 +59,7 @@ gulp.task('browserify', function () {
     .on('error', onError)
     .pipe(source('app.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-  // Add transformation tasks to the pipeline here.
+    .pipe(sourcemaps.init({ loadMaps: process.env.NODE_ENV === 'development' }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./www/js/'))
 })
@@ -117,8 +116,12 @@ gulp.task('compressJs', function () {
     .pipe(gulp.dest('./www/js/'))
 })
 
+gulp.task('deleteSourceMap', function () {
+  return del(['./www/**/*.map'])
+})
+
 gulp.task('build', gulp.parallel(['bundle-dependencies', 'browserify', 'sass']))
 
-gulp.task('release', gulp.series(['build', 'compressJs', 'compressCss']))
+gulp.task('release', gulp.series(['build', 'compressJs', 'compressCss', 'deleteSourceMap']))
 
 gulp.task('run', gulp.parallel(['build', 'watch', 'webserver']))
