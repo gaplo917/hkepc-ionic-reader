@@ -868,7 +868,7 @@ window.ionic.version = '1.3.3';
     bindDom: function(element, type, handler) {
       var types = type.split(' ');
       for(var t = 0; t < types.length; t++) {
-        element.addEventListener(types[t], handler, false);
+        element.addEventListener(types[t], handler, { passive: true });
       }
     },
 
