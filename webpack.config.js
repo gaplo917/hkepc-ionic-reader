@@ -97,7 +97,7 @@ const config = {
           'sass-loader']
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|html|json)$/i,
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|html|json|txt|md)$/i,
         type: 'asset/resource'
       }
 
