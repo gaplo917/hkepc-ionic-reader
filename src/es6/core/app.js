@@ -63,7 +63,7 @@ function initAngular () {
   console.log('init angular...')
 
   const angularInit = angular.module('starter', dynamicModules())
-    .run(function ($rootScope, ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate, $ionicHistory, $timeout) {
+    .run(function ($rootScope, ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate, $ionicHistory, $timeout, $ionicPopover) {
       window.moment = moment
       // export the global
       window.isiOSNative = isiOSNative()
@@ -139,16 +139,49 @@ function initAngular () {
         }
       } else {
         // Web
-        $rootScope.openDrawer = () => {
+        const rootPopover = $ionicPopover.fromTemplate(`
+        <ion-popover-view width="250">
+          <ion-content>
+              <ion-list>
+                <ion-item menu-close href="/tab/topics" ng-click="vm.onClose()">
+                  論壇版塊
+                </ion-item>
+                <ion-item menu-close href="/tab/likes" ng-click="vm.onClose()">
+                  我的最愛
+                </ion-item>
+                <ion-item menu-close href="/tab/features" ng-click="vm.onClose()">
+                  功能
+                </ion-item>
+                <ion-item menu-close href="/tab/about" ng-click="vm.onClose()">
+                  關於
+                </ion-item>
+              </ion-list>
+          </ion-content>
+        </ion-popover-view>
+        `)
+        $rootScope.openDrawer = ($event) => {
+          rootPopover.show($event)
+          rootPopover.scope.vm = {
+            onClose: () => {
+              rootPopover.hide($event)
+            }
+          }
           $ionicSideMenuDelegate.toggleLeft()
         }
       }
     })
     .run(function ($ionicPlatform, $templateCache, $http) {
-      $ionicPlatform.ready(function () {
+      $ionicPlatform.ready(async function () {
         const prefetchTemplateIds = [
           'templates/post-detail.html',
           'templates/post-list.html',
+          'templates/edit-post.html',
+          'templates/find-message.html',
+          'templates/user-profile.html',
+          'templates/write-new-post.html',
+          'templates/write-reply-post.html',
+          'templates/write-report.html',
+          'templates/modals/categories.html',
           'templates/modals/page-slider.html',
           'templates/modals/filter-order.html',
           'templates/features/account/account.html',
@@ -156,10 +189,11 @@ function initAngular () {
           'templates/features/chats/chats.list.html',
           'templates/features/mypost/my.post.html',
           'templates/features/myreply/my.reply.html',
-          'templates/features/notification/notification.html'
+          'templates/features/notification/notification.html',
+          'templates/directives/input.helper.html'
         ]
         for (const templateId of prefetchTemplateIds) {
-          $http({
+          await $http({
             method: 'GET',
             url: templateId
           }).then(({ data }) => {
@@ -186,7 +220,7 @@ function initAngular () {
       $ionicConfigProvider.backButton.text('')
       $ionicConfigProvider.backButton.previousTitleText(false)
     }])
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
       const stateProvider = $stateProvider
 
       for (const key of Object.keys(Controllers)) {
@@ -195,7 +229,9 @@ function initAngular () {
       }
 
       // if none of the above states are matched, use this as the fallback
-      $urlRouterProvider.otherwise('/tab/topics')
+      $urlRouterProvider.otherwise('tab/topics')
+      $locationProvider.hashPrefix('')
+      $locationProvider.html5Mode(true)
     })
     .config(['ngToastProvider', function (ngToast) {
       ngToast.configure({
@@ -248,7 +284,7 @@ function initAngular () {
                     console.debug('proxied request', config.url)
                   }
                 }
-                config.headers['HKEPC-Token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
+                config.headers['hkepc-token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
                 config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
 
                 deferred.resolve(config)

@@ -115,14 +115,14 @@ export class GeneralHtml {
 
       const url = elm.attr('href')
 
-      if (url && !url.startsWith('#') && url.indexOf(DEFAULT_IMAGE_PLACEHOLDER) === -1) {
+      if (url && !url.startsWith('/tab') && url.indexOf(DEFAULT_IMAGE_PLACEHOLDER) === -1) {
         // remove action attr on img
         elm.removeAttr('onload')
         elm.removeAttr('onclick')
         elm.removeAttr('onmouseover')
 
         elm.attr('href', '')
-        elm.attr('target', `_system`)
+        elm.attr('target', '_system')
         elm.attr('onclick', `window.open('${url}', '_system', 'location=yes'); return false;`)
         elm.attr('raw-href', url)
 

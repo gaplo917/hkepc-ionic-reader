@@ -3,7 +3,7 @@
         <button class="button"
                 ng-click="selectTab(0)"
                 ng-class="isTab(0) ? 'active': ''">
-            <img src="img/gifs/icon_tongue.gif"
+            <img src="/img/gifs/icon_tongue.gif"
                  style="background-color:#fff;border-radius:100px;" alt=""/>
         </button>
         <button class="button"
@@ -39,7 +39,7 @@
              ng-if="isTab(0)"
              ng-repeat="gif in ::modal.gifs track by $index"
              ng-click="modal.addGifCodeToText(gif.code)"
-             src="img/gifs/{{gif.url}}"/>
+             src="/img/gifs/{{gif.url}}"/>
 
         <div ng-if="isTab(1)">
             <label class="item item-input">

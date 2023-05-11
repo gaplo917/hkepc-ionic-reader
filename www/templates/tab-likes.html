@@ -3,7 +3,7 @@
         我的最愛
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer()" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
+        <button class="button button-icon icon ion-navicon" ng-click="openDrawer($event)" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
@@ -26,7 +26,7 @@
 
             <div class="item item-text-wrap item-divider">
                 <a style="color:white; text-decoration: none;"
-                   href="#!/tab/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}"
+                   href="/tab/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}"
                    compile="::message.hlContent.title">
                 </a>
                 <span>#{{::message.pos}}</span>

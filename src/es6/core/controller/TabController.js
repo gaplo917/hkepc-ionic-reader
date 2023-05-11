@@ -157,7 +157,7 @@ export class TabController {
           this.login = undefined
 
           if (this.isLoggedIn && !req.isFromLogout) {
-            ngToast.danger(`<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>`)
+            ngToast.danger('<i class="ion-alert-circled"> 你的登入認証己過期，請重新登入！</i>')
             AuthService.logout()
 
             this.isLoggedIn = false

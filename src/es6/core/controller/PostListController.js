@@ -216,7 +216,7 @@ export class PostListController {
         ? `(已隱藏｜原因：${authorName}的帖子${remarkContent})`
         : hasFilteredTopic
           ? `(已隱藏｜原因：${tag}版塊內的帖子)`
-          : ``
+          : ''
 
       return {
         ...it,
@@ -243,9 +243,9 @@ export class PostListController {
     // use exiting list if there is
     this.subTopicList = this.subTopicList.length === 0
       ? [{
-        id: topicTypeOrId,
-        name: renderTopicName()
-      }, ...subTopicList]
+          id: topicTypeOrId,
+          name: renderTopicName()
+        }, ...subTopicList]
       : this.subTopicList
 
     if (!this.topic) {
@@ -352,7 +352,7 @@ export class PostListController {
           categories: JSON.stringify(this.categories)
         })
       } else {
-        ngToast.danger(`<i class="ion-alert-circled"> 發佈新主題需要會員權限，請先登入！</i>`)
+        ngToast.danger('<i class="ion-alert-circled"> 發佈新主題需要會員權限，請先登入！</i>')
       }
     }).subscribe()
   }
@@ -380,7 +380,7 @@ export class PostListController {
   }
 
   postInAppUrl (post) {
-    return post.isMatchedFilter ? '' : `#!/tab/topics/${post.topicId}/posts/${post.id}/page/1`
+    return post.isMatchedFilter ? '' : `/tab/topics/${post.topicId}/posts/${post.id}/page/1`
   }
 
   onGoToPost (post) {

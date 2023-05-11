@@ -191,7 +191,7 @@ export default class Mapper {
       // fall back for latest postUrl finding
       const postUrl = postSource.find('tr .subject span a').attr('raw-href') || /* latest post */postSource.find('tr .subject > a').attr('raw-href')
       const postTitleImgUrl = postSource.find('tr .folder img').attr('raw-src')
-      const topicId = URLUtils.getQueryVariable(postSource.find('.forum a').attr('raw-href'), 'fid')
+      const topicId = URLUtils.getQueryVariable(postUrl, 'fid') || URLUtils.getQueryVariable(postSource.find('.forum a').attr('raw-href'), 'fid')
 
       return {
         id: URLUtils.getQueryVariable(postUrl, 'tid'),

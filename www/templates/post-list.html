@@ -5,7 +5,7 @@
         <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
                 ng-click="::vm.onBack()"></button>
         <button ng-if="::(!isiOSNative && !isAndroidNative)" class="button button-icon icon ion-navicon"
-                ng-click="::openDrawer()"></button>
+                ng-click="::openDrawer($event)"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a ng-if="vm.topicId != 'search' " class="button button-icon icon ion-ios-refresh-empty"

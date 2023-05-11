@@ -9,7 +9,7 @@
         <div class="list card">
 
             <a ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat) track by $index"
-               href="#!/tab/features/history/{{dateStr}}" class="item item-icon-right">
+               href="/tab/features/history/{{dateStr}}" class="item item-icon-right">
 
                 <div style="margin-left:10px">{{vm.relativeMomentize(dateStr)}}
                     <span class="fright badge badge-royal">{{vm.historyStat[dateStr].count}}</span>
