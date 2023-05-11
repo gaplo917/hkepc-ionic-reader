@@ -11,54 +11,93 @@ navigation history that also transitions its views in and out.
 
 <ion-nav-view name="main"></ion-nav-view>
 
-<link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="css/ionic.app.css" rel="stylesheet">
-<link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="css/ionic.app.dark.css" rel="stylesheet">
-<link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="css/ionic.app.oled.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="/css/ionic.app.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="/css/ionic.app.dark.css" rel="stylesheet">
+<link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="/css/ionic.app.oled.dark.css" rel="stylesheet">
 <style ng-if="isiOSNative">
 
+    .ng-toast {
+      margin-top: 82px;
+    }
+
+    body {
+      top: 78px;
+    }
+
     .bar.bar-header {
-        height: 59px;
+      height: 78px;
     }
 
     .bar.bar-subheader {
-        top: 59px;
+      top: 78px;
     }
 
     .bar.bar-header .title {
-        top: 15px;
+      top: 34px;
     }
 
     .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 15px;
+      margin-top: 34px;
     }
 
     .has-header {
-        top: 59px;
+      top: 78px;
     }
 
     .tab-nav {
-        display: none;
+      display: none;
     }
 
     .has-tabs, .bar-footer.has-tabs {
-        bottom: 0px;
+      bottom: 0px;
     }
 
-    /* default handling */
     .tab-bar-inset {
-        width: 100%;
-        height: 60px;
+      width: 100%;
+      height: 9.6vh;
     }
 
     .action-sheet-wrapper {
-        bottom: 60px;
+      bottom: 9.6vh;
     }
 
-    /*iphone 5*/
-    @media only screen
+    @media
+    /*iphone 5*/ screen
     and (device-width: 320px)
     and (device-height: 568px)
-    and (-webkit-device-pixel-ratio: 2) {
+    and (-webkit-device-pixel-ratio: 2),
+    /*iphone 6*/ screen
+    and (device-width: 375px)
+    and (device-height: 667px)
+    and (-webkit-device-pixel-ratio: 2),
+    /*iphone 6plus zoom*/ screen
+    and (device-width: 375px)
+    and (device-height: 667px)
+    and (-webkit-device-pixel-ratio: 3),
+    /*iphone 6plus*/ screen
+    and (device-width: 414px)
+    and (device-height: 736px)
+    and (-webkit-device-pixel-ratio: 3)
+    {
+        .bar.bar-header {
+          height: 59px;
+        }
+
+        .bar.bar-subheader {
+          top: 59px;
+        }
+
+        .bar.bar-header .title {
+          top: 15px;
+        }
+
+        .bar.bar-header > .buttons, .bar.bar-header > .button {
+          margin-top: 15px;
+        }
+
+        .has-header {
+          top: 59px;
+        }
 
         .tab-bar-inset {
             width: 100%;
@@ -68,308 +107,6 @@ navigation history that also transitions its views in and out.
         .action-sheet-wrapper {
             bottom: 7.8vh;
         }
-    }
-
-    /*iphone 6*/
-    @media only screen
-    and (device-width: 375px)
-    and (device-height: 667px)
-    and (-webkit-device-pixel-ratio: 2) {
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 6.6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 6.6vh;
-        }
-    }
-
-    /*iphone 6plus Zoom */
-    @media only screen
-    and (device-width: 375px)
-    and (device-height: 667px)
-    and (-webkit-device-pixel-ratio: 3) {
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 6.6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 6.6vh;
-        }
-    }
-
-    /*iphone 6plus Standard*/
-    @media only screen
-    and (device-width: 414px)
-    and (device-height: 736px)
-    and (-webkit-device-pixel-ratio: 3) {
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 6vh;
-        }
-    }
-
-    /*iPhone X/ XS*/
-    @media only screen
-    and (device-width: 375px)
-    and (device-height: 812px)
-    and (-webkit-device-pixel-ratio: 3) {
-        .ng-toast {
-            margin-top: 78px;
-        }
-        body {
-            top: 74px;
-        }
-
-        .bar.bar-header {
-            height: 74px;
-        }
-
-        .bar.bar-subheader {
-            top: 74px;
-        }
-
-        .bar.bar-header .title {
-            top: 30px;
-        }
-
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 30px;
-        }
-
-        .has-header {
-            top: 74px;
-        }
-
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 9.6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 9.6vh;
-        }
-    }
-
-    /*iPhone XS Max*/
-    @media only screen
-    and (device-width: 414px)
-    and (device-height: 896px)
-    and (-webkit-device-pixel-ratio: 3) {
-        .ng-toast {
-            margin-top: 78px;
-        }
-
-        body {
-            top: 74px;
-        }
-
-        .bar.bar-header {
-            height: 74px;
-        }
-
-        .bar.bar-subheader {
-            top: 74px;
-        }
-
-        .bar.bar-header .title {
-            top: 30px;
-        }
-
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 30px;
-        }
-
-        .has-header {
-            top: 74px;
-        }
-
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 9.6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 9.6vh;
-        }
-    }
-
-    /*iPhone XR*/
-    @media only screen
-    and (device-width: 414px)
-    and (device-height: 896px)
-    and (-webkit-device-pixel-ratio: 2) {
-        .ng-toast {
-            margin-top: 78px;
-        }
-
-        body {
-            top: 74px;
-        }
-
-        .bar.bar-header {
-            height: 74px;
-        }
-
-        .bar.bar-subheader {
-            top: 74px;
-        }
-
-        .bar.bar-header .title {
-            top: 30px;
-        }
-
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-            margin-top: 30px;
-        }
-
-        .has-header {
-            top: 74px;
-        }
-
-        .tab-nav {
-            display: none;
-        }
-
-        .has-tabs, .bar-footer.has-tabs {
-            bottom: 0px;
-        }
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 9.6vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 9.6vh;
-        }
-    }
-
-    /*iPhone 14 Pro*/
-    @media only screen
-    and (device-width: 428px)
-    and (device-height: 926px)
-    and (-webkit-device-pixel-ratio: 3) {
-      .ng-toast {
-        margin-top: 78px;
-      }
-
-      body {
-        top: 74px;
-      }
-
-      .bar.bar-header {
-        height: 74px;
-      }
-
-      .bar.bar-subheader {
-        top: 74px;
-      }
-
-      .bar.bar-header .title {
-        top: 30px;
-      }
-
-      .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 30px;
-      }
-
-      .has-header {
-        top: 74px;
-      }
-
-      .tab-nav {
-        display: none;
-      }
-
-      .has-tabs, .bar-footer.has-tabs {
-        bottom: 0px;
-      }
-
-      .tab-bar-inset {
-        width: 100%;
-        height: 9.6vh;
-      }
-
-      .action-sheet-wrapper {
-        bottom: 9.6vh;
-      }
-    }
-
-    /*iPhone 14 Pro Max*/
-    @media only screen
-    and (device-width: 430px)
-    and (device-height: 932px)
-    and (-webkit-device-pixel-ratio: 3) {
-      .ng-toast {
-        margin-top: 78px;
-      }
-
-      body {
-        top: 74px;
-      }
-
-      .bar.bar-header {
-        height: 74px;
-      }
-
-      .bar.bar-subheader {
-        top: 74px;
-      }
-
-      .bar.bar-header .title {
-        top: 30px;
-      }
-
-      .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 30px;
-      }
-
-      .has-header {
-        top: 74px;
-      }
-
-      .tab-nav {
-        display: none;
-      }
-
-      .has-tabs, .bar-footer.has-tabs {
-        bottom: 0px;
-      }
-
-      .tab-bar-inset {
-        width: 100%;
-        height: 9.6vh;
-      }
-
-      .action-sheet-wrapper {
-        bottom: 9.6vh;
-      }
     }
 
     /*ipad 1024*768*/
