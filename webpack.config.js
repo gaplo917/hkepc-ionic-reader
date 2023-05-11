@@ -26,10 +26,12 @@ const config = {
 
   },
   devServer: {
-    open: true,
-    host: 'localhost',
+    historyApiFallback: true,
+    allowedHosts: 'all',
+    port: 3000,
+    host: '0.0.0.0',
     static: {
-      directory: path.join(__dirname, 'dist')
+      directory: path.join(__dirname, 'www')
     }
   },
   plugins: [
