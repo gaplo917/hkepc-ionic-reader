@@ -1,3 +1,13 @@
+**12 May 2023 - Release IR Extreme 內核 v5.1.0, iOS 5.1.1**
+#### 內核更新
+* 支援自動升級 Web 內核
+* 內部整理降低維護難度
+* Bundler 由 gulp 升級到 Webpack 5
+
+#### App 更新
+* 加入自動升級 Web 內核
+* 修正 Google Admob 顯示廣告要求
+
 **1 May 2023 - Release IR Extreme 內核 v5.0.0, iOS 5.0.0**
 #### 內核更新
 * 加入常用字體顏色功能
