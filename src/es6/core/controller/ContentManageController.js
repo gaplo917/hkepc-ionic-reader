@@ -33,7 +33,7 @@ export class ContentManageController {
     $scope.$on('$ionicView.loaded', (e) => {
       AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
         if (!isLoggedIn) {
-          ngToast.danger(`<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>`)
+          ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
           this.onBack()
         } else {
           this.isReady = true

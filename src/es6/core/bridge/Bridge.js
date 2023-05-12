@@ -60,7 +60,7 @@ export function createIOSNativeBride (cb) {
       return window.WVJBCallbacks.push(callback)
     }
     window.WVJBCallbacks = [callback]
-    var WVJBIframe = document.createElement('iframe')
+    const WVJBIframe = document.createElement('iframe')
     WVJBIframe.style.display = 'none'
     WVJBIframe.src = 'https://__bridge_loaded__'
     document.documentElement.appendChild(WVJBIframe)
@@ -137,8 +137,8 @@ export function createAndroidNativeBridge (cb) {
         const uid = uuid()
 
         port.postMessage(JSON.stringify({
-          uid: uid,
-          channel: channel,
+          uid,
+          channel,
           data: JSON.stringify(opt)
         }))
 

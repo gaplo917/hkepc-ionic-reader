@@ -89,7 +89,7 @@ export class WriteReportController {
           if (result) {
             swal.close()
 
-            this.ngToast.success(`<i class="ion-ios-checkmark"> 成功報告！</i>`)
+            this.ngToast.success('<i class="ion-ios-checkmark"> 成功報告！</i>')
 
             this.onBack()
           } else {
@@ -106,13 +106,13 @@ export class WriteReportController {
           () => swal({
             animation: false,
             title: '發佈失敗',
-            text: `網絡異常，請重新嘗試！`,
+            text: '網絡異常，請重新嘗試！',
             type: 'error',
             confirmButtonText: '確定'
           })
         )
     } else {
-      this.ngToast.danger(`<i class="ion-alert-circled"> 標題或內容不能空白！</i>`)
+      this.ngToast.danger('<i class="ion-alert-circled"> 標題或內容不能空白！</i>')
     }
   }
 

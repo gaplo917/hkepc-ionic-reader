@@ -83,7 +83,7 @@ export class AboutController {
     if (Bridge.isAvailable()) {
       Bridge.callHandler(Channel.iap)
     } else {
-      this.ngToast.info(`<i class="ion-ios-timer-outline">請使用 iOS 或 Android App 訂閱</i>`)
+      this.ngToast.info('<i class="ion-ios-timer-outline">請使用 iOS 或 Android App 訂閱</i>')
     }
   }
 }

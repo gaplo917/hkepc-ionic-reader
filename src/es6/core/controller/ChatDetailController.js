@@ -52,7 +52,7 @@ export class ChatDetailController {
         // must exist in the list
         this.recipient = {
           id: this.recipientId,
-          username: username
+          username
         }
 
         this.messages = messages
@@ -69,7 +69,7 @@ export class ChatDetailController {
     const { $timeout, actionUrl, hiddenFormInputs, messageInput: message } = this
     if (message === '') {
       // empty input
-      this.ngToast.danger(`<i class="ion-alert-circled"> 不能發送空白訊息！</i>`)
+      this.ngToast.danger('<i class="ion-alert-circled"> 不能發送空白訊息！</i>')
       return
     }
     const spinnerHtml = `
@@ -93,7 +93,7 @@ export class ChatDetailController {
       method: 'POST',
       url: actionUrl,
       data: {
-        message: message,
+        message,
         ...hiddenFormInputs
       },
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -122,7 +122,7 @@ export class ChatDetailController {
   requestComposeDialog () {
     if (Bridge.isAvailable()) {
       Bridge.callHandler(Channel.composeDialog, {
-        title: `發送訊息`,
+        title: '發送訊息',
         positiveText: '發送',
         cancelText: '取消',
         placeholder: '訊息'

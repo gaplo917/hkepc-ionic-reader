@@ -130,12 +130,9 @@ self.addEventListener('message', function (ev) {
       })
       break
     case 'responseContainText':
-      const { text } = ev.data
-      const responseText = html
-      const result = includes(responseText, text)
       self.postMessage({
         topic,
-        data: { responseText, result }
+        data: { responseText: html, result: includes(html, ev.data.text) }
       })
       break
 

@@ -4,7 +4,7 @@
 import * as HKEPC from '../../data/config/hkepc'
 import { CommonInfoExtractRequest } from '../model/requests'
 import { HybridHttp } from '../bridge/HybridHttp'
-const cheerioWorker = new Worker(new URL('../cheerio-worker.js', import.meta.url));
+const cheerioWorker = new Worker(new URL('../cheerio-worker.js', import.meta.url))
 
 export class ApiService {
   /**
@@ -64,8 +64,8 @@ export class ApiService {
       method: 'POST',
       url: HKEPC.forum.login(),
       data: {
-        username: username,
-        password: password,
+        username,
+        password,
         questionid: securityQuestionId,
         answer: securityQuestionAns,
         cookietime: 2592000,
@@ -88,7 +88,6 @@ export class ApiService {
       method: 'GET',
       url: HKEPC.forum.index()
     }).flatMapApiFromCheerioworker('topicList')
-      .map(topics => topics.filter(_ => _.groupName || _.id))
   }
 
   fullTopicListFromSearch () {
@@ -117,7 +116,7 @@ export class ApiService {
     return this.http.request({
       method: 'GET',
       url: url()
-    }).flatMapApiFromCheerioworker('postListPage', { pageNum: pageNum })
+    }).flatMapApiFromCheerioworker('postListPage', { pageNum })
   }
 
   postDetails (opt) {
@@ -128,7 +127,7 @@ export class ApiService {
       url: HKEPC.forum.posts(topicId, postId, page, orderType, filterOnlyAuthorId)
     })
       .flatMapApiFromCheerioworker('postDetails', {
-        opt: opt,
+        opt,
         currentHash: window.location.hash,
         isAutoLoadImage
       })
@@ -141,7 +140,7 @@ export class ApiService {
       url: HKEPC.forum.findMessage(postId, messageId)
     })
       .flatMapApiFromCheerioworker('findMessage', {
-        opt: opt,
+        opt,
         currentHash: window.location.hash,
         isAutoLoadImage
       })
@@ -188,9 +187,9 @@ export class ApiService {
     const postUrl = HKEPC.forum.search()
     const postData = [
       `formhash=${encodeURIComponent(formhash)}`,
-      `srchtype=title`,
+      'srchtype=title',
       `srchtxt=${encodeURIComponent(searchText)}`,
-      `searchsubmit=true`,
+      'searchsubmit=true',
       'st=on',
       'rchuname=',
       'srchfilter=all',

@@ -189,7 +189,7 @@ export class TopicListController {
   myTopicTutorial () {
     swal({
       animation: false,
-      html: `這個是範例版塊。你要點擊 HKEPC 的版塊右邊的<span style="color: #FF6D00; font-size:24px; font-weight: 500"> +1 </span>才能提升喜好程度！`,
+      html: '這個是範例版塊。你要點擊 HKEPC 的版塊右邊的<span style="color: #FF6D00; font-size:24px; font-weight: 500"> +1 </span>才能提升喜好程度！',
       showCancelButton: false
     })
   }
@@ -197,7 +197,7 @@ export class TopicListController {
   encourageTopicTutorial () {
     swal({
       animation: false,
-      html: `這個是範例版塊。你要點擊右下角 <i class="ion-ios-bookmarks-outline"></i> ，然後開始編緝你的論壇版塊喜好程度！`,
+      html: '這個是範例版塊。你要點擊右下角 <i class="ion-ios-bookmarks-outline"></i> ，然後開始編緝你的論壇版塊喜好程度！',
       showCancelButton: false
     })
   }

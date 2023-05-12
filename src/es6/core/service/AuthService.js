@@ -22,9 +22,9 @@ export class AuthService {
 
   saveAuthority (authority) {
     // remove the password before save
-    delete authority['password']
-    delete authority['securityQuestionAns']
-    delete authority['securityQuestionId']
+    delete authority.password
+    delete authority.securityQuestionAns
+    delete authority.securityQuestionId
 
     return this.localStorageService.setObject('authority', authority)
   }
@@ -78,7 +78,7 @@ export class AuthService {
               }
             } else {
               this.$timeout(() => {
-                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+                this.ngToast.danger('<i class="ion-alert-circled"> 登入失敗! </i>')
               })
               cb('Fail!')
             }
@@ -86,7 +86,7 @@ export class AuthService {
             // native code
             const $ = cheerio.load(resp.data)
             const currentUsername = $('#umenu > cite').text()
-            const formhash = $(`input[name='formhash']`).attr('value')
+            const formhash = $('input[name=\'formhash\']').attr('value')
 
             if (currentUsername) {
               this.localStorageService.set(HKEPC.auth.id, 'dummy_val_for_non_proxied_client')
@@ -98,7 +98,7 @@ export class AuthService {
               if (cb) cb(null, currentUsername)
             } else {
               this.$timeout(() => {
-                this.ngToast.danger(`<i class="ion-alert-circled"> 登入失敗! </i>`)
+                this.ngToast.danger('<i class="ion-alert-circled"> 登入失敗! </i>')
               })
               cb('Fail!')
             }

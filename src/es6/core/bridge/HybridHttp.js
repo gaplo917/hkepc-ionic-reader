@@ -26,7 +26,7 @@ export class HybridHttp {
 
             this.ngToast.danger({
               dismissOnTimeout: true,
-              content: `<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>`,
+              content: '<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>',
               combineDuplications: true
             })
 

@@ -37,7 +37,7 @@ export class HistoryService {
       this.getHistoryAt(today),
       (stat, histories) => {
         return {
-          stat: stat,
+          stat,
           histories: histories || []
         }
       }

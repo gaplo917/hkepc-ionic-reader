@@ -60,7 +60,7 @@ export class MyPostController extends IRLifecycleOwner {
       if (isLoggedIn) {
         this.loadMyPosts()
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>`)
+        this.ngToast.danger('<i class="ion-alert-circled"> 我的帖子需要會員權限，請先登入！</i>')
         this.onBack()
       }
     }).subscribe()
@@ -146,10 +146,10 @@ export class MyPostController extends IRLifecycleOwner {
     })
       .safeApply(this.scope, resp => {
         if (resp.status === 200) {
-          this.ngToast.success(`<i class="ion-ios-checkmark"> 成功移除！</i>`)
+          this.ngToast.success('<i class="ion-ios-checkmark"> 成功移除！</i>')
           this.myposts = this.myposts.filter(it => it.post.id !== id)
         } else {
-          this.ngToast.danger(`<i class="ion-alert-circled"> 移除失敗！</i>`)
+          this.ngToast.danger('<i class="ion-alert-circled"> 移除失敗！</i>')
         }
       }).subscribe()
   }

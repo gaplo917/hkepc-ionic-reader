@@ -114,7 +114,7 @@ export default angular.module('starter.directives', [])
           const splits = [content.slice(0, selectionStart), content.slice(selectionStart)]
 
           const openTag = `[size=${size}]`
-          const closeTag = `[/size]`
+          const closeTag = '[/size]'
 
           scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
 
@@ -138,7 +138,7 @@ export default angular.module('starter.directives', [])
           const splits = [content.slice(0, selectionStart), content.slice(selectionStart)]
 
           const openTag = `[color=${size}]`
-          const closeTag = `[/color]`
+          const closeTag = '[/color]'
 
           scope.contentModel = `${splits[0]}${openTag}${closeTag}${splits[1]}`
 
@@ -301,7 +301,7 @@ export default angular.module('starter.directives', [])
   .directive('irSpinner', function () {
     return {
       restrict: 'E',
-      template: `<div class="icon"></div>`
+      template: '<div class="icon"></div>'
 
     }
   })

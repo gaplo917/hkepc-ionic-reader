@@ -22,8 +22,8 @@ export class NativeStorageService {
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: 'SET',
-        key: key,
-        value: value
+        key,
+        value
       }, (responseData) => {
         observer.onNext(responseData)
         observer.onCompleted()
@@ -35,7 +35,7 @@ export class NativeStorageService {
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: 'GET',
-        key: key
+        key
       }, (responseData) => {
         if (responseData !== undefined && responseData !== null) {
           observer.onNext(responseData)
@@ -51,7 +51,7 @@ export class NativeStorageService {
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: 'SET',
-        key: key,
+        key,
         value: JSON.stringify(value)
       }, () => {
         observer.onNext(true)
@@ -64,7 +64,7 @@ export class NativeStorageService {
     return this.rx.Observable.create((observer) => {
       Bridge.callHandler(Channel.nativeStorage, {
         action: 'GET',
-        key: key
+        key
       }, (responseData) => {
         const jsObj = JSON.parse(responseData)
         if (jsObj !== null && jsObj !== undefined) {

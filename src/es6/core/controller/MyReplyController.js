@@ -61,7 +61,7 @@ export class MyReplyController extends IRLifecycleOwner {
       if (isLoggedIn) {
         this.loadMyReplies()
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>`)
+        this.ngToast.danger('<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>')
         this.onBack()
       }
     }).subscribe()

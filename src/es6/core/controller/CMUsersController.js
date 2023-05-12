@@ -41,7 +41,7 @@ export class CMUsersController {
     $scope.$on('$ionicView.loaded', (e) => {
       AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
         if (!isLoggedIn) {
-          ngToast.danger(`<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>`)
+          ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
           this.onBack()
         }
       }).subscribe()
@@ -138,7 +138,7 @@ export class CMUsersController {
           author: JSON.stringify(author)
         })
       } else {
-        this.ngToast.danger(`<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>`)
+        this.ngToast.danger('<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>')
       }
     }).subscribe()
   }

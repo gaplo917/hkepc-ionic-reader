@@ -1,4 +1,3 @@
-import { HKEPCHtml } from '../model/hkepc-html'
 import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
 import * as HKEPC from '../../data/config/hkepc'
@@ -390,6 +389,7 @@ export default class Mapper {
       const v = $(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     formSource.find('button[type=\'submit\']').map((i, elem) => {
@@ -397,6 +397,7 @@ export default class Mapper {
       const v = $(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     const pageNumSource = $('.pages a, .pages strong')
@@ -534,6 +535,7 @@ export default class Mapper {
       const v = formSource(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     return {
@@ -558,6 +560,7 @@ export default class Mapper {
       const v = formSource(elem).attr('value') || formSource(elem).find('option[selected=\'selected\']').attr('value') || 0
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     const forumStyles = $('select[name=\'styleidnew\'] option').map((i, elem) => {
@@ -644,6 +647,7 @@ export default class Mapper {
       const k = attachFormSource(elem).attr('name')
       const v = attachFormSource(elem).attr('value')
       hiddenAttachFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     // ---------- End of Upload image preparation -----------------------------------------------
@@ -657,6 +661,7 @@ export default class Mapper {
       const v = formSource(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     const edit = {
@@ -738,6 +743,7 @@ export default class Mapper {
       const v = $(elem).attr('value')
 
       hiddenFormInputs[k] = encodeURIComponent(v)
+      return v
     }).get()
 
     // hard code that is report type
