@@ -1,6 +1,7 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require('path')
+const fs = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemovePlugin = require('remove-files-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -36,7 +37,8 @@ const config = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      IS_DEV: process.env.NODE_ENV === 'development'
+      IS_DEV: process.env.NODE_ENV === 'development',
+      WEBVIEW_VERSION: String(fs.readFileSync(path.resolve(__dirname, 'www/version.json')))
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css'

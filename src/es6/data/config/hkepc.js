@@ -9,7 +9,10 @@ const PROXY_URL = `${PROXY_SERVER}/www.hkepc.com`
 const BASE_URL = 'https://www.hkepc.com'
 const BASE_FORUM_URL = `${BASE_URL}/forum`
 const IMAGE_URL = 'https://www.hkepc.com/forum'
-const VERSION = '5.1.0'
+// eslint-disable-next-line no-undef
+const VERSION_JSON = WEBVIEW_VERSION
+const VERSION = VERSION_JSON.version
+
 function getMobileOperatingSystem (userAgent) {
   const ua = userAgent || navigator.userAgent || navigator.vendor || window.opera
 
