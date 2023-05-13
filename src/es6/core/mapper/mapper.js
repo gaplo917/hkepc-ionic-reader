@@ -37,6 +37,7 @@ export default class Mapper {
         description: description.replace('最後發表', ' -')
       }
     }).get()
+      .filter(it => it.id || it.groupName)
   }
 
   static fullTopicListFromSearchHtmlToTopicList (html) {
