@@ -1,4 +1,4 @@
-**12 May 2023 - Release IR Extreme iOS 5.1.1**
+**14 May 2023 - Release IR Extreme iOS 5.1.0**
 
 #### 內核更新 v5.1
 

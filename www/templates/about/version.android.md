@@ -1,10 +1,11 @@
-**12 May 2023 - Release IR Extreme Android 5.1.1**
+**14 May 2023 - Release IR Extreme Android 5.1.0**
 
 #### 內核更新 v5.1
 
 - 支援自動升級 Web 內核 - 提供更快的推送更新
 - 內部整理降低維護難度
 - 移除所有「優化」字眼
+- 更新「我的最愛 -> 更多功能鍵」使用原生界面
 - 開發者更新
   - DevOps 加入 Cloudflare Pages, GitHub Actions
   - 使用 `webpack5` 取代 `gulp` 改善開發環境
