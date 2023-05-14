@@ -13,8 +13,9 @@
 #### App 更新
 
 - 加入自動升級 Web 內核
-- 修正 Google Admob 顯示廣告要求
 - 移除內置瀏灠器，於外置瀏灠器開啟 payme, whatsapp 等連結
+- 改善壓縮圖片使用過多 Memory 問題
+- 修正 Google Admob 顯示廣告要求
 
 ---
 
