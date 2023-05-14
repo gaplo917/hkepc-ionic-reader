@@ -6,6 +6,7 @@
 - 內部整理降低維護難度
 - 移除所有「優化」字眼
 - 更新「我的最愛 -> 更多功能鍵」使用原生界面
+- 加入「開啟 HKEPC 原紿連結」功能
 - 開發者更新
   - DevOps 加入 Cloudflare Pages, GitHub Actions
   - 使用 `webpack5` 取代 `gulp` 改善開發環境
