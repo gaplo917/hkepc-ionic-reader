@@ -1,18 +1,20 @@
 ![HKEPC IR App](meta/webpage_preview.png)
 
-# HKEPC IR Pro (https://hkepc.pro)
+# HKEPC IR Pro (https://promote.hkepc.pro)
 <img src="https://storage.googleapis.com/hkepc-ir-public/hkepc-ir-pro-icon@512.png" height="200">
 <a href="https://apple.co/44zfmAV"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-applestore.png" height="50" target="_blank"> </a>
 <a href="https://play.google.com/store/apps/details?id=com.gaplotech.hkepc_ionic_reader"><img src="https://storage.googleapis.com/hkepc-ir-public/apps-googleplay.png" height="50" target="_blank"></a>
 
 
-# Brief Introduction in English
-* This project DON'T use Corodva.
-* This web app ONLY use customized `ionic.css`, `ionic.js`, `ionic-angular.js` (aka ionic v1). No `ionic-cli` used.
-* The native projects host this web app internally and are written in pure Swift(iOS) and Kotlin(Android).
-* This web app connects native via a pure tailor-made message bridge. i.e. pick images, compress images, upload images, HTTP proxy to prevent CORS
-* The native projects (iOS & Android) will be available later. Stay calm.
-* A separated tailor-made native message bridge will also be available later.
+# Introduction
+This application provided an unbelievable user experience through fine-tuning the web technology available since 2016.
+
+* Replaced Cordova with thin native Swift(iOS) and Kotlin(Android) application with tailor-made message bridges.
+* Extensively fine-tuning `ionic.js`, `ionic-angular.js` for a new navigation solution to [eliminate significant navigation delay](https://github.com/ionic-team/ionic/issues/10781).
+* Extensively use [ReactiveX](https://rxjs.dev/) and [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to offload heavy HTML parsing duty on client side.
+* Overall Tech Stack: Angularjs(v1), Scss, Webpack 5, ReactiveX, WebWorker
+
+Disclaimer: I build this project in my leisure time and I have no relationship with HKEPC.
 
 # 簡介
 [1.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/1.x) Branch 完全依賴 Cordova
@@ -21,7 +23,9 @@
 
 [3.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/3.x) Branch 效能先決．重新出發！Code review 及自行重製部份功能(發現部份 `ionic-angular.js` 提供的功能是拖低流暢度的主要成因)
 
-[4.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/4.x) Branch 內容自主．優化體驗！加入 HKEPC 討論區不能提供的功能，繼續 Fine-tune `ionic-angular.js`
+[4.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/4.x) Branch 內容自主．改良體驗！加入 HKEPC 討論區不能提供的功能，繼續微調 `ionic-angular.js`
+
+[5.x](https://github.com/gaplo917/hkepc-ionic-reader/tree/4.x) Branch 持續改良體驗、可持續發展模式@1 May 2023
 
 # 3.x - 效能先決．重新出發 (21 Jan 2019 Updated)
 Ionic V1 - 雖然係第一代比較完整嘅 HTML 5 Mobile framework 並以 Cordova 為基礎去做，但 Ionic V1 其實有好多 Performance 問題其實仲未 Optimize，更甚其實根本冇好好咁同 Native integrate。
@@ -53,7 +57,7 @@ Disable 咗個 Cache 之後，基本上成個 Ionic V1 App 清爽咗好多，And
 
 ---
 **HKEPC IR Pro Active User Snapshot@21 Jan 2019**
-![](https://upload.cc/i1/2019/01/22/ATdFk3.png)
+![HKEPC IR App](meta/firebase_user_activity.png)
 
 ---
 
@@ -99,13 +103,13 @@ HKEPC IR Pro iOS v2.4+ 及 Android v3.0+ 喺真正做到 hybrid sweet spot，自
 
     cd hkepc-ionic-reader
 
-    yarn install
+    npm install
 
     // run in web / dev with Native Project
-    yarn run dev
+    npm run dev
 
     // build production / for Native Project
-    yarn run build
+    npm run build
 ```
 
 # Create Proxy server for Dev
