@@ -3,11 +3,15 @@ import { userFilterSchema } from '../schema'
 import swal from 'sweetalert2'
 
 export class CMUsersController {
-  static get STATE () { return 'tab.features-contentmanage-users' }
+  static get STATE() {
+    return 'tab.features-contentmanage-users'
+  }
 
-  static get NAME () { return 'CMUsersController' }
+  static get NAME() {
+    return 'CMUsersController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       // topicType: 'latestPostTopicFilters' | 'latestReplyTopicFilters'
       url: '/features/contentmanage/users?prefill=',
@@ -15,13 +19,24 @@ export class CMUsersController {
         main: {
           templateUrl: 'templates/features/contentmanage/users.html',
           controller: CMUsersController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, $state, $stateParams, $ionicHistory, ngToast, rx, apiService, LocalStorageService, AuthService) {
+  constructor(
+    $scope,
+    $http,
+    $state,
+    $stateParams,
+    $ionicHistory,
+    ngToast,
+    rx,
+    apiService,
+    LocalStorageService,
+    AuthService
+  ) {
     this.scope = $scope
     this.state = $state
     this.ionicHistory = $ionicHistory
@@ -39,17 +54,19 @@ export class CMUsersController {
     this.userFilter = userFilterSchema
 
     $scope.$on('$ionicView.loaded', (e) => {
-      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        if (!isLoggedIn) {
-          ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
-          this.onBack()
-        }
-      }).subscribe()
+      AuthService.isLoggedIn()
+        .safeApply($scope, (isLoggedIn) => {
+          if (!isLoggedIn) {
+            ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
+            this.onBack()
+          }
+        })
+        .subscribe()
 
       LocalStorageService.getObject('userFilter', userFilterSchema)
         .safeApply($scope, (userFilter) => {
           const { users, userIds } = userFilter
-          this.items = userIds.map(it => users[it])
+          this.items = userIds.map((it) => users[it])
           this.userFilter = userFilter
           this.isReady = true
         })
@@ -57,7 +74,7 @@ export class CMUsersController {
     })
   }
 
-  showLoading () {
+  showLoading() {
     const spinnerHtml = `
           <div>
               <div class="text-center">驗証用戶資料中</div>
@@ -69,17 +86,17 @@ export class CMUsersController {
       html: spinnerHtml,
       allowOutsideClick: false,
       showCancelButton: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     })
 
     swal.showLoading()
   }
 
-  closeLoading () {
+  closeLoading() {
     swal.close()
   }
 
-  addUser (event) {
+  addUser(event) {
     const { userIds, users } = this.userFilter
     if (!event || (event && event.which === 13)) {
       const { userIdInput, remarkInput } = this
@@ -90,32 +107,36 @@ export class CMUsersController {
       }
       this.showLoading()
 
-      this.apiService.userProfile(userIdInput)
-        .safeApply(this.scope, resp => {
-          const { uid, name, rank, image } = resp
-          if (!name) {
-            this.ngToast.danger(`<i class="ion-alert-circled"> 用戶編號 ${uid} 不存在</i>`)
-            return
-          }
-          // mutate
-          this.userFilter.users[uid] = { uid, name, rank, image, remark: remarkInput }
+      this.apiService
+        .userProfile(userIdInput)
+        .safeApply(
+          this.scope,
+          (resp) => {
+            const { uid, name, rank, image } = resp
+            if (!name) {
+              this.ngToast.danger(`<i class="ion-alert-circled"> 用戶編號 ${uid} 不存在</i>`)
+              return
+            }
+            // mutate
+            this.userFilter.users[uid] = { uid, name, rank, image, remark: remarkInput }
 
-          // use the mutated object
-          this.userFilter.userIds = [uid, ...this.userFilter.userIds]
-          this.LocalStorageService.setObject('userFilter', this.userFilter)
+            // use the mutated object
+            this.userFilter.userIds = [uid, ...this.userFilter.userIds]
+            this.LocalStorageService.setObject('userFilter', this.userFilter)
 
-          const { users, userIds } = this.userFilter
-          this.items = userIds.map(it => users[it])
-          this.userIdInput = ''
-          this.remarkInput = ''
-        },
-        () => {},
-        () => this.closeLoading()
-        ).subscribe()
+            const { users, userIds } = this.userFilter
+            this.items = userIds.map((it) => users[it])
+            this.userIdInput = ''
+            this.remarkInput = ''
+          },
+          () => {},
+          () => this.closeLoading()
+        )
+        .subscribe()
     }
   }
 
-  deleteUser (index) {
+  deleteUser(index) {
     const [item] = this.items.splice(index, 1)
     const { uid } = item
     this.userFilter.userIds.splice(index, 1)
@@ -127,29 +148,32 @@ export class CMUsersController {
     this.LocalStorageService.setObject('userFilter', this.userFilter)
   }
 
-  getTimes (i) {
+  getTimes(i) {
     return new Array(parseInt(i))
   }
 
-  onUserProfilePic (author) {
-    this.authService.isLoggedIn().safeApply(this.scope, isLoggedIn => {
-      if (isLoggedIn) {
-        this.state.go(Controllers.UserProfileController.STATE, {
-          author: JSON.stringify(author)
-        })
-      } else {
-        this.ngToast.danger('<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>')
-      }
-    }).subscribe()
+  onUserProfilePic(author) {
+    this.authService
+      .isLoggedIn()
+      .safeApply(this.scope, (isLoggedIn) => {
+        if (isLoggedIn) {
+          this.state.go(Controllers.UserProfileController.STATE, {
+            author: JSON.stringify(author),
+          })
+        } else {
+          this.ngToast.danger('<i class="ion-alert-circled"> 查看會員需要會員權根，請先登入！</i>')
+        }
+      })
+      .subscribe()
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.ContentManageController.STATE)
     }

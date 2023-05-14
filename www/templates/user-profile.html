@@ -1,31 +1,30 @@
 <ion-view class="user-profile">
-    <ion-nav-title>
-        {{ vm.author.name }}
-    </ion-nav-title>
-    <ion-content>
-        <img class="profile-pic" ng-src="{{vm.author.image}}" >
-        <div class="sub-action-bar">
-            <button class="button-default" ng-if="!vm.isInUserFilter" ng-click="vm.addToFilterList()">加到過濾名單</button>
-            <button class="button-default" ng-if="vm.isInUserFilter" ng-click="vm.removeFromFilterList()">於過濾名單移除</button>
-            <button class="button-default" ng-click="vm.sendPm(vm.author)">發送短消息</button>
-        </div>
-        <div ng-if="!vm.content">
-            <div class="text-center">
-                <h4 class="title" >讀取中</h4>
-            </div>
-            <div class="spinner">
-                <ir-spinner></ir-spinner>
-                <p class="less-important-info">注意：HKEPC 伺服器有時加載呢頁會特別耐！ </p>
-            </div>
-        </div>
+  <ion-nav-title>{{ vm.author.name }}</ion-nav-title>
+  <ion-content>
+    <img class="profile-pic" ng-src="{{vm.author.image}}" />
+    <div class="sub-action-bar">
+      <button class="button-default" ng-if="!vm.isInUserFilter" ng-click="vm.addToFilterList()">加到過濾名單</button>
+      <button class="button-default" ng-if="vm.isInUserFilter" ng-click="vm.removeFromFilterList()">
+        於過濾名單移除
+      </button>
+      <button class="button-default" ng-click="vm.sendPm(vm.author)">發送短消息</button>
+    </div>
+    <div ng-if="!vm.content">
+      <div class="text-center">
+        <h4 class="title">讀取中</h4>
+      </div>
+      <div class="spinner">
+        <ir-spinner></ir-spinner>
+        <p class="less-important-info">注意：HKEPC 伺服器有時加載呢頁會特別耐！</p>
+      </div>
+    </div>
 
-        <div ng-if="vm.content">
+    <div ng-if="vm.content">
+      <div class="dashline"></div>
 
-            <div class="dashline"></div>
+      <div class="content" compile="vm.content"></div>
+    </div>
 
-            <div class="content" compile="vm.content"></div>
-        </div>
-
-        <div style="height:200px"></div>
-    </ion-content>
+    <div style="height: 200px"></div>
+  </ion-content>
 </ion-view>

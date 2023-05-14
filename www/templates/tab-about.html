@@ -1,62 +1,69 @@
 <ion-view class="about-view" view-title="關於">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer($event)" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
-    </ion-nav-buttons>
-    <ion-content>
-        <div ng-if="(isiOSNative || isAndroidNative) && nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">
-          <button onclick="isiOSNative ? window.open('https://apple.co/3LGuUu6', '_system', 'location=yes') : window.open('https://play.google.com/store/apps/details?id=com.gaplotech.hkepcir', '_system', 'location=yes')"
-                  class="center button button-full button-assertive rounded bold" style="font-weight: bolder; margin-top: 0">升級到 HKEPC IR 無廣告版本
-          </button>
-        </div>
-        <div class="description">
-            <img src="/img/icon.png" height="50" style="display: block; margin: -10px auto 5px auto">
-            <p>HKEPC IR 是第三方開發的 HKEPC 討論區瀏覧器。本程式不會記錄任何登入名稱或密碼，
-                作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！</p>
-        </div>
-        <a class="item item-icon-left" href="/tab/about/version">
-            <i class="icon ion-ios-loop-strong"></i>
-            更新日誌
-            <span class="item-note">
-          查看更新內容
-        </span>
-        </a>
-        <a class="item item-icon-left" ng-click="vm.showProxyPopup()" ng-if="vm.isProxy()">
-            <i class="icon ion-link"></i>
-            Proxy 伺服器
-            <span class="item-note">
-            {{vm.proxy}}
-          </span>
-        </a>
-        <a class="item item-icon-left" href="" ng-if="nativeVersion">
-            <i class="icon ion-iphone"></i>
-            App 版本<span ng-if="nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">(免費版)</span>
-            <span class="item-note">
-            {{nativeVersion.replace('F', '')}}
-          </span>
-        </a>
-        <a class="item item-icon-left" href="">
-            <i class="icon ion-ios-world-outline"></i>
-            Web 內核版本
-            <span class="item-note">
-            {{::vm.version}}
-          </span>
-        </a>
-        <a class="item item-icon-left" href="" target="_system"
-           onclick="window.open('https://gaplo.tech/about/', '_system', 'location=yes'); return false;">
-            <i class="icon ion-ios-at"></i>
-            關於作者
-            <span class="item-note">
-            Gap撈Tech
-          </span>
-        </a>
-        <a class="item item-icon-left" href="" target="_system"
-           onclick="window.open('https://github.com/gaplo917/hkepc-ionic-reader', '_system', 'location=yes'); return false;">
-            <i class="icon ion-social-github"></i>
-            GitHub
-            <span class="item-note">
-            Web 內核開源代碼
-          </span>
-        </a>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+  <ion-nav-buttons side="left">
+    <button
+      class="button button-icon icon ion-navicon"
+      ng-click="openDrawer($event)"
+      ng-if="::(!isiOSNative && !isAndroidNative)"
+    ></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <div ng-if="(isiOSNative || isAndroidNative) && nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">
+      <button
+        onclick="isiOSNative ? window.open('https://apple.co/3LGuUu6', '_system', 'location=yes') : window.open('https://play.google.com/store/apps/details?id=com.gaplotech.hkepcir', '_system', 'location=yes')"
+        class="center button button-full button-assertive rounded bold"
+        style="font-weight: bolder; margin-top: 0"
+      >
+        升級到 HKEPC IR 無廣告版本
+      </button>
+    </div>
+    <div class="description">
+      <img src="/img/icon.png" height="50" style="display: block; margin: -10px auto 5px auto" />
+      <p>
+        HKEPC IR 是第三方開發的 HKEPC 討論區瀏覧器。本程式不會記錄任何登入名稱或密碼，
+        作者亦不會為本程式做成的直接或間接損失負上任何責任，用家需自行承擔風險，敬請留意！
+      </p>
+    </div>
+    <a class="item item-icon-left" href="/tab/about/version">
+      <i class="icon ion-ios-loop-strong"></i>
+      更新日誌
+      <span class="item-note">查看更新內容</span>
+    </a>
+    <a class="item item-icon-left" ng-click="vm.showProxyPopup()" ng-if="vm.isProxy()">
+      <i class="icon ion-link"></i>
+      Proxy 伺服器
+      <span class="item-note">{{vm.proxy}}</span>
+    </a>
+    <a class="item item-icon-left" href="" ng-if="nativeVersion">
+      <i class="icon ion-iphone"></i>
+      App 版本
+      <span ng-if="nativeVersion && nativeVersion[nativeVersion.length - 1] === 'F'">(免費版)</span>
+      <span class="item-note">{{nativeVersion.replace('F', '')}}</span>
+    </a>
+    <a class="item item-icon-left" href="">
+      <i class="icon ion-ios-world-outline"></i>
+      Web 內核版本
+      <span class="item-note">{{::vm.version}}</span>
+    </a>
+    <a
+      class="item item-icon-left"
+      href=""
+      target="_system"
+      onclick="window.open('https://gaplo.tech/about/', '_system', 'location=yes'); return false;"
+    >
+      <i class="icon ion-ios-at"></i>
+      關於作者
+      <span class="item-note">Gap撈Tech</span>
+    </a>
+    <a
+      class="item item-icon-left"
+      href=""
+      target="_system"
+      onclick="window.open('https://github.com/gaplo917/hkepc-ionic-reader', '_system', 'location=yes'); return false;"
+    >
+      <i class="icon ion-social-github"></i>
+      GitHub
+      <span class="item-note">Web 內核開源代碼</span>
+    </a>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

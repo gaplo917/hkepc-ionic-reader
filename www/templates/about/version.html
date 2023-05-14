@@ -1,10 +1,9 @@
 <ion-view class="about-version-view" view-title="更新日誌" ng-class="{ 'version-ios': isiOSNative }">
-    <ion-content>
-        <div class="spinner" ng-if="!vm.content">
-            <ir-spinner></ir-spinner>
-        </div>
-        <ion-scroll compile="vm.content" class="version-md">
-        </ion-scroll>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+  <ion-content>
+    <div class="spinner" ng-if="!vm.content">
+      <ir-spinner></ir-spinner>
+    </div>
+    <ion-scroll compile="vm.content" class="version-md"></ion-scroll>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

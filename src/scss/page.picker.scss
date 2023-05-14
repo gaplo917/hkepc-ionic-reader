@@ -2,7 +2,7 @@
   border-radius: 0;
 
   .popover-arrow {
-    left:49% !important;
+    left: 49% !important;
   }
 
   .item {
@@ -12,7 +12,6 @@
     &.active {
       background-color: $activated-color;
     }
-
   }
 
   .range-pick {
@@ -35,8 +34,8 @@
     }
   }
 
-  .range-pick{
-    border-right:1px solid $border-color;
+  .range-pick {
+    border-right: 1px solid $border-color;
   }
 
   .button-full {
@@ -49,10 +48,10 @@
     color: $text-on-epc-color;
   }
 
-  ion-scroll{
+  ion-scroll {
     height: calc(100% - 40px);
-    width:50%;
-    float:left;
+    width: 50%;
+    float: left;
     border-bottom: 1px solid $border-color;
   }
 
@@ -62,7 +61,7 @@
 
   .bar-header {
     border: 0;
-    padding:0;
+    padding: 0;
   }
 
   .page-picker-view-container {
@@ -70,7 +69,7 @@
   }
 
   .bottom-row {
-    position:absolute;
+    position: absolute;
     bottom: 8px;
     display: flex;
     width: 240px;

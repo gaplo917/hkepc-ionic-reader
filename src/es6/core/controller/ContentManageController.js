@@ -4,11 +4,15 @@
 import * as Controllers from './index'
 
 export class ContentManageController {
-  static get STATE () { return 'tab.features-contentmanage' }
+  static get STATE() {
+    return 'tab.features-contentmanage'
+  }
 
-  static get NAME () { return 'ContentManageController' }
+  static get NAME() {
+    return 'ContentManageController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/features/contentmanage',
       cache: false,
@@ -16,13 +20,23 @@ export class ContentManageController {
         main: {
           templateUrl: 'templates/features/contentmanage/content.manage.html',
           controller: ContentManageController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, $state, ngToast, LocalStorageService, AuthService, $ionicHistory, observeOnScope, $timeout) {
+  constructor(
+    $scope,
+    $http,
+    $state,
+    ngToast,
+    LocalStorageService,
+    AuthService,
+    $ionicHistory,
+    observeOnScope,
+    $timeout
+  ) {
     this.http = $http
     this.scope = $scope
     this.state = $state
@@ -31,18 +45,22 @@ export class ContentManageController {
     this.filterMode = '1'
 
     $scope.$on('$ionicView.loaded', (e) => {
-      AuthService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        if (!isLoggedIn) {
-          ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
-          this.onBack()
-        } else {
-          this.isReady = true
-        }
-      }).subscribe()
+      AuthService.isLoggedIn()
+        .safeApply($scope, (isLoggedIn) => {
+          if (!isLoggedIn) {
+            ngToast.danger('<i class="ion-alert-circled"> IR 內容管理需要會員權限，請先登入！</i>')
+            this.onBack()
+          } else {
+            this.isReady = true
+          }
+        })
+        .subscribe()
 
-      LocalStorageService.get('filterMode', '1').safeApply($scope, data => {
-        this.filterMode = data
-      }).subscribe()
+      LocalStorageService.get('filterMode', '1')
+        .safeApply($scope, (data) => {
+          this.filterMode = data
+        })
+        .subscribe()
     })
 
     observeOnScope($scope, 'vm.filterMode')
@@ -52,14 +70,14 @@ export class ContentManageController {
       })
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
+        historyRoot: true,
       })
       this.state.go(Controllers.FeatureRouteController.STATE)
     }

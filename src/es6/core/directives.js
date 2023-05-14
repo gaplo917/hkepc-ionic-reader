@@ -11,7 +11,8 @@ const SCROLLING_DOWN = 1
 /**
  * Register the directives
  */
-export default angular.module('starter.directives', [])
+export default angular
+  .module('starter.directives', [])
   .directive('compile', ($compile) => {
     return (scope, element, attrs) => {
       scope.$watch(
@@ -30,7 +31,7 @@ export default angular.module('starter.directives', [])
       restrict: 'E',
       scope: {
         modal: '=',
-        contentModel: '='
+        contentModel: '=',
       },
       link: function (scope, element) {
         const modal = scope.modal
@@ -179,7 +180,7 @@ export default angular.module('starter.directives', [])
         }
       },
 
-      templateUrl: 'templates/directives/input.helper.html'
+      templateUrl: 'templates/directives/input.helper.html',
     }
   })
   .directive('onLongerThanScreen', ($window, $timeout) => {
@@ -197,20 +198,21 @@ export default angular.module('starter.directives', [])
             })
           }
         })
-      }
+      },
     }
   })
   .directive('lazyScroll', ($rootScope, rx) => {
     return {
       restrict: 'A',
       link: function ($scope, $element) {
-        const scrollEvents = $scope.$createObservableFunction('$onScroll')
+        const scrollEvents = $scope
+          .$createObservableFunction('$onScroll')
           .observeOn(rx.Scheduler.async)
-          .map(it => it.event)
+          .map((it) => it.event)
           .share()
 
         const subscription1 = scrollEvents
-          .map(event => (event && event.target && event.target.scrollTop) || 0)
+          .map((event) => (event && event.target && event.target.scrollTop) || 0)
           .bufferWithCount(2, 1) // https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithcount.md
           .subscribe(([lastScrollTop, currentScrollTop]) => {
             let scrollDirection = 0
@@ -224,17 +226,15 @@ export default angular.module('starter.directives', [])
             $rootScope.$broadcast('scrollDirection', scrollDirection)
           })
 
-        const subscription2 = scrollEvents
-          .throttle(300, rx.Scheduler.async)
-          .subscribe(({ event }) => {
-            $scope.$broadcast('lazyScrollEvent')
-          })
+        const subscription2 = scrollEvents.throttle(300, rx.Scheduler.async).subscribe(({ event }) => {
+          $scope.$broadcast('lazyScrollEvent')
+        })
 
         $element.on('$destroy', function () {
           subscription1.dispose()
           subscription2.dispose()
         })
-      }
+      },
     }
   })
   .directive('lastread', ($document, rx) => {
@@ -242,13 +242,14 @@ export default angular.module('starter.directives', [])
       restrict: 'A',
       scope: true,
       link: ($scope, $element, $attributes) => {
-        const subscription = $scope.$eventToObservable('lazyScrollEvent')
+        const subscription = $scope
+          .$eventToObservable('lazyScrollEvent')
           .startWith(1)
           .observeOn(rx.Scheduler.async)
           .filter(() => {
             const clientHeight = $document[0].documentElement.clientHeight
             const imageRect = $element[0].getBoundingClientRect()
-            return (imageRect.top >= 0 && imageRect.top <= clientHeight / 2)
+            return imageRect.top >= 0 && imageRect.top <= clientHeight / 2
           })
           .subscribe(() => {
             $scope.$emit('lastread', { page: $attributes.page, id: $attributes.id })
@@ -257,23 +258,24 @@ export default angular.module('starter.directives', [])
         $element.on('$destroy', function () {
           subscription.dispose()
         })
-      }
+      },
     }
   })
   .directive('imageLazySrc', ($document, rx) => {
     return {
       restrict: 'A',
       scope: {
-        imageLazySrc: '@'
+        imageLazySrc: '@',
       },
       link: function ($scope, $element, $attributes) {
-        const subscription = $scope.$eventToObservable('lazyScrollEvent')
+        const subscription = $scope
+          .$eventToObservable('lazyScrollEvent')
           .startWith(1)
           .observeOn(rx.Scheduler.async)
           .filter(() => {
             const clientHeight = $document[0].documentElement.clientHeight
             const imageRect = $element[0].getBoundingClientRect()
-            return (imageRect.top >= 0 && imageRect.top <= clientHeight)
+            return imageRect.top >= 0 && imageRect.top <= clientHeight
           })
           .take(1)
           .safeApply($scope, () => {
@@ -295,14 +297,13 @@ export default angular.module('starter.directives', [])
         $element.on('$destroy', function () {
           subscription.dispose()
         })
-      }
+      },
     }
   })
   .directive('irSpinner', function () {
     return {
       restrict: 'E',
-      template: '<div class="icon"></div>'
-
+      template: '<div class="icon"></div>',
     }
   })
   .directive('pageIndicator', (rx, $rootScope) => {
@@ -313,7 +314,7 @@ export default angular.module('starter.directives', [])
         paginationPopoverDelegate: '=',
         currentPage: '=',
         totalPage: '=',
-        click: '&onClick'
+        click: '&onClick',
       },
       template: `
         <div class="page-indicator-wrapper">
@@ -325,12 +326,13 @@ export default angular.module('starter.directives', [])
             <div class="tab-bar-inset"></div>
         </div>`,
       link: function ($scope, $element) {
-        const subscription = $rootScope.$eventToObservable('scrollDirection')
+        const subscription = $rootScope
+          .$eventToObservable('scrollDirection')
           .observeOn(rx.Scheduler.async)
           .skipUntil(rx.Observable.timer(1000))
           .map(([, scrollDirection]) => scrollDirection)
           .throttle(16, rx.Scheduler.async) // at least wait a frame after a changed value
-          .subscribe(scrollDirection => {
+          .subscribe((scrollDirection) => {
             if (scrollDirection === SCROLLING_DOWN) {
               if (!$element.hasClass('hidden')) {
                 requestAnimationFrame(() => $element.addClass('hidden'))
@@ -345,6 +347,6 @@ export default angular.module('starter.directives', [])
         $scope.$on('$destroy', function () {
           subscription.dispose()
         })
-      }
+      },
     }
   })

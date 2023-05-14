@@ -1,25 +1,47 @@
 export class Channel {
   // to Native
-  static get apiProxy () { return 'API_PROXY' }
+  static get apiProxy() {
+    return 'API_PROXY'
+  }
 
-  static get nativeStorage () { return 'NATIVE_STORAGE' }
+  static get nativeStorage() {
+    return 'NATIVE_STORAGE'
+  }
 
-  static get uploadImage () { return 'UPLOAD_IMAGE' }
+  static get uploadImage() {
+    return 'UPLOAD_IMAGE'
+  }
 
-  static get iap () { return 'IAP' }
+  static get iap() {
+    return 'IAP'
+  }
 
-  static get version () { return 'VERSION' }
+  static get version() {
+    return 'VERSION'
+  }
 
-  static get share () { return 'SHARE' }
+  static get share() {
+    return 'SHARE'
+  }
 
-  static get actionSheet () { return 'ACTION_SHEET' }
+  static get actionSheet() {
+    return 'ACTION_SHEET'
+  }
 
-  static get composeDialog () { return 'COMPOSE_DIALOG' }
+  static get composeDialog() {
+    return 'COMPOSE_DIALOG'
+  }
 
   // from Native
-  static get nativeStorageUpdated () { return 'NATIVE_STORAGE_UPDATE' }
+  static get nativeStorageUpdated() {
+    return 'NATIVE_STORAGE_UPDATE'
+  }
 
-  static get statusBarDidTap () { return 'STATUS_BAR_DID_TAP' }
+  static get statusBarDidTap() {
+    return 'STATUS_BAR_DID_TAP'
+  }
 
-  static get ping () { return 'PING' }
+  static get ping() {
+    return 'PING'
+  }
 }

@@ -1,4 +1,3 @@
-
 <ion-modal-view class="card-view">
   <ion-header-bar class="bar-assertive">
     <button class="button" ng-click="hide()">取消</button>
@@ -6,15 +5,20 @@
     <button class="button" ng-click="doReport(message,report)">舉報</button>
   </ion-header-bar>
   <ion-content>
-    <ion-list >
     <div class="row">
       <div class="col">
         <label class="item item-input text">
-          <textarea id="reply-content" placeholder="請說明你舉報的原因" rows="5" ng-model="report.content" ng-Required="true" name="description"></textarea>
+          <textarea
+            id="reply-content"
+            placeholder="請說明你舉報的原因"
+            rows="5"
+            ng-model="report.content"
+            ng-Required="true"
+            name="description"
+          ></textarea>
         </label>
       </div>
     </div>
-
-    <div style="width:100%; height:500px"></div>
+    <div style="width: 100%; height: 500px"></div>
   </ion-content>
 </ion-modal-view>

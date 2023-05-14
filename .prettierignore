@@ -1,0 +1,8 @@
+node_modules
+themes
+package-lock.json
+.vscode
+.firebase
+.idea
+dist
+*.min.css

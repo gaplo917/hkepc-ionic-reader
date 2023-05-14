@@ -1,8 +1,6 @@
-.user-profile{
-
-
-  ion-content{
-    padding:20px;
+.user-profile {
+  ion-content {
+    padding: 20px;
 
     .sub-action-bar {
       display: flex;
@@ -13,19 +11,18 @@
       }
     }
 
-    .dashline{
+    .dashline {
       @extend .ir-divider;
     }
 
-    .profile-pic{
-      display:block;
-      margin:auto;
+    .profile-pic {
+      display: block;
+      margin: auto;
       padding-bottom: 20px;
       width: 150px;
     }
 
-    .content{
-
+    .content {
       margin-top: 20px;
 
       h1 {
@@ -44,13 +41,9 @@
         color: $link-color;
       }
 
-      table{
+      table {
         text-align: left;
       }
-
-
     }
-
   }
-
 }

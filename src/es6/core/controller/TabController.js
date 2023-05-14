@@ -10,7 +10,7 @@ import {
   LoginTabUpdateRequest,
   MHeadFixRequest,
   NotificationBadgeUpdateRequest,
-  PushHistoryRequest
+  PushHistoryRequest,
 } from '../model/requests'
 
 import { NativeChangeFontSizeRequest, NativeChangeThemeRequest, NativeUpdateMHeadFixRequest } from '../bridge/requests'
@@ -20,28 +20,47 @@ import { isLegacyAndroid } from '../bridge/index'
 import * as Controllers from './index'
 
 export class TabController {
-  static get STATE () { return 'tab' }
+  static get STATE() {
+    return 'tab'
+  }
 
-  static get NAME () { return 'TabController' }
+  static get NAME() {
+    return 'TabController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/tab',
       abstract: true,
       templateUrl: 'templates/tabs.html',
       controller: 'TabController',
-      controllerAs: 'vm'
-
+      controllerAs: 'vm',
     }
   }
 
-  constructor ($scope, $state, $rootScope, $ionicModal, $stateParams, AuthService, ngToast, LocalStorageService, HistoryService, $ionicHistory, rx, apiService, observeOnScope, $ionicSideMenuDelegate, $timeout) {
+  constructor(
+    $scope,
+    $state,
+    $rootScope,
+    $ionicModal,
+    $stateParams,
+    AuthService,
+    ngToast,
+    LocalStorageService,
+    HistoryService,
+    $ionicHistory,
+    rx,
+    apiService,
+    observeOnScope,
+    $ionicSideMenuDelegate,
+    $timeout
+  ) {
     console.debug(`[${TabController.NAME}] init`)
 
     this.initTheme = {
       dark: document.getElementById('init-dark') !== null,
       oled: document.getElementById('init-oled') !== null,
-      default: document.getElementById('init-default') !== null
+      default: document.getElementById('init-default') !== null,
     }
 
     this.scope = $scope
@@ -56,11 +75,16 @@ export class TabController {
     this.darkTheme = null
     this.isLoggedIn = false
 
-    observeOnScope($scope, 'vm.fontSize').skip(1).subscribe(({ oldValue, newValue }) => {
-      const width = this.fontSize <= 100 ? 'device-width' : window.innerWidth * 100 / this.fontSize
-      const viewport = document.querySelector('meta[name=viewport]')
-      viewport.setAttribute('content', `initial-scale=${this.fontSize / 100}, maximum-scale=${this.fontSize / 100}, user-scalable=no, width=${width}`)
-    })
+    observeOnScope($scope, 'vm.fontSize')
+      .skip(1)
+      .subscribe(({ oldValue, newValue }) => {
+        const width = this.fontSize <= 100 ? 'device-width' : (window.innerWidth * 100) / this.fontSize
+        const viewport = document.querySelector('meta[name=viewport]')
+        viewport.setAttribute(
+          'content',
+          `initial-scale=${this.fontSize / 100}, maximum-scale=${this.fontSize / 100}, user-scalable=no, width=${width}`
+        )
+      })
 
     observeOnScope($scope, 'vm.darkTheme').subscribe(({ oldValue, newValue }) => {
       if (isLegacyAndroid()) {
@@ -85,19 +109,28 @@ export class TabController {
       this.isLoggedIn = isLoggedIn
     }).subscribe()
 
-    this.localStorageService.get('theme').safeApply(this.scope, data => {
-      this.darkTheme = data
-    }).subscribe()
+    this.localStorageService
+      .get('theme')
+      .safeApply(this.scope, (data) => {
+        this.darkTheme = data
+      })
+      .subscribe()
 
-    this.localStorageService.get('fontSize').safeApply(this.scope, data => {
-      this.fontSize = data || '100'
-    }).subscribe()
+    this.localStorageService
+      .get('fontSize')
+      .safeApply(this.scope, (data) => {
+        this.fontSize = data || '100'
+      })
+      .subscribe()
 
-    this.localStorageService.get('mHeadFix').safeApply($scope, data => {
-      if (data) {
-        this.mHeadFix = String(data) === 'true'
-      }
-    }).subscribe()
+    this.localStorageService
+      .get('mHeadFix')
+      .safeApply($scope, (data) => {
+        if (data) {
+          this.mHeadFix = String(data) === 'true'
+        }
+      })
+      .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
       // FIXME: ugly hack for dark theme, all style use ios style
@@ -109,7 +142,8 @@ export class TabController {
       })
     })
 
-    $rootScope.$eventToObservable(CommonInfoExtractRequest.NAME)
+    $rootScope
+      .$eventToObservable(CommonInfoExtractRequest.NAME)
       .filter(([event, req]) => req instanceof CommonInfoExtractRequest)
       .debounce(100)
       .subscribe(([event, req]) => {
@@ -128,10 +162,14 @@ export class TabController {
         this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
 
         // send the notification badge update in rootscope
-        this.rootScope.$emit(NotificationBadgeUpdateRequest.NAME, new NotificationBadgeUpdateRequest(pmNotification, postNotification))
+        this.rootScope.$emit(
+          NotificationBadgeUpdateRequest.NAME,
+          new NotificationBadgeUpdateRequest(pmNotification, postNotification)
+        )
       })
 
-    $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+    $rootScope
+      .$eventToObservable(NotificationBadgeUpdateRequest.NAME)
       .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
       .subscribe(([event, req]) => {
         console.debug(`[${TabController.NAME}] Received NotificationBadgeUpdateRequest`)
@@ -144,7 +182,8 @@ export class TabController {
         this.localStorageService.setObject('notification', notification)
       })
 
-    $scope.$eventToObservable(LoginTabUpdateRequest.NAME)
+    $scope
+      .$eventToObservable(LoginTabUpdateRequest.NAME)
       .filter(([event, req]) => req instanceof LoginTabUpdateRequest)
       .safeApply($scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received LoginTabUpdateRequest`, req)
@@ -163,21 +202,24 @@ export class TabController {
             this.isLoggedIn = false
           }
         }
-      }).subscribe()
+      })
+      .subscribe()
 
-    $scope.$eventToObservable(FindMessageRequest.NAME)
+    $scope
+      .$eventToObservable(FindMessageRequest.NAME)
       .filter(([event, req]) => req instanceof FindMessageRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received FindMessageRequest`)
 
         this.state.go(Controllers.FindMessageController.STATE, {
           postId: req.postId,
-          messageId: req.messageId
+          messageId: req.messageId,
         })
       })
       .subscribe()
 
-    $scope.$eventToObservable(PushHistoryRequest.NAME)
+    $scope
+      .$eventToObservable(PushHistoryRequest.NAME)
       .filter(([event, req]) => req instanceof PushHistoryRequest)
       .subscribe(([event, req]) => {
         console.debug(`[${TabController.NAME}] Received PushHistoryRequest`)
@@ -185,66 +227,80 @@ export class TabController {
         this.historyService.add(req.historyObj)
       })
 
-    $rootScope.$eventToObservable(NativeChangeThemeRequest.NAME)
+    $rootScope
+      .$eventToObservable(NativeChangeThemeRequest.NAME)
       .filter(([event, req]) => req instanceof NativeChangeThemeRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received NativeChangeThemeRequest`)
 
         this.darkTheme = req.theme
-      }).subscribe()
+      })
+      .subscribe()
 
-    $rootScope.$eventToObservable(NativeChangeFontSizeRequest.NAME)
+    $rootScope
+      .$eventToObservable(NativeChangeFontSizeRequest.NAME)
       .filter(([event, req]) => req instanceof NativeChangeFontSizeRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received NativeChangeFontSizeRequest`)
 
         this.fontSize = req.size
         this.ionicHistory.clearCache()
-      }).subscribe()
+      })
+      .subscribe()
 
-    $rootScope.$eventToObservable(NativeUpdateMHeadFixRequest.NAME)
+    $rootScope
+      .$eventToObservable(NativeUpdateMHeadFixRequest.NAME)
       .filter(([event, req]) => req instanceof NativeUpdateMHeadFixRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received NativeUpdateMHeadFixRequest`)
         this.mHeadFix = String(req.isMHead) === 'true'
-      }).subscribe()
+      })
+      .subscribe()
 
-    $scope.$eventToObservable(ChangeThemeRequest.NAME)
+    $scope
+      .$eventToObservable(ChangeThemeRequest.NAME)
 
       .filter(([event, req]) => req instanceof ChangeThemeRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received ChangeThemeRequest`)
         this.darkTheme = req.theme
         this.localStorageService.set('theme', req.theme)
-      }).subscribe()
+      })
+      .subscribe()
 
-    $scope.$eventToObservable(ChangeFontSizeRequest.NAME)
+    $scope
+      .$eventToObservable(ChangeFontSizeRequest.NAME)
       .filter(([event, req]) => req instanceof ChangeFontSizeRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received ChangeFontSizeRequest`)
         this.fontSize = req.size
         this.localStorageService.set('fontSize', req.size)
         this.ionicHistory.clearCache()
-      }).subscribe()
+      })
+      .subscribe()
 
-    $scope.$eventToObservable(MHeadFixRequest.NAME)
+    $scope
+      .$eventToObservable(MHeadFixRequest.NAME)
       .filter(([event, req]) => req instanceof MHeadFixRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received MHeadFixRequest`, req)
         this.mHeadFix = String(req.mHeadFix) === 'true'
         this.localStorageService.set('mHeadFix', req.mHeadFix ? 'true' : 'false')
-      }).subscribe()
+      })
+      .subscribe()
 
-    $scope.$eventToObservable(AndroidBottomFixRequest.NAME)
+    $scope
+      .$eventToObservable(AndroidBottomFixRequest.NAME)
       .filter(([event, req]) => req instanceof AndroidBottomFixRequest)
       .safeApply(this.scope, ([event, req]) => {
         console.debug(`[${TabController.NAME}] Received AndroidBottomFixRequest`, req)
         this.androidBottomFix = String(req.androidBottomFix) === 'true'
         this.localStorageService.set('androidBottomFix', req.androidBottomFix ? 'true' : 'false')
-      }).subscribe()
+      })
+      .subscribe()
   }
 
-  removeAndroidStyleCssClass () {
+  removeAndroidStyleCssClass() {
     const body = angular.element(document.querySelector('body'))[0]
 
     body.className = body.className.replace('platform-android', '')

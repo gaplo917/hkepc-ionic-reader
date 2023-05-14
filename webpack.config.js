@@ -20,11 +20,10 @@ const config = {
     './js/app': './src/es6/core/app.js',
     './css/ionic.app': './src/scss/ionic.app.scss',
     './css/ionic.app.dark': './src/scss/ionic.app.dark.scss',
-    './css/ionic.app.oled.dark': './src/scss/ionic.app.oled.dark.scss'
+    './css/ionic.app.oled.dark': './src/scss/ionic.app.oled.dark.scss',
   },
   output: {
-    path: path.resolve(__dirname, 'dist')
-
+    path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
     historyApiFallback: true,
@@ -32,55 +31,55 @@ const config = {
     port: 3000,
     host: '0.0.0.0',
     static: {
-      directory: path.join(__dirname, 'www')
-    }
+      directory: path.join(__dirname, 'www'),
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
       IS_DEV: process.env.NODE_ENV === 'development',
-      WEBVIEW_VERSION: String(fs.readFileSync(path.resolve(__dirname, 'www/version.json')))
+      WEBVIEW_VERSION: String(fs.readFileSync(path.resolve(__dirname, 'www/version.json'))),
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css'
+      filename: '[name].css',
     }),
     new RemovePlugin({
       before: {
         test: [
           {
             folder: path.resolve(__dirname, 'dist'),
-            method: () => true
-          }
-        ]
+            method: () => true,
+          },
+        ],
       },
       // scss entry will produce unnecessary .js file, use this plugin to remove it
       after: {
         test: [
           {
             folder: path.resolve(__dirname, 'dist/css'),
-            method: filePath => /\.js$|\.js.map$/.test(filePath)
-          }
-        ]
-      }
+            method: (filePath) => /\.js$|\.js.map$/.test(filePath),
+          },
+        ],
+      },
     }),
     new CopyPlugin({
       patterns: [
         {
           from: '**/*',
           to: './',
-          context: 'www/'
-        }
-      ]
-    })
+          context: 'www/',
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/i,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler, 'css-loader']
+        use: [stylesHandler, 'css-loader'],
       },
       {
         test: /\.s[ac]ss$/i,
@@ -89,25 +88,26 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              esModule: false
-            }
+              esModule: false,
+            },
           },
           {
             loader: 'css-loader',
             options: {
-              url: false
-            }
+              url: false,
+            },
           },
-          'sass-loader']
+          'sass-loader',
+        ],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|html|json|txt|md)$/i,
-        type: 'asset/resource'
-      }
+        type: 'asset/resource',
+      },
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
-    ]
+    ],
   },
   optimization: {
     minimize: process.env.NODE_ENV !== 'development',
@@ -122,12 +122,12 @@ const config = {
           mangle: false,
           sourceMap: false, // Must be set to true if using source-maps in production
           compress: {
-            drop_console: true
-          }
-        }
-      })
-    ]
-  }
+            drop_console: true,
+          },
+        },
+      }),
+    ],
+  },
 }
 
 module.exports = () => {

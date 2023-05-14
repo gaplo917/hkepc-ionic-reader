@@ -8,7 +8,7 @@
   @include display-flex();
   @include flex-direction(horizontal);
   @include justify-content(center);
-  @include translate3d(0,0,0);
+  @include translate3d(0, 0, 0);
 
   @include tab-style($tabs-default-bg, $tabs-default-border, $tabs-default-text);
   @include tab-badge-style($tabs-default-text, $tabs-default-bg);
@@ -28,10 +28,10 @@
   line-height: $tabs-height;
 
   @media (min--moz-device-pixel-ratio: 1.5),
-         (-webkit-min-device-pixel-ratio: 1.5),
-         (min-device-pixel-ratio: 1.5),
-         (min-resolution: 144dpi),
-         (min-resolution: 1.5dppx) {
+    (-webkit-min-device-pixel-ratio: 1.5),
+    (min-device-pixel-ratio: 1.5),
+    (min-resolution: 144dpi),
+    (min-resolution: 1.5dppx) {
     padding-top: 2px;
     border-top: none !important;
     border-bottom: none;
@@ -39,7 +39,6 @@
     background-size: 100% 1px;
     background-repeat: no-repeat;
   }
-
 }
 /* Allow parent element of tabs to define color, or just the tab itself */
 .tabs-light > .tabs,
@@ -90,14 +89,14 @@
 
 @mixin tabs-striped($style, $color, $background) {
   &.#{$style} {
-    .tabs{
+    .tabs {
       background-color: $background;
     }
     .tab-item {
       color: rgba($color, $tabs-striped-off-opacity);
       opacity: 1;
-      .badge{
-        opacity:$tabs-striped-off-opacity;
+      .badge {
+        opacity: $tabs-striped-off-opacity;
       }
       &.tab-item-active,
       &.active,
@@ -110,7 +109,7 @@
       }
     }
   }
-  &.tabs-top{
+  &.tabs-top {
     .tab-item {
       &.tab-item-active,
       &.active,
@@ -126,7 +125,7 @@
 @mixin tabs-background($style, $color, $border-color) {
   .#{$style} {
     .tabs,
-    &> .tabs{
+    & > .tabs {
       background-color: $color;
       background-image: linear-gradient(0deg, $border-color, $border-color 50%, transparent 50%);
       border-color: $border-color;
@@ -138,7 +137,7 @@
   &.#{$style} {
     .tabs {
       background-color: $color;
-      background-image:none;
+      background-image: none;
     }
   }
 }
@@ -148,15 +147,15 @@
     .tab-item {
       color: rgba($color, $tabs-off-opacity);
       opacity: 1;
-      .badge{
-        opacity:$tabs-off-opacity;
+      .badge {
+        opacity: $tabs-off-opacity;
       }
       &.tab-item-active,
       &.active,
       &.activated {
         color: $color;
         border: 0 solid $color;
-        .badge{
+        .badge {
           opacity: 1;
         }
       }
@@ -169,8 +168,8 @@
     .tab-item {
       color: rgba($color, $tabs-striped-off-opacity);
       opacity: 1;
-      .badge{
-        opacity:$tabs-striped-off-opacity;
+      .badge {
+        opacity: $tabs-striped-off-opacity;
       }
       &.tab-item-active,
       &.active,
@@ -179,8 +178,8 @@
         color: $color;
         border: 0 solid $color;
         border-top-width: $tabs-striped-border-width;
-        .badge{
-          top:$tabs-striped-border-width;
+        .badge {
+          top: $tabs-striped-border-width;
           opacity: 1;
         }
       }
@@ -205,8 +204,8 @@
       border-style: solid;
       border-width: $tabs-striped-border-width 0 0 0;
       border-color: $dark;
-      .badge{
-        top:$tabs-striped-border-width;
+      .badge {
+        top: $tabs-striped-border-width;
         opacity: 1;
       }
     }
@@ -228,7 +227,7 @@
   @include tabs-striped-background('tabs-background-calm', $calm);
   @include tabs-striped-background('tabs-background-assertive', $assertive);
   @include tabs-striped-background('tabs-background-balanced', $balanced);
-  @include tabs-striped-background('tabs-background-energized',$energized);
+  @include tabs-striped-background('tabs-background-energized', $energized);
   @include tabs-striped-background('tabs-background-royal', $royal);
   @include tabs-striped-background('tabs-background-dark', $dark);
 
@@ -238,10 +237,9 @@
   @include tabs-striped-color('tabs-color-calm', $calm);
   @include tabs-striped-color('tabs-color-assertive', $assertive);
   @include tabs-striped-color('tabs-color-balanced', $balanced);
-  @include tabs-striped-color('tabs-color-energized',$energized);
+  @include tabs-striped-color('tabs-color-energized', $energized);
   @include tabs-striped-color('tabs-color-royal', $royal);
   @include tabs-striped-color('tabs-color-dark', $dark);
-
 }
 
 @include tabs-background('tabs-background-light', $light, $bar-light-border);
@@ -250,7 +248,7 @@
 @include tabs-background('tabs-background-calm', $calm, $bar-calm-border);
 @include tabs-background('tabs-background-assertive', $assertive, $bar-assertive-border);
 @include tabs-background('tabs-background-balanced', $balanced, $bar-balanced-border);
-@include tabs-background('tabs-background-energized',$energized, $bar-energized-border);
+@include tabs-background('tabs-background-energized', $energized, $bar-energized-border);
 @include tabs-background('tabs-background-royal', $royal, $bar-royal-border);
 @include tabs-background('tabs-background-dark', $dark, $bar-dark-border);
 
@@ -260,11 +258,11 @@
 @include tabs-color('tabs-color-calm', $calm);
 @include tabs-color('tabs-color-assertive', $assertive);
 @include tabs-color('tabs-color-balanced', $balanced);
-@include tabs-color('tabs-color-energized',$energized);
+@include tabs-color('tabs-color-energized', $energized);
 @include tabs-color('tabs-color-royal', $royal);
 @include tabs-color('tabs-color-dark', $dark);
 
-@mixin tabs-standard-color($style, $color, $off-color:$dark) {
+@mixin tabs-standard-color($style, $color, $off-color: $dark) {
   &.#{$style} {
     .tab-item {
       color: $off-color;
@@ -274,7 +272,6 @@
         color: $color;
       }
     }
-
   }
 
   &.tabs-striped.#{$style} {
@@ -286,9 +283,7 @@
         color: $color;
       }
     }
-
   }
-
 }
 
 ion-tabs {
@@ -298,60 +293,63 @@ ion-tabs {
   @include tabs-standard-color('tabs-color-active-calm', $calm, $dark);
   @include tabs-standard-color('tabs-color-active-assertive', $assertive, $dark);
   @include tabs-standard-color('tabs-color-active-balanced', $balanced, $dark);
-  @include tabs-standard-color('tabs-color-active-energized',$energized, $dark);
+  @include tabs-standard-color('tabs-color-active-energized', $energized, $dark);
   @include tabs-standard-color('tabs-color-active-royal', $royal, $dark);
   @include tabs-standard-color('tabs-color-active-dark', $dark, $light);
 }
 
 .tabs-top {
   &.tabs-striped {
-    padding-bottom:0;
-    .tab-item{
+    padding-bottom: 0;
+    .tab-item {
       background: transparent;
       // animate the top bar, leave bottom for platform consistency
-      -webkit-transition: color .1s ease;
-      -moz-transition: color .1s ease;
-      -ms-transition: color .1s ease;
-      -o-transition: color .1s ease;
-      transition: color .1s ease;
+      -webkit-transition: color 0.1s ease;
+      -moz-transition: color 0.1s ease;
+      -ms-transition: color 0.1s ease;
+      -o-transition: color 0.1s ease;
+      transition: color 0.1s ease;
       &.tab-item-active,
       &.active,
       &.activated {
         margin-top: $tabs-striped-border-width - 1px;
         border-width: 0px 0px $tabs-striped-border-width 0px !important;
         border-style: solid;
-        > .badge, > i{
+        > .badge,
+        > i {
           margin-top: -$tabs-striped-border-width + 1px;
         }
       }
-      .badge{
-        -webkit-transition: color .2s ease;
-        -moz-transition: color .2s ease;
-        -ms-transition: color .2s ease;
-        -o-transition: color .2s ease;
-        transition: color .2s ease;
+      .badge {
+        -webkit-transition: color 0.2s ease;
+        -moz-transition: color 0.2s ease;
+        -ms-transition: color 0.2s ease;
+        -o-transition: color 0.2s ease;
+        transition: color 0.2s ease;
       }
     }
-   &:not(.tabs-icon-left):not(.tabs-icon-top){
-       .tab-item{
-          &.tab-item-active,
-          &.active,
-          &.activated {
-             .tab-title, i{
-            display:block;
+    &:not(.tabs-icon-left):not(.tabs-icon-top) {
+      .tab-item {
+        &.tab-item-active,
+        &.active,
+        &.activated {
+          .tab-title,
+          i {
+            display: block;
             margin-top: -$tabs-striped-border-width + 1px;
           }
         }
       }
     }
-    &.tabs-icon-left{
-       .tab-item{
-          margin-top: 1px;
-          &.tab-item-active,
-          &.active,
-          &.activated {
-            .tab-title, i {
-              margin-top: -0.1em;
+    &.tabs-icon-left {
+      .tab-item {
+        margin-top: 1px;
+        &.tab-item-active,
+        &.active,
+        &.activated {
+          .tab-title,
+          i {
+            margin-top: -0.1em;
           }
         }
       }
@@ -405,8 +403,8 @@ ion-tabs {
   &:hover {
     cursor: pointer;
   }
-  &.tab-hidden{
-    display:none;
+  &.tab-hidden {
+    display: none;
   }
 }
 
@@ -436,14 +434,15 @@ ion-tabs {
 .tabs-icon-right > .tabs .tab-item {
   font-size: $tabs-text-font-size-side-icon;
 
-  .icon, .tab-title {
+  .icon,
+  .tab-title {
     display: inline-block;
     vertical-align: top;
-    margin-top: -.1em;
+    margin-top: -0.1em;
 
     &:before {
-    font-size: $tabs-icon-size - 8;
-    line-height: $tabs-height;
+      font-size: $tabs-icon-size - 8;
+      line-height: $tabs-height;
     }
   }
 }
@@ -463,7 +462,6 @@ ion-tabs {
   line-height: inherit;
 }
 
-
 .tab-item.has-badge {
   position: relative;
 }
@@ -478,7 +476,6 @@ ion-tabs {
   font-size: $tabs-badge-font-size;
   line-height: $tabs-badge-font-size + 4;
 }
-
 
 /* Navigational tab */
 
@@ -528,15 +525,14 @@ ion-tabs {
 
 .tab-item.disabled,
 .tab-item[disabled] {
-  opacity: .4;
+  opacity: 0.4;
   cursor: default;
   pointer-events: none;
 }
 
-.nav-bar-tabs-top.hide ~ .view-container .tabs-top .tabs{
-  top: 0
+.nav-bar-tabs-top.hide ~ .view-container .tabs-top .tabs {
+  top: 0;
 }
-.pane[hide-nav-bar="true"] .has-tabs-top{
-  top:$tabs-height
+.pane[hide-nav-bar='true'] .has-tabs-top {
+  top: $tabs-height;
 }
-

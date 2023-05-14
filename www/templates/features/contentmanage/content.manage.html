@@ -1,79 +1,73 @@
 <ion-view view-title="IR 內容設定" class="contentmanage-view">
+  <ion-content>
+    <div class="spinner" ng-if="!vm.isReady">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div ng-if="vm.isReady">
+      <div class="list card">
+        <a href="/tab/features/contentmanage/topic/latestPostTopicFilters" class="feature-route item item-icon-left">
+          <div class="icon">
+            <i class="ion-ios-clock inner-icon" style="background-color: #0065ff"></i>
+          </div>
 
-    <ion-content>
-        <div class="spinner" ng-if="!vm.isReady">
-            <ir-spinner></ir-spinner>
+          <div style="margin-left: 10px">最新發佈</div>
+          <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+        </a>
+
+        <a href="/tab/features/contentmanage/topic/latestReplyTopicFilters" class="feature-route item item-icon-left">
+          <div class="icon">
+            <i class="ion-ios-chatboxes inner-icon" style="background-color: #ff6b68"></i>
+          </div>
+
+          <div style="margin-left: 10px">最新帖子</div>
+          <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+        </a>
+      </div>
+
+      <div class="list card">
+        <a href="/tab/features/contentmanage/keywords" class="feature-route item item-icon-left">
+          <div class="icon">
+            <i
+              class="ion-ios-color-wand inner-icon"
+              style="font-size: 28px; background-color: rgba(255, 235, 59, 0.9); color: #000"
+            ></i>
+          </div>
+
+          <div style="margin-left: 10px">加強顯示</div>
+          <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+        </a>
+      </div>
+
+      <div class="list card">
+        <a href="/tab/features/contentmanage/users" class="feature-route item item-icon-left">
+          <div class="icon">
+            <i class="ion-filing inner-icon" style="background-color: #23b1c8"></i>
+          </div>
+
+          <div style="margin-left: 10px">過濾帖子及回覆名單</div>
+          <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
+        </a>
+      </div>
+
+      <div class="list card">
+        <div class="feature-route item item-icon-left selectable">
+          <div class="icon">
+            <i class="ion-android-hand inner-icon" style="background-color: #212121"></i>
+          </div>
+
+          <div style="margin-left: 10px; line-height: 2">
+            過濾內容時的操作
+            <div class="fright">
+              <select ng-model="vm.filterMode">
+                <option value="0">暫不過濾</option>
+                <option value="1">部份隱藏</option>
+                <option value="2">完全隱藏</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div ng-if="vm.isReady">
-            <div class="list card">
-
-                <a href="/tab/features/contentmanage/topic/latestPostTopicFilters" class="feature-route item item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-clock inner-icon" style="background-color: #0065ff;"></i>
-                    </div>
-
-                    <div style="margin-left:10px">最新發佈</div>
-                    <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-                </a>
-
-                <a href="/tab/features/contentmanage/topic/latestReplyTopicFilters" class="feature-route item item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-chatboxes inner-icon" style="background-color: #ff6b68;"></i>
-                    </div>
-
-                    <div style="margin-left:10px">最新帖子</div>
-                    <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-                </a>
-            </div>
-
-            <div class="list card">
-
-                <a href="/tab/features/contentmanage/keywords" class="feature-route item item-icon-left">
-                    <div class="icon">
-                        <i class="ion-ios-color-wand inner-icon" style="font-size:28px; background-color: rgba(255, 235, 59, 0.9); color: #000"></i>
-                    </div>
-
-                    <div style="margin-left:10px">加強顯示</div>
-                    <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-                </a>
-
-            </div>
-
-            <div class="list card">
-
-                <a href="/tab/features/contentmanage/users" class="feature-route item item-icon-left">
-                    <div class="icon">
-                        <i class="ion-filing inner-icon" style="background-color: #23b1c8;"></i>
-                    </div>
-
-                    <div style="margin-left:10px">過濾帖子及回覆名單</div>
-                    <i class="list-right-arrow icon ion-chevron-right icon-accessory"></i>
-                </a>
-
-            </div>
-
-            <div class="list card">
-
-                <div class="feature-route item item-icon-left selectable">
-                    <div class="icon">
-                        <i class="ion-android-hand inner-icon" style="background-color: #212121;"></i>
-                    </div>
-
-                    <div style="margin-left:10px;line-height: 2;">過濾內容時的操作
-                        <div class="fright">
-                            <select ng-model="vm.filterMode">
-                                <option value="0">暫不過濾</option>
-                                <option value="1">部份隱藏</option>
-                                <option value="2">完全隱藏</option>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-        <div class="tab-bar-inset"></div>
-
-    </ion-content>
+      </div>
+    </div>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

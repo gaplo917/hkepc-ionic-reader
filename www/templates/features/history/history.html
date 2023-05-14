@@ -1,23 +1,21 @@
 <ion-view class="feature-view">
-    <ion-nav-title>
-        瀏覧紀錄
-    </ion-nav-title>
-    <div class="spinner" ng-if="vm.chats.length == 0">
-        <ir-spinner></ir-spinner>
-    </div>
-    <ion-content>
-        <div class="list card">
-
-            <a ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat) track by $index"
-               href="/tab/features/history/{{dateStr}}" class="item item-icon-right">
-
-                <div style="margin-left:10px">{{vm.relativeMomentize(dateStr)}}
-                    <span class="fright badge badge-royal">{{vm.historyStat[dateStr].count}}</span>
-                </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-            </a>
-
-
+  <ion-nav-title>瀏覧紀錄</ion-nav-title>
+  <div class="spinner" ng-if="vm.chats.length == 0">
+    <ir-spinner></ir-spinner>
+  </div>
+  <ion-content>
+    <div class="list card">
+      <a
+        ng-repeat="dateStr in vm.sortedDateStrKey(vm.historyStat) track by $index"
+        href="/tab/features/history/{{dateStr}}"
+        class="item item-icon-right"
+      >
+        <div style="margin-left: 10px">
+          {{vm.relativeMomentize(dateStr)}}
+          <span class="fright badge badge-royal">{{vm.historyStat[dateStr].count}}</span>
         </div>
-    </ion-content>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </a>
+    </div>
+  </ion-content>
 </ion-view>

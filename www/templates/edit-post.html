@@ -8,19 +8,21 @@
       點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
     </div>
     <div class="attachment-row" ng-if="vm.existingImages.length > 0">
-      <div class="attachment-image-wrapper"
-           ng-repeat="eImage in vm.existingImages track by $index"
-           on-hold="vm.confirmDeleteImage(eImage)"
-           on-tap="vm.addImageToContent(eImage)">
-        <img ng-src="{{eImage.src}}">
-        <span class="super-less-important-info"> {{eImage.id}}</span>
+      <div
+        class="attachment-image-wrapper"
+        ng-repeat="eImage in vm.existingImages track by $index"
+        on-hold="vm.confirmDeleteImage(eImage)"
+        on-tap="vm.addImageToContent(eImage)"
+      >
+        <img ng-src="{{eImage.src}}" />
+        <span class="super-less-important-info">{{eImage.id}}</span>
       </div>
     </div>
-    <input-helper modal='vm' content-model='vm.edit.content'></input-helper>
+    <input-helper modal="vm" content-model="vm.edit.content"></input-helper>
     <div class="row title-input" ng-if="vm.edit.subject">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-          <input placeholder="請輸入標題" type="text" ng-model="vm.edit.subject">
+          <input placeholder="請輸入標題" type="text" ng-model="vm.edit.subject" />
         </div>
       </div>
     </div>
@@ -31,12 +33,13 @@
     <div class="row content-input">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-            <textarea id="{{vm.id}}"
-                      ng-focus="isAndroidNative && vm.onFocus()"
-                      placeholder="請輸入內容"
-                      ng-model="vm.edit.content"
-                      ng-if="vm.edit.content !== undefined"
-            ></textarea>
+          <textarea
+            id="{{vm.id}}"
+            ng-focus="isAndroidNative && vm.onFocus()"
+            placeholder="請輸入內容"
+            ng-model="vm.edit.content"
+            ng-if="vm.edit.content !== undefined"
+          ></textarea>
         </div>
       </div>
     </div>
@@ -46,4 +49,3 @@
     <div class="tab-bar-inset"></div>
   </ion-content>
 </ion-view>
-

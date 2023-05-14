@@ -1,11 +1,10 @@
 .topics-view {
-
   .reminder {
-    color:$less-important-color
+    color: $less-important-color;
   }
 
-  .last-description{
-    color: $less-important-color
+  .last-description {
+    color: $less-important-color;
   }
 
   .odd > a {
@@ -13,10 +12,10 @@
   }
 
   .even > a {
-    background-color: $even-color
+    background-color: $even-color;
   }
 
-  .topic-icon{
+  .topic-icon {
     background-color: #ffffff;
   }
 
@@ -27,25 +26,27 @@
     color: $less-important-color;
   }
 
-
   // My Topic edit mode
   .odd {
-    &.editable-item, .item-reorder, .item-delete {
+    &.editable-item,
+    .item-reorder,
+    .item-delete {
       background-color: $odd-color;
       padding: 0;
     }
-
   }
 
   .even {
-    &.editable-item, .item-reorder, .item-delete {
+    &.editable-item,
+    .item-reorder,
+    .item-delete {
       background-color: $even-color;
       padding: 0;
     }
   }
 
   .item-delete {
-    margin-left: 5px
+    margin-left: 5px;
   }
 
   .item-reorder > .edit-plus-one {
@@ -56,7 +57,9 @@
     color: $danger-text-color;
   }
 
-  .item-reorder .button.icon, .item-reorder .input-helper .icon.flow-button, .input-helper .item-reorder .icon.flow-button {
+  .item-reorder .button.icon,
+  .item-reorder .input-helper .icon.flow-button,
+  .input-helper .item-reorder .icon.flow-button {
     font-size: 24px;
   }
 }

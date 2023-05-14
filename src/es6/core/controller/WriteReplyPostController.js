@@ -1,17 +1,19 @@
 import * as HKEPC from '../../data/config/hkepc'
 import * as Controllers from './index'
-import {
-  replace
-} from 'lodash-es'
+import { replace } from 'lodash-es'
 import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
 export class WriteReplyPostController {
-  static get STATE () { return 'tab.topics-posts-detail-reply' }
+  static get STATE() {
+    return 'tab.topics-posts-detail-reply'
+  }
 
-  static get NAME () { return 'WriteReplyPostController' }
+  static get NAME() {
+    return 'WriteReplyPostController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/topics/:topicId/posts/:postId/page/:page/reply?post=&reply=',
       cache: false,
@@ -19,13 +21,24 @@ export class WriteReplyPostController {
         main: {
           templateUrl: 'templates/write-reply-post.html',
           controller: WriteReplyPostController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, ngToast, apiService, $ionicPopup, $compile, LocalStorageService, $ionicScrollDelegate) {
+  constructor(
+    $scope,
+    $state,
+    $stateParams,
+    $ionicHistory,
+    ngToast,
+    apiService,
+    $ionicPopup,
+    $compile,
+    LocalStorageService,
+    $ionicScrollDelegate
+  ) {
     this.id = 'reply-content'
     this.post = JSON.parse($stateParams.post)
     this.reply = JSON.parse($stateParams.reply)
@@ -48,14 +61,14 @@ export class WriteReplyPostController {
     this.existingImages = []
 
     $scope.$on('$ionicView.loaded', (e) => {
-      LocalStorageService.get('signature').subscribe(signature => {
+      LocalStorageService.get('signature').subscribe((signature) => {
         const isFree = $scope.nativeVersion && $scope.nativeVersion[$scope.nativeVersion.length - 1] === 'F'
         if (signature === 'false' && !isFree) {
           this.ionicReaderSign = ''
         } else {
           this.ionicReaderSign = HKEPC.signature({
             androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
+            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
           })
         }
       })
@@ -65,37 +78,30 @@ export class WriteReplyPostController {
     })
   }
 
-  onImageUploadSuccess (attachmentIds) {
+  onImageUploadSuccess(attachmentIds) {
     this.ngToast.success(`<i class="ion-ios-checkmark"> 成功新增圖片${attachmentIds.join(',')}！</i>`)
     this.preFetchContent().subscribe()
   }
 
-  preFetchContent () {
+  preFetchContent() {
     // useful for determine none|reply|quote type
-    return this.apiService.replyPage(this.reply)
-      .safeApply(this.scope, resp => {
-        const {
-          actionUrl,
-          preText,
-          hiddenFormInputs,
-          existingImages,
-          hiddenAttachFormInputs
-        } = resp
+    return this.apiService.replyPage(this.reply).safeApply(this.scope, (resp) => {
+      const { actionUrl, preText, hiddenFormInputs, existingImages, hiddenAttachFormInputs } = resp
 
-        this.actionUrl = actionUrl
+      this.actionUrl = actionUrl
 
-        // assign hiddenAttachFormInputs to modal
-        this.hiddenAttachFormInputs = hiddenAttachFormInputs
-        this.existingImages = existingImages
+      // assign hiddenAttachFormInputs to modal
+      this.hiddenAttachFormInputs = hiddenAttachFormInputs
+      this.existingImages = existingImages
 
-        this.hiddenFormInputs = hiddenFormInputs
+      this.hiddenFormInputs = hiddenFormInputs
 
-        // the text showing the effects of reply / quote
-        this.preText = preText
-      })
+      // the text showing the effects of reply / quote
+      this.preText = preText
+    })
   }
 
-  doReply (reply) {
+  doReply(reply) {
     console.log(JSON.stringify(reply))
 
     const spinnerHtml = `
@@ -109,7 +115,7 @@ export class WriteReplyPostController {
       html: spinnerHtml,
       allowOutsideClick: false,
       showCancelButton: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     })
 
     swal.showLoading()
@@ -128,7 +134,7 @@ export class WriteReplyPostController {
         const deleteImageFormData = {}
 
         // attach Image logic
-        this.attachImageIds.forEach(id => {
+        this.attachImageIds.forEach((id) => {
           imageFormData[`attachnew[${id}][description]=`] = ''
         })
 
@@ -145,9 +151,9 @@ export class WriteReplyPostController {
             message: replyMessage,
             ...hiddenFormInputs,
             ...imageFormData,
-            ...deleteImageFormData
+            ...deleteImageFormData,
           },
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         })
       })
       .flatMapApiFromCheerioworker('responseContainText', { text: '回覆已經發佈', isXml: true })
@@ -163,22 +169,24 @@ export class WriteReplyPostController {
             title: '發佈失敗',
             text: `HKEPC 傳回:「${responseText}」`,
             type: 'error',
-            confirmButtonText: '確定'
+            confirmButtonText: '確定',
           })
         }
-      }).subscribe(
+      })
+      .subscribe(
         () => {},
-        () => swal({
-          animation: false,
-          title: '發佈失敗',
-          text: '網絡異常，請重新嘗試！',
-          type: 'error',
-          confirmButtonText: '確定'
-        })
+        () =>
+          swal({
+            animation: false,
+            title: '發佈失敗',
+            text: '網絡異常，請重新嘗試！',
+            type: 'error',
+            confirmButtonText: '確定',
+          })
       )
   }
 
-  addImageToContent (existingImage) {
+  addImageToContent(existingImage) {
     const attachmentId = existingImage.id
     const selectorId = this.id
     const selectionStart = document.getElementById(selectorId).selectionStart
@@ -189,54 +197,55 @@ export class WriteReplyPostController {
     this.attachImageIds.push(attachmentId)
   }
 
-  confirmDeleteImage (existingImage) {
-    this.ionicPopup.confirm({
-      title: '確認要刪除圖片？', // String. The title of the popup.
-      cssClass: '', // String, The custom CSS class name
-      subTitle: '', // String (optional). The sub-title of the popup.
-      cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
-      cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
-      okText: '刪除', // String (default: 'OK'). The text of the OK button.
-      okType: 'button-assertive' // String (default: 'button-positive'). The type of the OK button.
-    }).then(isDelete => {
-      console.log(`isDelete ${isDelete} ->`, existingImage)
-      if (isDelete) {
-        const id = existingImage.id
+  confirmDeleteImage(existingImage) {
+    this.ionicPopup
+      .confirm({
+        title: '確認要刪除圖片？', // String. The title of the popup.
+        cssClass: '', // String, The custom CSS class name
+        subTitle: '', // String (optional). The sub-title of the popup.
+        cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
+        cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
+        okText: '刪除', // String (default: 'OK'). The text of the OK button.
+        okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
+      })
+      .then((isDelete) => {
+        console.log(`isDelete ${isDelete} ->`, existingImage)
+        if (isDelete) {
+          const id = existingImage.id
 
-        // add to delete array
-        this.deleteImageIds.push(id)
+          // add to delete array
+          this.deleteImageIds.push(id)
 
-        // remove attachment id from array
-        this.attachImageIds = this.attachImageIds.filter(imgId => imgId !== id)
+          // remove attachment id from array
+          this.attachImageIds = this.attachImageIds.filter((imgId) => imgId !== id)
 
-        this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
+          this.existingImages = this.existingImages.filter((eImage) => eImage.id !== id)
 
-        this.reply.content = replace(this.reply.content, id, '')
-        this.reply.content = replace(this.reply.content, '[attachimg][/attachimg]', '')
-        setTimeout(() => this.scope.$apply(), 0)
-      }
-    })
+          this.reply.content = replace(this.reply.content, id, '')
+          this.reply.content = replace(this.reply.content, '[attachimg][/attachimg]', '')
+          setTimeout(() => this.scope.$apply(), 0)
+        }
+      })
   }
 
-  onFocus () {
+  onFocus() {
     const focusPosition = angular.element(document.querySelector('#input-helper')).prop('offsetTop')
     this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
-
+        historyRoot: true,
       })
       this.state.go(Controllers.PostDetailController.STATE, {
         topicId: this.topicId,
         postId: this.postId,
-        page: this.page
+        page: this.page,
       })
     }
   }

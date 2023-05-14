@@ -1,5 +1,5 @@
 export class IRLifecycleOwner {
-  constructor ($scope) {
+  constructor($scope) {
     this.$scope = $scope
 
     const lifeCycleMap = {
@@ -11,7 +11,7 @@ export class IRLifecycleOwner {
       onViewAfterEnter: '$ionicView.afterEnter',
       onViewAfterLeave: '$ionicView.afterLeave',
       onViewUnloaded: '$ionicView.unloaded',
-      onViewDestroy: '$destroy'
+      onViewDestroy: '$destroy',
     }
 
     for (const customImpl in lifeCycleMap) {

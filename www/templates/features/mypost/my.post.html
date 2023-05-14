@@ -1,46 +1,50 @@
 <ion-view class="mypost-view">
-    <ion-nav-title>{{vm.title()}}</ion-nav-title>
-    <ion-nav-buttons side="right">
-        <a ng-if="vm.type === 'favorites' || vm.type === 'attention'"
-           class="button button-icon icon ion-edit"
-           ng-click="vm.editMode = !vm.editMode"
-           ng-class="vm.editMode ? 'edit-mode-activated': '' "
-        ></a>
-    </ion-nav-buttons>
-    <ion-content lazy-scroll>
-        <div class="spinner" ng-if="vm.myposts.length == 0">
-            <ir-spinner></ir-spinner>
+  <ion-nav-title>{{vm.title()}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <a
+      ng-if="vm.type === 'favorites' || vm.type === 'attention'"
+      class="button button-icon icon ion-edit"
+      ng-click="vm.editMode = !vm.editMode"
+      ng-class="vm.editMode ? 'edit-mode-activated': '' "
+    ></a>
+  </ion-nav-buttons>
+  <ion-content lazy-scroll>
+    <div class="spinner" ng-if="vm.myposts.length == 0">
+      <ir-spinner></ir-spinner>
+    </div>
+    <ion-list show-delete="vm.editMode">
+      <ion-item
+        class="item item-icon-right"
+        href="{{::mypost.post.url}}"
+        ng-repeat="mypost in vm.myposts"
+        ng-class-odd="'odd'"
+        ng-class-even="'even'"
+      >
+        <h2 class="item-text-wrap">
+          <i class="ion-ios-locked" ng-if="::mypost.status == '關閉'"></i>
+          {{::mypost.post.title}}
+        </h2>
+        <div>
+          <small style="color: #999">#{{$index + 1}} {{::mypost.topic.title}}</small>
+          <small class="fright" style="color: #999">{{::mypost.lastpost.timestamp}} @ {{::mypost.lastpost.by}}</small>
         </div>
-        <ion-list show-delete="vm.editMode">
-            <ion-item class="item item-icon-right" href="{{::mypost.post.url}}"
-                      ng-repeat="mypost in vm.myposts"
-                      ng-class-odd="'odd'" ng-class-even="'even'">
-                <h2 class="item-text-wrap"><i class="ion-ios-locked" ng-if="::mypost.status == '關閉'"></i>
-                    {{::mypost.post.title}}</h2>
-                <div>
-                    <small style="color:#999">#{{$index + 1}} {{::mypost.topic.title}}</small>
-                    <small class="fright" style="color:#999">{{::mypost.lastpost.timestamp}} @
-                        {{::mypost.lastpost.by}}
-                    </small>
-                </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-                <ion-delete-button class="ion-android-remove-circle" ng-click="::vm.deleteItem(mypost.post.id)"/>
-            </ion-item>
-
-        </ion-list>
-        <ion-infinite-scroll
-            class="ispinner text-center"
-            ng-if="vm.hasMoreData()"
-            on-infinite="vm.loadMore()"
-            spinner="android"
-            immediate-check="false"
-            distance="7%">
-        </ion-infinite-scroll>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
-    <page-indicator
-        pagination-popover-delegate="vm.paginationPopoverDelegate"
-        current-page="vm.page"
-        total-page="vm.totalPageNum" />
+        <i class="icon ion-chevron-right icon-accessory"></i>
+        <ion-delete-button class="ion-android-remove-circle" ng-click="::vm.deleteItem(mypost.post.id)" />
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll
+      class="ispinner text-center"
+      ng-if="vm.hasMoreData()"
+      on-infinite="vm.loadMore()"
+      spinner="android"
+      immediate-check="false"
+      distance="7%"
+    ></ion-infinite-scroll>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+  <page-indicator
+    pagination-popover-delegate="vm.paginationPopoverDelegate"
+    current-page="vm.page"
+    total-page="vm.totalPageNum"
+  />
 </ion-view>
-

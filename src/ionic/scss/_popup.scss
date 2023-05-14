@@ -1,4 +1,3 @@
-
 /**
  * Popups
  * --------------------------------------------------
@@ -10,7 +9,7 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
 
   @include display-flex();
   @include justify-content(center);
@@ -104,7 +103,8 @@
     pointer-events: none;
   }
 
-  .popup-backdrop, .popup {
+  .popup-backdrop,
+  .popup {
     pointer-events: auto;
   }
 }

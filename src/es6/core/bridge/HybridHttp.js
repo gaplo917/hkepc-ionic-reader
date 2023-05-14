@@ -4,7 +4,7 @@
 import { Bridge, Channel } from './index'
 
 export class HybridHttp {
-  constructor ($http, rx, ngToast) {
+  constructor($http, rx, ngToast) {
     this.http = $http
     this.rx = rx
     this.ngToast = ngToast
@@ -14,7 +14,7 @@ export class HybridHttp {
    * @param opt
    * @returns {Observable}
    */
-  request (opt) {
+  request(opt) {
     if (Bridge.isAvailable()) {
       return this.rx.Observable.create((observer) => {
         Bridge.callHandler(Channel.apiProxy, opt, (responseData) => {
@@ -27,7 +27,7 @@ export class HybridHttp {
             this.ngToast.danger({
               dismissOnTimeout: true,
               content: '<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>',
-              combineDuplications: true
+              combineDuplications: true,
             })
 
             // fulfill the handler to prevent memory leak
@@ -35,7 +35,7 @@ export class HybridHttp {
           }
           observer.onCompleted()
         })
-      }).filter(_ => _.status === 200)
+      }).filter((_) => _.status === 200)
     } else {
       const serializedData = this.serialize(opt.data)
 
@@ -44,11 +44,11 @@ export class HybridHttp {
       console.log(nOpt)
 
       // Use Rx to wrap Angular httpPromise for better data modeling
-      return this.rx.Observable.fromPromise(this.http(nOpt)).filter(_ => _.status === 200)
+      return this.rx.Observable.fromPromise(this.http(nOpt)).filter((_) => _.status === 200)
     }
   }
 
-  serialize (obj) {
+  serialize(obj) {
     const str = []
     for (const p in obj) {
       str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]))

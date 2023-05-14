@@ -1,16 +1,21 @@
 // sync all background color for ionic component
-html, body, .pane, .view, .view-container {
+html,
+body,
+.pane,
+.view,
+.view-container {
   background-color: $bg-color;
 }
 
 // word break
 * {
   word-break: break-word;
-  -webkit-text-size-adjust: none!important;
+  -webkit-text-size-adjust: none !important;
   text-rendering: optimizeSpeed;
 }
 
-input,textarea {
+input,
+textarea {
   /* Exception for input areas */
   -webkit-touch-callout: default !important;
   -webkit-user-select: text !important;
@@ -24,7 +29,7 @@ input,textarea {
 }
 
 a.youtube-link {
-  display:block;
+  display: block;
   text-align: center;
   margin-top: 8px;
   margin-bottom: 8px;
@@ -35,22 +40,22 @@ a.youtube-link {
 }
 
 //
-.text-center{
+.text-center {
   text-align: center;
 }
 
-.fright{
-  float:right;
+.fright {
+  float: right;
 }
-.fleft{
-  float:left;
+.fleft {
+  float: left;
 }
 
-.username{
+.username {
   font-weight: 700;
 }
 
-.w100{
+.w100 {
   width: 100%;
 }
 
@@ -59,16 +64,27 @@ a.youtube-link {
 }
 
 // common ionic content
-.item.active, .item.activated, .item-complex.active .item-content, .item-complex.activated .item-content, .item .item-content.active, .item .item-content.activated {
+.item.active,
+.item.activated,
+.item-complex.active .item-content,
+.item-complex.activated .item-content,
+.item .item-content.active,
+.item .item-content.activated {
   background-color: $activated-color;
   border-color: $border-color;
 }
-.item.active.item-complex > .item-content, .item.activated.item-complex > .item-content, .item-complex.active .item-content.item-complex > .item-content, .item-complex.activated .item-content.item-complex > .item-content, .item .item-content.active.item-complex > .item-content, .item .item-content.activated.item-complex > .item-content {
+.item.active.item-complex > .item-content,
+.item.activated.item-complex > .item-content,
+.item-complex.active .item-content.item-complex > .item-content,
+.item-complex.activated .item-content.item-complex > .item-content,
+.item .item-content.active.item-complex > .item-content,
+.item .item-content.activated.item-complex > .item-content {
   background-color: $activated-color;
   border-color: $border-color;
 }
 ion-tabs {
-  &.pane, &.view {
+  &.pane,
+  &.view {
     background-color: $bg-color;
   }
 }
@@ -85,17 +101,23 @@ ion-content {
   }
 
   .odd {
-    .item-content {}
+    .item-content {
+    }
   }
 
   .even {
-    .item-content{  background-color: $even-color;  }
+    .item-content {
+      background-color: $even-color;
+    }
   }
 }
 
-.item-radio .item-content { padding-right:0;}
+.item-radio .item-content {
+  padding-right: 0;
+}
 
-ion-list, .list {
+ion-list,
+.list {
   // override
   .item {
     border: 0;
@@ -107,21 +129,37 @@ ion-list, .list {
   }
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .input-label{
-  color:$text-color;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.input-label {
+  color: $text-color;
 }
 
-code, kbd, pre, samp {
+code,
+kbd,
+pre,
+samp {
   font-family: Hack, monospace, serif;
 }
 
 .bar.bar-stable {
   border-color: $border-color;
   background-color: $header-bg-color;
-  .title{
-    color:$text-color;
+  .title {
+    color: $text-color;
   }
-  button, .button {
+  button,
+  .button {
     color: $default-button-font-color;
   }
 }
@@ -151,54 +189,60 @@ code, kbd, pre, samp {
         text-align: center;
 
         &.long-title {
-          font-size: 12px
+          font-size: 12px;
         }
       }
     }
   }
-  &.bar-subheader{
-    border:0;
+  &.bar-subheader {
+    border: 0;
   }
   .button.button-icon {
-    color: mix($text-color,$bg-color,50%);
+    color: mix($text-color, $bg-color, 50%);
   }
 }
 
-.tab-nav{
+.tab-nav {
   border-color: $border-color;
   background-color: $header-bg-color;
-  i ,span{
-    color:$tab-item-stoke-color;
+  i,
+  span {
+    color: $tab-item-stoke-color;
   }
-
 }
 .platform-ios .popover-arrow:after {
-  background-color:  $popover-bg-color;
+  background-color: $popover-bg-color;
 }
 
-.popover-backdrop.active, .action-sheet-backdrop.active {
+.popover-backdrop.active,
+.action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.6);
 }
-.popover, .range.range-positive {
-  color:$text-color;
+.popover,
+.range.range-positive {
+  color: $text-color;
   background-color: $popover-bg-color;
 
-  ion-header-bar{
+  ion-header-bar {
     border-bottom: 1px solid $border-color;
   }
 
-  .bar.bar-header, .bar.bar-footer,ion-content,.button.button-icon, .item{
+  .bar.bar-header,
+  .bar.bar-footer,
+  ion-content,
+  .button.button-icon,
+  .item {
     background-color: $popover-bg-color;
   }
-  .bar.bar-subheader{
-    border:0;
+  .bar.bar-subheader {
+    border: 0;
   }
   .button.button-icon {
-    color: mix($text-color,$bg-color,50%);
+    color: mix($text-color, $bg-color, 50%);
   }
 
   .item {
-    border:0 !important;
+    border: 0 !important;
   }
 
   .item .item-content {
@@ -216,73 +260,109 @@ code, kbd, pre, samp {
 
   .item-input-wrapper {
     padding: 4px 16px;
-    background-color: lighten($bg-color,10%);
+    background-color: lighten($bg-color, 10%);
 
-    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-      color:$text-color;
+    textarea,
+    input[type='text'],
+    input[type='password'],
+    input[type='datetime'],
+    input[type='datetime-local'],
+    input[type='date'],
+    input[type='month'],
+    input[type='time'],
+    input[type='week'],
+    input[type='number'],
+    input[type='email'],
+    input[type='url'],
+    input[type='search'],
+    input[type='tel'],
+    input[type='color'] {
+      color: $text-color;
       padding: 0;
     }
   }
 }
-.item-checkbox, .item-input, .item-radio, .popover {
-  color:$text-color;
+.item-checkbox,
+.item-input,
+.item-radio,
+.popover {
+  color: $text-color;
   //background-color: lighten($bg-color,10%);
 
-  textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-    color:$text-color;
-    background-color: lighten($bg-color,10%);
+  textarea,
+  input[type='text'],
+  input[type='password'],
+  input[type='datetime'],
+  input[type='datetime-local'],
+  input[type='date'],
+  input[type='month'],
+  input[type='time'],
+  input[type='week'],
+  input[type='number'],
+  input[type='email'],
+  input[type='url'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='color'] {
+    color: $text-color;
+    background-color: lighten($bg-color, 10%);
   }
-  &.item, .item-content {
-    background-color: lighten($bg-color,10%);
+  &.item,
+  .item-content {
+    background-color: lighten($bg-color, 10%);
   }
 
-  input:checked + .radio-content .item-content{
-    color:$text-color;
-    background-color: lighten($bg-color,20%);
+  input:checked + .radio-content .item-content {
+    color: $text-color;
+    background-color: lighten($bg-color, 20%);
   }
 }
 
 textarea {
-  color:$text-color;
-  background-color: lighten($bg-color,10%);
-  margin-top:1px;
+  color: $text-color;
+  background-color: lighten($bg-color, 10%);
+  margin-top: 1px;
 }
 
 .button {
-  &.ion-close, &.ion-ios-close-empty {
-    border:0;
-    font-size:30px;
+  &.ion-close,
+  &.ion-ios-close-empty {
+    border: 0;
+    font-size: 30px;
   }
 }
 
 .button:hover {
-  color:$default-button-font-color;
+  color: $default-button-font-color;
 }
 .button-block {
-  border:0;
+  border: 0;
 }
-.button-full, .button-default {
-  background-color:$default-button-bg-color;
+.button-full,
+.button-default {
+  background-color: $default-button-bg-color;
   color: $default-button-font-color;
-  border:0;
+  border: 0;
   &.activated {
     background-color: lighten($default-button-bg-color, 20%);
-    color:darken($default-button-font-color, 5%);
+    color: darken($default-button-font-color, 5%);
   }
 }
 
 @media not all, (-webkit-min-device-pixel-ratio: 1.5), not all, (min-resolution: 144dpi), (min-resolution: 1.5dppx) {
-  .tabs, .bar {
-    background-size: 100% 0px!important;
-  } }
+  .tabs,
+  .bar {
+    background-size: 100% 0px !important;
+  }
+}
 
 .action-sheet-open {
   pointer-events: auto !important;
 }
 
-.ir-divider{
+.ir-divider {
   width: 100%;
-  border:1px solid $border-color;
+  border: 1px solid $border-color;
 }
 
 textarea {
@@ -320,7 +400,7 @@ textarea {
   color: $text-color;
 }
 
-span.search-highlight{
+span.search-highlight {
   background-color: $highlight-background;
   color: $highlight-text-color !important;
   padding: 0 3px;
@@ -331,7 +411,7 @@ span.search-highlight{
   .popup-head {
     border-bottom: 1px solid $border-color;
   }
-  .popup-title{
+  .popup-title {
     color: $text-color;
   }
 }
@@ -400,8 +480,8 @@ span.search-highlight{
 
   textarea {
     font-size: $font-size-base;
-    color:$text-color;
-    background-color: lighten($bg-color,10%);
+    color: $text-color;
+    background-color: lighten($bg-color, 10%);
   }
 }
 
@@ -416,7 +496,7 @@ span.search-highlight{
   }
 }
 
-.active-nav-view{
+.active-nav-view {
   z-index: 8;
 }
 
@@ -426,7 +506,6 @@ span.search-highlight{
     background-color: $header-bg-color;
     box-shadow: 1px 1px 1px $news-border-color;
     border: 1px solid $news-border-color;
-
   }
 }
 
@@ -445,32 +524,44 @@ ion-infinite-scroll {
 
 .menu {
   a {
-    border:0 !important;
+    border: 0 !important;
   }
 }
 
-.action-sheet .button, .action-sheet .input-helper .flow-button, .input-helper .action-sheet .flow-button {
+.action-sheet .button,
+.action-sheet .input-helper .flow-button,
+.input-helper .action-sheet .flow-button {
   color: $text-color;
   font-size: $font-size-large;
   border-color: $border-color;
 }
 
-.action-sheet .button.active, .action-sheet .input-helper .active.flow-button, .input-helper .action-sheet .active.flow-button, .action-sheet .button.activated, .action-sheet .input-helper .activated.flow-button, .input-helper .action-sheet .activated.flow-button {
+.action-sheet .button.active,
+.action-sheet .input-helper .active.flow-button,
+.input-helper .action-sheet .active.flow-button,
+.action-sheet .button.activated,
+.action-sheet .input-helper .activated.flow-button,
+.input-helper .action-sheet .activated.flow-button {
   color: $text-color;
   font-size: $font-size-large;
   border-color: $border-color;
   background-color: $activated-color;
 }
 
-.action-sheet .button:hover, .action-sheet .input-helper .flow-button:hover, .input-helper .action-sheet .flow-button:hover {
+.action-sheet .button:hover,
+.action-sheet .input-helper .flow-button:hover,
+.input-helper .action-sheet .flow-button:hover {
   color: $text-color;
 }
 
-.action-sheet .button.activated, .action-sheet .input-helper .flow-button.activated, .input-helper .action-sheet .flow-button.activated {
+.action-sheet .button.activated,
+.action-sheet .input-helper .flow-button.activated,
+.input-helper .action-sheet .flow-button.activated {
   color: $text-color;
 }
 
-.action-sheet-options, .action-sheet-group {
+.action-sheet-options,
+.action-sheet-group {
   background-color: $popover-bg-color;
 }
 
@@ -531,7 +622,6 @@ page-indicator {
       color: $sub-epc-color;
     }
   }
-
 }
 
 .overlay-fix {

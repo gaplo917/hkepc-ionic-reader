@@ -1,11 +1,15 @@
 import * as Controllers from './index'
 
 export class FindMessageController {
-  static get STATE () { return 'tab.find-message' }
+  static get STATE() {
+    return 'tab.find-message'
+  }
 
-  static get NAME () { return 'FindMessageController' }
+  static get NAME() {
+    return 'FindMessageController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/findMessage?postId=&messageId=',
       cache: false,
@@ -13,13 +17,13 @@ export class FindMessageController {
         main: {
           templateUrl: 'templates/find-message.html',
           controller: FindMessageController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, apiService, $compile) {
+  constructor($scope, $state, $stateParams, $ionicHistory, apiService, $compile) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     this.scope = $scope
@@ -29,7 +33,8 @@ export class FindMessageController {
     const postId = $stateParams.postId
 
     $scope.$on('$ionicView.loaded', (e) => {
-      apiService.findMessage({ postId, messageId })
+      apiService
+        .findMessage({ postId, messageId })
         .safeApply(this.scope, ({ currentPage, message }) => {
           this.pageNumber = currentPage
           this.message = message
@@ -38,21 +43,21 @@ export class FindMessageController {
     })
   }
 
-  goToMessage () {
+  goToMessage() {
     this.state.go(Controllers.PostDetailController.STATE, {
       topicId: this.message.post.topicId,
       postId: this.message.post.id,
       page: this.pageNumber,
       delayRender: 0,
-      focus: this.message.id
+      focus: this.message.id,
     })
   }
 
-  getTimes (i) {
+  getTimes(i) {
     return new Array(parseInt(i))
   }
 
-  relativeMomentize (dateStr) {
+  relativeMomentize(dateStr) {
     const momentDate = moment(dateStr, 'YYYY-M-D hh:mm')
 
     if (momentDate.diff(new Date(), 'days') >= -3) {
@@ -62,13 +67,13 @@ export class FindMessageController {
     }
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
     }
   }

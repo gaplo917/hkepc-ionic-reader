@@ -1,4 +1,3 @@
-
 // Scroll refresher (for pull to refresh)
 .scroll-refresher {
   position: absolute;
@@ -41,8 +40,8 @@
     @include animation-duration(200ms);
     @include animation-timing-function(linear);
     @include animation-fill-mode(none);
-    -webkit-transform: translate3d(0,0,0) rotate(0deg);
-    transform: translate3d(0,0,0) rotate(0deg);
+    -webkit-transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   .icon-refreshing,
   .text-refreshing {
@@ -55,14 +54,14 @@
   &.active {
     .icon-pulling:not(.pulling-rotation-disabled) {
       @include animation-name(refresh-spin);
-      -webkit-transform: translate3d(0,0,0) rotate(-180deg);
-      transform: translate3d(0,0,0) rotate(-180deg);
+      -webkit-transform: translate3d(0, 0, 0) rotate(-180deg);
+      transform: translate3d(0, 0, 0) rotate(-180deg);
     }
     &.refreshing {
-      @include transition(-webkit-transform .2s);
-      @include transition(transform .2s);
-      -webkit-transform: scale(1,1);
-      transform: scale(1,1);
+      @include transition(-webkit-transform 0.2s);
+      @include transition(transform 0.2s);
+      -webkit-transform: scale(1, 1);
+      transform: scale(1, 1);
 
       .icon-pulling,
       .text-pulling {
@@ -73,41 +72,57 @@
         display: block;
       }
       &.refreshing-tail {
-        -webkit-transform: scale(0,0);
-        transform: scale(0,0);
+        -webkit-transform: scale(0, 0);
+        transform: scale(0, 0);
       }
     }
   }
 }
-.overflow-scroll > .scroll{
-  &.overscroll{
-    position:fixed;
+.overflow-scroll > .scroll {
+  &.overscroll {
+    position: fixed;
     right: 0;
     left: 0;
   }
-  -webkit-overflow-scrolling:touch;
-  width:100%;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
-.overflow-scroll.padding > .scroll.overscroll{
-    padding: 10px;
+.overflow-scroll.padding > .scroll.overscroll {
+  padding: 10px;
 }
 @-webkit-keyframes refresh-spin {
-  0%   { -webkit-transform: translate3d(0,0,0) rotate(0); }
-  100% { -webkit-transform: translate3d(0,0,0) rotate(180deg); }
+  0% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(0);
+  }
+  100% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(180deg);
+  }
 }
 
 @keyframes refresh-spin {
-  0%   { transform: translate3d(0,0,0) rotate(0); }
-  100% { transform: translate3d(0,0,0) rotate(180deg); }
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(180deg);
+  }
 }
 
 @-webkit-keyframes refresh-spin-back {
-  0%   { -webkit-transform: translate3d(0,0,0) rotate(180deg); }
-  100% { -webkit-transform: translate3d(0,0,0) rotate(0); }
+  0% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(180deg);
+  }
+  100% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(0);
+  }
 }
 
 @keyframes refresh-spin-back {
-  0%   { transform: translate3d(0,0,0) rotate(180deg); }
-  100% { transform: translate3d(0,0,0) rotate(0); }
+  0% {
+    transform: translate3d(0, 0, 0) rotate(180deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
 }

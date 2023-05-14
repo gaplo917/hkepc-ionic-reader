@@ -38,7 +38,6 @@
   width: 100%;
 }
 
-
 /* Vertically Align Columns */
 /* .row-* vertically aligns every .col in the .row */
 .row-top {
@@ -78,13 +77,15 @@
 .col-offset-25 {
   margin-left: 25%;
 }
-.col-offset-33, .col-offset-34 {
+.col-offset-33,
+.col-offset-34 {
   margin-left: 33.3333%;
 }
 .col-offset-50 {
   margin-left: 50%;
 }
-.col-offset-66, .col-offset-67 {
+.col-offset-66,
+.col-offset-67 {
   margin-left: 66.6666%;
 }
 .col-offset-75 {
@@ -96,7 +97,6 @@
 .col-offset-90 {
   margin-left: 90%;
 }
-
 
 /* Explicit Column Percent Sizes */
 /* By default each grid column will evenly distribute */
@@ -114,7 +114,8 @@
   @include flex(0, 0, 25%);
   max-width: 25%;
 }
-.col-33, .col-34 {
+.col-33,
+.col-34 {
   @include flex(0, 0, 33.3333%);
   max-width: 33.3333%;
 }
@@ -130,7 +131,8 @@
   @include flex(0, 0, 60%);
   max-width: 60%;
 }
-.col-66, .col-67 {
+.col-66,
+.col-67 {
   @include flex(0, 0, 66.6666%);
   max-width: 66.6666%;
 }
@@ -146,7 +148,6 @@
   @include flex(0, 0, 90%);
   max-width: 90%;
 }
-
 
 /* Responsive Grid Classes */
 /* Adding a class of responsive-X to a row */

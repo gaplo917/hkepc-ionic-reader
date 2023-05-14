@@ -1,41 +1,45 @@
 <ion-view class="card-view" view-title="引用帖子詳情">
-    <ion-content lazy-scroll>
-        <div style="text-align:center">
-            <h4 class="title item-text-wrap" >{{vm.message.post.title || '下載中'}}</h4>
-        </div>
-        <div class="spinner" ng-if="!vm.message">
-            <ir-spinner></ir-spinner>
-        </div>
-        <div class="card" ng-if="vm.message">
-            <div class="item item-avatar">
-                <!--Profile pic-->
-                <img ng-src="{{::vm.message.author.image}}"
-                     ng-click="vm.onUserProfilePic(vm.message.author)">
+  <ion-content lazy-scroll>
+    <div style="text-align: center">
+      <h4 class="title item-text-wrap">{{vm.message.post.title || '下載中'}}</h4>
+    </div>
+    <div class="spinner" ng-if="!vm.message">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="card" ng-if="vm.message">
+      <div class="item item-avatar">
+        <!--Profile pic-->
+        <img ng-src="{{::vm.message.author.image}}" ng-click="vm.onUserProfilePic(vm.message.author)" />
 
-                <!--User name-->
-                <h2 ng-click="vm.onUserProfilePic(vm.message.author)">
-                    <span class="less-important-info">#{{::vm.message.pos}}</span> {{::vm.message.author.name}}
-                </h2>
+        <!--User name-->
+        <h2 ng-click="vm.onUserProfilePic(vm.message.author)">
+          <span class="less-important-info">#{{::vm.message.pos}}</span>
+          {{::vm.message.author.name}}
+        </h2>
 
-                <span class="super-less-important-info">
-                <!--When banned-->
-                <i class="ion-close-circled" style="color:red" ng-if="::vm.message.author.rank == 0">
-                    <small>Banned</small>
-                </i>
-                    <!--Normal User-->
-                <i ng-repeat="star in vm.getTimes(vm.message.author.rank) track by $index"
-                   class="ion-ios-star"
-                   style="color:#F9A825;"></i>
-                    <!--Post timestamp-->
-                <span style="margin-left:3px">{{::vm.relativeMomentize(vm.message.createdAt)}}</span>
-            </span>
-            </div>
-            <div class="item item-body" compile="vm.message.content"></div>
+        <span class="super-less-important-info">
+          <!--When banned-->
+          <i class="ion-close-circled" style="color: red" ng-if="::vm.message.author.rank == 0">
+            <small>Banned</small>
+          </i>
+          <!--Normal User-->
+          <i
+            ng-repeat="star in vm.getTimes(vm.message.author.rank) track by $index"
+            class="ion-ios-star"
+            style="color: #f9a825"
+          ></i>
+          <!--Post timestamp-->
+          <span style="margin-left: 3px">{{::vm.relativeMomentize(vm.message.createdAt)}}</span>
+        </span>
+      </div>
+      <div class="item item-body" compile="vm.message.content"></div>
 
-            <div class="button button-full" ng-click="vm.goToMessage()">前往帖子 <i class="ion-ios-arrow-right"></i></div>
+      <div class="button button-full" ng-click="vm.goToMessage()">
+        前往帖子
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+    </div>
 
-        </div>
-
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

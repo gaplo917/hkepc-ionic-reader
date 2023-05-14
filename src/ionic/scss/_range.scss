@@ -1,10 +1,9 @@
-
 /**
  * Range
  * --------------------------------------------------
  */
 
- .range input{
+.range input {
   display: inline-block;
   overflow: hidden;
   margin-top: 5px;
@@ -14,7 +13,13 @@
   width: auto;
   height: $range-slider-height + 15;
   outline: none;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, $range-default-track-bg), color-stop(100%, $range-default-track-bg));
+  background: -webkit-gradient(
+    linear,
+    50% 0%,
+    50% 100%,
+    color-stop(0%, $range-default-track-bg),
+    color-stop(100%, $range-default-track-bg)
+  );
   background: linear-gradient(to right, $range-default-track-bg 0%, $range-default-track-bg 100%);
   background-position: center;
   background-size: 99% $range-track-height;
@@ -38,7 +43,7 @@
     border: 0;
   }
 
-  &::-webkit-slider-thumb:before{
+  &::-webkit-slider-thumb:before {
     /* what creates the colorful line on the left side of the slider */
     position: absolute;
     top: ($range-slider-height * 0.5) - ($range-track-height * 0.5);
@@ -59,10 +64,10 @@
     //background: red;
     //opacity: .5;
   }
-   &::-ms-fill-lower{
-     height: $range-track-height;
-     background:$dark;
-   }
+  &::-ms-fill-lower {
+    height: $range-track-height;
+    background: $dark;
+  }
   /*
    &::-ms-track{
      background: transparent;
@@ -95,31 +100,49 @@
   padding: 2px 11px;
 
   &.range-light {
-    input { @include range-style($range-light-track-bg); }
+    input {
+      @include range-style($range-light-track-bg);
+    }
   }
   &.range-stable {
-    input { @include range-style($range-stable-track-bg); }
+    input {
+      @include range-style($range-stable-track-bg);
+    }
   }
   &.range-positive {
-    input { @include range-style($range-positive-track-bg); }
+    input {
+      @include range-style($range-positive-track-bg);
+    }
   }
   &.range-calm {
-    input { @include range-style($range-calm-track-bg); }
+    input {
+      @include range-style($range-calm-track-bg);
+    }
   }
   &.range-balanced {
-    input { @include range-style($range-balanced-track-bg); }
+    input {
+      @include range-style($range-balanced-track-bg);
+    }
   }
   &.range-assertive {
-    input { @include range-style($range-assertive-track-bg); }
+    input {
+      @include range-style($range-assertive-track-bg);
+    }
   }
   &.range-energized {
-    input { @include range-style($range-energized-track-bg); }
+    input {
+      @include range-style($range-energized-track-bg);
+    }
   }
   &.range-royal {
-    input { @include range-style($range-royal-track-bg); }
+    input {
+      @include range-style($range-royal-track-bg);
+    }
   }
   &.range-dark {
-    input { @include range-style($range-dark-track-bg); }
+    input {
+      @include range-style($range-dark-track-bg);
+    }
   }
 }
 
@@ -153,8 +176,8 @@
 }
 
 // WP range height must be auto
-.platform-windowsphone{
-  .range input{
-    height:auto;
+.platform-windowsphone {
+  .range input {
+    height: auto;
   }
 }

@@ -1,87 +1,84 @@
 <div id="input-helper" class="input-helper">
-    <div class="row input-helper-control">
-        <button class="button"
-                ng-click="selectTab(0)"
-                ng-class="isTab(0) ? 'active': ''">
-            <img src="/img/gifs/icon_tongue.gif"
-                 style="background-color:#fff;border-radius:100px;" alt=""/>
-        </button>
-        <button class="button"
-                ng-click="selectTab(1)"
-                ng-class="isTab(1) ? 'active': ''">
-            <i class="ion ion-link"></i>
-        </button>
-        <button class="button"
-                ng-click="selectTab(2)"
-                ng-class="isTab(2) ? 'active': ''">
-            <span class="bold">B</span>
-        </button>
-        <button class="button"
-                ng-click="selectTab(3)"
-                ng-class="isTab(3) ? 'active': ''">
-            <span class="bold">T</span>
-        </button>
-        <button class="button"
-                ng-click="selectTab(4)"
-                ng-class="isTab(4) ? 'active': ''">
-            <i class="ion ion-images"></i>
-        </button>
-        <button class="button" ng-if="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
-            <i class="ion ion-ios-close-empty"></i>
-        </button>
+  <div class="row input-helper-control">
+    <button class="button" ng-click="selectTab(0)" ng-class="isTab(0) ? 'active': ''">
+      <img src="/img/gifs/icon_tongue.gif" style="background-color: #fff; border-radius: 100px" alt="" />
+    </button>
+    <button class="button" ng-click="selectTab(1)" ng-class="isTab(1) ? 'active': ''">
+      <i class="ion ion-link"></i>
+    </button>
+    <button class="button" ng-click="selectTab(2)" ng-class="isTab(2) ? 'active': ''">
+      <span class="bold">B</span>
+    </button>
+    <button class="button" ng-click="selectTab(3)" ng-class="isTab(3) ? 'active': ''">
+      <span class="bold">T</span>
+    </button>
+    <button class="button" ng-click="selectTab(4)" ng-class="isTab(4) ? 'active': ''">
+      <i class="ion ion-images"></i>
+    </button>
+    <button class="button" ng-if="isSelectedTab()" ng-click="modal.showInputHelperAt = undefined">
+      <i class="ion ion-ios-close-empty"></i>
+    </button>
+  </div>
+
+  <ion-scroll class="asessory-view" zooming="false" ng-if="isSelectedTab()" direction="y">
+    <img
+      class="gif"
+      ng-if="isTab(0)"
+      ng-repeat="gif in ::modal.gifs track by $index"
+      ng-click="modal.addGifCodeToText(gif.code)"
+      src="/img/gifs/{{gif.url}}"
+    />
+
+    <div ng-if="isTab(1)">
+      <label class="item item-input">
+        <input type="text" placeholder="請輸入鏈接的地址" ng-model="url" />
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="請輸入鏈接的文字" ng-model="urlText" />
+      </label>
+      <button class="button button-full" ng-click="url && modal.addUrlToText(url,urlText)">插入</button>
     </div>
 
-    <ion-scroll class="asessory-view"
-                zooming="false"
-                ng-if="isSelectedTab()"
-                direction="y">
-        <img class="gif"
-             ng-if="isTab(0)"
-             ng-repeat="gif in ::modal.gifs track by $index"
-             ng-click="modal.addGifCodeToText(gif.code)"
-             src="/img/gifs/{{gif.url}}"/>
+    <div ng-if="isTab(2)">
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('s')">刪除</button>
+      <button class="flow-button" ng-click="modal.addTextStyleTagToText('hr')">分隔線</button>
+    </div>
 
-        <div ng-if="isTab(1)">
-            <label class="item item-input">
-                <input type="text" placeholder="請輸入鏈接的地址" ng-model="url">
-            </label>
-            <label class="item item-input">
-                <input type="text" placeholder="請輸入鏈接的文字" ng-model="urlText">
-            </label>
-            <button class="button button-full" ng-click="url && modal.addUrlToText(url,urlText)">
-                插入
-            </button>
+    <div ng-if="isTab(3)">
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('4')">預設</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('5')">大</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('6')">較大</button>
+      <button class="flow-button" ng-click="modal.addFontSizeTagToText('7')">極大</button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('Red')">
+        <span style="color: red; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('Green')">
+        <span style="color: green; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('Blue')">
+        <span style="color: blue; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('DarkOrange')">
+        <span style="color: DarkOrange; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('Magenta')">
+        <span style="color: Magenta; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('DarkOrchid')">
+        <span style="color: DarkOrchid; width: 16px; height: 16px">⬤</span>
+      </button>
+      <button class="flow-button" ng-click="modal.addFontColorTagToText('DimGray')">
+        <span style="color: DimGray; width: 16px; height: 16px">⬤</span>
+      </button>
+    </div>
 
-        </div>
-
-        <div ng-if="isTab(2)">
-            <button class="flow-button" ng-click="modal.addTextStyleTagToText('b')">粗體</button>
-            <button class="flow-button" ng-click="modal.addTextStyleTagToText('i')">斜體</button>
-            <button class="flow-button" ng-click="modal.addTextStyleTagToText('u')">下劃線</button>
-            <button class="flow-button" ng-click="modal.addTextStyleTagToText('s')">刪除</button>
-            <button class="flow-button" ng-click="modal.addTextStyleTagToText('hr')">分隔線</button>
-
-        </div>
-
-        <div ng-if="isTab(3)">
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('1')">極小</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('2')">小</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('3')">較小</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('4')">預設</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('5')">大</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('6')">較大</button>
-            <button class="flow-button" ng-click="modal.addFontSizeTagToText('7')">極大</button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('Red')"><span style="color: red; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('Green')"><span style="color: green; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('Blue')"><span style="color: blue; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('DarkOrange')"><span style="color: DarkOrange; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('Magenta')"><span style="color: Magenta; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('DarkOrchid')"><span style="color: DarkOrchid; width: 16px; height:16px">⬤</span></button>
-            <button class="flow-button" ng-click="modal.addFontColorTagToText('DimGray')"><span style="color: DimGray; width: 16px; height:16px">⬤</span></button>
-        </div>
-
-        <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
-        <div style="height:1000px" ng-if="modal.showInputHelperAt == undefined"></div>
-    </ion-scroll>
-
+    <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
+    <div style="height: 1000px" ng-if="modal.showInputHelperAt == undefined"></div>
+  </ion-scroll>
 </div>

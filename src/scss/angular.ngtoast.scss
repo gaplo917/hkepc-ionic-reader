@@ -1,5 +1,5 @@
-@import "../../node_modules/ng-toast/dist/ngToast-animations.min";
-@import "../../node_modules/ng-toast/dist/ngToast.min";
+@import '../../node_modules/ng-toast/dist/ngToast-animations.min';
+@import '../../node_modules/ng-toast/dist/ngToast.min';
 
 .alert {
   padding: 15px;
@@ -15,7 +15,8 @@
   .alert-link {
     font-weight: bold;
   }
-  >p,> ul {
+  > p,
+  > ul {
     margin-bottom: 0;
   }
   > p + p {
@@ -25,7 +26,7 @@
 .alert-dismissable,
 .alert-dismissible {
   padding-right: 35px;
-  .close{
+  .close {
     position: relative;
     top: -2px;
     right: -21px;

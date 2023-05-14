@@ -1,11 +1,15 @@
 import * as Controllers from './index'
 
 export class CMTopicController {
-  static get STATE () { return 'tab.features-contentmanage-topic' }
+  static get STATE() {
+    return 'tab.features-contentmanage-topic'
+  }
 
-  static get NAME () { return 'CMTopicController' }
+  static get NAME() {
+    return 'CMTopicController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       // filterType: 'latestPostTopicFilters' | 'latestReplyTopicFilters'
       url: '/features/contentmanage/topic/:filterType',
@@ -13,22 +17,23 @@ export class CMTopicController {
         main: {
           templateUrl: 'templates/features/contentmanage/topics.html',
           controller: CMTopicController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, $state, $stateParams, $ionicHistory, rx, apiService, LocalStorageService, observeOnScope) {
+  constructor($scope, $http, $state, $stateParams, $ionicHistory, rx, apiService, LocalStorageService, observeOnScope) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     this.rx = rx
     this.apiService = apiService
     this.LocalStorageService = LocalStorageService
     this.targetFilter = $stateParams.filterType
-    this.title = this.targetFilter === 'latestPostTopicFilters'
-      ? '最新發佈'
-      : this.targetFilter === 'latestReplyTopicFilters'
+    this.title =
+      this.targetFilter === 'latestPostTopicFilters'
+        ? '最新發佈'
+        : this.targetFilter === 'latestReplyTopicFilters'
         ? '最新帖子'
         : '未知'
     this.originalItems = []
@@ -42,11 +47,11 @@ export class CMTopicController {
         (filters, topics) => ({ filters, topics })
       )
         .safeApply($scope, ({ filters, topics }) => {
-          this.originalItems = topics.map(it => {
+          this.originalItems = topics.map((it) => {
             const { id } = it
             return {
               ...it,
-              isSelected: filters.indexOf(id) >= 0
+              isSelected: filters.indexOf(id) >= 0,
             }
           })
           this.items = this.originalItems
@@ -57,25 +62,24 @@ export class CMTopicController {
     observeOnScope($scope, 'vm.searchText')
       .skip(1)
       .subscribe(({ oldValue, newValue }) => {
-        this.items = this.originalItems.filter(it => it.name.indexOf(newValue) >= 0)
+        this.items = this.originalItems.filter((it) => it.name.indexOf(newValue) >= 0)
       })
   }
 
-  onTopicSelected () {
-    this.LocalStorageService.setObject(this.targetFilter,
-      this.originalItems
-        .filter(it => it.isSelected)
-        .map(it => it.id)
+  onTopicSelected() {
+    this.LocalStorageService.setObject(
+      this.targetFilter,
+      this.originalItems.filter((it) => it.isSelected).map((it) => it.id)
     )
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.ContentManageController.STATE)
     }

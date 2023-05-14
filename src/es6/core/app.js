@@ -7,7 +7,8 @@ import * as URLUtils from '../utils/url'
 import {
   NativeChangeThemeRequest,
   NativeChangeFontSizeRequest,
-  NativeUpdateMHeadFixRequest, NativeUpdateNotificationRequest
+  NativeUpdateMHeadFixRequest,
+  NativeUpdateNotificationRequest,
 } from './bridge/requests'
 
 import {
@@ -17,7 +18,7 @@ import {
   isAndroidNative,
   isLegacyAndroid,
   createIOSNativeBride,
-  createAndroidNativeBridge
+  createAndroidNativeBridge,
 } from './bridge/index'
 
 import moment from 'moment'
@@ -36,16 +37,9 @@ if (isiOSNative()) {
   })
 }
 
-function dynamicModules () {
+function dynamicModules() {
   if (isiOSNative() || isAndroidNative()) {
-    return [
-      'ionic',
-      'starter.controllers',
-      'starter.services',
-      'starter.directives',
-      'ngToast',
-      'rx'
-    ]
+    return ['ionic', 'starter.controllers', 'starter.services', 'starter.directives', 'ngToast', 'rx']
   } else {
     return [
       'ionic',
@@ -54,16 +48,27 @@ function dynamicModules () {
       'starter.directives',
       'ngToast',
       'LocalForageModule',
-      'rx'
+      'rx',
     ]
   }
 }
 
-function initAngular () {
+function initAngular() {
   console.log('init angular...')
 
-  const angularInit = angular.module('starter', dynamicModules())
-    .run(function ($rootScope, ngToast, $window, $ionicScrollDelegate, $ionicConfig, $ionicSideMenuDelegate, $ionicHistory, $timeout, $ionicPopover) {
+  const angularInit = angular
+    .module('starter', dynamicModules())
+    .run(function (
+      $rootScope,
+      ngToast,
+      $window,
+      $ionicScrollDelegate,
+      $ionicConfig,
+      $ionicSideMenuDelegate,
+      $ionicHistory,
+      $timeout,
+      $ionicPopover
+    ) {
       window.moment = moment
       // export the global
       window.isiOSNative = isiOSNative()
@@ -102,7 +107,10 @@ function initAngular () {
             case 'notification':
               if (data.value) {
                 const payload = JSON.parse(data.value)
-                $rootScope.$emit(NativeUpdateNotificationRequest.NAME, new NativeUpdateNotificationRequest(payload.pm, payload.post))
+                $rootScope.$emit(
+                  NativeUpdateNotificationRequest.NAME,
+                  new NativeUpdateNotificationRequest(payload.pm, payload.post)
+                )
               } else {
                 console.warn('structure of notification update from native is not correct')
               }
@@ -164,7 +172,7 @@ function initAngular () {
           rootPopover.scope.vm = {
             onClose: () => {
               rootPopover.hide($event)
-            }
+            },
           }
           $ionicSideMenuDelegate.toggleLeft()
         }
@@ -190,36 +198,41 @@ function initAngular () {
           'templates/features/mypost/my.post.html',
           'templates/features/myreply/my.reply.html',
           'templates/features/notification/notification.html',
-          'templates/directives/input.helper.html'
+          'templates/directives/input.helper.html',
         ]
         for (const templateId of prefetchTemplateIds) {
           await $http({
             method: 'GET',
-            url: templateId
-          }).then(({ data }) => {
-            $templateCache.put(templateId, data)
-          }).catch((e) => console.error('prefetch fail', e))
+            url: templateId,
+          })
+            .then(({ data }) => {
+              $templateCache.put(templateId, data)
+            })
+            .catch((e) => console.error('prefetch fail', e))
         }
       })
     })
-    .config(['$ionicConfigProvider', function ($ionicConfigProvider) {
-      $ionicConfigProvider.scrolling.jsScrolling(false)
-      $ionicConfigProvider.views.forwardCache(false)
-      $ionicConfigProvider.views.maxCache(4)
-      $ionicConfigProvider.spinner.icon('android')
-      $ionicConfigProvider.tabs.style('standard')
-      $ionicConfigProvider.tabs.position('bottom')
-      $ionicConfigProvider.views.swipeBackEnabled(false)
-      $ionicConfigProvider.navBar.alignTitle('center')
-      $ionicConfigProvider.views.transition('ios')
+    .config([
+      '$ionicConfigProvider',
+      function ($ionicConfigProvider) {
+        $ionicConfigProvider.scrolling.jsScrolling(false)
+        $ionicConfigProvider.views.forwardCache(false)
+        $ionicConfigProvider.views.maxCache(4)
+        $ionicConfigProvider.spinner.icon('android')
+        $ionicConfigProvider.tabs.style('standard')
+        $ionicConfigProvider.tabs.position('bottom')
+        $ionicConfigProvider.views.swipeBackEnabled(false)
+        $ionicConfigProvider.navBar.alignTitle('center')
+        $ionicConfigProvider.views.transition('ios')
 
-      // always load all templates to prevent white screen
-      $ionicConfigProvider.templates.maxPrefetch(0)
+        // always load all templates to prevent white screen
+        $ionicConfigProvider.templates.maxPrefetch(0)
 
-      $ionicConfigProvider.backButton.icon('ion-ios-arrow-thin-left')
-      $ionicConfigProvider.backButton.text('')
-      $ionicConfigProvider.backButton.previousTitleText(false)
-    }])
+        $ionicConfigProvider.backButton.icon('ion-ios-arrow-thin-left')
+        $ionicConfigProvider.backButton.text('')
+        $ionicConfigProvider.backButton.previousTitleText(false)
+      },
+    ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
       const stateProvider = $stateProvider
 
@@ -233,105 +246,124 @@ function initAngular () {
       $locationProvider.hashPrefix('')
       $locationProvider.html5Mode(true)
     })
-    .config(['ngToastProvider', function (ngToast) {
-      ngToast.configure({
-        timeout: '2000',
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-        animation: 'slide',
-        combineDuplications: true
-      })
-    }])
-    .config(['$compileProvider', function ($compileProvider) {
-      $compileProvider.debugInfoEnabled(false)
-    }])
+    .config([
+      'ngToastProvider',
+      function (ngToast) {
+        ngToast.configure({
+          timeout: '2000',
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          animation: 'slide',
+          combineDuplications: true,
+        })
+      },
+    ])
+    .config([
+      '$compileProvider',
+      function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(false)
+      },
+    ])
 
   // partial init for Web and legacy android
   if (!isiOSNative() && !isAndroidNative()) {
     angularInit
-      .config(['$httpProvider', function ($httpProvider) {
-        // true if ionic is run in ios/android to allow use of cookies
-        $httpProvider.defaults.withCredentials = true
+      .config([
+        '$httpProvider',
+        function ($httpProvider) {
+          // true if ionic is run in ios/android to allow use of cookies
+          $httpProvider.defaults.withCredentials = true
 
-        // always use async is a good practice
-        $httpProvider.useApplyAsync(true)
-      }])
-      .provider('HKEPC_PROXY', [function () {
-        this.$get = (rx, $q, ngToast, LocalStorageService) => {
-          return {
-            request: function (config) {
-              const deferred = $q.defer()
+          // always use async is a good practice
+          $httpProvider.useApplyAsync(true)
+        },
+      ])
+      .provider('HKEPC_PROXY', [
+        function () {
+          this.$get = (rx, $q, ngToast, LocalStorageService) => {
+            return {
+              request: function (config) {
+                const deferred = $q.defer()
 
-              rx.Observable.combineLatest(
-                LocalStorageService.get('proxy', HKEPC.proxy),
-                LocalStorageService.get(HKEPC.auth.id, null),
-                LocalStorageService.get(HKEPC.auth.token, null),
-                (proxyInDb, authId, token) => {
-                  return {
-                    proxyInDb,
-                    authId,
-                    token
+                rx.Observable.combineLatest(
+                  LocalStorageService.get('proxy', HKEPC.proxy),
+                  LocalStorageService.get(HKEPC.auth.id, null),
+                  LocalStorageService.get(HKEPC.auth.token, null),
+                  (proxyInDb, authId, token) => {
+                    return {
+                      proxyInDb,
+                      authId,
+                      token,
+                    }
                   }
-                }).subscribe(({ proxyInDb, authId, token }) => {
-                if (isProxied) {
-                  // we need to proxy all the request to prevent CORS
+                ).subscribe(
+                  ({ proxyInDb, authId, token }) => {
+                    if (isProxied) {
+                      // we need to proxy all the request to prevent CORS
 
-                  if (config.url.indexOf(HKEPC.baseUrl) >= 0) {
-                    const proxy = proxyInDb || HKEPC.proxy
-                    // rewrite the url with proxy
-                    config.url = config.url.replace('https://www.hkepc.com/', `${proxy}/`)
+                      if (config.url.indexOf(HKEPC.baseUrl) >= 0) {
+                        const proxy = proxyInDb || HKEPC.proxy
+                        // rewrite the url with proxy
+                        config.url = config.url.replace('https://www.hkepc.com/', `${proxy}/`)
 
-                    console.debug('proxied request', config.url)
+                        console.debug('proxied request', config.url)
+                      }
+                    }
+                    config.headers['hkepc-token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
+                    config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
+
+                    deferred.resolve(config)
+                  },
+                  () => {
+                    deferred.resolve(config)
                   }
+                )
+
+                return deferred.promise
+              },
+              responseError: function (err) {
+                if (err.status === 404) {
+                  ngToast.danger({
+                    dismissOnTimeout: false,
+                    content: '<i class="ion-network"> 找不到相關的內容！</i>',
+                    combineDuplications: true,
+                  })
+                } else if (err.status === -1) {
+                  ngToast.danger({
+                    dismissOnTimeout: true,
+                    content: '<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>',
+                    combineDuplications: true,
+                  })
+                } else {
+                  ngToast.danger({
+                    dismissOnTimeout: true,
+                    content:
+                      '<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>',
+                    combineDuplications: true,
+                  })
                 }
-                config.headers['hkepc-token'] = `${HKEPC.auth.id}=${authId};${HKEPC.auth.token}=${token}`
-                config.timeout = 30000 // 30 seconds should be enough to transfer plain HTML text
 
-                deferred.resolve(config)
-              }, () => {
-                deferred.resolve(config)
-              })
-
-              return deferred.promise
-            },
-            responseError: function (err) {
-              if (err.status === 404) {
-                ngToast.danger({
-                  dismissOnTimeout: false,
-                  content: '<i class="ion-network"> 找不到相關的內容！</i>',
-                  combineDuplications: true
-                })
-              } else if (err.status === -1) {
-                ngToast.danger({
-                  dismissOnTimeout: true,
-                  content: '<i class="ion-network"> 你的網絡不穩定，請重新嘗試！</i>',
-                  combineDuplications: true
-                })
-              } else {
-                ngToast.danger({
-                  dismissOnTimeout: true,
-                  content: '<i class="ion-network"> 連線出現問題！有可能產生此問題的原因: 網絡不穩定、連線逾時、EPC 伺服器出現異常</i>',
-                  combineDuplications: true
-                })
-              }
-
-              console.log('$http Error', JSON.stringify(err))
-              return err
+                console.log('$http Error', JSON.stringify(err))
+                return err
+              },
             }
           }
-        }
-      }])
+        },
+      ])
       .config(function ($httpProvider) {
         $httpProvider.interceptors.push('HKEPC_PROXY')
       })
-      .config(['$localForageProvider', function ($localForageProvider) {
-        $localForageProvider.config({
-          name: 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
-          version: 1.0, // version of the database, you shouldn't have to use this
-          storeName: 'keyvaluepairs', // name of the table
-          description: 'Simple persistant storage'
-        })
-      }])
+      .config([
+        '$localForageProvider',
+        function ($localForageProvider) {
+          $localForageProvider.config({
+            name: 'HKEPCIR', // name of the database and prefix for your data, it is "lf" by default
+            version: 1.0, // version of the database, you shouldn't have to use this
+            storeName: 'keyvaluepairs', // name of the table
+            description: 'Simple persistant storage',
+          })
+        },
+      ])
   }
 
   angular.bootstrap(document, ['starter'])

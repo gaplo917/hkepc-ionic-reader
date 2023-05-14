@@ -4,24 +4,28 @@
 import * as Controllers from './index'
 
 export class SearchController {
-  static get STATE () { return 'tab.topics-search' }
+  static get STATE() {
+    return 'tab.topics-search'
+  }
 
-  static get NAME () { return 'SearchController' }
+  static get NAME() {
+    return 'SearchController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/topics/search',
       views: {
         main: {
           templateUrl: 'templates/search.html',
           controller: SearchController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $ionicHistory, $state, ngToast, apiService, rx, LocalStorageService) {
+  constructor($scope, $ionicHistory, $state, ngToast, apiService, rx, LocalStorageService) {
     this.scope = $scope
     this.ionicHistory = $ionicHistory
     this.state = $state
@@ -33,12 +37,15 @@ export class SearchController {
     this.searching = false
     this.lastSearchTimestamp = 0
 
-    this.localStorageService.get('formhash').safeApply($scope, data => {
-      this.formhash = data
-    }).subscribe()
+    this.localStorageService
+      .get('formhash')
+      .safeApply($scope, (data) => {
+        this.formhash = data
+      })
+      .subscribe()
   }
 
-  onSearch (keyword) {
+  onSearch(keyword) {
     const now = new Date().getTime()
 
     const diffInSecond = parseInt((now - this.lastSearchTimestamp) / 1000)
@@ -50,34 +57,36 @@ export class SearchController {
       this.searching = true
       this.lastSearchTimestamp = new Date().getTime()
 
-      this.apiService.search(this.formhash, keyword).safeApply(this.scope, resp => {
-        this.state.go(
-          Controllers.PostListController.STATE,
-          {
+      this.apiService
+        .search(this.formhash, keyword)
+        .safeApply(this.scope, (resp) => {
+          this.state.go(Controllers.PostListController.STATE, {
             page: 1,
             topicId: 'search',
             searchResp: JSON.stringify(resp),
-            searchText: keyword
-          }
-        )
+            searchText: keyword,
+          })
 
-        this.searching = false
-      }).subscribe()
+          this.searching = false
+        })
+        .subscribe()
     } else {
       this.ngToast.danger({
         dismissOnTimeout: false,
-        content: `<i class="ion-ios-stopwatch-outline"> HKEPC 只支授 20 秒搜尋一次，請於 ${20 - diffInSecond} 秒後再嘗試！</i>`
+        content: `<i class="ion-ios-stopwatch-outline"> HKEPC 只支授 20 秒搜尋一次，請於 ${
+          20 - diffInSecond
+        } 秒後再嘗試！</i>`,
       })
     }
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.TopicListController.STATE)
     }

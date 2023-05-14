@@ -1,6 +1,6 @@
 .about-version-view {
   -webkit-font-smoothing: antialiased;
-  font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  font-family: '-apple-system', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
 
   .version-ios {
     font-weight: 300;
@@ -13,10 +13,16 @@
     font-style: italic;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     text-decoration: underline;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     margin-top: 16px;
   }
 
@@ -26,20 +32,21 @@
     padding: 10px 16px 0 16px;
 
     pre {
-      background-color: darken($bg-color,5%);
+      background-color: darken($bg-color, 5%);
       color: $text-color;
       padding: 8px;
       margin: 16px 8px;
     }
 
     code {
-      background-color: darken($bg-color,5%);
+      background-color: darken($bg-color, 5%);
       padding: 0 4px;
     }
 
-    ol, ul {
+    ol,
+    ul {
       list-style: initial !important;
-      padding:4px 16px 4px 16px;
+      padding: 4px 16px 4px 16px;
     }
 
     ul li {
@@ -52,7 +59,7 @@
       border-color: $border-color;
     }
 
-    img[src$=".gif"] {
+    img[src$='.gif'] {
       padding: 1px;
       margin: 1px;
       background-color: #ffffff;
@@ -63,5 +70,4 @@
       border-left: 5px solid $epc-color;
     }
   }
-
 }

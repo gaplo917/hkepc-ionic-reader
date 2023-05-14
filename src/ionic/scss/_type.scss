@@ -1,9 +1,7 @@
-
 /**
  * Typography
  * --------------------------------------------------
  */
-
 
 // Body text
 // -------------------------
@@ -12,27 +10,44 @@ p {
   margin: 0 0 calc($line-height-computed / 2);
 }
 
-
 // Emphasis & misc
 // -------------------------
 
-small   { font-size: 85%; }
-cite    { font-style: normal; }
-
+small {
+  font-size: 85%;
+}
+cite {
+  font-style: normal;
+}
 
 // Alignment
 // -------------------------
 
-.text-left           { text-align: left; }
-.text-right          { text-align: right; }
-.text-center         { text-align: center; }
-
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
 
 // Headings
 // -------------------------
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   color: $base-color;
   font-weight: $headings-font-weight;
   font-family: $headings-font-family;
@@ -44,9 +59,12 @@ h1, h2, h3, h4, h5, h6,
   }
 }
 
-h1, .h1,
-h2, .h2,
-h3, .h3 {
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3 {
   margin-top: $line-height-computed;
   margin-bottom: calc($line-height-computed / 2);
 
@@ -54,32 +72,65 @@ h3, .h3 {
     margin-top: 0;
   }
 
-  + h1, + .h1,
-  + h2, + .h2,
-  + h3, + .h3 {
+  + h1,
+  + .h1,
+  + h2,
+  + .h2,
+  + h3,
+  + .h3 {
     margin-top: calc($line-height-computed / 2);
   }
 }
 
-h4, .h4,
-h5, .h5,
-h6, .h6 {
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
   margin-top: calc($line-height-computed / 2);
   margin-bottom: calc($line-height-computed / 2);
 }
 
-h1, .h1 { font-size: floor($font-size-base * 2.60); } // ~36px
-h2, .h2 { font-size: floor($font-size-base * 2.15); } // ~30px
-h3, .h3 { font-size: ceil($font-size-base * 1.70); } // ~24px
-h4, .h4 { font-size: ceil($font-size-base * 1.25); } // ~18px
-h5, .h5 { font-size:  $font-size-base; }
-h6, .h6 { font-size: ceil($font-size-base * 0.85); } // ~12px
+h1,
+.h1 {
+  font-size: floor($font-size-base * 2.6);
+} // ~36px
+h2,
+.h2 {
+  font-size: floor($font-size-base * 2.15);
+} // ~30px
+h3,
+.h3 {
+  font-size: ceil($font-size-base * 1.7);
+} // ~24px
+h4,
+.h4 {
+  font-size: ceil($font-size-base * 1.25);
+} // ~18px
+h5,
+.h5 {
+  font-size: $font-size-base;
+}
+h6,
+.h6 {
+  font-size: ceil($font-size-base * 0.85);
+} // ~12px
 
-h1 small, .h1 small { font-size: ceil($font-size-base * 1.70); } // ~24px
-h2 small, .h2 small { font-size: ceil($font-size-base * 1.25); } // ~18px
-h3 small, .h3 small,
-h4 small, .h4 small { font-size: $font-size-base; }
-
+h1 small,
+.h1 small {
+  font-size: ceil($font-size-base * 1.7);
+} // ~24px
+h2 small,
+.h2 small {
+  font-size: ceil($font-size-base * 1.25);
+} // ~18px
+h3 small,
+.h3 small,
+h4 small,
+.h4 small {
+  font-size: $font-size-base;
+}
 
 // Description Lists
 // -------------------------
@@ -94,7 +145,6 @@ dd {
 dt {
   font-weight: bold;
 }
-
 
 // Blockquotes
 // -------------------------
@@ -118,11 +168,10 @@ blockquote {
     display: block;
     line-height: $line-height-base;
     &:before {
-      content: '\2014 \00A0';// EM DASH, NBSP;
+      content: '\2014 \00A0'; // EM DASH, NBSP;
     }
   }
 }
-
 
 // Quotes
 // -------------------------
@@ -131,9 +180,8 @@ q:before,
 q:after,
 blockquote:before,
 blockquote:after {
-  content: "";
+  content: '';
 }
-
 
 // Addresses
 // -------------------------
@@ -144,7 +192,6 @@ address {
   font-style: normal;
   line-height: $line-height-base;
 }
-
 
 // Links
 // -------------------------

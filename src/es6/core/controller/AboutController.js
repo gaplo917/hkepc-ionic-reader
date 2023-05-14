@@ -6,24 +6,28 @@ import * as URLUtils from '../../utils/url'
 import { Bridge, Channel } from '../bridge/index'
 
 export class AboutController {
-  static get STATE () { return 'tab.about' }
+  static get STATE() {
+    return 'tab.about'
+  }
 
-  static get NAME () { return 'AboutController' }
+  static get NAME() {
+    return 'AboutController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/about',
       views: {
         main: {
           templateUrl: 'templates/tab-about.html',
           controller: AboutController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, LocalStorageService, $ionicPopup, ngToast) {
+  constructor($scope, $http, LocalStorageService, $ionicPopup, ngToast) {
     this.localStorageService = LocalStorageService
     this.http = $http
     this.scope = $scope
@@ -31,20 +35,22 @@ export class AboutController {
     this.version = HKEPC.version
     this.ngToast = ngToast
 
-    LocalStorageService.get('proxy').safeApply($scope, data => {
-      this.proxy = data || HKEPC.proxy
-    }).subscribe()
+    LocalStorageService.get('proxy')
+      .safeApply($scope, (data) => {
+        this.proxy = data || HKEPC.proxy
+      })
+      .subscribe()
   }
 
-  isIOS () {
+  isIOS() {
     return ionic.Platform.isIOS()
   }
 
-  isAndroid () {
+  isAndroid() {
     return ionic.Platform.isAndroid()
   }
 
-  showProxyPopup () {
+  showProxyPopup() {
     // An elaborate, custom popup
     const proxyPopup = this.ionicPopup.show({
       template: '<input type="text" ng-model="vm.proxy">',
@@ -63,9 +69,9 @@ export class AboutController {
             } else {
               return this.proxy
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     })
 
     proxyPopup.then((res) => {
@@ -73,13 +79,13 @@ export class AboutController {
         this.localStorageService.set('proxy', res)
       }
     })
-  };
+  }
 
-  isProxy () {
+  isProxy() {
     return URLUtils.isProxy()
   }
 
-  onIAP () {
+  onIAP() {
     if (Bridge.isAvailable()) {
       Bridge.callHandler(Channel.iap)
     } else {

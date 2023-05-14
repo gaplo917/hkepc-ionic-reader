@@ -5,14 +5,14 @@ import { GeneralHtml } from './general-html'
 import * as URLUtils from '../../utils/url'
 
 export class HKEPCHtml extends GeneralHtml {
-  constructor (cheerioSource) {
+  constructor(cheerioSource) {
     super(cheerioSource)
     this.BASE_URL = 'https://www.hkepc.com'
     this.BASE_FORUM_URL = `${this.BASE_URL}/forum`
     this.IMAGE_URL = 'https://www.hkepc.com/forum'
   }
 
-  processEpcUrl (currentHash) {
+  processEpcUrl(currentHash) {
     this.source('a').each((i, e) => {
       const elm = this.source(e)
       // remove action attr on img
@@ -95,19 +95,20 @@ export class HKEPCHtml extends GeneralHtml {
     return this
   }
 
-  getLoggedInUserInfo () {
+  getLoggedInUserInfo() {
     return {
-      username: this.source('#umenu > cite > a').text() || /* HKEPC 2.0 beta */this.source('header .userInfo span').text(),
+      username:
+        this.source('#umenu > cite > a').text() || /* HKEPC 2.0 beta */ this.source('header .userInfo span').text(),
       pmNotification: (this.source('#prompt_pm').text().match(/\d/g) || [])[0],
       postNotification: (this.source('#prompt_threads').text().match(/\d/g) || [])[0],
-      formhash: this.source('input[name=formhash]').attr('value')
+      formhash: this.source('input[name=formhash]').attr('value'),
     }
   }
 
-  getEPCTopicFromTitle () {
+  getEPCTopicFromTitle() {
     const title = this.source('title').text()
     const filteredTitle = title.split(' -  電腦領域')[0]
-    const [, ...tail] = filteredTitle.split(' - ').map(it => it.trim())
+    const [, ...tail] = filteredTitle.split(' - ').map((it) => it.trim())
     return tail ? tail.reverse().join(' » ') : ''
   }
 }

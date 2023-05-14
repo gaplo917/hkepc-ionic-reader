@@ -7,24 +7,40 @@ import { PaginationPopoverDelegates } from '../delegates'
 import { IRLifecycleOwner } from './base/IRLifecycleOwner'
 
 export class MyReplyController extends IRLifecycleOwner {
-  static get STATE () { return 'tab.features-myreply' }
+  static get STATE() {
+    return 'tab.features-myreply'
+  }
 
-  static get NAME () { return 'MyReplyController' }
+  static get NAME() {
+    return 'MyReplyController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/features/myreply',
       views: {
         main: {
           templateUrl: 'templates/features/myreply/my.reply.html',
           controller: MyReplyController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor (HistoryService, $ionicHistory, $state, $scope, $ionicPopover, $ionicScrollDelegate, apiService, $sce, AuthService, ngToast, $timeout) {
+  constructor(
+    HistoryService,
+    $ionicHistory,
+    $state,
+    $scope,
+    $ionicPopover,
+    $ionicScrollDelegate,
+    apiService,
+    $sce,
+    AuthService,
+    ngToast,
+    $timeout
+  ) {
     super($scope)
     this.historyService = HistoryService
     this.state = $state
@@ -38,79 +54,89 @@ export class MyReplyController extends IRLifecycleOwner {
     this.page = 1
     this.myreplies = []
 
-    this.paginationPopoverDelegate = PaginationPopoverDelegates({
-      $scope,
-      $ionicPopover,
-      $timeout,
-      $ionicScrollDelegate
-    }, {
-      getCurrentPage: () => this.page,
-      getTotalPage: () => this.totalPageNum,
-      getLocalMinPage: () => (this.myreplies[0] && this.myreplies[0].page) || 1,
-      onJumpPage: ({ to }) => {
-        this.reset()
-        this.page = to
-        this.loadMyReplies()
+    this.paginationPopoverDelegate = PaginationPopoverDelegates(
+      {
+        $scope,
+        $ionicPopover,
+        $timeout,
+        $ionicScrollDelegate,
+      },
+      {
+        getCurrentPage: () => this.page,
+        getTotalPage: () => this.totalPageNum,
+        getLocalMinPage: () => (this.myreplies[0] && this.myreplies[0].page) || 1,
+        onJumpPage: ({ to }) => {
+          this.reset()
+          this.page = to
+          this.loadMyReplies()
+        },
       }
-    })
+    )
   }
 
-  onViewLoaded () {
+  onViewLoaded() {
     const { authService, scope } = this
-    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
-      if (isLoggedIn) {
-        this.loadMyReplies()
-      } else {
-        this.ngToast.danger('<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>')
-        this.onBack()
-      }
-    }).subscribe()
+    authService
+      .isLoggedIn()
+      .safeApply(scope, (isLoggedIn) => {
+        if (isLoggedIn) {
+          this.loadMyReplies()
+        } else {
+          this.ngToast.danger('<i class="ion-alert-circled"> 我的回覆需要會員權限，請先登入！</i>')
+          this.onBack()
+        }
+      })
+      .subscribe()
   }
 
-  onViewDestroy () {
+  onViewDestroy() {
     this.paginationPopoverDelegate.remove()
   }
 
-  loadMyReplies () {
+  loadMyReplies() {
     this.refreshing = true
     const { page } = this
 
-    this.apiService.myReplies(page)
+    this.apiService
+      .myReplies(page)
       .safeApply(this.scope, ({ replies, totalPageNum }) => {
         this.totalPageNum = totalPageNum
 
-        this.myreplies = this.myreplies.concat(replies.map(it => ({
-          ...it,
-          page
-        })))
+        this.myreplies = this.myreplies.concat(
+          replies.map((it) => ({
+            ...it,
+            page,
+          }))
+        )
 
         this.refreshing = false
         this.scope.$broadcast('scroll.infiniteScrollComplete')
-      }).subscribe()
+      })
+      .subscribe()
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.FeatureRouteController.STATE)
     }
   }
 
-  reset () {
+  reset() {
     this.myreplies = []
     this.end = false
   }
 
-  findMessage (postId, messageId) {
+  findMessage(postId, messageId) {
     this.scope.$emit(FindMessageRequest.NAME, new FindMessageRequest(postId, messageId))
   }
 
-  loadMore () {
+  loadMore() {
     if (this.hasMoreData()) {
       const nextPage = parseInt(this.page) + 1
       if (nextPage <= this.totalPageNum) {
@@ -125,7 +151,7 @@ export class MyReplyController extends IRLifecycleOwner {
     }
   }
 
-  hasMoreData () {
+  hasMoreData() {
     return !this.end && !this.refreshing
   }
 }

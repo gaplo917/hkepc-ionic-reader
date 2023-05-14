@@ -6,11 +6,15 @@ import swal from 'sweetalert2'
 import { Bridge, Channel } from '../bridge/index'
 
 export class ChatDetailController {
-  static get STATE () { return 'tab.features-chat-detail' }
+  static get STATE() {
+    return 'tab.features-chat-detail'
+  }
 
-  static get NAME () { return 'ChatDetailController' }
+  static get NAME() {
+    return 'ChatDetailController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/features/chats/:id',
       cache: false,
@@ -18,13 +22,23 @@ export class ChatDetailController {
         main: {
           templateUrl: 'templates/features/chats/chats.details.html',
           controller: ChatDetailController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, apiService, $stateParams, $ionicScrollDelegate, ngToast, $ionicHistory, $state, $compile, $timeout) {
+  constructor(
+    $scope,
+    apiService,
+    $stateParams,
+    $ionicScrollDelegate,
+    ngToast,
+    $ionicHistory,
+    $state,
+    $compile,
+    $timeout
+  ) {
     this.scope = $scope
     this.apiService = apiService
     this.ionicScrollDelegate = $ionicScrollDelegate.$getByHandle('chat-detail-scroll')
@@ -43,7 +57,7 @@ export class ChatDetailController {
     })
   }
 
-  loadMessages () {
+  loadMessages() {
     this.apiService
       .chatDetails(this.recipientId)
       .safeApply(this.scope, ({ username, messages, actionUrl, hiddenFormInputs }) => {
@@ -52,7 +66,7 @@ export class ChatDetailController {
         // must exist in the list
         this.recipient = {
           id: this.recipientId,
-          username
+          username,
         }
 
         this.messages = messages
@@ -62,10 +76,11 @@ export class ChatDetailController {
 
         this.actionUrl = actionUrl
         this.hiddenFormInputs = hiddenFormInputs
-      }).subscribe()
+      })
+      .subscribe()
   }
 
-  sendMessage () {
+  sendMessage() {
     const { $timeout, actionUrl, hiddenFormInputs, messageInput: message } = this
     if (message === '') {
       // empty input
@@ -83,61 +98,68 @@ export class ChatDetailController {
       html: spinnerHtml,
       allowOutsideClick: false,
       showCancelButton: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     })
 
     swal.showLoading()
 
     // Post to the server
-    this.apiService.dynamicRequest({
-      method: 'POST',
-      url: actionUrl,
-      data: {
-        message,
-        ...hiddenFormInputs
-      },
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).safeApply(this.scope, (resp) => {
-      $timeout(() => this.doRefresh(), 2000)
-    }).subscribe()
+    this.apiService
+      .dynamicRequest({
+        method: 'POST',
+        url: actionUrl,
+        data: {
+          message,
+          ...hiddenFormInputs,
+        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+      .safeApply(this.scope, (resp) => {
+        $timeout(() => this.doRefresh(), 2000)
+      })
+      .subscribe()
   }
 
-  doRefresh () {
+  doRefresh() {
     this.messageInput = ''
     this.loadMessages()
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.ChatListController.STATE)
     }
   }
 
-  requestComposeDialog () {
+  requestComposeDialog() {
     if (Bridge.isAvailable()) {
-      Bridge.callHandler(Channel.composeDialog, {
-        title: '發送訊息',
-        positiveText: '發送',
-        cancelText: '取消',
-        placeholder: '訊息'
-      }, (content) => {
-        if (content === null) {
-          // cancelled
-          return
+      Bridge.callHandler(
+        Channel.composeDialog,
+        {
+          title: '發送訊息',
+          positiveText: '發送',
+          cancelText: '取消',
+          placeholder: '訊息',
+        },
+        (content) => {
+          if (content === null) {
+            // cancelled
+            return
+          }
+          this.messageInput = content
+          this.sendMessage()
         }
-        this.messageInput = content
-        this.sendMessage()
-      })
+      )
     }
   }
 
-  loadLazyImage (uid, imageSrc) {
+  loadLazyImage(uid, imageSrc) {
     const image = document.getElementById(uid)
     if (image.getAttribute('src') === imageSrc) {
       window.open(imageSrc, '_system', 'location=yes')
@@ -146,7 +168,7 @@ export class ChatDetailController {
     }
   }
 
-  openImage (uid, imageSrc) {
+  openImage(uid, imageSrc) {
     window.open(imageSrc, '_system', 'location=yes')
   }
 }

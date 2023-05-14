@@ -1,202 +1,203 @@
 <ion-nav-bar id="ion-nav-bar" class="bar-stable">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon ion-ios-arrow-thin-left" ng-click="onBack()" ng-if="isRendered && (isiOSNative || isAndroidNative)"></button>
-    </ion-nav-buttons>
+  <ion-nav-buttons side="left">
+    <button
+      class="button button-icon ion-ios-arrow-thin-left"
+      ng-click="onBack()"
+      ng-if="isRendered && (isiOSNative || isAndroidNative)"
+    ></button>
+  </ion-nav-buttons>
 </ion-nav-bar>
 
 <ion-nav-view name="main"></ion-nav-view>
 
-<link ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'" href="/css/ionic.app.css" rel="stylesheet">
-<link ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'" href="/css/ionic.app.dark.css" rel="stylesheet">
-<link ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'" href="/css/ionic.app.oled.dark.css" rel="stylesheet">
+<link
+  ng-if="!vm.initTheme.default && vm.darkTheme !== null && vm.darkTheme === 'default'"
+  href="/css/ionic.app.css"
+  rel="stylesheet"
+/>
+<link
+  ng-if="!vm.initTheme.dark && vm.darkTheme !== null && vm.darkTheme === 'dark'"
+  href="/css/ionic.app.dark.css"
+  rel="stylesheet"
+/>
+<link
+  ng-if="!vm.initTheme.oled && vm.darkTheme !== null && vm.darkTheme === 'oled'"
+  href="/css/ionic.app.oled.dark.css"
+  rel="stylesheet"
+/>
 <style ng-if="isiOSNative">
+  .ng-toast {
+    margin-top: 82px;
+  }
 
-    .ng-toast {
-      margin-top: 82px;
-    }
+  body {
+    top: 78px;
+  }
 
-    body {
-      top: 78px;
-    }
+  .bar.bar-header {
+    height: 78px;
+  }
 
+  .bar.bar-subheader {
+    top: 78px;
+  }
+
+  .bar.bar-header .title {
+    top: 34px;
+  }
+
+  .bar.bar-header > .buttons,
+  .bar.bar-header > .button {
+    margin-top: 34px;
+  }
+
+  .has-header {
+    top: 78px;
+  }
+
+  .tab-nav {
+    display: none;
+  }
+
+  .has-tabs,
+  .bar-footer.has-tabs {
+    bottom: 0px;
+  }
+
+  .tab-bar-inset {
+    width: 100%;
+    height: 9.6vh;
+  }
+
+  .action-sheet-wrapper {
+    bottom: 9.6vh;
+  }
+
+  @media /*iphone 5*/ screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2),
+    /*iphone 6*/ screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2),
+    /*iphone 6plus zoom*/ screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 3),
+    /*iphone 6plus*/ screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
     .bar.bar-header {
-      height: 78px;
+      height: 59px;
     }
 
     .bar.bar-subheader {
-      top: 78px;
+      top: 59px;
     }
 
     .bar.bar-header .title {
-      top: 34px;
+      top: 15px;
     }
 
-    .bar.bar-header > .buttons, .bar.bar-header > .button {
-      margin-top: 34px;
+    .bar.bar-header > .buttons,
+    .bar.bar-header > .button {
+      margin-top: 15px;
     }
 
     .has-header {
-      top: 78px;
-    }
-
-    .tab-nav {
-      display: none;
-    }
-
-    .has-tabs, .bar-footer.has-tabs {
-      bottom: 0px;
+      top: 59px;
     }
 
     .tab-bar-inset {
       width: 100%;
-      height: 9.6vh;
+      height: 7.8vh;
     }
 
     .action-sheet-wrapper {
-      bottom: 9.6vh;
+      bottom: 7.8vh;
+    }
+  }
+
+  /*ipad 1024*768*/
+  @media only screen and (device-width: 768px) and (device-height: 1024px) {
+    .tab-bar-inset {
+      width: 100%;
+      height: 7.7vh;
     }
 
-    @media
-    /*iphone 5*/ screen
-    and (device-width: 320px)
-    and (device-height: 568px)
-    and (-webkit-device-pixel-ratio: 2),
-    /*iphone 6*/ screen
-    and (device-width: 375px)
-    and (device-height: 667px)
-    and (-webkit-device-pixel-ratio: 2),
-    /*iphone 6plus zoom*/ screen
-    and (device-width: 375px)
-    and (device-height: 667px)
-    and (-webkit-device-pixel-ratio: 3),
-    /*iphone 6plus*/ screen
-    and (device-width: 414px)
-    and (device-height: 736px)
-    and (-webkit-device-pixel-ratio: 3)
-    {
-        .bar.bar-header {
-          height: 59px;
-        }
+    .action-sheet-wrapper {
+      bottom: 7.7vh;
+    }
+  }
 
-        .bar.bar-subheader {
-          top: 59px;
-        }
-
-        .bar.bar-header .title {
-          top: 15px;
-        }
-
-        .bar.bar-header > .buttons, .bar.bar-header > .button {
-          margin-top: 15px;
-        }
-
-        .has-header {
-          top: 59px;
-        }
-
-        .tab-bar-inset {
-            width: 100%;
-            height: 7.8vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 7.8vh;
-        }
+  /*ipad pro 3rd gen 1024*768*/
+  @media only screen and (min-device-width: 1024px) and (max-device-height: 1366px) and (-webkit-min-device-pixel-ratio: 2) {
+    .tab-bar-inset {
+      width: 100%;
+      height: 60px;
     }
 
-    /*ipad 1024*768*/
-    @media only screen
-    and (device-width: 768px)
-    and (device-height: 1024px) {
-        .tab-bar-inset {
-            width: 100%;
-            height: 7.7vh;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 7.7vh;
-        }
+    .action-sheet-wrapper {
+      bottom: 60px;
     }
-
-    /*ipad pro 3rd gen 1024*768*/
-    @media only screen
-    and (min-device-width: 1024px)
-    and (max-device-height: 1366px)
-    and (-webkit-min-device-pixel-ratio: 2) {
-        .tab-bar-inset {
-            width: 100%;
-            height: 60px;
-        }
-
-        .action-sheet-wrapper {
-            bottom: 60px;
-        }
-    }
-
+  }
 </style>
 <style ng-if="vm.mHeadFix && isiOSNative">
-    .ng-toast {
-        margin-top: 94px;
-    }
+  .ng-toast {
+    margin-top: 94px;
+  }
 
-    body {
-        top: 90px;
-    }
+  body {
+    top: 90px;
+  }
 
-    .bar.bar-header {
-        height: 90px;
-    }
+  .bar.bar-header {
+    height: 90px;
+  }
 
-    .bar.bar-subheader {
-        top: 90px;
-    }
+  .bar.bar-subheader {
+    top: 90px;
+  }
 
-    .bar.bar-header .title {
-        top: 46px;
-    }
+  .bar.bar-header .title {
+    top: 46px;
+  }
 
-    .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 46px;
-    }
+  .bar.bar-header > .buttons,
+  .bar.bar-header > .button {
+    margin-top: 46px;
+  }
 
-    .has-header {
-        top: 90px;
-    }
+  .has-header {
+    top: 90px;
+  }
 </style>
 <style ng-if="vm.mHeadFix && isAndroidNative">
-    .ng-toast {
-        margin-top: 6vh;
-    }
+  .ng-toast {
+    margin-top: 6vh;
+  }
 
-    body {
-        top: 8.5vh;
-    }
+  body {
+    top: 8.5vh;
+  }
 
-    .bar.bar-header {
-        height: 10.5vh;
-    }
+  .bar.bar-header {
+    height: 10.5vh;
+  }
 
-    .bar.bar-subheader {
-        top: 8.5vh;
-    }
+  .bar.bar-subheader {
+    top: 8.5vh;
+  }
 
-    .bar.bar-header .title {
-        top: 3.1vh;
-    }
+  .bar.bar-header .title {
+    top: 3.1vh;
+  }
 
-    .bar.bar-header > .buttons, .bar.bar-header > .button {
-        margin-top: 3.1vh;
-    }
+  .bar.bar-header > .buttons,
+  .bar.bar-header > .button {
+    margin-top: 3.1vh;
+  }
 
-    .has-header {
-        top: 8.5vh;
-    }
+  .has-header {
+    top: 8.5vh;
+  }
 
-    .tab-nav {
-        display: none;
-    }
+  .tab-nav {
+    display: none;
+  }
 
-    .has-tabs, .bar-footer.has-tabs {
-        bottom: 0px;
-    }
+  .has-tabs,
+  .bar-footer.has-tabs {
+    bottom: 0px;
+  }
 </style>

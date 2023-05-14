@@ -1,142 +1,162 @@
 <ion-view ng-init="vm.messages=[]" class="card-view">
-    <ion-nav-title>
-        <div class="wrapper" ng-if="vm.post.title">
-            <p ng-class="{'long-title': vm.post.isLongTitle }"><i class="ion-ios-locked" ng-if="::vm.isLock"></i>{{' '}}{{::vm.post.title}}</p>
-        </div>
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
-                ng-click="::vm.onBack()"></button>
-        <button ng-if="::(!isiOSNative && !isAndroidNative)" class="button button-icon icon ion-navicon"
-                ng-click="::openDrawer($event)"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="::vm.doRefresh()"></a>
-    </ion-nav-buttons>
-    <span class="bar bar-subheader text-center sticky-title" ng-if="vm.post.topicStr">
-        {{::vm.post.topicStr}}<span ng-if="::vm.post.topicCategory">{{' » '}}{{::vm.post.topicCategory}}</span>
-    </span>
+  <ion-nav-title>
+    <div class="wrapper" ng-if="vm.post.title">
+      <p ng-class="{'long-title': vm.post.isLongTitle }">
+        <i class="ion-ios-locked" ng-if="::vm.isLock"></i>
+        {{' '}}{{::vm.post.title}}
+      </p>
+    </div>
+  </ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button
+      ng-if="::(isiOSNative || isAndroidNative)"
+      class="button button-icon ion-ios-arrow-thin-left"
+      ng-click="::vm.onBack()"
+    ></button>
+    <button
+      ng-if="::(!isiOSNative && !isAndroidNative)"
+      class="button button-icon icon ion-navicon"
+      ng-click="::openDrawer($event)"
+    ></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="::vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <span class="bar bar-subheader text-center sticky-title" ng-if="vm.post.topicStr">
+    {{::vm.post.topicStr}}
+    <span ng-if="::vm.post.topicCategory">{{' » '}}{{::vm.post.topicCategory}}</span>
+  </span>
 
-    <ion-content lazy-scroll style="padding-top:16px" delegate-handle="post-detail">
-        <div class="text-center" ng-if="vm.loadingPrevious">
-            <ir-spinner></ir-spinner>
-        </div>
-        <div class="spinner" ng-if="vm.messages.length == 0">
-            <ir-spinner></ir-spinner>
-        </div>
+  <ion-content lazy-scroll style="padding-top: 16px" delegate-handle="post-detail">
+    <div class="text-center" ng-if="vm.loadingPrevious">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="spinner" ng-if="vm.messages.length == 0">
+      <ir-spinner></ir-spinner>
+    </div>
 
-        <div id="message-{{::message.id}}"
-             page="{{::message.post.page}}"
-             class="list"
-             style="display:block!important;"
-             ng-class="{
+    <div
+      id="message-{{::message.id}}"
+      page="{{::message.post.page}}"
+      class="list"
+      style="display: block !important"
+      ng-class="{
                'shake-notice shake-constant': message.focused,
                'card': message.type === 'POST_MESSAGE',
                'partial-hide': message.isMatchedFilter && message.filterMode === '1'
              }"
-             ng-if="!(message.isMatchedFilter && message.filterMode === '2')"
-             ng-repeat="message in vm.messages"
-             ng-click="message.focused = false; message.filterMode = '0'"
-             lastread>
-            <div class="bigger-title filter-reason"><span compile="::message.filterReason"></span></div>
+      ng-if="!(message.isMatchedFilter && message.filterMode === '2')"
+      ng-repeat="message in vm.messages"
+      ng-click="message.focused = false; message.filterMode = '0'"
+      lastread
+    >
+      <div class="bigger-title filter-reason"><span compile="::message.filterReason"></span></div>
 
-            <!--Section Header to show the page number-->
-            <h5 ng-if="::(message.type == 'POST_PAGE_DIVIDER')"
-                class="page-divider text-center">
-                <div ng-if="::message.content" ng-bind-html="::message.hlContent"></div>
-                <div ng-if="::!message.content">第 {{ ::message.post.page }} 頁 <i class="ion-android-arrow-down"></i></div>
-            </h5>
-
-            <!--Really the Post-->
-            <div ng-if="::(message.type == 'POST_MESSAGE')" on-longer-than-screen="message.extraReplyBtn = true">
-
-                <div class="item item-avatar">
-                    <!--Profile pic-->
-                    <img ng-src="{{::message.author.image}}"
-                         ng-click="::vm.onUserProfilePic(message.author)">
-
-                    <!--Control buttons-->
-                    <div class="button button-icon ion-ios-compose-outline on-more-button"
-                            style="right: 105px;"
-                            ng-if="::message.hasEdit"
-                            ng-click="::vm.onEdit(message)"></div>
-                    <div class="button button-icon on-more-button"
-                            ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "
-                            style="right: 70px;"
-                            ng-click="::vm.onReply(message)"></div>
-                    <div class="button button-icon on-more-button"
-                            ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "
-                            style="right: 35px;"
-                            ng-click="::vm.like(message)"></div>
-                    <div class="button button-icon ion-android-more-vertical on-more-button"
-                            ng-click="::vm.onMore(message)"></div>
-
-                    <!--User name-->
-                    <h2 ng-click="::vm.onUserProfilePic(message.author)">
-                        <span class="less-important-info">#{{::message.pos}}</span> {{::message.author.name}}
-                    </h2>
-
-                    <span class="ultra-less-important-info">
-                        <!--When banned-->
-                        <i class="ion-close-circled" style="color:red" ng-if="::message.author.rank == 0">
-                            <small> Banned</small>
-                        </i>
-                        <!--Normal User-->
-                        <i ng-repeat="star in ::vm.getTimes(message.author.rank) track by $index"
-                           class="ion-ios-star"
-                           style="color:#F9A825;"></i>
-                        <!--Post timestamp-->
-                        <span style="margin-left:3px">{{::vm.relativeMomentize(message.createdAt)}}</span>
-                    </span>
-                </div>
-                <div class="item item-body" compile="::message.hlContent"></div>
-
-                <div class="item tabs tabs-secondary tabs-icon-left" ng-if="message.extraReplyBtn">
-                    <a class="tab-item card-button" ng-click="::vm.like(message)">
-                        <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
-                        喜歡
-                    </a>
-                    <a class="tab-item card-button" ng-click="::vm.onReply(message)">
-                        <i class="icon" ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "></i>
-                        回覆
-                    </a>
-                    <a class="tab-item card-button" ng-if="::message.hasEdit" ng-click="::vm.onEdit(message)">
-                        <i class="icon ion-ios-compose-outline"></i>
-                        修改
-                    </a>
-                </div>
-            </div>
-
-
+      <!--Section Header to show the page number-->
+      <h5 ng-if="::(message.type == 'POST_PAGE_DIVIDER')" class="page-divider text-center">
+        <div ng-if="::message.content" ng-bind-html="::message.hlContent"></div>
+        <div ng-if="::!message.content">
+          第 {{ ::message.post.page }} 頁
+          <i class="ion-android-arrow-down"></i>
         </div>
-        <ion-infinite-scroll
-            ng-if="!vm.end && vm.messages.length > 0"
-            on-infinite="vm.loadMore()"
-            immediate-check="true"
-            distance="2%">
-        </ion-infinite-scroll>
-        <div class="text-center f5-button" style="width: 100%; display:block; height:59px">
-            <button class="button button-full" ng-click="::vm.forceLoadMore()" ng-if="vm.end">F5</button>
+      </h5>
+
+      <!--Really the Post-->
+      <div ng-if="::(message.type == 'POST_MESSAGE')" on-longer-than-screen="message.extraReplyBtn = true">
+        <div class="item item-avatar">
+          <!--Profile pic-->
+          <img ng-src="{{::message.author.image}}" ng-click="::vm.onUserProfilePic(message.author)" />
+
+          <!--Control buttons-->
+          <div
+            class="button button-icon ion-ios-compose-outline on-more-button"
+            style="right: 105px"
+            ng-if="::message.hasEdit"
+            ng-click="::vm.onEdit(message)"
+          ></div>
+          <div
+            class="button button-icon on-more-button"
+            ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "
+            style="right: 70px"
+            ng-click="::vm.onReply(message)"
+          ></div>
+          <div
+            class="button button-icon on-more-button"
+            ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "
+            style="right: 35px"
+            ng-click="::vm.like(message)"
+          ></div>
+          <div
+            class="button button-icon ion-android-more-vertical on-more-button"
+            ng-click="::vm.onMore(message)"
+          ></div>
+
+          <!--User name-->
+          <h2 ng-click="::vm.onUserProfilePic(message.author)">
+            <span class="less-important-info">#{{::message.pos}}</span>
+            {{::message.author.name}}
+          </h2>
+
+          <span class="ultra-less-important-info">
+            <!--When banned-->
+            <i class="ion-close-circled" style="color: red" ng-if="::message.author.rank == 0">
+              <small>Banned</small>
+            </i>
+            <!--Normal User-->
+            <i
+              ng-repeat="star in ::vm.getTimes(message.author.rank) track by $index"
+              class="ion-ios-star"
+              style="color: #f9a825"
+            ></i>
+            <!--Post timestamp-->
+            <span style="margin-left: 3px">{{::vm.relativeMomentize(message.createdAt)}}</span>
+          </span>
         </div>
+        <div class="item item-body" compile="::message.hlContent"></div>
 
-        <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
-        <div style="height:500px" ng-if="vm.messages.length < 2"></div>
-
-        <!--double inset for page-indicator-->
-        <div style="height: 48px"></div>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
-
-    <div class="floating-action-btn" ng-if="vm.messages.length > 0">
-        <button class="button-rounded action-button action-button-small"  ng-click="vm.onQuickReply(vm.post)">
-            <i class="ion-ios-undo-outline"></i>
-        </button>
-        <div class="tab-bar-inset"></div>
+        <div class="item tabs tabs-secondary tabs-icon-left" ng-if="message.extraReplyBtn">
+          <a class="tab-item card-button" ng-click="::vm.like(message)">
+            <i class="icon" ng-class="message.liked ? 'active-liked ion-ios-heart' : 'ion-ios-heart-outline' "></i>
+            喜歡
+          </a>
+          <a class="tab-item card-button" ng-click="::vm.onReply(message)">
+            <i class="icon" ng-class="::vm.isLock ? 'ion-ios-locked-outline' : 'ion-ios-undo-outline' "></i>
+            回覆
+          </a>
+          <a class="tab-item card-button" ng-if="::message.hasEdit" ng-click="::vm.onEdit(message)">
+            <i class="icon ion-ios-compose-outline"></i>
+            修改
+          </a>
+        </div>
+      </div>
     </div>
-    <page-indicator
-        pagination-popover-delegate="vm.paginationPopoverDelegate"
-        current-page="vm.currentPage"
-        total-page="vm.totalPageNum" />
+    <ion-infinite-scroll
+      ng-if="!vm.end && vm.messages.length > 0"
+      on-infinite="vm.loadMore()"
+      immediate-check="true"
+      distance="2%"
+    ></ion-infinite-scroll>
+    <div class="text-center f5-button" style="width: 100%; display: block; height: 59px">
+      <button class="button button-full" ng-click="::vm.forceLoadMore()" ng-if="vm.end">F5</button>
+    </div>
 
+    <!-- TODO: Work Arround for the lazy scroll not enough size to scroll before the image load -->
+    <div style="height: 500px" ng-if="vm.messages.length < 2"></div>
+
+    <!--double inset for page-indicator-->
+    <div style="height: 48px"></div>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+
+  <div class="floating-action-btn" ng-if="vm.messages.length > 0">
+    <button class="button-rounded action-button action-button-small" ng-click="vm.onQuickReply(vm.post)">
+      <i class="ion-ios-undo-outline"></i>
+    </button>
+    <div class="tab-bar-inset"></div>
+  </div>
+  <page-indicator
+    pagination-popover-delegate="vm.paginationPopoverDelegate"
+    current-page="vm.currentPage"
+    total-page="vm.totalPageNum"
+  />
 </ion-view>
-

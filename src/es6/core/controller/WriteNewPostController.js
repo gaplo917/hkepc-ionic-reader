@@ -5,11 +5,15 @@ import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
 export class WriteNewPostController {
-  static get STATE () { return 'tab.topics-posts-new' }
+  static get STATE() {
+    return 'tab.topics-posts-new'
+  }
 
-  static get NAME () { return 'WriteNewPostController' }
+  static get NAME() {
+    return 'WriteNewPostController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/topics/:topicId/newPost?categories=&topic=',
       cache: false,
@@ -17,13 +21,26 @@ export class WriteNewPostController {
         main: {
           templateUrl: 'templates/write-new-post.html',
           controller: WriteNewPostController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, $ionicPopover, ngToast, apiService, $ionicPopup, $rootScope, $compile, LocalStorageService, $ionicScrollDelegate) {
+  constructor(
+    $scope,
+    $state,
+    $stateParams,
+    $ionicHistory,
+    $ionicPopover,
+    ngToast,
+    apiService,
+    $ionicPopup,
+    $rootScope,
+    $compile,
+    LocalStorageService,
+    $ionicScrollDelegate
+  ) {
     this.id = 'new-content'
     this.post = { content: '' }
     this.topicId = $stateParams.topicId
@@ -46,21 +63,23 @@ export class WriteNewPostController {
     console.log('write new post ', this.topic)
     console.log('write new post ', this.categories)
 
-    $ionicPopover.fromTemplateUrl('templates/modals/categories.html', {
-      scope: $scope
-    }).then((popover) => {
-      this.categoryPopover = popover
-    })
+    $ionicPopover
+      .fromTemplateUrl('templates/modals/categories.html', {
+        scope: $scope,
+      })
+      .then((popover) => {
+        this.categoryPopover = popover
+      })
 
     $scope.$on('$ionicView.loaded', (e) => {
-      LocalStorageService.get('signature').subscribe(signature => {
+      LocalStorageService.get('signature').subscribe((signature) => {
         const isFree = $scope.nativeVersion && $scope.nativeVersion[$scope.nativeVersion.length - 1] === 'F'
         if (signature === 'false' && !isFree) {
           this.ionicReaderSign = ''
         } else {
           this.ionicReaderSign = HKEPC.signature({
             androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
+            iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
           })
         }
       })
@@ -70,32 +89,26 @@ export class WriteNewPostController {
     })
   }
 
-  onImageUploadSuccess (attachmentIds) {
+  onImageUploadSuccess(attachmentIds) {
     this.ngToast.success(`<i class="ion-ios-checkmark"> 成功新增圖片${attachmentIds.join(',')}！</i>`)
     this.preFetchContent().subscribe()
   }
 
-  preFetchContent () {
-    return this.apiService.preNewPost(this.topicId)
-      .safeApply(this.scope, resp => {
-        const {
-          actionUrl,
-          hiddenFormInputs,
-          existingImages,
-          hiddenAttachFormInputs
-        } = resp
+  preFetchContent() {
+    return this.apiService.preNewPost(this.topicId).safeApply(this.scope, (resp) => {
+      const { actionUrl, hiddenFormInputs, existingImages, hiddenAttachFormInputs } = resp
 
-        this.actionUrl = actionUrl
+      this.actionUrl = actionUrl
 
-        // assign hiddenAttachFormInputs to modal
-        this.hiddenAttachFormInputs = hiddenAttachFormInputs
-        this.existingImages = existingImages
+      // assign hiddenAttachFormInputs to modal
+      this.hiddenAttachFormInputs = hiddenAttachFormInputs
+      this.existingImages = existingImages
 
-        this.hiddenFormInputs = hiddenFormInputs
-      })
+      this.hiddenFormInputs = hiddenFormInputs
+    })
   }
 
-  doPublishNewPost (post) {
+  doPublishNewPost(post) {
     const isValidInput = post.title && post.content
 
     if (isValidInput) {
@@ -105,7 +118,7 @@ export class WriteNewPostController {
       const deleteImageFormData = {}
 
       // attach Image logic
-      this.attachImageIds.forEach(id => {
+      this.attachImageIds.forEach((id) => {
         imageFormData[`attachnew[${id}][description]=`] = ''
       })
 
@@ -128,27 +141,29 @@ export class WriteNewPostController {
         html: spinnerHtml,
         allowOutsideClick: false,
         showCancelButton: false,
-        showConfirmButton: false
+        showConfirmButton: false,
       })
 
       swal.showLoading()
 
       // Post to the server
-      this.apiService.dynamicRequest({
-        method: 'POST',
-        url: actionUrl,
-        data: {
-          subject,
-          message: replyMessage,
-          typeid: get(post, 'category.id', undefined),
-          handlekey: 'newthread',
-          topicsubmit: true,
-          ...hiddenFormInputs,
-          ...imageFormData,
-          ...deleteImageFormData
-        },
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }).flatMapApiFromCheerioworker('responseContainText', { text: '主題已經發佈', isXml: true })
+      this.apiService
+        .dynamicRequest({
+          method: 'POST',
+          url: actionUrl,
+          data: {
+            subject,
+            message: replyMessage,
+            typeid: get(post, 'category.id', undefined),
+            handlekey: 'newthread',
+            topicsubmit: true,
+            ...hiddenFormInputs,
+            ...imageFormData,
+            ...deleteImageFormData,
+          },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        })
+        .flatMapApiFromCheerioworker('responseContainText', { text: '主題已經發佈', isXml: true })
         .safeApply(this.scope, ({ responseText, result }) => {
           if (result) {
             swal.close()
@@ -162,25 +177,27 @@ export class WriteNewPostController {
               title: '發佈失敗',
               text: `HKEPC 傳回:「${responseText}」`,
               type: 'error',
-              confirmButtonText: '確定'
+              confirmButtonText: '確定',
             })
           }
-        }).subscribe(
+        })
+        .subscribe(
           () => {},
-          () => swal({
-            animation: false,
-            title: '發佈失敗',
-            text: '網絡異常，請重新嘗試！',
-            type: 'error',
-            confirmButtonText: '確定'
-          })
+          () =>
+            swal({
+              animation: false,
+              title: '發佈失敗',
+              text: '網絡異常，請重新嘗試！',
+              type: 'error',
+              confirmButtonText: '確定',
+            })
         )
     } else {
       this.ngToast.danger('<i class="ion-alert-circled"> 標題或內容不能空白！</i>')
     }
   }
 
-  addImageToContent (existingImage) {
+  addImageToContent(existingImage) {
     const attachmentId = existingImage.id
     const selectorId = this.id
     const selectionStart = document.getElementById(selectorId).selectionStart
@@ -191,58 +208,59 @@ export class WriteNewPostController {
     this.attachImageIds.push(attachmentId)
   }
 
-  confirmDeleteImage (existingImage) {
-    this.ionicPopup.confirm({
-      title: '確認要刪除圖片？', // String. The title of the popup.
-      cssClass: '', // String, The custom CSS class name
-      subTitle: '', // String (optional). The sub-title of the popup.
-      cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
-      cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
-      okText: '刪除', // String (default: 'OK'). The text of the OK button.
-      okType: 'button-assertive' // String (default: 'button-positive'). The type of the OK button.
-    }).then(isDelete => {
-      console.log(`isDelete ${isDelete} ->`, existingImage)
-      if (isDelete) {
-        const id = existingImage.id
+  confirmDeleteImage(existingImage) {
+    this.ionicPopup
+      .confirm({
+        title: '確認要刪除圖片？', // String. The title of the popup.
+        cssClass: '', // String, The custom CSS class name
+        subTitle: '', // String (optional). The sub-title of the popup.
+        cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
+        cancelType: 'button-default', // String (default: 'button-default'). The type of the Cancel button.
+        okText: '刪除', // String (default: 'OK'). The text of the OK button.
+        okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
+      })
+      .then((isDelete) => {
+        console.log(`isDelete ${isDelete} ->`, existingImage)
+        if (isDelete) {
+          const id = existingImage.id
 
-        // add to delete array
-        this.deleteImageIds.push(id)
+          // add to delete array
+          this.deleteImageIds.push(id)
 
-        // remove attachment id from array
-        this.attachImageIds = this.attachImageIds.filter(imgId => imgId !== id)
+          // remove attachment id from array
+          this.attachImageIds = this.attachImageIds.filter((imgId) => imgId !== id)
 
-        this.existingImages = this.existingImages.filter(eImage => eImage.id !== id)
+          this.existingImages = this.existingImages.filter((eImage) => eImage.id !== id)
 
-        this.post.content = replace(this.post.content, id, '')
-        this.post.content = replace(this.post.content, '[attachimg][/attachimg]', '')
-        setTimeout(() => this.scope.$apply(), 0)
-      }
-    })
+          this.post.content = replace(this.post.content, id, '')
+          this.post.content = replace(this.post.content, '[attachimg][/attachimg]', '')
+          setTimeout(() => this.scope.$apply(), 0)
+        }
+      })
   }
 
-  openCategoryPopover ($event) {
+  openCategoryPopover($event) {
     this.categoryPopover.show($event)
   }
 
-  selectCategory (category) {
+  selectCategory(category) {
     this.categoryPopover.hide()
     this.post.category = category
   }
 
-  onFocus () {
+  onFocus() {
     const focusPosition = angular.element(document.querySelector('#input-helper')).prop('offsetTop')
     this.ionicScrollDelegate.scrollTo(0, focusPosition + 4, false)
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
-
+        historyRoot: true,
       })
       this.state.go(Controllers.TopicListController.STATE)
     }

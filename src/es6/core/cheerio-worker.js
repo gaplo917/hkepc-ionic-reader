@@ -10,16 +10,16 @@ self.addEventListener('message', function (ev) {
   const html = isXml
     ? cheerio.load(XMLUtils.removeCDATA(data), { xmlMode: true }).html()
     : new HKEPCHtml(cheerio.load(data))
-      .removeAds()
-      .processImgUrl('https://www.hkepc.com/forum')
-      .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
-      .processEpcUrl(currentHash || '')
-      .processExternalUrl()
+        .removeAds()
+        .processImgUrl('https://www.hkepc.com/forum')
+        .processImageToLazy(isAutoLoadImage === undefined ? true : isAutoLoadImage)
+        .processEpcUrl(currentHash || '')
+        .processExternalUrl()
 
   if (!isXml) {
     self.postMessage({
       topic: 'commonInfo',
-      data: html.getLoggedInUserInfo()
+      data: html.getLoggedInUserInfo(),
     })
 
     console.log(html.getLoggedInUserInfo())
@@ -27,17 +27,16 @@ self.addEventListener('message', function (ev) {
 
   switch (topic) {
     case 'topicList':
-
       self.postMessage({
         topic,
-        data: Mapper.topicListHtmlToTopicList(html)
+        data: Mapper.topicListHtmlToTopicList(html),
       })
 
       break
     case 'fullTopicListFromSearch':
       self.postMessage({
         topic,
-        data: Mapper.fullTopicListFromSearchHtmlToTopicList(html)
+        data: Mapper.fullTopicListFromSearchHtmlToTopicList(html),
       })
       break
 
@@ -46,7 +45,7 @@ self.addEventListener('message', function (ev) {
 
       self.postMessage({
         topic,
-        data: Mapper.postListHtmlToPostListPage(html, pageNum)
+        data: Mapper.postListHtmlToPostListPage(html, pageNum),
       })
 
       break
@@ -54,7 +53,7 @@ self.addEventListener('message', function (ev) {
     case 'postDetails':
       self.postMessage({
         topic,
-        data: Mapper.postHtmlToPost(html, ev.data.opt)
+        data: Mapper.postHtmlToPost(html, ev.data.opt),
       })
 
       break
@@ -62,77 +61,76 @@ self.addEventListener('message', function (ev) {
     case 'findMessage':
       self.postMessage({
         topic,
-        data: Mapper.postHtmlToFindMessageResult(html, ev.data.opt)
+        data: Mapper.postHtmlToFindMessageResult(html, ev.data.opt),
       })
 
       break
     case 'userProfile':
       self.postMessage({
         topic,
-        data: Mapper.userProfileHtmlToUserProfile(html, ev.data.uid)
+        data: Mapper.userProfileHtmlToUserProfile(html, ev.data.uid),
       })
       break
 
     case 'search':
-
       self.postMessage({
         topic,
-        data: Mapper.postListHtmlToPostListPage(html, 1)
+        data: Mapper.postListHtmlToPostListPage(html, 1),
       })
       break
 
     case 'myPost':
       self.postMessage({
         topic,
-        data: Mapper.myPost(html, ev.data.opt)
+        data: Mapper.myPost(html, ev.data.opt),
       })
       break
     case 'chatList':
       self.postMessage({
         topic,
-        data: Mapper.chatList(html, ev.data.opt)
+        data: Mapper.chatList(html, ev.data.opt),
       })
       break
     case 'chatDetails':
       self.postMessage({
         topic,
-        data: Mapper.chatDetails(html, ev.data.opt)
+        data: Mapper.chatDetails(html, ev.data.opt),
       })
       break
     case 'settings':
       self.postMessage({
         topic,
-        data: Mapper.settings(html, ev.data.opt)
+        data: Mapper.settings(html, ev.data.opt),
       })
       break
     case 'notifications':
       self.postMessage({
         topic,
-        data: Mapper.notifications(html, ev.data.opt)
+        data: Mapper.notifications(html, ev.data.opt),
       })
       break
     case 'epcEditorData':
       self.postMessage({
         topic,
-        data: Mapper.epcEditorData(html, ev.data.opt)
+        data: Mapper.epcEditorData(html, ev.data.opt),
       })
       break
     case 'reportEditorXmlData':
       self.postMessage({
         topic,
-        data: Mapper.reportEditorXmlData(html, ev.data.opt)
+        data: Mapper.reportEditorXmlData(html, ev.data.opt),
       })
       break
-    case 'myReplies' :
+    case 'myReplies':
       self.postMessage({
         topic,
-        data: Mapper.myReplies(html, ev.data.opt)
+        data: Mapper.myReplies(html, ev.data.opt),
       })
       break
     case 'responseContainText':
       self.postMessage({
         topic,
-        data: { responseText: html, result: includes(html, ev.data.text) }
+        data: { responseText: html, result: includes(html, ev.data.text) },
       })
       break
 
@@ -140,7 +138,7 @@ self.addEventListener('message', function (ev) {
       console.log(`No special handling of topic=${topic}`)
       self.postMessage({
         topic,
-        data: {}
+        data: {},
       })
   }
 })

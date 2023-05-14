@@ -8,22 +8,20 @@ $header-bg-color: #f8f8f8;
 $odd-color: #ffffff;
 $even-color: #f5f5f5;
 $inner-icon-color: #fff;
-  // text color
-  $text-color: #000000;
-  $less-important-color: #999;
+// text color
+$text-color: #000000;
+$less-important-color: #999;
 
-  $activated-color: #f0f0f0;
+$activated-color: #f0f0f0;
 
-  // tab item
-  $tab-item-stoke-color: #444;
+// tab item
+$tab-item-stoke-color: #444;
 
-  $default-button-bg-color: #f8f8f8;
-  $default-button-font-color: #444;
+$default-button-bg-color: #f8f8f8;
+$default-button-font-color: #444;
 
 //popover
-$popover-bg-color: lighten($bg-color,5%);
-
-
+$popover-bg-color: lighten($bg-color, 5%);
 
 // spinner
 $spinner-color: #8fc320;
@@ -34,23 +32,22 @@ $item-divider-font-color: $text-on-epc-color;
 
 // card view
 $liked-color: #dd0000;
-$locked-dash-line: #FF9A9A;
+$locked-dash-line: #ff9a9a;
 $blockquote-color: #8fc320;
 $card-bg-color: #fff;
-$card-selection-color: darken($card-bg-color,2%);
-  $news-border-color: rgba(0,0,0,0.1);
-  $card-news-holder-bg-color: #fff;
+$card-selection-color: darken($card-bg-color, 2%);
+$news-border-color: rgba(0, 0, 0, 0.1);
+$card-news-holder-bg-color: #fff;
 // ng toast
 
-
 // chart view
-$left-bubble-bg-color: #FAFAFA;
-$right-bubble-bg-color: #8BC34A;
+$left-bubble-bg-color: #fafafa;
+$right-bubble-bg-color: #8bc34a;
 $signature-color: #444444;
 $chat-input-bg-color: #f4f4f4;
 
 // post list view
-$hot-topic-icon-color-on: #FF6D00;
+$hot-topic-icon-color-on: #ff6d00;
 $hot-topic-icon-color-off: #444;
 
 // general text color
@@ -58,10 +55,10 @@ $danger-text-color: #ff4444;
 $success-text-color: #8fc320;
 
 // search highlight
-$highlight-background: #FFEB3B;
+$highlight-background: #ffeb3b;
 $highlight-text-color: $text-color;
 
-$action-button-bg-color: lighten($bg-color,2%) !default;
+$action-button-bg-color: lighten($bg-color, 2%) !default;
 
 // in post-list that list of button for user to select sub-topics
 $topic-select-button-bg-color: $text-on-epc-color;
@@ -69,12 +66,12 @@ $topic-select-button-active-bg-color: $text-on-epc-color;
 $topic-select-button-active-color: $text-color;
 
 // override ionic css color
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       lighten($epc-color,2%) !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
+$light: #fff !default;
+$stable: #f8f8f8 !default;
+$positive: #387ef5 !default;
+$calm: #11c1f3 !default;
+$balanced: #33cd5f !default;
+$energized: #ffc900 !default;
+$assertive: lighten($epc-color, 2%) !default;
+$royal: #886aea !default;
+$dark: #444 !default;

@@ -6,30 +6,34 @@ import {
   ChangeThemeRequest,
   ChangeFontSizeRequest,
   MHeadFixRequest,
-  AndroidBottomFixRequest
+  AndroidBottomFixRequest,
 } from '../model/requests'
 import swal from 'sweetalert2'
 import { NativeUpdateNotificationRequest } from '../bridge/requests'
 
 export class FeatureRouteController {
-  static get STATE () { return 'tab.features' }
+  static get STATE() {
+    return 'tab.features'
+  }
 
-  static get NAME () { return 'FeatureRouteController' }
+  static get NAME() {
+    return 'FeatureRouteController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/features',
       views: {
         main: {
           templateUrl: 'templates/features/features.route.html',
           controller: FeatureRouteController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, apiService, AuthService, $state, ngToast, LocalStorageService, observeOnScope, $rootScope) {
+  constructor($scope, apiService, AuthService, $state, ngToast, LocalStorageService, observeOnScope, $rootScope) {
     this.apiService = apiService
     this.scope = $scope
     this.state = $state
@@ -76,46 +80,66 @@ export class FeatureRouteController {
         this.scope.$emit(AndroidBottomFixRequest.NAME, new AndroidBottomFixRequest(newValue))
       })
 
-    this.localStorageService.get('loadImageMethod').safeApply($scope, loadImageMethod => {
-      this.isAutoLoadImage = loadImageMethod !== 'block'
-    }).subscribe()
+    this.localStorageService
+      .get('loadImageMethod')
+      .safeApply($scope, (loadImageMethod) => {
+        this.isAutoLoadImage = loadImageMethod !== 'block'
+      })
+      .subscribe()
 
-    this.localStorageService.get('theme').safeApply($scope, data => {
-      this.darkTheme = data || 'default'
-    }).subscribe()
+    this.localStorageService
+      .get('theme')
+      .safeApply($scope, (data) => {
+        this.darkTheme = data || 'default'
+      })
+      .subscribe()
 
-    this.localStorageService.get('fontSize').safeApply($scope, data => {
-      this.fontSize = data || '100'
-    }).subscribe()
+    this.localStorageService
+      .get('fontSize')
+      .safeApply($scope, (data) => {
+        this.fontSize = data || '100'
+      })
+      .subscribe()
 
-    this.localStorageService.get('signature').safeApply($scope, data => {
-      if (data) {
-        this.signature = String(data) === 'true'
-      }
-    }).subscribe()
+    this.localStorageService
+      .get('signature')
+      .safeApply($scope, (data) => {
+        if (data) {
+          this.signature = String(data) === 'true'
+        }
+      })
+      .subscribe()
 
-    this.localStorageService.get('mHeadFix').safeApply($scope, data => {
-      if (data) {
-        this.mHeadFix = String(data) === 'true'
-      }
-    }).subscribe()
+    this.localStorageService
+      .get('mHeadFix')
+      .safeApply($scope, (data) => {
+        if (data) {
+          this.mHeadFix = String(data) === 'true'
+        }
+      })
+      .subscribe()
 
-    this.localStorageService.get('androidBottomFix').safeApply($scope, data => {
-      if (data) {
-        this.androidBottomFix = String(data) === 'true'
-      }
-    }).subscribe()
+    this.localStorageService
+      .get('androidBottomFix')
+      .safeApply($scope, (data) => {
+        if (data) {
+          this.androidBottomFix = String(data) === 'true'
+        }
+      })
+      .subscribe()
 
     this.authService = AuthService
 
-    $rootScope.$eventToObservable(NotificationBadgeUpdateRequest.NAME)
+    $rootScope
+      .$eventToObservable(NotificationBadgeUpdateRequest.NAME)
       .filter(([event, req]) => req instanceof NotificationBadgeUpdateRequest)
       .safeApply($scope, ([event, req]) => {
         this.notification = req.notification
       })
       .subscribe()
 
-    $rootScope.$eventToObservable(NativeUpdateNotificationRequest.NAME)
+    $rootScope
+      .$eventToObservable(NativeUpdateNotificationRequest.NAME)
       .filter(([event, req]) => req instanceof NativeUpdateNotificationRequest)
       .safeApply($scope, ([event, req]) => {
         this.notification = req.notification
@@ -123,16 +147,19 @@ export class FeatureRouteController {
       .subscribe()
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.localStorageService.getObject('notification').subscribe(data => {
+      this.localStorageService.getObject('notification').subscribe((data) => {
         this.notification = data
       })
 
-      this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        this.isLoggedIn = isLoggedIn
-        if (isLoggedIn) {
-          this.registerOnChangeForumStyle()
-        }
-      }).subscribe()
+      this.authService
+        .isLoggedIn()
+        .safeApply($scope, (isLoggedIn) => {
+          this.isLoggedIn = isLoggedIn
+          if (isLoggedIn) {
+            this.registerOnChangeForumStyle()
+          }
+        })
+        .subscribe()
 
       if (this.isFree()) {
         this.signature = true
@@ -140,17 +167,19 @@ export class FeatureRouteController {
     })
   }
 
-  registerOnChangeForumStyle () {
+  registerOnChangeForumStyle() {
     // TODO: move to web-worker
-    this.apiService.settings()
+    this.apiService
+      .settings()
       .safeApply(this.scope, ({ actionUrl, forumStyle, forumStyles, hiddenFormInputs }) => {
         this.forumStyle = forumStyle
         this.actionUrl = actionUrl
         this.hiddenFormInputs = hiddenFormInputs
-      }).subscribe()
+      })
+      .subscribe()
   }
 
-  onChangeForumStyle (newStyle) {
+  onChangeForumStyle(newStyle) {
     const { actionUrl, hiddenFormInputs } = this
     const spinnerHtml = `
           <div>
@@ -163,38 +192,42 @@ export class FeatureRouteController {
       html: spinnerHtml,
       allowOutsideClick: false,
       showCancelButton: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     })
 
     swal.showLoading()
 
     // Post to the server
-    this.apiService.dynamicRequest({
-      method: 'POST',
-      url: actionUrl,
-      data: {
-        styleidnew: newStyle,
-        ...hiddenFormInputs
-      },
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).safeApply(this.scope, (resp) => {
-      swal({
-        animation: false,
-        title: '成功更改',
-        text: '',
-        type: 'success'
+    this.apiService
+      .dynamicRequest({
+        method: 'POST',
+        url: actionUrl,
+        data: {
+          styleidnew: newStyle,
+          ...hiddenFormInputs,
+        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
-    }).subscribe()
+      .safeApply(this.scope, (resp) => {
+        swal({
+          animation: false,
+          title: '成功更改',
+          text: '',
+          type: 'success',
+        })
+      })
+      .subscribe()
   }
 
-  doRefresh () {
+  doRefresh() {
     this.registerOnChangeForumStyle()
-    this.apiService.checkPM()
+    this.apiService
+      .checkPM()
       .flatMap(() => this.apiService.memberCenter())
       .subscribe()
   }
 
-  isFree () {
+  isFree() {
     const version = this.scope.nativeVersion
     return version && version[version.length - 1] === 'F'
   }

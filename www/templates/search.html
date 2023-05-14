@@ -1,29 +1,24 @@
 <ion-view class="search-view">
+  <ion-nav-title>搜尋帖子</ion-nav-title>
 
-    <ion-nav-title>
-        搜尋帖子
-    </ion-nav-title>
+  <ion-content>
+    <div class="spinner" ng-if="vm.searching">
+      <ir-spinner></ir-spinner>
+      <p class="default-text-color">搜尋「{{vm.keyword}}」中</p>
+    </div>
 
-    <ion-content>
-        <div class="spinner" ng-if="vm.searching">
-            <ir-spinner></ir-spinner>
-            <p class="default-text-color">搜尋「{{vm.keyword}}」中</p>
+    <div>
+      <div class="app-icon"><img src="/img/icon.png" alt="" /></div>
+
+      <div class="search-container row" ng-if="!vm.searching">
+        <div class="col-80 col-offset-10">
+          <span class="item item-input" style="width: 100%">
+            <input placeholder="請輸入關鍵字..." type="text" ng-model="vm.keyword" />
+
+            <button class="button ion-ios-search-strong fright" ng-click="vm.onSearch(vm.keyword)"></button>
+          </span>
         </div>
-
-        <div>
-            <div class="app-icon"><img src="/img/icon.png" alt=""></div>
-
-            <div class="search-container row" ng-if="!vm.searching">
-                <div class="col-80 col-offset-10">
-                <span class="item item-input" style="width:100%">
-                    <input placeholder="請輸入關鍵字..." type="text" ng-model="vm.keyword">
-
-                    <button class="button ion-ios-search-strong fright" ng-click="vm.onSearch(vm.keyword)"></button>
-                </span>
-                </div>
-            </div>
-        </div>
-
-    </ion-content>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>
-

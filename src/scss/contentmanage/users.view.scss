@@ -1,5 +1,4 @@
 .contentmanage-users-view {
-
   // uid
   .item-input-wrapper > input:first-child {
     width: 50%;
@@ -15,25 +14,29 @@
   }
 
   .odd {
-    &.item, .item-content {
+    &.item,
+    .item-content {
       background-color: $odd-color;
     }
-    &.editable-item, .item-reorder, .item-delete {
+    &.editable-item,
+    .item-reorder,
+    .item-delete {
       background-color: $odd-color;
       .button.icon {
         color: red;
       }
       padding: 0;
     }
-
   }
 
   .even {
-
-    &.item, .item-content {
+    &.item,
+    .item-content {
       background-color: $even-color;
     }
-    &.editable-item, .item-reorder, .item-delete {
+    &.editable-item,
+    .item-reorder,
+    .item-delete {
       background-color: $even-color;
       .button.icon {
         color: red;
@@ -44,7 +47,7 @@
 
   .item {
     .remark {
-      flex:2;
+      flex: 2;
       text-align: right;
       word-break: break-word;
       white-space: normal;

@@ -78,7 +78,7 @@ const sitemaps = new Set([
   '/tab/topics/92/page/1',
   '/tab/topics/67/page/1',
   '/tab/topics/27/page/1',
-  '/tab/topics/47/page/1'
+  '/tab/topics/47/page/1',
 ])
 
-sitemaps.forEach(it => console.log('https://hkepc.pro' + it))
+sitemaps.forEach((it) => console.log('https://hkepc.pro' + it))

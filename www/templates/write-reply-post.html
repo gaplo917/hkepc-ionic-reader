@@ -1,8 +1,8 @@
 <ion-view class="edit-view">
   <ion-nav-title>
-      <div class="wrapper">
-          <p ng-class="{'long-title': vm.post.isLongTitle }">{{::vm.post.title}}</p>
-      </div>
+    <div class="wrapper">
+      <p ng-class="{'long-title': vm.post.isLongTitle }">{{::vm.post.title}}</p>
+    </div>
   </ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button-default" ng-click="vm.doReply(vm.reply)">發佈</button>
@@ -12,38 +12,45 @@
       點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
     </div>
     <div class="attachment-row" ng-if="vm.existingImages.length > 0">
-      <div class="attachment-image-wrapper"
-           ng-repeat="eImage in vm.existingImages track by $index"
-           on-hold="vm.confirmDeleteImage(eImage)"
-           on-tap="vm.addImageToContent(eImage)">
-          <img ng-src="{{eImage.src}}">
-          <span class="super-less-important-info"> {{eImage.id}}</span>
+      <div
+        class="attachment-image-wrapper"
+        ng-repeat="eImage in vm.existingImages track by $index"
+        on-hold="vm.confirmDeleteImage(eImage)"
+        on-tap="vm.addImageToContent(eImage)"
+      >
+        <img ng-src="{{eImage.src}}" />
+        <span class="super-less-important-info">{{eImage.id}}</span>
       </div>
     </div>
     <ion-list ng-if="!vm.isHideSelectType">
-      <div class="item item-divider" style="text-align: center;">
-        回覆類別
-      </div>
-      <div class="row" style="padding:0;">
-        <ion-radio style="width:34%" ng-model="vm.reply.type" ng-value="1"><i class="icon ion-compose"></i> 無
+      <div class="item item-divider" style="text-align: center">回覆類別</div>
+      <div class="row" style="padding: 0">
+        <ion-radio style="width: 34%" ng-model="vm.reply.type" ng-value="1">
+          <i class="icon ion-compose"></i>
+          無
         </ion-radio>
-        <ion-radio style="width:34%" ng-model="vm.reply.type" ng-value="2"><i class="icon ion-reply"></i> 回覆
+        <ion-radio style="width: 34%" ng-model="vm.reply.type" ng-value="2">
+          <i class="icon ion-reply"></i>
+          回覆
         </ion-radio>
-        <ion-radio style="width:34%" ng-model="vm.reply.type" ng-value="3"><i class="icon ion-quote"></i> 引用
+        <ion-radio style="width: 34%" ng-model="vm.reply.type" ng-value="3">
+          <i class="icon ion-quote"></i>
+          引用
         </ion-radio>
       </div>
     </ion-list>
 
-    <input-helper modal='vm' content-model='vm.reply.content'></input-helper>
+    <input-helper modal="vm" content-model="vm.reply.content"></input-helper>
 
     <div class="row content-input">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-            <textarea id="{{vm.id}}"
-                      ng-focus="isAndroidNative && vm.onFocus()"
-                      placeholder="請輸入內容"
-                      ng-model="vm.reply.content"
-            ></textarea>
+          <textarea
+            id="{{vm.id}}"
+            ng-focus="isAndroidNative && vm.onFocus()"
+            placeholder="請輸入內容"
+            ng-model="vm.reply.content"
+          ></textarea>
         </div>
       </div>
     </div>
@@ -51,7 +58,5 @@
     <div style="height: 500px"></div>
 
     <div class="tab-bar-inset"></div>
-
   </ion-content>
 </ion-view>
-

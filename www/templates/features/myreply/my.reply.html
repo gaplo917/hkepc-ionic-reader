@@ -1,42 +1,47 @@
 <ion-view class="myreply-view">
-    <ion-nav-title>我的回覆</ion-nav-title>
-    <ion-content lazy-scroll>
-        <div class="spinner" ng-if="vm.myreplies.length == 0">
-            <ir-spinner></ir-spinner>
+  <ion-nav-title>我的回覆</ion-nav-title>
+  <ion-content lazy-scroll>
+    <div class="spinner" ng-if="vm.myreplies.length == 0">
+      <ir-spinner></ir-spinner>
+    </div>
+    <ion-list>
+      <ion-item
+        class="item item-icon-right"
+        ng-repeat="myreply in vm.myreplies track by $index"
+        ng-class-odd="'odd'"
+        ng-class-even="'even'"
+        href=""
+        ng-click="::vm.findMessage(myreply.post.postId,myreply.post.messageId)"
+      >
+        <div class="item-text-wrap">
+          <h3>{{::myreply.brief}}</h3>
         </div>
-        <ion-list>
-            <ion-item class="item item-icon-right"
-                      ng-repeat="myreply in vm.myreplies track by $index"
-                      ng-class-odd="'odd'" ng-class-even="'even'"
-                      href=""
-                      ng-click="::vm.findMessage(myreply.post.postId,myreply.post.messageId)">
-                <div class="item-text-wrap">
-                    <h3>{{::myreply.brief}}</h3>
-                </div>
 
-                <div>
-                    <span class="less-important-info">{{::myreply.post.title}}</span>
-                </div>
-                <div>
-                    <span class="less-important-info">#{{$index + 1}} <i class="ion-ios-locked"
-                                                                         ng-if="::myreply.status == '關閉'"></i> {{::myreply.topic.title}}</span>
-                    <span class="fright less-important-info">{{::myreply.timestamp}}</span>
-                </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-            </ion-item>
-
-        </ion-list>
-        <ion-infinite-scroll
-            ng-if="vm.hasMoreData()"
-            on-infinite="vm.loadMore()"
-            immediate-check="true"
-            distance="7%">
-        </ion-infinite-scroll>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
-    <page-indicator
-        pagination-popover-delegate="vm.paginationPopoverDelegate"
-        current-page="vm.page"
-        total-page="vm.totalPageNum" />
+        <div>
+          <span class="less-important-info">{{::myreply.post.title}}</span>
+        </div>
+        <div>
+          <span class="less-important-info">
+            #{{$index + 1}}
+            <i class="ion-ios-locked" ng-if="::myreply.status == '關閉'"></i>
+            {{::myreply.topic.title}}
+          </span>
+          <span class="fright less-important-info">{{::myreply.timestamp}}</span>
+        </div>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll
+      ng-if="vm.hasMoreData()"
+      on-infinite="vm.loadMore()"
+      immediate-check="true"
+      distance="7%"
+    ></ion-infinite-scroll>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+  <page-indicator
+    pagination-popover-delegate="vm.paginationPopoverDelegate"
+    current-page="vm.page"
+    total-page="vm.totalPageNum"
+  />
 </ion-view>
-

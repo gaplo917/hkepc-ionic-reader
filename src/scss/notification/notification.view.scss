@@ -1,16 +1,16 @@
 .notification-view {
   .odd {
-    background-color: $odd-color
+    background-color: $odd-color;
   }
 
   .even {
-    background-color: $even-color
+    background-color: $even-color;
   }
-  .new-notification{
-    background-color: mix($epc-color,$bg-color,20%);
+  .new-notification {
+    background-color: mix($epc-color, $bg-color, 20%);
   }
 
-  .item-body{
-    color:$text-color;
+  .item-body {
+    color: $text-color;
   }
 }

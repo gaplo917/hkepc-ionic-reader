@@ -1,112 +1,135 @@
 <ion-view class="post-list-view">
-    <ion-nav-title>主題列表</i>
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button ng-if="::(isiOSNative || isAndroidNative)" class="button button-icon ion-ios-arrow-thin-left"
-                ng-click="::vm.onBack()"></button>
-        <button ng-if="::(!isiOSNative && !isAndroidNative)" class="button button-icon icon ion-navicon"
-                ng-click="::openDrawer($event)"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <a ng-if="vm.topicId != 'search' " class="button button-icon icon ion-ios-refresh-empty"
-           ng-click="::vm.doRefresh()"></a>
-    </ion-nav-buttons>
-    <div class="bar bar-subheader">
-        <a class="button button-icon icon ion-bonfire"
-           ng-if="::(vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
-           ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
-           ng-class="vm.showSticky ? 'icon-on': 'icon-off'">
-        </a>
-        <div class="title">
-            <div id="topics" class="wrapper" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
-                <button ng-repeat="subTopic in vm.subTopicList track by $index"
-                        ng-click="::vm.goToSubTopic($index, subTopic)"
-                        ng-class="{
+  <ion-nav-title>主題列表</ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button
+      ng-if="::(isiOSNative || isAndroidNative)"
+      class="button button-icon ion-ios-arrow-thin-left"
+      ng-click="::vm.onBack()"
+    ></button>
+    <button
+      ng-if="::(!isiOSNative && !isAndroidNative)"
+      class="button button-icon icon ion-navicon"
+      ng-click="::openDrawer($event)"
+    ></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a
+      ng-if="vm.topicId != 'search' "
+      class="button button-icon icon ion-ios-refresh-empty"
+      ng-click="::vm.doRefresh()"
+    ></a>
+  </ion-nav-buttons>
+  <div class="bar bar-subheader">
+    <a
+      class="button button-icon icon ion-bonfire"
+      ng-if="::(vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
+      ng-click="vm.showSticky = !vm.showSticky; vm.saveShowSticky(vm.showSticky)"
+      ng-class="vm.showSticky ? 'icon-on': 'icon-off'"
+    ></a>
+    <div class="title">
+      <div id="topics" class="wrapper" ng-class="{'scroll-x-padding': vm.subTopicList.length > 1}">
+        <button
+          ng-repeat="subTopic in vm.subTopicList track by $index"
+          ng-click="::vm.goToSubTopic($index, subTopic)"
+          ng-class="{
                             'active': vm.topic === subTopic
                         }"
-                        id="subtopic-{{::subTopic.id}}"
-                        class="topic-btn"
-                        ng-style="{
+          id="subtopic-{{::subTopic.id}}"
+          class="topic-btn"
+          ng-style="{
                             'opacity': vm.topicUiReady || vm.subTopicList.length <= 1 ? 1 : 0
-                        }">
-                    {{::subTopic.name}}
-                </button>
-            </div>
-
-        </div>
-        <a ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
-           class="button button-icon icon ion-ios-more" ng-click="::vm.doFilterOrder($event)"></a>
-
+                        }"
+        >
+          {{::subTopic.name}}
+        </button>
+      </div>
     </div>
-    <ion-content lazy-scroll>
-        <div class="spinner" ng-if="vm.posts === null">
-          <ir-spinner></ir-spinner>
-        </div>
-        <div class="spinner" ng-if="vm.posts !== null && vm.posts.length == 0">
-            沒有資料
-        </div>
+    <a
+      ng-if="::(vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost')"
+      class="button button-icon icon ion-ios-more"
+      ng-click="::vm.doFilterOrder($event)"
+    ></a>
+  </div>
+  <ion-content lazy-scroll>
+    <div class="spinner" ng-if="vm.posts === null">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="spinner" ng-if="vm.posts !== null && vm.posts.length == 0">沒有資料</div>
 
-        <div style="padding-top:44px;" ng-if="vm.posts !== null && vm.posts.length > 0">
-
-            <ion-item
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                class="item-icon-right item-text-wrap"
-                ng-repeat="post in vm.posts track by $index"
-                ng-class="{
+    <div style="padding-top: 44px" ng-if="vm.posts !== null && vm.posts.length > 0">
+      <ion-item
+        ng-class-odd="'odd'"
+        ng-class-even="'even'"
+        class="item-icon-right item-text-wrap"
+        ng-repeat="post in vm.posts track by $index"
+        ng-class="{
                   'partial-hide': post.isMatchedFilter && post.filterMode === '1'
                 }"
-                ng-if="post.topicId == 'search' ||
+        ng-if="post.topicId == 'search' ||
                 post.topicId == 'latest' ||
                 (vm.showSticky && post.isSticky) ||
                 !post.isSticky"
-                ng-click="::vm.onGoToPost(post)"
-                ng-href="{{vm.postInAppUrl(post)}}"
-                id="post-{{::post.id}}"
-                page="{{::post.pageNum}}"
-                lastread>
-                <h2 class="bigger-title filter-reason"><span compile="::post.filterReason"></span></h2>
-                <h2 class="bigger-title"><span compile="::post.hlContent"></span> <a ng-if="::post.tag">
-                    <small class="tag">#{{::post.tag}}</small>
-                </a></h2>
-                <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>
-                <div>
-                    <i class="ion-bonfire" ng-if="::post.isSticky"></i>
-                    <i class="ion-ios-locked" ng-if="::post.isLock"></i>
-                    <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
-                    <span class="less-important-info ion-person"> {{::post.author.name}}</span>
-                </div>
-                <div>
-                    <span class="super-less-important-info">
-                        <span ng-if="::post.count.reply > 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-undo"></i> {{::post.lastPost.name}}</span>
-                        <span ng-if="::post.count.reply == 0">{{::vm.relativeMomentize(post.lastPost.timestamp)}} <i class="ion ion-ios-redo"></i></span>
-                    </span>
-                </div>
-
-                <i class="icon ion-chevron-right icon-accessory"></i>
-            </ion-item>
-
+        ng-click="::vm.onGoToPost(post)"
+        ng-href="{{vm.postInAppUrl(post)}}"
+        id="post-{{::post.id}}"
+        page="{{::post.pageNum}}"
+        lastread
+      >
+        <h2 class="bigger-title filter-reason"><span compile="::post.filterReason"></span></h2>
+        <h2 class="bigger-title">
+          <span compile="::post.hlContent"></span>
+          <a ng-if="::post.tag">
+            <small class="tag">#{{::post.tag}}</small>
+          </a>
+        </h2>
+        <span class="less-important-info reply-view-count">{{::post.count.reply}} / {{::post.count.view}}</span>
+        <div>
+          <i class="ion-bonfire" ng-if="::post.isSticky"></i>
+          <i class="ion-ios-locked" ng-if="::post.isLock"></i>
+          <i class="ion-ios-eye" ng-if="::post.isRead" ng-style="::post.isRead && {'color' : '#8BC34A'}"></i>
+          <span class="less-important-info ion-person">{{::post.author.name}}</span>
+        </div>
+        <div>
+          <span class="super-less-important-info">
+            <span ng-if="::post.count.reply > 0">
+              {{::vm.relativeMomentize(post.lastPost.timestamp)}}
+              <i class="ion ion-ios-undo"></i>
+              {{::post.lastPost.name}}
+            </span>
+            <span ng-if="::post.count.reply == 0">
+              {{::vm.relativeMomentize(post.lastPost.timestamp)}}
+              <i class="ion ion-ios-redo"></i>
+            </span>
+          </span>
         </div>
 
-        <ion-infinite-scroll
-            ng-if="vm.posts !== null && vm.posts.length > 0 && vm.hasMoreData"
-            on-infinite="vm.loadMore()"
-            immediate-check="true"
-            distance="10%">
-        </ion-infinite-scroll>
-
-        <div class="tab-bar-inset"></div>
-    </ion-content>
-    <div class="floating-action-btn">
-        <button class="button-rounded action-button action-button-small"
-                ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
-                ng-click="vm.doNewPost(vm.topic)">
-            <i class="ion-ios-compose-outline"></i>
-        </button>
-        <div class="tab-bar-inset"></div>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
     </div>
-    <page-indicator
-        ng-if="vm.posts !== null && vm.posts.length > 0"
-        pagination-popover-delegate="vm.paginationPopoverDelegate"
-        current-page="vm.currentPageNum"
-        total-page="vm.totalPageNum" />
+
+    <ion-infinite-scroll
+      ng-if="vm.posts !== null && vm.posts.length > 0 && vm.hasMoreData"
+      on-infinite="vm.loadMore()"
+      immediate-check="true"
+      distance="10%"
+    ></ion-infinite-scroll>
+
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+  <div class="floating-action-btn">
+    <button
+      class="button-rounded action-button action-button-small"
+      ng-if="vm.topic.name && vm.topicId != 'search' && vm.topicId != 'latest' && vm.topicId != 'latestPost'"
+      ng-click="vm.doNewPost(vm.topic)"
+    >
+      <i class="ion-ios-compose-outline"></i>
+    </button>
+    <div class="tab-bar-inset"></div>
+  </div>
+  <page-indicator
+    ng-if="vm.posts !== null && vm.posts.length > 0"
+    pagination-popover-delegate="vm.paginationPopoverDelegate"
+    current-page="vm.currentPageNum"
+    total-page="vm.totalPageNum"
+  />
 </ion-view>

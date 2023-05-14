@@ -1,11 +1,15 @@
 import * as Controllers from './index'
 
 export class CMKeywordController {
-  static get STATE () { return 'tab.features-contentmanage-keyword' }
+  static get STATE() {
+    return 'tab.features-contentmanage-keyword'
+  }
 
-  static get NAME () { return 'CMKeywordController' }
+  static get NAME() {
+    return 'CMKeywordController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       // topicType: 'latestPostTopicFilters' | 'latestReplyTopicFilters'
       url: '/features/contentmanage/keywords',
@@ -13,13 +17,13 @@ export class CMKeywordController {
         main: {
           templateUrl: 'templates/features/contentmanage/keywords.html',
           controller: CMKeywordController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, $state, $stateParams, $ionicHistory, rx, apiService, LocalStorageService, observeOnScope) {
+  constructor($scope, $http, $state, $stateParams, $ionicHistory, rx, apiService, LocalStorageService, observeOnScope) {
     this.state = $state
     this.ionicHistory = $ionicHistory
     this.rx = rx
@@ -40,7 +44,7 @@ export class CMKeywordController {
     })
   }
 
-  addKeyword (event) {
+  addKeyword(event) {
     if (!event || (event && event.which === 13)) {
       this.items = [this.keywordInput, ...this.items]
       this.keywordInput = ''
@@ -48,18 +52,18 @@ export class CMKeywordController {
     this.LocalStorageService.setObject('hlKeywords', this.items)
   }
 
-  deleteKeyword (index) {
+  deleteKeyword(index) {
     this.items = this.items.filter((it, i) => i !== index)
     this.LocalStorageService.setObject('hlKeywords', this.items)
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.ContentManageController.STATE)
     }

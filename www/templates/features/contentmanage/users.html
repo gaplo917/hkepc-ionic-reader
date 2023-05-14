@@ -1,61 +1,59 @@
 <ion-view view-title="過濾帖子及回覆名單" class="contentmanage-users-view">
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-edit"
-           ng-click="vm.editMode = !vm.editMode"
-           ng-class="vm.editMode ? 'edit-mode-activated': '' "
-        ></a>
-    </ion-nav-buttons>
-    <ion-content>
-        <div class="spinner" ng-if="!vm.isReady">
-            <ir-spinner></ir-spinner>
-        </div>
-        <div class="item item-input-inset">
-            <div class="item-input-wrapper">
-                <input type="tel"
-                       ng-model="vm.userIdInput"
-                       ng-keypress="vm.addUser($event)"
-                       placeholder="輸入用戶編號 (UID)"
-                >
-                <input type="text"
-                       ng-model="vm.remarkInput"
-                       ng-keypress="vm.addUser($event)"
-                       placeholder="備註"
-                >
-            </div>
-            <button class="button button-small icon ion-android-add button-assertive"
-                    ng-click="vm.addUser()">
-            </button>
-        </div>
-        <div class="less-important-info"
-             ng-if="vm.isReady && vm.items.length === 0"
-             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            名單沒有資料
-        </div>
-        <div class="less-important-info"
-             ng-if="vm.isReady && vm.items.length > 0"
-             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            以下用戶的帖子或回覆會被隱藏
-        </div>
-        <ion-list ng-if="vm.isReady" show-delete="vm.editMode">
-            <ion-item
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                class="item item-avatar"
-                ng-repeat="item in vm.items track by $index"
-                ng-click="vm.onUserProfilePic(item)">
-                <img  ng-src="{{item.image}}">
-                <h2>{{item.name}} (UID: {{item.uid}})</h2>
-                <p style="display: flex">
-                    <span style="flex: 1">
-                        <i ng-repeat="star in vm.getTimes(item.rank) track by $index"
-                           class="ion-ios-star"
-                           style="color:#F9A825;"></i>
-                    </span>
-                    <span class="remark" ng-if="item.remark">備註：{{item.remark}}</span>
-                </p>
-                <ion-delete-button class="ion-android-remove-circle" ng-click="vm.deleteUser($index)"/>
-            </ion-item>
-        </ion-list>
-        <div class="tab-bar-inset"></div>
-
-    </ion-content>
+  <ion-nav-buttons side="right">
+    <a
+      class="button button-icon icon ion-edit"
+      ng-click="vm.editMode = !vm.editMode"
+      ng-class="vm.editMode ? 'edit-mode-activated': '' "
+    ></a>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="spinner" ng-if="!vm.isReady">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="item item-input-inset">
+      <div class="item-input-wrapper">
+        <input type="tel" ng-model="vm.userIdInput" ng-keypress="vm.addUser($event)" placeholder="輸入用戶編號 (UID)" />
+        <input type="text" ng-model="vm.remarkInput" ng-keypress="vm.addUser($event)" placeholder="備註" />
+      </div>
+      <button class="button button-small icon ion-android-add button-assertive" ng-click="vm.addUser()"></button>
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.isReady && vm.items.length === 0"
+      style="text-align: center; margin-top: 8px; margin-bottom: 8px"
+    >
+      名單沒有資料
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.isReady && vm.items.length > 0"
+      style="text-align: center; margin-top: 8px; margin-bottom: 8px"
+    >
+      以下用戶的帖子或回覆會被隱藏
+    </div>
+    <ion-list ng-if="vm.isReady" show-delete="vm.editMode">
+      <ion-item
+        ng-class-odd="'odd'"
+        ng-class-even="'even'"
+        class="item item-avatar"
+        ng-repeat="item in vm.items track by $index"
+        ng-click="vm.onUserProfilePic(item)"
+      >
+        <img ng-src="{{item.image}}" />
+        <h2>{{item.name}} (UID: {{item.uid}})</h2>
+        <p style="display: flex">
+          <span style="flex: 1">
+            <i
+              ng-repeat="star in vm.getTimes(item.rank) track by $index"
+              class="ion-ios-star"
+              style="color: #f9a825"
+            ></i>
+          </span>
+          <span class="remark" ng-if="item.remark">備註：{{item.remark}}</span>
+        </p>
+        <ion-delete-button class="ion-android-remove-circle" ng-click="vm.deleteUser($index)" />
+      </ion-item>
+    </ion-list>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

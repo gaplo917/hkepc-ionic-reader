@@ -6,42 +6,44 @@ import moment from 'moment'
 import uuid from 'uuid-v4'
 
 export class HistoryService {
-  static get NAME () { return 'HistoryService' }
+  static get NAME() {
+    return 'HistoryService'
+  }
 
-  static get DI () {
+  static get DI() {
     return (LocalStorageService, rx) => new HistoryService(LocalStorageService, rx)
   }
 
-  static get BROWSE_HISTORY () { return 'browse.history' }
+  static get BROWSE_HISTORY() {
+    return 'browse.history'
+  }
 
-  static get BROWSE_HISTORY_STAT () { return 'browse.history.stat' }
+  static get BROWSE_HISTORY_STAT() {
+    return 'browse.history.stat'
+  }
 
-  constructor (LocalStorageService, rx) {
+  constructor(LocalStorageService, rx) {
     this.localStorageService = LocalStorageService
     this.rx = rx
   }
 
-  save (dateStr, historyList) {
+  save(dateStr, historyList) {
     this.localStorageService.setObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`, historyList)
   }
 
-  saveStat (stat) {
+  saveStat(stat) {
     this.localStorageService.setObject(HistoryService.BROWSE_HISTORY_STAT, stat)
   }
 
-  add (historyObj) {
+  add(historyObj) {
     const today = moment().format('YYYYMMDD')
 
-    this.rx.Observable.combineLatest(
-      this.getHistoryStat(),
-      this.getHistoryAt(today),
-      (stat, histories) => {
-        return {
-          stat,
-          histories: histories || []
-        }
+    this.rx.Observable.combineLatest(this.getHistoryStat(), this.getHistoryAt(today), (stat, histories) => {
+      return {
+        stat,
+        histories: histories || [],
       }
-    ).subscribe(({ stat, histories }) => {
+    }).subscribe(({ stat, histories }) => {
       // // add uuid for the history obj
       historyObj.uuid = uuid()
       historyObj.createdAt = new Date().getTime()
@@ -58,25 +60,25 @@ export class HistoryService {
     })
   }
 
-  getHistoryStat () {
-    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY_STAT).map(data => data || {})
+  getHistoryStat() {
+    return this.localStorageService.getObject(HistoryService.BROWSE_HISTORY_STAT).map((data) => data || {})
   }
 
-  getHistoryAt (dateStr) {
-    return this.localStorageService.getObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`).map(data => data || [])
+  getHistoryAt(dateStr) {
+    return this.localStorageService.getObject(`${HistoryService.BROWSE_HISTORY}.${dateStr}`).map((data) => data || [])
   }
 
-  clearHistory (key) {
+  clearHistory(key) {
     this.save(key, undefined)
 
-    this.getHistoryStat().subscribe(stat => {
+    this.getHistoryStat().subscribe((stat) => {
       delete stat[key]
 
       this.saveStat(stat)
     })
   }
 
-  clearAllHistory () {
+  clearAllHistory() {
     const stat = this.getHistoryStat()
 
     for (const key of Object.keys(stat)) {

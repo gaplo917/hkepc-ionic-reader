@@ -1,34 +1,42 @@
 export class NativeChangeFontSizeRequest {
-  static get NAME () { return 'NativeChangeFontSizeRequest' }
+  static get NAME() {
+    return 'NativeChangeFontSizeRequest'
+  }
 
-  constructor (size) {
+  constructor(size) {
     this.size = size
   }
 }
 
 export class NativeChangeThemeRequest {
-  static get NAME () { return 'NativeChangeThemeRequest' }
+  static get NAME() {
+    return 'NativeChangeThemeRequest'
+  }
 
-  constructor (theme) {
+  constructor(theme) {
     this.theme = theme
   }
 }
 
 export class NativeUpdateMHeadFixRequest {
-  static get NAME () { return 'NativeUpdateMHeadFixRequest' }
+  static get NAME() {
+    return 'NativeUpdateMHeadFixRequest'
+  }
 
-  constructor (isMHead) {
+  constructor(isMHead) {
     this.isMHead = isMHead
   }
 }
 
 export class NativeUpdateNotificationRequest {
-  static get NAME () { return 'NativeUpdateNotificationRequest' }
+  static get NAME() {
+    return 'NativeUpdateNotificationRequest'
+  }
 
-  constructor (pmNotificationCount, postNotificationCount) {
+  constructor(pmNotificationCount, postNotificationCount) {
     this.notification = {
       pm: parseInt(pmNotificationCount),
-      post: parseInt(postNotificationCount)
+      post: parseInt(postNotificationCount),
     }
   }
 }

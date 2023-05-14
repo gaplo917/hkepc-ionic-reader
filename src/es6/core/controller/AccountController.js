@@ -7,11 +7,15 @@ import { LoginTabUpdateRequest } from '../model/requests'
 import * as Controllers from './index'
 
 export class AccountController {
-  static get STATE () { return 'tab.features-account' }
+  static get STATE() {
+    return 'tab.features-account'
+  }
 
-  static get NAME () { return 'AccountController' }
+  static get NAME() {
+    return 'AccountController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/features/account',
       cache: false,
@@ -19,13 +23,13 @@ export class AccountController {
         main: {
           templateUrl: 'templates/features/account/account.html',
           controller: AccountController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory, $timeout) {
+  constructor($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory, $timeout) {
     this.http = $http
     this.scope = $scope
     this.state = $state
@@ -39,35 +43,45 @@ export class AccountController {
       username: null,
       password: null,
       securityQuestionId: '0',
-      securityQuestionAns: ''
+      securityQuestionAns: '',
     }
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.authService.isLoggedIn().safeApply($scope, isLoggedIn => {
-        this.isLoggedIn = isLoggedIn
-        this.isReady = true
-      }).subscribe()
+      this.authService
+        .isLoggedIn()
+        .safeApply($scope, (isLoggedIn) => {
+          this.isLoggedIn = isLoggedIn
+          this.isReady = true
+        })
+        .subscribe()
 
-      this.authService.getUsername().safeApply($scope, username => {
-        if (username) {
-          this.loginForm.username = username
-        }
-      }).subscribe()
+      this.authService
+        .getUsername()
+        .safeApply($scope, (username) => {
+          if (username) {
+            this.loginForm.username = username
+          }
+        })
+        .subscribe()
 
-      LocalStorageService.get('proxy').safeApply($scope, data => {
-        this.proxy = data || HKEPC.proxy
-      }).subscribe()
+      LocalStorageService.get('proxy')
+        .safeApply($scope, (data) => {
+          this.proxy = data || HKEPC.proxy
+        })
+        .subscribe()
 
-      LocalStorageService.getObject('authority').safeApply($scope, data => {
-        this.loginForm = {
-          ...this.loginForm,
-          data
-        }
-      }).subscribe()
+      LocalStorageService.getObject('authority')
+        .safeApply($scope, (data) => {
+          this.loginForm = {
+            ...this.loginForm,
+            data,
+          }
+        })
+        .subscribe()
     })
   }
 
-  login (username, password) {
+  login(username, password) {
     const authority = this.loginForm
 
     this.authService.login(authority, (err, username) => {
@@ -82,7 +96,7 @@ export class AccountController {
         ...this.loginForm,
         password: null,
         securityQuestionId: '0',
-        securityQuestionAns: ''
+        securityQuestionAns: '',
       }
 
       this.ionicHistory.clearCache()
@@ -95,7 +109,7 @@ export class AccountController {
     })
   }
 
-  logout () {
+  logout() {
     this.authService.logout()
 
     // send the login name to parent controller
@@ -106,20 +120,20 @@ export class AccountController {
     this.isLoggedIn = false
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
+        historyRoot: true,
       })
       this.state.go(Controllers.FeatureRouteController.STATE)
     }
   }
 
-  isProxy () {
+  isProxy() {
     return URLUtils.isProxy()
   }
 }

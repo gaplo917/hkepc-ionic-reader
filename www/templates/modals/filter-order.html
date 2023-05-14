@@ -1,19 +1,22 @@
 <ion-popover-view>
-  <ion-content >
+  <ion-content>
     <div class="list">
       <div class="item item-divider">依次順序</div>
       <ion-radio name="order" ng-model="vm.order" ng-value="'dateline'">日期</ion-radio>
       <ion-radio name="order" ng-model="vm.order" ng-value="'lastpost'">最後發表</ion-radio>
 
       <div class="item item-divider" ng-if="vm.categories.length > 0">分類</div>
-      <ion-radio name="category" ng-repeat="c in vm.categories" ng-model="vm.filter" ng-value="c.id">#{{c.name}}</ion-radio>
+      <ion-radio name="category" ng-repeat="c in vm.categories" ng-model="vm.filter" ng-value="c.id">
+        #{{c.name}}
+      </ion-radio>
     </div>
-
   </ion-content>
   <ion-footer-bar class="bar bar-clear">
-      <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.hide()"></button>
-      <span class="col-20"></span>
-      <button class="col-40 button button-icon ion-ios-checkmark-empty" ng-click="vm.doRefresh({order: vm.order, filter: vm.filter});vm.hide()"> </button>
-
+    <button class="col-40 button button-icon ion-ios-close-empty" ng-click="vm.hide()"></button>
+    <span class="col-20"></span>
+    <button
+      class="col-40 button button-icon ion-ios-checkmark-empty"
+      ng-click="vm.doRefresh({order: vm.order, filter: vm.filter});vm.hide()"
+    ></button>
   </ion-footer-bar>
 </ion-popover-view>

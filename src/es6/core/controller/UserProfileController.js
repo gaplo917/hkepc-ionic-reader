@@ -2,15 +2,15 @@ import * as Controllers from './index'
 import { userFilterSchema } from '../schema'
 
 export class UserProfileController {
-  static get STATE () {
+  static get STATE() {
     return 'tab.user-profile'
   }
 
-  static get NAME () {
+  static get NAME() {
     return 'UserProfileController'
   }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/userProfile?author=',
       cache: false,
@@ -18,13 +18,13 @@ export class UserProfileController {
         main: {
           templateUrl: 'templates/user-profile.html',
           controller: UserProfileController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile, LocalStorageService) {
+  constructor($scope, $stateParams, $state, $ionicHistory, ngToast, apiService, $compile, LocalStorageService) {
     this.state = $state
     this.scope = $scope
     this.ionicHistory = $ionicHistory
@@ -39,13 +39,17 @@ export class UserProfileController {
     this.author = author
 
     $scope.$on('$ionicView.loaded', (e) => {
-      this.apiService.userProfile(author.uid).safeApply($scope, data => {
-        this.content = data.content
-      }).subscribe()
+      this.apiService
+        .userProfile(author.uid)
+        .safeApply($scope, (data) => {
+          this.content = data.content
+        })
+        .subscribe()
     })
 
     $scope.$on('$ionicView.enter', (e) => {
-      this.localStorageService.getObject('userFilter', userFilterSchema)
+      this.localStorageService
+        .getObject('userFilter', userFilterSchema)
         .safeApply($scope, (userFilter) => {
           const { userIds } = userFilter
           this.isInUserFilter = userIds.indexOf(String(this.author.uid)) >= 0
@@ -54,23 +58,24 @@ export class UserProfileController {
     })
   }
 
-  sendPm (author) {
+  sendPm(author) {
     this.state.go(Controllers.ChatDetailController.STATE, {
-      id: author.uid
+      id: author.uid,
     })
   }
 
-  addToFilterList () {
+  addToFilterList() {
     this.state.go(Controllers.CMUsersController.STATE, {
       prefill: JSON.stringify({
         id: this.author.uid,
-        reason: ''
-      })
+        reason: '',
+      }),
     })
   }
 
-  removeFromFilterList () {
-    this.localStorageService.getObject('userFilter', userFilterSchema)
+  removeFromFilterList() {
+    this.localStorageService
+      .getObject('userFilter', userFilterSchema)
       .safeApply(this.scope, (userFilter) => {
         const { uid: userId } = this.author
         const index = userFilter.userIds.indexOf(String(this.author.uid))
@@ -91,13 +96,13 @@ export class UserProfileController {
       .subscribe()
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
-        disableBack: true
+        disableBack: true,
       })
       this.state.go(Controllers.TopicListController.STATE)
     }

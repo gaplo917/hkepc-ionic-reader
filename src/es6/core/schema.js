@@ -1,5 +1,4 @@
-
 export const userFilterSchema = {
   users: {},
-  userIds: []
+  userIds: [],
 }

@@ -1,30 +1,34 @@
 <ion-view class="edit-view">
-  <ion-nav-title>
-    {{ vm.topic.name }}
-  </ion-nav-title>
+  <ion-nav-title>{{ vm.topic.name }}</ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button-default" ng-click="vm.doPublishNewPost(vm.post)">發佈</button>
   </ion-nav-buttons>
 
   <ion-content delegate-handle="edit">
-
     <div ng-if="vm.existingImages.length > 0" class="super-less-important-info text-center padding-top">
       點擊加入圖片 - 長按刪除圖片（提交修改才能生效)
     </div>
     <div class="attachment-row" ng-if="vm.existingImages.length > 0">
-      <div class="attachment-image-wrapper"
-           ng-repeat="eImage in vm.existingImages track by $index"
-           on-hold="vm.confirmDeleteImage(eImage)"
-           on-tap="vm.addImageToContent(eImage)">
-          <img ng-src="{{eImage.src}}">
-          <span class="super-less-important-info"> {{eImage.id}}</span>
+      <div
+        class="attachment-image-wrapper"
+        ng-repeat="eImage in vm.existingImages track by $index"
+        on-hold="vm.confirmDeleteImage(eImage)"
+        on-tap="vm.addImageToContent(eImage)"
+      >
+        <img ng-src="{{eImage.src}}" />
+        <span class="super-less-important-info">{{eImage.id}}</span>
       </div>
     </div>
 
     <ion-list>
-      <div ng-if="vm.categories.length > 0" class="item item-divider" style="text-align: center"
-           ng-click="vm.openCategoryPopover($event)">
-        {{vm.post.category.name || '新帖類別'}} <i class="ion-android-arrow-dropdown"></i>
+      <div
+        ng-if="vm.categories.length > 0"
+        class="item item-divider"
+        style="text-align: center"
+        ng-click="vm.openCategoryPopover($event)"
+      >
+        {{vm.post.category.name || '新帖類別'}}
+        <i class="ion-android-arrow-dropdown"></i>
       </div>
     </ion-list>
 
@@ -33,17 +37,18 @@
     <div class="row title-input">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-          <input placeholder="請輸入標題" type="text" ng-model="vm.post.title">
+          <input placeholder="請輸入標題" type="text" ng-model="vm.post.title" />
         </div>
       </div>
     </div>
     <div class="row content-input">
       <div class="item item-input-inset">
         <div class="item-input-wrapper">
-          <textarea id="{{vm.id}}"
-                    ng-focus="isAndroidNative && vm.onFocus()"
-                    placeholder="請輸入內容"
-                    ng-model="vm.post.content"
+          <textarea
+            id="{{vm.id}}"
+            ng-focus="isAndroidNative && vm.onFocus()"
+            placeholder="請輸入內容"
+            ng-model="vm.post.content"
           ></textarea>
         </div>
       </div>
@@ -54,4 +59,3 @@
     <div class="tab-bar-inset"></div>
   </ion-content>
 </ion-view>
-

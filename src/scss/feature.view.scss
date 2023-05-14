@@ -1,15 +1,15 @@
-.feature-view, .contentmanage-view {
+.feature-view,
+.contentmanage-view {
   ion-content {
     background-color: $bg-color;
-
   }
 
   .inner-icon {
     font-size: $font-size-base * 2;
-    color:$inner-icon-color;
+    color: $inner-icon-color;
 
-    padding:4px 9px;
-    border-radius:10px;
+    padding: 4px 9px;
+    border-radius: 10px;
   }
 
   .text-icon {
@@ -21,44 +21,45 @@
   }
 
   .list-right-arrow {
-    position:absolute;
-    left:initial;
-    width:20px;
-    right:12px;
+    position: absolute;
+    left: initial;
+    width: 20px;
+    right: 12px;
   }
 
   .card {
     background-color: $card-bg-color;
 
-    .feature-route, .item {
-      color:$text-color;
+    .feature-route,
+    .item {
+      color: $text-color;
       background-color: $card-bg-color;
     }
-    :hover{
+    :hover {
       background-color: $card-selection-color;
     }
 
-    .selectable, .toggleable {
+    .selectable,
+    .toggleable {
       padding-top: 10px;
       padding-bottom: 10px;
     }
 
     .selectable:after {
-        position: absolute;
-        top: 50%;
-        right: 16px;
-        margin-top: -3px;
-        width: 0;
-        height: 0;
-        border-top: 5px solid;
-        border-right: 5px solid transparent;
-        border-left: 5px solid transparent;
-        color: $text-color;
-        content: "";
-        pointer-events: none;
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      margin-top: -3px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+      color: $text-color;
+      content: '';
+      pointer-events: none;
     }
     select {
-
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
@@ -71,7 +72,7 @@
       border: none;
       background: $card-bg-color;
       color: $text-color;
-      text-indent: .01px;
+      text-indent: 0.01px;
       text-overflow: '';
       white-space: nowrap;
       font-size: 14px;
@@ -80,12 +81,12 @@
     }
   }
 
-  .forum-style-warning{
-    color:red;
+  .forum-style-warning {
+    color: red;
     text-align: right;
-    position:absolute;
-    font-size:12px;
-    right:20px;
-    bottom:0px
+    position: absolute;
+    font-size: 12px;
+    right: 20px;
+    bottom: 0px;
   }
 }

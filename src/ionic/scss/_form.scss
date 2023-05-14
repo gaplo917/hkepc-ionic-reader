@@ -21,7 +21,7 @@ legend {
 
   small {
     color: $stable;
-    font-size: $line-height-base * .75;
+    font-size: $line-height-base * 0.75;
   }
 }
 
@@ -39,7 +39,6 @@ select,
 textarea {
   font-family: $font-family-base; // And only set font-family here for those that need it (note the missing label element)
 }
-
 
 // Input List
 // -------------------------------
@@ -80,7 +79,7 @@ textarea {
   }
 }
 // prevent flex-shrink on WP
-.platform-windowsphone .item-input input{
+.platform-windowsphone .item-input input {
   flex-shrink: 1;
 }
 
@@ -137,7 +136,8 @@ textarea {
   background-color: transparent;
   box-shadow: none;
 
-  .input-label, .icon {
+  .input-label,
+  .icon {
     display: inline-block;
     padding: 4px 0 0 0px;
     vertical-align: middle;
@@ -160,7 +160,7 @@ textarea {
   position: relative;
   padding: 0px;
   max-width: 90%;
-  direction:ltr;
+  direction: ltr;
   white-space: pre-wrap;
   margin: -3px;
 }
@@ -175,36 +175,35 @@ textarea {
     padding: 5px 0 0 0;
     opacity: 0;
     top: 10px;
-    @include transition(opacity .15s ease-in, top .2s linear);
+    @include transition(opacity 0.15s ease-in, top 0.2s linear);
 
     &.has-input {
       opacity: 1;
       top: 0;
-      @include transition(opacity .15s ease-in, top .2s linear);
+      @include transition(opacity 0.15s ease-in, top 0.2s linear);
     }
   }
 }
-
 
 // Form Controls
 // -------------------------------
 
 // Shared size and type resets
 textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
-input[type="color"] {
+input[type='text'],
+input[type='password'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='date'],
+input[type='month'],
+input[type='time'],
+input[type='week'],
+input[type='number'],
+input[type='email'],
+input[type='url'],
+input[type='search'],
+input[type='tel'],
+input[type='color'] {
   display: block;
   padding-top: 2px;
   padding-left: 0;
@@ -217,11 +216,11 @@ input[type="color"] {
 
 .platform-ios,
 .platform-android {
-  input[type="datetime-local"],
-  input[type="date"],
-  input[type="month"],
-  input[type="time"],
-  input[type="week"] {
+  input[type='datetime-local'],
+  input[type='date'],
+  input[type='month'],
+  input[type='time'],
+  input[type='week'] {
     padding-top: 8px;
   }
 }
@@ -245,45 +244,45 @@ textarea {
 
 // Everything else
 textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
-input[type="color"] {
+input[type='text'],
+input[type='password'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='date'],
+input[type='month'],
+input[type='time'],
+input[type='week'],
+input[type='number'],
+input[type='email'],
+input[type='url'],
+input[type='search'],
+input[type='tel'],
+input[type='color'] {
   border: 0;
 }
 
 // Position radios and checkboxes better
-input[type="radio"],
-input[type="checkbox"] {
+input[type='radio'],
+input[type='checkbox'] {
   margin: 0;
   line-height: normal;
 }
 
 // Reset width of input images, buttons, radios, checkboxes
 .item-input {
-  input[type="file"],
-  input[type="image"],
-  input[type="submit"],
-  input[type="reset"],
-  input[type="button"],
-  input[type="radio"],
-  input[type="checkbox"] {
+  input[type='file'],
+  input[type='image'],
+  input[type='submit'],
+  input[type='reset'],
+  input[type='button'],
+  input[type='radio'],
+  input[type='checkbox'] {
     width: auto; // Override of generic input selector
   }
 }
 
 // Set the height of file to match text inputs
-input[type="file"] {
+input[type='file'] {
   line-height: $input-height-base;
 }
 
@@ -296,14 +295,12 @@ input[type="file"] {
   width: 200px;
 }
 
-
 // Placeholder
 // -------------------------------
 input,
 textarea {
   @include placeholder();
 }
-
 
 // DISABLED STATE
 // -------------------------------
@@ -319,9 +316,9 @@ select[readonly] {
   cursor: not-allowed;
 }
 // Explicitly reset the colors here
-input[type="radio"][disabled],
-input[type="checkbox"][disabled],
-input[type="radio"][readonly],
-input[type="checkbox"][readonly] {
+input[type='radio'][disabled],
+input[type='checkbox'][disabled],
+input[type='radio'][readonly],
+input[type='checkbox'][readonly] {
   background-color: transparent;
 }

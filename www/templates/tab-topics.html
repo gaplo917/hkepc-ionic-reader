@@ -1,212 +1,287 @@
 <ion-view class="topics-view">
-    <ion-nav-title>論壇版塊
-        <span class="less-important-info">{{vm.cacheTimestamp}}</span>
-        <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer($event)" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-    </ion-nav-buttons>
-    <ion-content>
-        <div class="spinner" ng-if="vm.topics.length == 0">
-            <ir-spinner></ir-spinner>
-            <p class="reminder">如無法加載，請於設定內的「論壇風格設定」設定為 HKEPC </p>
-        </div>
-        <!--For Better UX. Tell users to login to see all topics-->
-        <p ng-if='vm.topics.length > 0 && !vm.isLoggedIn' class="alert-warning" style="text-align: center; margin:0">
-            你需要登入 HKEPC 帳號才能瀏覽所有論壇版塊
-        </p>
-
-        <ion-list ng-if="vm.topics.length > 0" show-delete="vm.editMode" show-reorder="vm.editMode" can-swipe="vm.editMode">
-            <!--Static Topic-->
-            <span>
-                <div class="item item-divider" ng-if='vm.isLoggedIn'>會員功能</div>
-
-                <ion-item
-                    ng-if='vm.isLoggedIn'
-                    class="odd item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href="/tab/topics/latestPost/page/1">
-                  <i class="ion-ios-clock-outline icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#77c320;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                  <h2>最新發佈</h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
-                  <small class="last-description">瀏覧用戶 24 小時內最新發佈的帖子</small>
-                </ion-item>
-                <ion-item
-                    ng-if='vm.isLoggedIn'
-                    class="even item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href="/tab/topics/latest/page/1">
-                  <i class="ion-ios-chatboxes-outline icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#77c320;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                  <h2>最新帖子</h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
-                  <small class="last-description">瀏覧 24 小時內回覆的帖子</small>
-                </ion-item>
-                <ion-item
-                    ng-if='vm.isLoggedIn'
-                    class="odd item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href="/tab/topics/search">
-                  <i class="ion-ios-search icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#77c320;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                  <h2>搜尋帖子</h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
-                  <small class="last-description">尋找你有興趣的帖子</small>
-                </ion-item>
-
-                <ion-item
-                    ng-if='vm.isLoggedIn'
-                    class="even item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href=""
-                    ng-click="vm.onIRSection()">
-                  <img class="topic-icon" ng-src="/img/icon.png"/>
-                  <h2>IR 專區</h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
-                  <small class="last-description">更新、教學、問題回報</small>
-                </ion-item>
-
-            </span >
-
-            <span class="my-topic">
-                <div class="item item-divider">我的版塊 <small style="font-size: 12px;"></small></div>
-                <ion-item
-                    ng-if='vm.rankedTopics.length === 0'
-                    class="editable-item odd item-remove-animate item-avatar item-icon-right "
-                    href=""
-                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
-                    type="item-text-wrap">
-                  <i class="ion-android-star icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#ff6d00;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                  <h2>範例版塊一<span style="color: #ff6d00;" ng-if="vm.editMode" > +5</span></h2>
-                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
-                  <small class="last-description">點擊 <i class="ion-ios-bookmarks-outline"></i> 開始排列你的喜愛的版塊</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
-                </ion-item>
-                <ion-item
-                    ng-if='vm.rankedTopics.length === 0'
-                    class="editable-item even item-remove-animate item-avatar item-icon-right "
-                    href=""
-                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
-                    type="item-text-wrap">
-                  <i class="ion-android-star icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#ff6d00;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                    <h2>範例版塊二<span style="color: #ff6d00;" ng-if="vm.editMode"> +2</span></h2>
-                    <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
-                    <small class="last-description">點擊「+1」可提升喜好程度</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
-                </ion-item>
-                <ion-item
-                    ng-if='vm.rankedTopics.length === 0'
-                    class="editable-item odd item-remove-animate item-avatar item-icon-right "
-                    href=""
-                    ng-click="!vm.editMode && vm.encourageTopicTutorial()"
-                    type="item-text-wrap">
-                  <i class="ion-android-star icon"
-                     style="position: absolute;
-                            top: 16px;
-                            color:#ff6d00;
-                            left: 16px;
-                            max-width: 40px;
-                            max-height: 40px;
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;"></i>
-                  <h2>範例版塊三<span style="color: #ff6d00;" ng-if="vm.editMode"> +1</span></h2>
-                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
-                  <small class="last-description">完成後點擊 <i class="ion-ios-bookmarks-outline" style="color: #ff6d00;"></i> 更新！</small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
-                </ion-item>
-                <!--Real My Topic-->
-                <ion-item
-                    ng-repeat="topic in vm.rankedTopics track by $index"
-                    ng-if="!topic.groupName && topic.rank > 0 && vm.canShowSectionInIOSReview(topic.id)"
-                    ng-class-odd="'odd'" ng-class-even="'even'"
-                    class="editable-item item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href="/tab/topics/{{topic.id}}/page/1">
-                  <img class="topic-icon" ng-src="{{topic.image}}" ng-if="vm.canShowIniOSReview(topic.id)"/>
-                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.editMode && vm.topicRankMap.get(topic.id) > 0" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
-                  <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00;"></i>
-                  <small class="last-description" ng-bind="topic.description"></small>
-                  <ion-delete-button class="edit-minus-one" ng-click="vm.decreaseRank(topic)">-1</ion-delete-button>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.increaseRank(topic)">+1</ion-reorder-button>
-                </ion-item>
-            </span>
-
-            <!--Dynamic Topic-->
-            <span ng-repeat="topic in vm.topics track by $index">
-                <div ng-if="topic.groupName && vm.canShowGroupNameIniOSReview(topic.groupName)" class="item item-divider"
-                     ng-bind="topic.groupName">
-                </div>
-                <ion-item
-                    ng-if="!topic.groupName && vm.canShowSectionInIOSReview(topic.id)"
-                    ng-class-odd="'odd'" ng-class-even="'even'"
-                    class="editable-item item-remove-animate item-avatar item-icon-right "
-                    type="item-text-wrap"
-                    href="/tab/topics/{{topic.id}}/page/1">
-                  <img class="topic-icon" ng-src="{{topic.image}}" ng-if="vm.canShowIniOSReview(topic.id)"/>
-                  <h2>{{topic.name}}<span style="color: #ff6d00;" ng-if="vm.topicRankMap.get(topic.id) > 0 && vm.editMode" > +{{vm.topicRankMap.get(topic.id)}}</span></h2>
-                  <i class="icon ion-chevron-right icon-accessory"></i>
-                  <small class="last-description" ng-bind="topic.description"></small>
-                  <ion-reorder-button class="edit-plus-one" ng-click="vm.increaseRank(topic)">+1</ion-reorder-button>
-                </ion-item>
-            </span>
-
-            <div class="tab-bar-inset"></div>
-        </ion-list>
-    </ion-content>
-    <div class="floating-action-btn">
-        <button class="button-rounded action-button action-button-small" ng-class="vm.editMode ? 'edit-activated': '' " ng-click="vm.changeEditMode()">
-            <i class="ion-ios-bookmarks-outline"></i>
-        </button>
-        <div class="tab-bar-inset"></div>
+  <ion-nav-title>
+    論壇版塊
+    <span class="less-important-info">{{vm.cacheTimestamp}}</span>
+    <ion-spinner class="spinner spinner-xs" icon="bubbles" ng-if="vm.refreshing"></ion-spinner>
+  </ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button
+      class="button button-icon icon ion-navicon"
+      ng-click="openDrawer($event)"
+      ng-if="::(!isiOSNative && !isAndroidNative)"
+    ></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="spinner" ng-if="vm.topics.length == 0">
+      <ir-spinner></ir-spinner>
+      <p class="reminder">如無法加載，請於設定內的「論壇風格設定」設定為 HKEPC</p>
     </div>
+    <!--For Better UX. Tell users to login to see all topics-->
+    <p ng-if="vm.topics.length > 0 && !vm.isLoggedIn" class="alert-warning" style="text-align: center; margin: 0">
+      你需要登入 HKEPC 帳號才能瀏覽所有論壇版塊
+    </p>
+
+    <ion-list ng-if="vm.topics.length > 0" show-delete="vm.editMode" show-reorder="vm.editMode" can-swipe="vm.editMode">
+      <!--Static Topic-->
+      <span>
+        <div class="item item-divider" ng-if="vm.isLoggedIn">會員功能</div>
+
+        <ion-item
+          ng-if="vm.isLoggedIn"
+          class="odd item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href="/tab/topics/latestPost/page/1"
+        >
+          <i
+            class="ion-ios-clock-outline icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #77c320;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>最新發佈</h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small class="last-description">瀏覧用戶 24 小時內最新發佈的帖子</small>
+        </ion-item>
+        <ion-item
+          ng-if="vm.isLoggedIn"
+          class="even item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href="/tab/topics/latest/page/1"
+        >
+          <i
+            class="ion-ios-chatboxes-outline icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #77c320;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>最新帖子</h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small class="last-description">瀏覧 24 小時內回覆的帖子</small>
+        </ion-item>
+        <ion-item
+          ng-if="vm.isLoggedIn"
+          class="odd item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href="/tab/topics/search"
+        >
+          <i
+            class="ion-ios-search icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #77c320;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>搜尋帖子</h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small class="last-description">尋找你有興趣的帖子</small>
+        </ion-item>
+
+        <ion-item
+          ng-if="vm.isLoggedIn"
+          class="even item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href=""
+          ng-click="vm.onIRSection()"
+        >
+          <img class="topic-icon" ng-src="/img/icon.png" />
+          <h2>IR 專區</h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small class="last-description">更新、教學、問題回報</small>
+        </ion-item>
+      </span>
+
+      <span class="my-topic">
+        <div class="item item-divider">
+          我的版塊
+          <small style="font-size: 12px"></small>
+        </div>
+        <ion-item
+          ng-if="vm.rankedTopics.length === 0"
+          class="editable-item odd item-remove-animate item-avatar item-icon-right"
+          href=""
+          ng-click="!vm.editMode && vm.encourageTopicTutorial()"
+          type="item-text-wrap"
+        >
+          <i
+            class="ion-android-star icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #ff6d00;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>
+            範例版塊一
+            <span style="color: #ff6d00" ng-if="vm.editMode">+5</span>
+          </h2>
+          <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00"></i>
+          <small class="last-description">
+            點擊
+            <i class="ion-ios-bookmarks-outline"></i>
+            開始排列你的喜愛的版塊
+          </small>
+          <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+          <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
+        </ion-item>
+        <ion-item
+          ng-if="vm.rankedTopics.length === 0"
+          class="editable-item even item-remove-animate item-avatar item-icon-right"
+          href=""
+          ng-click="!vm.editMode && vm.encourageTopicTutorial()"
+          type="item-text-wrap"
+        >
+          <i
+            class="ion-android-star icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #ff6d00;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>
+            範例版塊二
+            <span style="color: #ff6d00" ng-if="vm.editMode">+2</span>
+          </h2>
+          <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00"></i>
+          <small class="last-description">點擊「+1」可提升喜好程度</small>
+          <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+          <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
+        </ion-item>
+        <ion-item
+          ng-if="vm.rankedTopics.length === 0"
+          class="editable-item odd item-remove-animate item-avatar item-icon-right"
+          href=""
+          ng-click="!vm.editMode && vm.encourageTopicTutorial()"
+          type="item-text-wrap"
+        >
+          <i
+            class="ion-android-star icon"
+            style="
+              position: absolute;
+              top: 16px;
+              color: #ff6d00;
+              left: 16px;
+              max-width: 40px;
+              max-height: 40px;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            "
+          ></i>
+          <h2>
+            範例版塊三
+            <span style="color: #ff6d00" ng-if="vm.editMode">+1</span>
+          </h2>
+          <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00"></i>
+          <small class="last-description">
+            完成後點擊
+            <i class="ion-ios-bookmarks-outline" style="color: #ff6d00"></i>
+            更新！
+          </small>
+          <ion-delete-button class="edit-minus-one" ng-click="vm.myTopicTutorial()">-1</ion-delete-button>
+          <ion-reorder-button class="edit-plus-one" ng-click="vm.myTopicTutorial()">+1</ion-reorder-button>
+        </ion-item>
+        <!--Real My Topic-->
+        <ion-item
+          ng-repeat="topic in vm.rankedTopics track by $index"
+          ng-if="!topic.groupName && topic.rank > 0 && vm.canShowSectionInIOSReview(topic.id)"
+          ng-class-odd="'odd'"
+          ng-class-even="'even'"
+          class="editable-item item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href="/tab/topics/{{topic.id}}/page/1"
+        >
+          <img class="topic-icon" ng-src="{{topic.image}}" ng-if="vm.canShowIniOSReview(topic.id)" />
+          <h2>
+            {{topic.name}}
+            <span style="color: #ff6d00" ng-if="vm.editMode && vm.topicRankMap.get(topic.id) > 0">
+              +{{vm.topicRankMap.get(topic.id)}}
+            </span>
+          </h2>
+          <i class="icon ion-chevron-right icon-accessory" style="color: #ff6d00"></i>
+          <small class="last-description" ng-bind="topic.description"></small>
+          <ion-delete-button class="edit-minus-one" ng-click="vm.decreaseRank(topic)">-1</ion-delete-button>
+          <ion-reorder-button class="edit-plus-one" ng-click="vm.increaseRank(topic)">+1</ion-reorder-button>
+        </ion-item>
+      </span>
+
+      <!--Dynamic Topic-->
+      <span ng-repeat="topic in vm.topics track by $index">
+        <div
+          ng-if="topic.groupName && vm.canShowGroupNameIniOSReview(topic.groupName)"
+          class="item item-divider"
+          ng-bind="topic.groupName"
+        ></div>
+        <ion-item
+          ng-if="!topic.groupName && vm.canShowSectionInIOSReview(topic.id)"
+          ng-class-odd="'odd'"
+          ng-class-even="'even'"
+          class="editable-item item-remove-animate item-avatar item-icon-right"
+          type="item-text-wrap"
+          href="/tab/topics/{{topic.id}}/page/1"
+        >
+          <img class="topic-icon" ng-src="{{topic.image}}" ng-if="vm.canShowIniOSReview(topic.id)" />
+          <h2>
+            {{topic.name}}
+            <span style="color: #ff6d00" ng-if="vm.topicRankMap.get(topic.id) > 0 && vm.editMode">
+              +{{vm.topicRankMap.get(topic.id)}}
+            </span>
+          </h2>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <small class="last-description" ng-bind="topic.description"></small>
+          <ion-reorder-button class="edit-plus-one" ng-click="vm.increaseRank(topic)">+1</ion-reorder-button>
+        </ion-item>
+      </span>
+
+      <div class="tab-bar-inset"></div>
+    </ion-list>
+  </ion-content>
+  <div class="floating-action-btn">
+    <button
+      class="button-rounded action-button action-button-small"
+      ng-class="vm.editMode ? 'edit-activated': '' "
+      ng-click="vm.changeEditMode()"
+    >
+      <i class="ion-ios-bookmarks-outline"></i>
+    </button>
+    <div class="tab-bar-inset"></div>
+  </div>
 </ion-view>

@@ -1,46 +1,47 @@
 <ion-view view-title="加強顯示設定" class="contentmanage-keyword-view">
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-edit"
-           ng-click="vm.editMode = !vm.editMode"
-           ng-class="vm.editMode ? 'edit-mode-activated': '' "
-        ></a>
-    </ion-nav-buttons>
-    <ion-content>
-        <div class="spinner" ng-if="!vm.isReady">
-            <ir-spinner></ir-spinner>
-        </div>
-        <div class="item item-input-inset">
-            <div class="item-input-wrapper">
-                <input type="text"
-                       ng-model="vm.keywordInput"
-                       ng-keypress="vm.addKeyword($event)"
-                       placeholder="輸入關鍵字 (例如 Ryzen, Intel)"
-                       style="width: 100%;"
-                >
-            </div>
-            <button class="button button-small icon ion-android-add button-assertive"
-                    ng-click="vm.addKeyword()">
-            </button>
-        </div>
-        <div class="less-important-info"
-             ng-if="vm.isReady && vm.items.length === 0"
-             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            沒有關鍵字
-        </div>
-        <div class="less-important-info"
-             ng-if="vm.isReady && vm.items.length > 0"
-             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            以下關鍵字會被加強顯示
-        </div>
-        <ion-list ng-if="vm.isReady" show-delete="vm.editMode">
-            <ion-item
-                ng-class-odd="'odd'" ng-class-even="'even'"
-                ng-repeat="item in vm.items track by $index">
-                {{item}}
-                <ion-delete-button class="ion-android-remove-circle" ng-click="vm.deleteKeyword($index)"/>
-            </ion-item>
-        </ion-list>
-        <div class="tab-bar-inset"></div>
-
-    </ion-content>
+  <ion-nav-buttons side="right">
+    <a
+      class="button button-icon icon ion-edit"
+      ng-click="vm.editMode = !vm.editMode"
+      ng-class="vm.editMode ? 'edit-mode-activated': '' "
+    ></a>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="spinner" ng-if="!vm.isReady">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="item item-input-inset">
+      <div class="item-input-wrapper">
+        <input
+          type="text"
+          ng-model="vm.keywordInput"
+          ng-keypress="vm.addKeyword($event)"
+          placeholder="輸入關鍵字 (例如 Ryzen, Intel)"
+          style="width: 100%"
+        />
+      </div>
+      <button class="button button-small icon ion-android-add button-assertive" ng-click="vm.addKeyword()"></button>
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.isReady && vm.items.length === 0"
+      style="text-align: center; margin-top: 8px; margin-bottom: 8px"
+    >
+      沒有關鍵字
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.isReady && vm.items.length > 0"
+      style="text-align: center; margin-top: 8px; margin-bottom: 8px"
+    >
+      以下關鍵字會被加強顯示
+    </div>
+    <ion-list ng-if="vm.isReady" show-delete="vm.editMode">
+      <ion-item ng-class-odd="'odd'" ng-class-even="'even'" ng-repeat="item in vm.items track by $index">
+        {{item}}
+        <ion-delete-button class="ion-android-remove-circle" ng-click="vm.deleteKeyword($index)" />
+      </ion-item>
+    </ion-list>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

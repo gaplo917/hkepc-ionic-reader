@@ -10,14 +10,14 @@ const DEFAULT_DEAD_IMAGE_PLACEHOLDER = 'img/default-dead-placeholder.png'
 
 export class GeneralHtml {
   // copied from cloudflare script
-  static decodeCloudflareEmailProtection (e, t = 0, r, n) {
-    for (r = '', n = '0x' + e.substr(t, 2) | 0, t += 2; t < e.length; t += 2) {
-      r += String.fromCharCode('0x' + e.substr(t, 2) ^ n)
+  static decodeCloudflareEmailProtection(e, t = 0, r, n) {
+    for (r = '', n = ('0x' + e.substr(t, 2)) | 0, t += 2; t < e.length; t += 2) {
+      r += String.fromCharCode(('0x' + e.substr(t, 2)) ^ n)
     }
     return r
   }
 
-  constructor (cheerioSource) {
+  constructor(cheerioSource) {
     this.source = cheerioSource
 
     // remove all the script tags
@@ -26,7 +26,7 @@ export class GeneralHtml {
     this.handleCloudflareEmailProtection()
   }
 
-  handleCloudflareEmailProtection () {
+  handleCloudflareEmailProtection() {
     this.source('.__cf_email__').each((i, e) => {
       const obfElement = this.source(e)
       const dataCFEmail = obfElement.attr('data-cfemail')
@@ -34,19 +34,19 @@ export class GeneralHtml {
     })
   }
 
-  removeScripts () {
+  removeScripts() {
     this.source('script').remove()
 
     return this
   }
 
-  removeAds () {
+  removeAds() {
     this.source('.adv').remove()
 
     return this
   }
 
-  processImgUrl (imagePrefix) {
+  processImgUrl(imagePrefix) {
     this.source('img').each((i, e) => {
       const elm = this.source(e)
       const lazyImg = elm.attr('file')
@@ -79,7 +79,7 @@ export class GeneralHtml {
     return this
   }
 
-  processImageToLazy (isAutoLoadImage = true) {
+  processImageToLazy(isAutoLoadImage = true) {
     this.source('img').each((i, e) => {
       const elm = this.source(e)
       const imgSrc = this.source(e).attr('src')
@@ -109,7 +109,7 @@ export class GeneralHtml {
     return this
   }
 
-  processExternalUrl () {
+  processExternalUrl() {
     this.source('a').each((i, e) => {
       const elm = this.source(e)
 
@@ -129,7 +129,10 @@ export class GeneralHtml {
         const youtubeId = this.getYoutubeIdByUrl(url)
         if (youtubeId) {
           elm.addClass('youtube-link')
-          elm.attr('youtube-embed', `<iframe class="youtube-embed" width="640" height="385" src="https://www.youtube.com/embed/${youtubeId}?fs=1&enablejsapi=1&origin=http://www.hkepc.com" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+          elm.attr(
+            'youtube-embed',
+            `<iframe class="youtube-embed" width="640" height="385" src="https://www.youtube.com/embed/${youtubeId}?fs=1&enablejsapi=1&origin=http://www.hkepc.com" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+          )
         }
       }
     })
@@ -137,7 +140,7 @@ export class GeneralHtml {
     return this
   }
 
-  getYoutubeIdByUrl (url) {
+  getYoutubeIdByUrl(url) {
     if (url.match(/(https:\/\/.*youtube.com\/)/)) {
       return URLUtils.getQueryVariable(url, 'v')
     } else if (url.indexOf('https://youtu.be/') >= 0) {
@@ -146,19 +149,19 @@ export class GeneralHtml {
     return null
   }
 
-  getTitle () {
+  getTitle() {
     return this.source('meta[property="og:title"]').attr('content')
   }
 
-  getCheerio () {
+  getCheerio() {
     return this.source
   }
 
-  html () {
+  html() {
     return this.source.html()
   }
 
-  text () {
+  text() {
     return this.source.text()
   }
 }

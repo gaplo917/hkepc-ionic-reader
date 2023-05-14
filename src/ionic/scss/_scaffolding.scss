@@ -1,4 +1,3 @@
-
 /**
  * Scaffolding
  * --------------------------------------------------
@@ -75,7 +74,7 @@ body.grade-c {
   height: auto;
 }
 
-.menu .scroll-content.scroll-content-false{
+.menu .scroll-content.scroll-content-false {
   z-index: $z-index-scroll-content-false;
 }
 
@@ -88,9 +87,18 @@ body.grade-c {
     position: relative;
   }
 
-  &.scroll-x { overflow-x: scroll; overflow-y: hidden; }
-  &.scroll-y { overflow-x: hidden; overflow-y: scroll; }
-  &.scroll-xy { overflow-x: scroll; overflow-y: scroll; }
+  &.scroll-x {
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+  &.scroll-y {
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  &.scroll-xy {
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
 
   // Hide the top border if any
   margin-top: -1px;
@@ -110,7 +118,9 @@ body.grade-c {
  * Set ms-viewport to prevent MS "page squish" and allow fluid scrolling
  * https://msdn.microsoft.com/en-us/library/ie/hh869615(v=vs.85).aspx
  */
-@-ms-viewport { width: device-width; }
+@-ms-viewport {
+  width: device-width;
+}
 
 // Scroll bar styles
 .scroll-bar {
@@ -145,9 +155,9 @@ body.grade-c {
 .scroll-bar-indicator {
   position: absolute;
   border-radius: 4px;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   opacity: 1;
-  @include transition(opacity .3s linear);
+  @include transition(opacity 0.3s linear);
 
   &.scroll-bar-fade-out {
     opacity: 0;
@@ -182,10 +192,10 @@ ion-infinite-scroll {
     font-size: 30px;
     color: $scroll-refresh-icon-color;
   }
-  &:not(.active){
+  &:not(.active) {
     .spinner,
-    .icon:before{
-      display:none;
+    .icon:before {
+      display: none;
     }
   }
 }
@@ -212,10 +222,13 @@ ion-infinite-scroll {
   .scroll {
     position: static;
     height: 100%;
-    -webkit-transform: translate3d(0, 0, 0);   // fix iOS bug where relative children of scroller disapear while scrolling.  see: http://stackoverflow.com/questions/9807620/ipad-safari-scrolling-causes-html-elements-to-disappear-and-reappear-with-a-dela
+    -webkit-transform: translate3d(
+      0,
+      0,
+      0
+    ); // fix iOS bug where relative children of scroller disapear while scrolling.  see: http://stackoverflow.com/questions/9807620/ipad-safari-scrolling-causes-html-elements-to-disappear-and-reappear-with-a-dela
   }
 }
-
 
 // Pad top/bottom of content so it doesn't hide behind .bar-title and .bar-tab.
 // Note: For these to work, content must come after both bars in the markup
@@ -248,9 +261,9 @@ ion-infinite-scroll {
 .has-tabs,
 .bar-footer.has-tabs {
   bottom: $tabs-height;
-  &.pane{
+  &.pane {
     bottom: $tabs-height;
-    height:auto;
+    height: auto;
   }
 }
 
@@ -264,7 +277,7 @@ ion-infinite-scroll {
 
 // A full screen section with a solid background
 .pane {
-  @include translate3d(0,0,0);
+  @include translate3d(0, 0, 0);
   @include transition-duration(0);
   z-index: $z-index-pane;
 }

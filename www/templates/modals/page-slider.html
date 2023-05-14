@@ -1,52 +1,58 @@
-<ion-popover-view style="width:256px; height:200px;" class="page-picker-view">
-    <ion-content scroll="false" scrollbar-y="false" style="border-radius: 0; margin:0">
-        <ion-scroll
-            class="range-pick"
-            ng-if="vm.totalPageNum >= 1 && vm.inputPage"
-            ng-init="vm.inputPageRangeStart = vm.floor(vm.inputPage / 50)"
-            style="margin: 0;">
-            <div class="list">
-                <ion-radio class="item"
-                           style="border:0px"
-                           ng-repeat="page in vm.getTimes(vm.ceil(vm.totalPageNum / 50)) track by $index"
-                           ng-init="start = $index * 50 + 1; end = ($index + 1) * 50"
-                           ng-model="vm.inputPageRangeStart"
-                           ng-value="$index"
-                >
-                    {{::start}} - {{::end}} 頁
-                </ion-radio>
-            </div>
-        </ion-scroll>
+<ion-popover-view style="width: 256px; height: 200px" class="page-picker-view">
+  <ion-content scroll="false" scrollbar-y="false" style="border-radius: 0; margin: 0">
+    <ion-scroll
+      class="range-pick"
+      ng-if="vm.totalPageNum >= 1 && vm.inputPage"
+      ng-init="vm.inputPageRangeStart = vm.floor(vm.inputPage / 50)"
+      style="margin: 0"
+    >
+      <div class="list">
+        <ion-radio
+          class="item"
+          style="border: 0px"
+          ng-repeat="page in vm.getTimes(vm.ceil(vm.totalPageNum / 50)) track by $index"
+          ng-init="start = $index * 50 + 1; end = ($index + 1) * 50"
+          ng-model="vm.inputPageRangeStart"
+          ng-value="$index"
+        >
+          {{::start}} - {{::end}} 頁
+        </ion-radio>
+      </div>
+    </ion-scroll>
 
-        <ion-scroll style="margin: 0;">
-            <div class="list">
-                <div class="item text-center"
-                     ng-repeat="page in vm.getRange(vm.inputPageRangeStart * 50 + 1, (vm.inputPageRangeStart + 1) * 50) track by $index"
-                     ng-if="page <= vm.totalPageNum "
-                     ng-click="vm.inputPage = page; vm.doJumpPage()"
-                     ng-class="vm.inputPage == page ? 'active' : '' "
-                >
-                    第 {{page}} 頁
-                </div>
-            </div>
-        </ion-scroll>
-        <div class="bottom-row">
-            <button class="action-button action-button-small button-rounded"
-                    ng-click="vm.inputPage = 1; vm.doJumpPage()">
-                首頁
-            </button>
-            <button class="action-button action-button-small button-rounded"
-                    ng-click="vm.doLoadPreviousPage()">
-                上一頁
-            </button>
-            <button class="action-button action-button-small button-rounded"
-                    ng-click="vm.inputPage = vm.totalPageNum; vm.doJumpPage()">最後一頁</button>
+    <ion-scroll style="margin: 0">
+      <div class="list">
+        <div
+          class="item text-center"
+          ng-repeat="page in vm.getRange(vm.inputPageRangeStart * 50 + 1, (vm.inputPageRangeStart + 1) * 50) track by $index"
+          ng-if="page <= vm.totalPageNum "
+          ng-click="vm.inputPage = page; vm.doJumpPage()"
+          ng-class="vm.inputPage == page ? 'active' : '' "
+        >
+          第 {{page}} 頁
         </div>
-    </ion-content>
+      </div>
+    </ion-scroll>
+    <div class="bottom-row">
+      <button class="action-button action-button-small button-rounded" ng-click="vm.inputPage = 1; vm.doJumpPage()">
+        首頁
+      </button>
+      <button class="action-button action-button-small button-rounded" ng-click="vm.doLoadPreviousPage()">
+        上一頁
+      </button>
+      <button
+        class="action-button action-button-small button-rounded"
+        ng-click="vm.inputPage = vm.totalPageNum; vm.doJumpPage()"
+      >
+        最後一頁
+      </button>
+    </div>
+  </ion-content>
 
-    <page-indicator
-      class="overlay-fix"
-      ng-click="vm.dismiss()"
-      current-page="vm.inputPage"
-      total-page="vm.totalPageNum" />
+  <page-indicator
+    class="overlay-fix"
+    ng-click="vm.dismiss()"
+    current-page="vm.inputPage"
+    total-page="vm.totalPageNum"
+  />
 </ion-popover-view>

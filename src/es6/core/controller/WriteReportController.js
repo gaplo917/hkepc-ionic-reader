@@ -4,11 +4,15 @@ import swal from 'sweetalert2'
 import { Bridge } from '../bridge/Bridge'
 
 export class WriteReportController {
-  static get STATE () { return 'tab.report-message' }
+  static get STATE() {
+    return 'tab.report-message'
+  }
 
-  static get NAME () { return 'WriteReportController' }
+  static get NAME() {
+    return 'WriteReportController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/report/:topicId/:postId/:messageId?meta=',
       cache: false,
@@ -16,13 +20,25 @@ export class WriteReportController {
         main: {
           templateUrl: 'templates/write-report.html',
           controller: WriteReportController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $state, $stateParams, $ionicHistory, $ionicPopover, ngToast, apiService, $ionicPopup, $rootScope, $compile, LocalStorageService) {
+  constructor(
+    $scope,
+    $state,
+    $stateParams,
+    $ionicHistory,
+    $ionicPopover,
+    ngToast,
+    apiService,
+    $ionicPopup,
+    $rootScope,
+    $compile,
+    LocalStorageService
+  ) {
     this.scope = $scope
     this.state = $state
     this.ionicHistory = $ionicHistory
@@ -37,15 +53,16 @@ export class WriteReportController {
     $scope.$on('$ionicView.loaded', (e) => {
       this.ionicSignature = HKEPC.signature({
         androidVersion: Bridge.isAndroidNative() ? $scope.nativeVersion : null,
-        iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null
+        iosVersion: Bridge.isiOSNative() ? $scope.nativeVersion : null,
       })
       // fetch the epc data for native App
       this.preFetchContent().subscribe()
     })
   }
 
-  preFetchContent () {
-    return this.apiService.getReportDialog(this.topicId, this.postId, this.messageId)
+  preFetchContent() {
+    return this.apiService
+      .getReportDialog(this.topicId, this.postId, this.messageId)
       .safeApply(this.scope, ({ actionUrl, hiddenFormInputs }) => {
         this.actionUrl = actionUrl
 
@@ -53,7 +70,7 @@ export class WriteReportController {
       })
   }
 
-  doReport () {
+  doReport() {
     const { reason, ionicSignature } = this
 
     if (reason) {
@@ -70,21 +87,23 @@ export class WriteReportController {
         html: spinnerHtml,
         allowOutsideClick: false,
         showCancelButton: false,
-        showConfirmButton: false
+        showConfirmButton: false,
       })
 
       swal.showLoading()
 
       // Post to the server
-      this.apiService.dynamicRequest({
-        method: 'POST',
-        url: actionUrl,
-        data: {
-          ...hiddenFormInputs,
-          reason: `${reason}\n\n${ionicSignature}`
-        },
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }).flatMapApiFromCheerioworker('responseContainText', { text: '報告', isXml: true })
+      this.apiService
+        .dynamicRequest({
+          method: 'POST',
+          url: actionUrl,
+          data: {
+            ...hiddenFormInputs,
+            reason: `${reason}\n\n${ionicSignature}`,
+          },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        })
+        .flatMapApiFromCheerioworker('responseContainText', { text: '報告', isXml: true })
         .safeApply(this.scope, ({ responseText, result }) => {
           if (result) {
             swal.close()
@@ -98,32 +117,34 @@ export class WriteReportController {
               title: '發佈失敗',
               text: `HKEPC 傳回:「${responseText}」`,
               type: 'error',
-              confirmButtonText: '確定'
+              confirmButtonText: '確定',
             })
           }
-        }).subscribe(
+        })
+        .subscribe(
           () => {},
-          () => swal({
-            animation: false,
-            title: '發佈失敗',
-            text: '網絡異常，請重新嘗試！',
-            type: 'error',
-            confirmButtonText: '確定'
-          })
+          () =>
+            swal({
+              animation: false,
+              title: '發佈失敗',
+              text: '網絡異常，請重新嘗試！',
+              type: 'error',
+              confirmButtonText: '確定',
+            })
         )
     } else {
       this.ngToast.danger('<i class="ion-alert-circled"> 標題或內容不能空白！</i>')
     }
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
+        historyRoot: true,
       })
       this.state.go(Controllers.TopicListController.STATE)
     }

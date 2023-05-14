@@ -1,65 +1,51 @@
 <ion-view class="chats-details-view">
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-    </ion-nav-buttons>
-    <ion-nav-title>
-        <span>{{vm.recipient.username}}</span>
-    </ion-nav-title>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <ion-nav-title>
+    <span>{{vm.recipient.username}}</span>
+  </ion-nav-title>
 
-
-    <ion-content class="has-header" lazy-scroll delegate-handle="chat-detail-scroll">
-
-        <div class="spinner" ng-if="vm.messages == null">
-            <ir-spinner></ir-spinner>
-        </div>
-
-        <div ng-repeat="message in vm.messages" class="message-wrapper">
-
-            <div ng-if="::!message.isSelf">
-
-                <img class="profile-pic left" ng-src="{{::message.avatarUrl}}"/>
-
-                <div class="chat-bubble left">
-
-                    <div class="message" ng-bind-html="::message.content">
-                    </div>
-
-                    <div class="message-detail text-right">
-                        <span ng-bind="::message.date"></span>
-                    </div>
-
-                </div>
-            </div>
-
-            <div ng-if="::message.isSelf">
-
-                <img class="profile-pic right"
-                     ng-src="{{::message.avatarUrl}}"/>
-
-                <div class="chat-bubble right">
-
-                    <div class="message" compile="::message.content">
-                    </div>
-
-                    <div class="message-detail text-right">
-                        <span ng-bind="::message.date"></span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="cf"></div>
-
-        </div>
-        <div style="height:88px"></div>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
-
-    <div class="floating-action-btn">
-        <button class="button-rounded action-button action-button-small" ng-click="vm.requestComposeDialog()">
-            <i class="ion-ios-paperplane-outline"></i>
-        </button>
-        <div class="tab-bar-inset"></div>
+  <ion-content class="has-header" lazy-scroll delegate-handle="chat-detail-scroll">
+    <div class="spinner" ng-if="vm.messages == null">
+      <ir-spinner></ir-spinner>
     </div>
+
+    <div ng-repeat="message in vm.messages" class="message-wrapper">
+      <div ng-if="::!message.isSelf">
+        <img class="profile-pic left" ng-src="{{::message.avatarUrl}}" />
+
+        <div class="chat-bubble left">
+          <div class="message" ng-bind-html="::message.content"></div>
+
+          <div class="message-detail text-right">
+            <span ng-bind="::message.date"></span>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="::message.isSelf">
+        <img class="profile-pic right" ng-src="{{::message.avatarUrl}}" />
+
+        <div class="chat-bubble right">
+          <div class="message" compile="::message.content"></div>
+
+          <div class="message-detail text-right">
+            <span ng-bind="::message.date"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cf"></div>
+    </div>
+    <div style="height: 88px"></div>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
+
+  <div class="floating-action-btn">
+    <button class="button-rounded action-button action-button-small" ng-click="vm.requestComposeDialog()">
+      <i class="ion-ios-paperplane-outline"></i>
+    </button>
+    <div class="tab-bar-inset"></div>
+  </div>
 </ion-view>

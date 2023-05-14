@@ -1,57 +1,64 @@
 <ion-view class="card-view">
-    <ion-nav-title>
-        我的最愛
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-icon icon ion-navicon" ng-click="openDrawer($event)" ng-if="::(!isiOSNative && !isAndroidNative)"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
-    </ion-nav-buttons>
-    <ion-content lazy-scroll>
-        <div class="text-center">
-            <div class="item item-input-inset w100">
-                <div class="item-input-wrapper">
-                    <i class="icon ion-ios-search-strong placeholder-icon"></i>
-                    <input class="w100" placeholder="搜尋..." type="text" ng-model="vm.searchText" ng-change="vm.highlightSearchText()">
-                </div>
-            </div>
+  <ion-nav-title>我的最愛</ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button
+      class="button button-icon icon ion-navicon"
+      ng-click="openDrawer($event)"
+      ng-if="::(!isiOSNative && !isAndroidNative)"
+    ></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-refresh-empty" ng-click="vm.doRefresh()"></a>
+  </ion-nav-buttons>
+  <ion-content lazy-scroll>
+    <div class="text-center">
+      <div class="item item-input-inset w100">
+        <div class="item-input-wrapper">
+          <i class="icon ion-ios-search-strong placeholder-icon"></i>
+          <input
+            class="w100"
+            placeholder="搜尋..."
+            type="text"
+            ng-model="vm.searchText"
+            ng-change="vm.highlightSearchText()"
+          />
         </div>
-        <div class="less-important-info"
-             ng-if="vm.messages.length === 0"
-             style="text-align: center; margin-top: 8px;margin-bottom: 8px">
-            沒有任何我的最愛
-        </div>
-        <div class="list card" ng-repeat="message in vm.messages track by message.id">
+      </div>
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.messages.length === 0"
+      style="text-align: center; margin-top: 8px; margin-bottom: 8px"
+    >
+      沒有任何我的最愛
+    </div>
+    <div class="list card" ng-repeat="message in vm.messages track by message.id">
+      <div class="item item-text-wrap item-divider">
+        <a
+          style="color: white; text-decoration: none"
+          href="/tab/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}"
+          compile="::message.hlContent.title"
+        ></a>
+        <span>#{{::message.pos}}</span>
+      </div>
 
-            <div class="item item-text-wrap item-divider">
-                <a style="color:white; text-decoration: none;"
-                   href="/tab/topics/{{::message.post.topicId}}/posts/{{::message.post.id}}/page/{{::message.post.page}}"
-                   compile="::message.hlContent.title">
-                </a>
-                <span>#{{::message.pos}}</span>
-            </div>
+      <div class="item item-avatar">
+        <img ng-src="{{::message.author.image}}" />
+        <button class="button button-icon ion-ios-arrow-down fright" ng-click="vm.onMore(message)"></button>
 
-            <div class="item item-avatar">
-                <img ng-src="{{::message.author.image}}">
-                <button class="button button-icon ion-ios-arrow-down fright" ng-click="vm.onMore(message)"></button>
+        <h2 ng-bind="::message.author.name"></h2>
+        <p>{{::message.createdAt}}</p>
+      </div>
 
-                <h2 ng-bind="::message.author.name"></h2>
-                <p>{{::message.createdAt}}</p>
-            </div>
+      <div class="item item-body" compile="::message.hlContent.body"></div>
+    </div>
+    <ion-infinite-scroll
+      ng-if="vm.hasMoreData()"
+      on-infinite="vm.loadMore()"
+      immediate-check="true"
+      distance="7%"
+    ></ion-infinite-scroll>
 
-            <div class="item item-body" compile="::message.hlContent.body">
-            </div>
-
-        </div>
-        <ion-infinite-scroll
-            ng-if="vm.hasMoreData()"
-            on-infinite="vm.loadMore()"
-            immediate-check="true"
-            distance="7%">
-        </ion-infinite-scroll>
-
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>
-

@@ -4,55 +4,55 @@ import { Channel } from './Channel'
 import uuid from 'uuid-v4'
 
 export class Bridge {
-  static get instance () {
+  static get instance() {
     return Bridge._instance
   }
 
-  static set instance (bridge) {
+  static set instance(bridge) {
     Bridge._instance = bridge
   }
 
-  static callHandler (channel, opt, cb) {
+  static callHandler(channel, opt, cb) {
     Bridge._instance.callHandler(channel, opt, cb)
   }
 
-  static registerHandler (channel, cb) {
+  static registerHandler(channel, cb) {
     Bridge._instance.registerHandler(channel, cb)
   }
 
-  static isAvailable () {
+  static isAvailable() {
     return Bridge._instance
   }
 
-  static isAndroidNative () {
+  static isAndroidNative() {
     return Bridge._instance && Bridge._instance.platform === 'android'
   }
 
-  static isiOSNative () {
+  static isiOSNative() {
     return Bridge._instance && Bridge._instance.platform === 'ios'
   }
 
-  static version (cb) {
+  static version(cb) {
     Bridge._instance.callHandler(Channel.version, {}, (data) => {
       cb(data.version)
     })
   }
 }
 
-export function isiOSNative () {
+export function isiOSNative() {
   return window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.isIRNative
 }
 
-export function isAndroidNative () {
+export function isAndroidNative() {
   return window.Android
 }
 
-export function isLegacyAndroid () {
+export function isLegacyAndroid() {
   return window.LegacyAndroid
 }
 
-export function createIOSNativeBride (cb) {
-  function setupWebViewJavascriptBridge (callback) {
+export function createIOSNativeBride(cb) {
+  function setupWebViewJavascriptBridge(callback) {
     if (window.WebViewJavascriptBridge) {
       return callback(WebViewJavascriptBridge)
     }
@@ -64,10 +64,12 @@ export function createIOSNativeBride (cb) {
     WVJBIframe.style.display = 'none'
     WVJBIframe.src = 'https://__bridge_loaded__'
     document.documentElement.appendChild(WVJBIframe)
-    setTimeout(function () { document.documentElement.removeChild(WVJBIframe) }, 0)
+    setTimeout(function () {
+      document.documentElement.removeChild(WVJBIframe)
+    }, 0)
   }
 
-  setupWebViewJavascriptBridge(bridge => {
+  setupWebViewJavascriptBridge((bridge) => {
     console.log('web view javascript bridge ready')
     Bridge.instance = bridge
     Bridge.instance.platform = 'ios'
@@ -78,7 +80,7 @@ export function createIOSNativeBride (cb) {
   })
 }
 
-export function createAndroidNativeBridge (cb) {
+export function createAndroidNativeBridge(cb) {
   console.log('Android webview bridge is ready', window.Android)
 
   let port = null
@@ -118,11 +120,13 @@ export function createAndroidNativeBridge (cb) {
 
         if (rHandler) {
           rHandler(JSON.parse(msg.data), (data) => {
-            port.postMessage(JSON.stringify({
-              uid: msg.uid,
-              channel: msg.channel,
-              data: JSON.stringify(data)
-            }))
+            port.postMessage(
+              JSON.stringify({
+                uid: msg.uid,
+                channel: msg.channel,
+                data: JSON.stringify(data),
+              })
+            )
           })
         }
       } catch (e) {
@@ -136,11 +140,13 @@ export function createAndroidNativeBridge (cb) {
       callHandler: (channel, opt, cb) => {
         const uid = uuid()
 
-        port.postMessage(JSON.stringify({
-          uid,
-          channel,
-          data: JSON.stringify(opt)
-        }))
+        port.postMessage(
+          JSON.stringify({
+            uid,
+            channel,
+            data: JSON.stringify(opt),
+          })
+        )
 
         if (typeof cb === 'function') {
           handlers.set(uid, cb)
@@ -149,7 +155,7 @@ export function createAndroidNativeBridge (cb) {
       // receive native message
       registerHandler: (channel, cb) => {
         channelHandlers.set(channel, cb)
-      }
+      },
     }
 
     window.Bridge = Bridge

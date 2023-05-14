@@ -1,43 +1,43 @@
 <ion-view view-title="{{vm.title}}設定" class="contentmanage-view">
-    <ion-content>
-        <div class="spinner" ng-if="vm.items.length == 0">
-            <ir-spinner></ir-spinner>
+  <ion-content>
+    <div class="spinner" ng-if="vm.items.length == 0">
+      <ir-spinner></ir-spinner>
+    </div>
+    <div class="list">
+      <div class="item item-input-inset">
+        <div class="item-input-wrapper">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input
+            type="text"
+            ng-model="vm.searchText"
+            ng-change="vm.searchOnTextChange()"
+            placeholder="搜尋 (例如: 吹水王國)"
+          />
         </div>
-        <div class="list">
-            <div class="item item-input-inset">
-                <div class="item-input-wrapper">
-                    <i class="icon ion-search placeholder-icon"></i>
-                    <input type="text"
-                           ng-model="vm.searchText"
-                           ng-change="vm.searchOnTextChange()"
-                           placeholder="搜尋 (例如: 吹水王國)">
-                </div>
-            </div>
+      </div>
+    </div>
+    <div
+      class="less-important-info"
+      ng-if="vm.items.length > 0"
+      style="text-align: center; margin-top: -12px; margin-bottom: 8px"
+    >
+      選取你希望在「{{vm.title}}」中隱藏的版塊
+    </div>
+    <ion-list>
+      <ion-item class="item-with-content-bg-color" ng-repeat="item in vm.items" style="height: 48px; padding: 0">
+        <div class="widget-content" ng-style="{ 'padding-left': item.isSubTopic ? '32px': 0 }">
+          <ion-checkbox
+            class="checkbox-assertive"
+            style="background-color: transparent"
+            ng-model="item.isSelected"
+            ng-click="vm.onTopicSelected()"
+          >
+            {{item.name}}
+          </ion-checkbox>
         </div>
-        <div class="less-important-info"
-             ng-if="vm.items.length > 0"
-             style="text-align: center; margin-top: -12px;margin-bottom: 8px">
-            選取你希望在「{{vm.title}}」中隱藏的版塊
-        </div>
-        <ion-list>
-            <ion-item
-                class="item-with-content-bg-color"
-                ng-repeat="item in vm.items"
-                style="height: 48px; padding: 0;">
-                <div class="widget-content"
-                     ng-style="{ 'padding-left': item.isSubTopic ? '32px': 0 }">
-                    <ion-checkbox
-                        class="checkbox-assertive"
-                        style="background-color: transparent"
-                        ng-model="item.isSelected"
-                        ng-click="vm.onTopicSelected()">
-                        {{item.name}}
-                    </ion-checkbox>
-                </div>
-
-            </ion-item>
-        </ion-list>
-        <div class="tab-bar-inset"></div>
-        <div class="tab-bar-inset"></div>
-    </ion-content>
+      </ion-item>
+    </ion-list>
+    <div class="tab-bar-inset"></div>
+    <div class="tab-bar-inset"></div>
+  </ion-content>
 </ion-view>

@@ -1,7 +1,7 @@
 //////////////////////////black theme///////////////////
 // common color
 $border-color: #353535;
-$epc-color: #37474F;
+$epc-color: #37474f;
 $sub-epc-color: #ff6d00;
 $text-on-epc-color: #f4f4f0;
 $bg-color: #222222;
@@ -19,8 +19,7 @@ $default-button-bg-color: #333;
 $default-button-font-color: $text-color;
 
 //popover
-$popover-bg-color: lighten($bg-color,5%);
-
+$popover-bg-color: lighten($bg-color, 5%);
 
 // spinner
 $spinner-color: $epc-color;
@@ -31,15 +30,14 @@ $item-divider-font-color: $text-on-epc-color;
 
 // card view
 $liked-color: #dd0000;
-$locked-dash-line: #FF9A9A;
-$blockquote-color: #607D8B;
+$locked-dash-line: #ff9a9a;
+$blockquote-color: #607d8b;
 $card-bg-color: #2b2b2b;
-$card-selection-color: lighten($card-bg-color,2%);
-  $news-border-color: rgba(255,255,255,0.15);
-  $card-news-holder-bg-color: darken($card-bg-color,5%);
+$card-selection-color: lighten($card-bg-color, 2%);
+$news-border-color: rgba(255, 255, 255, 0.15);
+$card-news-holder-bg-color: darken($card-bg-color, 5%);
 
 // ng toast
-
 
 // chart view
 $left-bubble-bg-color: lighten($bg-color, 4%);
@@ -48,7 +46,7 @@ $signature-color: $less-important-color;
 $chat-input-bg-color: #444;
 
 // post list view
-$hot-topic-icon-color-on: #FF6D00;
+$hot-topic-icon-color-on: #ff6d00;
 $hot-topic-icon-color-off: #666;
 
 // general text color
@@ -56,10 +54,10 @@ $danger-text-color: #ff4444;
 $success-text-color: #8fc320;
 
 // search highlight
-$highlight-background: rgba(#FFEB3B, 1);
+$highlight-background: rgba(#ffeb3b, 1);
 $highlight-text-color: #000;
 
-$action-button-bg-color: lighten($bg-color,2%) !default;
+$action-button-bg-color: lighten($bg-color, 2%) !default;
 
 // in post-list that list of button for user to select sub-topics
 $topic-select-button-bg-color: $less-important-color;
@@ -67,12 +65,12 @@ $topic-select-button-active-bg-color: lighten($bg-color, 4%);
 $topic-select-button-active-color: $text-color;
 
 // override ionic css color
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       lighten($epc-color,10%) !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
+$light: #fff !default;
+$stable: #f8f8f8 !default;
+$positive: #387ef5 !default;
+$calm: #11c1f3 !default;
+$balanced: #33cd5f !default;
+$energized: #ffc900 !default;
+$assertive: lighten($epc-color, 10%) !default;
+$royal: #886aea !default;
+$dark: #444 !default;

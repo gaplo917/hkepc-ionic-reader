@@ -1,15 +1,7 @@
-
-export const PaginationPopoverDelegates = ({
-  $scope,
-  $ionicPopover,
-  $timeout,
-  $ionicScrollDelegate
-}, {
-  getCurrentPage,
-  getTotalPage,
-  getLocalMinPage,
-  onJumpPage
-}) => {
+export const PaginationPopoverDelegates = (
+  { $scope, $ionicPopover, $timeout, $ionicScrollDelegate },
+  { getCurrentPage, getTotalPage, getLocalMinPage, onJumpPage }
+) => {
   let pageSliderPopover = null
 
   // force init, ionic will cache it underlying
@@ -73,6 +65,6 @@ export const PaginationPopoverDelegates = ({
         vm.totalPageNum = getTotalPage()
         pageSliderPopover.show($event)
       }
-    }
+    },
   }
 }

@@ -1,10 +1,7 @@
 import * as URLUtils from '../../utils/url'
 import cheerio from 'cheerio'
 import * as HKEPC from '../../data/config/hkepc'
-import {
-  startsWith,
-  replace
-} from 'lodash-es'
+import { startsWith, replace } from 'lodash-es'
 
 const matchCount = (str, regex) => {
   const result = str.match(regex)
@@ -12,35 +9,37 @@ const matchCount = (str, regex) => {
 }
 
 export default class Mapper {
-  static apiSuccess (o) { return { message: o.message } }
-
-  static topicListHtmlToTopicList (html) {
-    const $ = html.getCheerio()
-
-    return $('#mainIndex > div').map((i, elem) => {
-      const source = $(elem)
-
-      const groupName = source.hasClass('group')
-        ? source.find('a').text()
-        : undefined
-
-      const topicId = URLUtils.getQueryVariable(source.find('.forumInfo .caption').attr('raw-href'), 'fid')
-      const topicName = source.find('.forumInfo .caption').text()
-      const description = source.find('.forumInfo p').next().text()
-      const image = source.find('.icon img').attr('raw-src')
-
-      return {
-        id: topicId,
-        name: topicName,
-        image,
-        groupName,
-        description: description.replace('最後發表', ' -')
-      }
-    }).get()
-      .filter(it => it.id || it.groupName)
+  static apiSuccess(o) {
+    return { message: o.message }
   }
 
-  static fullTopicListFromSearchHtmlToTopicList (html) {
+  static topicListHtmlToTopicList(html) {
+    const $ = html.getCheerio()
+
+    return $('#mainIndex > div')
+      .map((i, elem) => {
+        const source = $(elem)
+
+        const groupName = source.hasClass('group') ? source.find('a').text() : undefined
+
+        const topicId = URLUtils.getQueryVariable(source.find('.forumInfo .caption').attr('raw-href'), 'fid')
+        const topicName = source.find('.forumInfo .caption').text()
+        const description = source.find('.forumInfo p').next().text()
+        const image = source.find('.icon img').attr('raw-src')
+
+        return {
+          id: topicId,
+          name: topicName,
+          image,
+          groupName,
+          description: description.replace('最後發表', ' -'),
+        }
+      })
+      .get()
+      .filter((it) => it.id || it.groupName)
+  }
+
+  static fullTopicListFromSearchHtmlToTopicList(html) {
     const blackList = [
       { id: '118', name: '熱點投票', isSubTopic: false },
       { id: '154', name: 'HKEPC X CoolerMaster Case Mod 2009', isSubTopic: false },
@@ -124,27 +123,29 @@ export default class Mapper {
       { id: '194', name: 'OCZ Vertex 2 SSD Master 比賽專區 - Tips Master', isSubTopic: true },
       { id: '213', name: 'HKEPC會員試用Gadmei T820', isSubTopic: true },
       { id: '287', name: 'and M811 開發及分享專區', isSubTopic: false },
-      { id: '208', name: '日本地震賑災義賣', isSubTopic: false }
+      { id: '208', name: '日本地震賑災義賣', isSubTopic: false },
     ]
-    const blIds = blackList.map(it => it.id)
+    const blIds = blackList.map((it) => it.id)
     const $ = html.getCheerio()
 
-    return $('#srchfid optgroup option').map((i, elem) => {
-      const source = $(elem)
-      const id = source.attr('value')
-      const name = source.text()
-      const trimmedName = name.trim()
-      const isSubTopic = trimmedName.length < name.length
-      return {
-        id,
-        name: trimmedName,
-        isSubTopic
-      }
-    }).get()
+    return $('#srchfid optgroup option')
+      .map((i, elem) => {
+        const source = $(elem)
+        const id = source.attr('value')
+        const name = source.text()
+        const trimmedName = name.trim()
+        const isSubTopic = trimmedName.length < name.length
+        return {
+          id,
+          name: trimmedName,
+          isSubTopic,
+        }
+      })
+      .get()
       .filter(({ id }) => blIds.indexOf(id) === -1)
   }
 
-  static postListHtmlToPostListPage (html, pageNum) {
+  static postListHtmlToPostListPage(html, pageNum) {
     const $ = html.getCheerio()
 
     // only work for latest
@@ -152,23 +153,27 @@ export default class Mapper {
 
     const titles = $('#nav').text().split('»')
     const topicName = titles[titles.length - 1]
-    const subTopicList = $('#subforum table h2 a').map((i, elem) => {
-      const obj = $(elem)
-      const name = obj.text()
-      const id = URLUtils.getQueryVariable(obj.attr('raw-href'), 'fid')
-      return {
-        id,
-        name
-      }
-    }).get()
+    const subTopicList = $('#subforum table h2 a')
+      .map((i, elem) => {
+        const obj = $(elem)
+        const name = obj.text()
+        const id = URLUtils.getQueryVariable(obj.attr('raw-href'), 'fid')
+        return {
+          id,
+          name,
+        }
+      })
+      .get()
 
-    const postCategories = $('.threadtype a').map((i, elem) => {
-      const obj = $(elem)
-      return {
-        id: URLUtils.getQueryVariable(obj.attr('raw-href'), 'typeid'),
-        name: obj.text()
-      }
-    }).get()
+    const postCategories = $('.threadtype a')
+      .map((i, elem) => {
+        const obj = $(elem)
+        return {
+          id: URLUtils.getQueryVariable(obj.attr('raw-href'), 'typeid'),
+          name: obj.text(),
+        }
+      })
+      .get()
 
     // only extract the number
     const pageNumSource = $('.pages_btns .pages a')
@@ -176,56 +181,62 @@ export default class Mapper {
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.min(Math.max(...pageNumArr), 1000)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.min(Math.max(...pageNumArr), 1000)
 
-    const posts = $('.threadlist table tbody').map((i, elem) => {
-      const htmlId = $(elem).attr('id')
+    const posts = $('.threadlist table tbody')
+      .map((i, elem) => {
+        const htmlId = $(elem).attr('id')
 
-      const postSource = $(elem)
-      // fall back for latest postUrl finding
-      const postUrl = postSource.find('tr .subject span a').attr('raw-href') || /* latest post */postSource.find('tr .subject > a').attr('raw-href')
-      const postTitleImgUrl = postSource.find('tr .folder img').attr('raw-src')
-      const topicId = URLUtils.getQueryVariable(postUrl, 'fid') || URLUtils.getQueryVariable(postSource.find('.forum a').attr('raw-href'), 'fid')
+        const postSource = $(elem)
+        // fall back for latest postUrl finding
+        const postUrl =
+          postSource.find('tr .subject span a').attr('raw-href') ||
+          /* latest post */ postSource.find('tr .subject > a').attr('raw-href')
+        const postTitleImgUrl = postSource.find('tr .folder img').attr('raw-src')
+        const topicId =
+          URLUtils.getQueryVariable(postUrl, 'fid') ||
+          URLUtils.getQueryVariable(postSource.find('.forum a').attr('raw-href'), 'fid')
 
-      return {
-        id: URLUtils.getQueryVariable(postUrl, 'tid'),
-        topicId,
-        tag: postSource.find('tr .subject em a').text() || postSource.find('.forum a').text(),
-        name: postSource.find('tr .subject span[id^=thread_] a ').text() || postSource.find('tr .subject > a ').text(),
-        lastPost: {
-          name: postSource.find('tr .lastpost cite a').text(),
-          timestamp: postSource.find('tr .lastpost em a span').attr('title') || postSource.find('tr .lastpost em a').text()
-        },
-        author: {
-          id: URLUtils.getQueryVariable(postSource.find('tr .author a').attr('raw-href'), 'uid'),
-          name: postSource.find('tr .author a').text()
-        },
-        count: {
-          view: postSource.find('tr .nums em').text(),
-          reply: postSource.find('tr .nums strong').text()
-        },
-        publishDate: postSource.find('tr .author em').text(),
-        pageNum,
-        isSticky: htmlId ? htmlId.startsWith('stickthread') : false,
-        isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false,
-        isLock: postTitleImgUrl ? postTitleImgUrl.indexOf('lock') > 0 : false
-      }
-    }).get()
+        return {
+          id: URLUtils.getQueryVariable(postUrl, 'tid'),
+          topicId,
+          tag: postSource.find('tr .subject em a').text() || postSource.find('.forum a').text(),
+          name:
+            postSource.find('tr .subject span[id^=thread_] a ').text() || postSource.find('tr .subject > a ').text(),
+          lastPost: {
+            name: postSource.find('tr .lastpost cite a').text(),
+            timestamp:
+              postSource.find('tr .lastpost em a span').attr('title') || postSource.find('tr .lastpost em a').text(),
+          },
+          author: {
+            id: URLUtils.getQueryVariable(postSource.find('tr .author a').attr('raw-href'), 'uid'),
+            name: postSource.find('tr .author a').text(),
+          },
+          count: {
+            view: postSource.find('tr .nums em').text(),
+            reply: postSource.find('tr .nums strong').text(),
+          },
+          publishDate: postSource.find('tr .author em').text(),
+          pageNum,
+          isSticky: htmlId ? htmlId.startsWith('stickthread') : false,
+          isRead: postTitleImgUrl ? postTitleImgUrl.indexOf('new') > 0 : false,
+          isLock: postTitleImgUrl ? postTitleImgUrl.indexOf('lock') > 0 : false,
+        }
+      })
+      .get()
 
     return {
       searchId,
       totalPageNum,
       subTopicList,
       categories: postCategories,
-      posts: posts.filter(_ => _.id && _.name),
+      posts: posts.filter((_) => _.id && _.name),
       topicName,
-      pageNum
+      pageNum,
     }
   }
 
@@ -235,7 +246,7 @@ export default class Mapper {
    * @param opt {postId, page}
    * @returns {*}
    */
-  static postHtmlToPost (html, opt) {
+  static postHtmlToPost(html, opt) {
     const { postId, page } = opt
 
     const $ = html.getCheerio()
@@ -249,12 +260,15 @@ export default class Mapper {
 
     const postTitle = html.getTitle()
 
-    const chiFullWidthCharCount = matchCount(postTitle, /[\uff00-\uff60]|[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/ug)
+    const chiFullWidthCharCount = matchCount(
+      postTitle,
+      /[\uff00-\uff60]|[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/gu
+    )
     const engCharacterCount = matchCount(postTitle, /[0-9]|[a-z]|[-!$%^&*()_+|~=`{}[\]:";'<>?,./\s]/gi)
 
     console.log('word count', { chiFullWidthCharCount, engCharacterCount })
 
-    const isLongTitle = (chiFullWidthCharCount * 2 + engCharacterCount) >= 50
+    const isLongTitle = chiFullWidthCharCount * 2 + engCharacterCount >= 50
 
     const topicStr = html.getEPCTopicFromTitle()
 
@@ -265,13 +279,11 @@ export default class Mapper {
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
     const messages = $('#postlist > div')
       .filter((i, elem) => {
@@ -282,14 +294,17 @@ export default class Mapper {
         const postSource = $(elem)
         const hasEdit = !!postSource.find('a.editpost').text()
 
-        const content = postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix') ||
+        const content =
+          postSource.find('.postcontent > .defaultpost > .postmessage > .t_msgfontfix') ||
           postSource.find('.postcontent > .defaultpost > .postmessage')
 
         content.find('#threadtitle').remove()
         content.find('.useraction').remove()
         content.find('blockquote').attr('ng-click', content.find('blockquote a').attr('ng-click'))
         content.find('blockquote a').attr('ng-click', '')
-        content.find('blockquote img').html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
+        content
+          .find('blockquote img')
+          .html('<div class="message-resolve"><i class="ion-ios-search-strong"></i> 點擊查看原文</div>')
 
         // auto add embedded youtube before the link
         content.find('a[youtube-embed]').each((i, e) => {
@@ -308,7 +323,9 @@ export default class Mapper {
         return {
           id: postSource.find('table').attr('id').replace('pid', ''),
           pos: postSource.find('.postinfo strong a em').text(),
-          createdAt: postSource.find('.posterinfo .authorinfo em span').attr('title') || postSource.find('.posterinfo .authorinfo em').text().replace('發表於 ', ''),
+          createdAt:
+            postSource.find('.posterinfo .authorinfo em span').attr('title') ||
+            postSource.find('.posterinfo .authorinfo em').text().replace('發表於 ', ''),
           pstatus,
           content: content.html(),
           type: 'POST_MESSAGE',
@@ -317,16 +334,17 @@ export default class Mapper {
             id: postId,
             topicId,
             title: postTitle,
-            page
+            page,
           },
           author: {
             rank: rank ? rank.replace('Rank: ', '') : 0,
             image: avatarImageUrl,
             uid: URLUtils.getQueryVariable(postSource.find('.postauthor a').attr('raw-href'), 'uid'),
-            name: postSource.find('.postauthor > .postinfo').text().trim()
-          }
+            name: postSource.find('.postauthor > .postinfo').text().trim(),
+          },
         }
-      }).get()
+      })
+      .get()
 
     return {
       title: postTitle,
@@ -337,11 +355,11 @@ export default class Mapper {
       topicCategory,
       totalPageNum,
       messages,
-      isLock
+      isLock,
     }
   }
 
-  static userProfileHtmlToUserProfile (html, uid) {
+  static userProfileHtmlToUserProfile(html, uid) {
     const $ = html.getCheerio()
     const contentSource = $('#profilecontent')
     const image = $('.avatar > img').attr('raw-src')
@@ -352,11 +370,11 @@ export default class Mapper {
       rank,
       name,
       image,
-      content: contentSource.html()
+      content: contentSource.html(),
     }
   }
 
-  static postHtmlToFindMessageResult (html, opt) {
+  static postHtmlToFindMessageResult(html, opt) {
     const { messageId, postId, page } = opt
 
     const result = Mapper.postHtmlToPost(html, { postId, page })
@@ -364,91 +382,96 @@ export default class Mapper {
     const pageNumArr = $('.pages strong')
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const currentPage = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const currentPage = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
     return {
       currentPage,
-      message: result.messages.filter(_ => parseInt(_.id) === parseInt(messageId))[0]
+      message: result.messages.filter((_) => parseInt(_.id) === parseInt(messageId))[0],
     }
   }
 
-  static myPost (html, opt) {
+  static myPost(html, opt) {
     const $ = html.getCheerio()
     const formSource = $('.datalist > form')
     const relativeUrl = formSource.attr('action')
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
     const hiddenFormInputs = {}
-    formSource.find('input[type=\'hidden\']').map((i, elem) => {
-      const k = $(elem).attr('name')
-      const v = $(elem).attr('value')
+    formSource
+      .find("input[type='hidden']")
+      .map((i, elem) => {
+        const k = $(elem).attr('name')
+        const v = $(elem).attr('value')
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
-    formSource.find('button[type=\'submit\']').map((i, elem) => {
-      const k = $(elem).attr('name')
-      const v = $(elem).attr('value')
+    formSource
+      .find("button[type='submit']")
+      .map((i, elem) => {
+        const k = $(elem).attr('name')
+        const v = $(elem).attr('value')
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
     const pageNumSource = $('.pages a, .pages strong')
 
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
-    const posts = $('.datalist table > tbody > tr').map((i, elem) => {
-      const postSource = $(elem)
+    const posts = $('.datalist table > tbody > tr')
+      .map((i, elem) => {
+        const postSource = $(elem)
 
-      return {
-        post: {
-          id: postSource.find('input.checkbox').attr('value'),
-          title: postSource.find('th a').text(),
-          url: postSource.find('th a').attr('href')
-        },
-        topic: {
-          url: postSource.find('.forum a').attr('href'),
-          title: postSource.find('.forum a').text() || postSource.find('td.forum').text()
-        },
-        status: postSource.find('.nums').text(),
-        lastpost: {
-          by: postSource.find('.lastpost cite a').text() || postSource.find('.lastpost cite').text(),
-          timestamp: postSource.find('.lastpost > em > a > span').attr('title') ||
-                     postSource.find('.lastpost > em > a').text() ||
-                     postSource.find('.lastpost > em > span').text() ||
-                     postSource.find('.lastpost > em').text() ||
-                     0
+        return {
+          post: {
+            id: postSource.find('input.checkbox').attr('value'),
+            title: postSource.find('th a').text(),
+            url: postSource.find('th a').attr('href'),
+          },
+          topic: {
+            url: postSource.find('.forum a').attr('href'),
+            title: postSource.find('.forum a').text() || postSource.find('td.forum').text(),
+          },
+          status: postSource.find('.nums').text(),
+          lastpost: {
+            by: postSource.find('.lastpost cite a').text() || postSource.find('.lastpost cite').text(),
+            timestamp:
+              postSource.find('.lastpost > em > a > span').attr('title') ||
+              postSource.find('.lastpost > em > a').text() ||
+              postSource.find('.lastpost > em > span').text() ||
+              postSource.find('.lastpost > em').text() ||
+              0,
+          },
         }
-      }
-    }).get()
-      .filter(it => it.post.title)
+      })
+      .get()
+      .filter((it) => it.post.title)
 
     return {
       totalPageNum,
       posts,
       actionUrl,
-      hiddenFormInputs
+      hiddenFormInputs,
     }
   }
 
-  static chatList (html, opt) {
+  static chatList(html, opt) {
     const $ = html.getCheerio()
 
     const pageNumSource = $('.pages a, .pages strong')
@@ -456,43 +479,43 @@ export default class Mapper {
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
-    const chats = $('.pm_list li').map((i, elem) => {
-      const chatSource = $(elem)
+    const chats = $('.pm_list li')
+      .map((i, elem) => {
+        const chatSource = $(elem)
 
-      const avatarUrl = chatSource.find('.avatar img').attr('raw-src')
-      const summary = chatSource.find('.summary').text()
-      const username = chatSource.find('.cite cite a').text()
-      const isRead = chatSource.find('.cite img').attr('alt') !== 'NEW'
+        const avatarUrl = chatSource.find('.avatar img').attr('raw-src')
+        const summary = chatSource.find('.summary').text()
+        const username = chatSource.find('.cite cite a').text()
+        const isRead = chatSource.find('.cite img').attr('alt') !== 'NEW'
 
-      chatSource.find('cite').remove()
-      const date = chatSource.find('.cite').text()
+        chatSource.find('cite').remove()
+        const date = chatSource.find('.cite').text()
 
-      const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
-      return {
-        id,
-        avatarUrl,
-        summary,
-        username,
-        date,
-        isRead
-      }
-    }).get()
+        const id = URLUtils.getQueryVariable(chatSource.find('a.avatar').attr('raw-href'), 'uid')
+        return {
+          id,
+          avatarUrl,
+          summary,
+          username,
+          date,
+          isRead,
+        }
+      })
+      .get()
 
     return {
       chats,
-      totalPageNum
+      totalPageNum,
     }
   }
 
-  static chatDetails (html, opt) {
+  static chatDetails(html, opt) {
     const $ = html.getCheerio()
     const parseChat = (chatSource, isSelf) => {
       const avatarUrl = chatSource.find('.avatar img').attr('raw-src')
@@ -511,14 +534,16 @@ export default class Mapper {
         content,
         username,
         date: date.trim(),
-        isSelf
+        isSelf,
       }
     }
-    const messages = $('.pm_list li.s_clear').map((i, elem) => {
-      const isSelf = $(elem).attr('class').indexOf('self') > 0
+    const messages = $('.pm_list li.s_clear')
+      .map((i, elem) => {
+        const isSelf = $(elem).attr('class').indexOf('self') > 0
 
-      return parseChat($(elem), isSelf)
-    }).get()
+        return parseChat($(elem), isSelf)
+      })
+      .get()
 
     const username = $('.itemtitle .left strong').text()
 
@@ -531,61 +556,69 @@ export default class Mapper {
 
     const hiddenFormInputs = {}
 
-    formSource('input[type=\'hidden\']').map((i, elem) => {
-      const k = formSource(elem).attr('name')
-      const v = formSource(elem).attr('value')
+    formSource("input[type='hidden']")
+      .map((i, elem) => {
+        const k = formSource(elem).attr('name')
+        const v = formSource(elem).attr('value')
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
     return {
       username,
       messages,
       actionUrl,
-      hiddenFormInputs
+      hiddenFormInputs,
     }
   }
 
-  static settings (html, opt) {
+  static settings(html, opt) {
     const $ = html.getCheerio()
-    const form = $('form[name=\'reg\']')
+    const form = $("form[name='reg']")
     const formSource = cheerio.load(form.html() || '')
     const relativeUrl = form.attr('action')
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}`
 
     const hiddenFormInputs = {}
 
-    formSource('input[type=\'hidden\'], input[checked=\'checked\'], #editsubmit, select').not('select[name=\'styleidnew\']').map((i, elem) => {
-      const k = formSource(elem).attr('name')
-      const v = formSource(elem).attr('value') || formSource(elem).find('option[selected=\'selected\']').attr('value') || 0
+    formSource("input[type='hidden'], input[checked='checked'], #editsubmit, select")
+      .not("select[name='styleidnew']")
+      .map((i, elem) => {
+        const k = formSource(elem).attr('name')
+        const v =
+          formSource(elem).attr('value') || formSource(elem).find("option[selected='selected']").attr('value') || 0
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
-    const forumStyles = $('select[name=\'styleidnew\'] option').map((i, elem) => {
-      const obj = $(elem)
-      const isSelected = obj.attr('selected') === 'selected'
-      const value = obj.attr('value')
-      // const name = obj.text()
+    const forumStyles = $("select[name='styleidnew'] option")
+      .map((i, elem) => {
+        const obj = $(elem)
+        const isSelected = obj.attr('selected') === 'selected'
+        const value = obj.attr('value')
+        // const name = obj.text()
 
-      return {
-        isSelected,
-        value
-      }
-    }).get()
+        return {
+          isSelected,
+          value,
+        }
+      })
+      .get()
 
-    const [forumStyle] = forumStyles.filter(it => it.isSelected).map(it => it.value)
+    const [forumStyle] = forumStyles.filter((it) => it.isSelected).map((it) => it.value)
     return {
       actionUrl,
       forumStyle,
       forumStyles,
-      hiddenFormInputs
+      hiddenFormInputs,
     }
   }
 
-  static notifications (html, opt) {
+  static notifications(html, opt) {
     const $ = html.getCheerio()
 
     const pageNumSource = $('.pages a, .pages strong')
@@ -593,29 +626,29 @@ export default class Mapper {
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
-    const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread').map((i, elem) => {
-      const source = $(elem)
-      return {
-        isRead: source.find('img').attr('alt') !== 'NEW',
-        content: source.html()
-      }
-    }).get()
+    const notifications = $('.feed li .f_quote, .feed li .f_reply, .feed li .f_thread')
+      .map((i, elem) => {
+        const source = $(elem)
+        return {
+          isRead: source.find('img').attr('alt') !== 'NEW',
+          content: source.html(),
+        }
+      })
+      .get()
 
     return {
       totalPageNum,
-      notifications
+      notifications,
     }
   }
 
-  static epcEditorData (html, opt) {
+  static epcEditorData(html, opt) {
     const $ = html.getCheerio()
     const postForm = $('#postform')
     const relativeUrl = postForm.attr('action')
@@ -623,19 +656,21 @@ export default class Mapper {
 
     // ---------- Upload image preparation ----------------------------------------------
     const imgattachform = $('#imgattachform')
-    const existingImages = $('img').map((i, e) => {
-      const img = $(e)
-      const src = img.attr('raw-src')
-      const rawId = img.attr('raw-id')
-      const isAttachment = startsWith(src, 'https://forum.hkepc.net')
-      const id = replace(rawId, 'image_', '')
-      return {
-        src,
-        id,
-        isAttachment
-      }
-    }).get()
-      .filter(existingImage => existingImage.isAttachment)
+    const existingImages = $('img')
+      .map((i, e) => {
+        const img = $(e)
+        const src = img.attr('raw-src')
+        const rawId = img.attr('raw-id')
+        const isAttachment = startsWith(src, 'https://forum.hkepc.net')
+        const id = replace(rawId, 'image_', '')
+        return {
+          src,
+          id,
+          isAttachment,
+        }
+      })
+      .get()
+      .filter((existingImage) => existingImage.isAttachment)
 
     console.log('existingImages', existingImages)
     const attachFormSource = cheerio.load(imgattachform.html())
@@ -644,30 +679,34 @@ export default class Mapper {
 
     hiddenAttachFormInputs.action = `${HKEPC.baseForumUrl}/${imgattachform.attr('action')}`
 
-    attachFormSource('input[type=\'hidden\']').map((i, elem) => {
-      const k = attachFormSource(elem).attr('name')
-      const v = attachFormSource(elem).attr('value')
-      hiddenAttachFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+    attachFormSource("input[type='hidden']")
+      .map((i, elem) => {
+        const k = attachFormSource(elem).attr('name')
+        const v = attachFormSource(elem).attr('value')
+        hiddenAttachFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
     // ---------- End of Upload image preparation -----------------------------------------------
 
     const formSource = cheerio.load(postForm.html())
-    const subTopicTypeId = formSource('#typeid > option[selected=\'selected\']').attr('value')
+    const subTopicTypeId = formSource("#typeid > option[selected='selected']").attr('value')
 
     const hiddenFormInputs = {}
-    formSource('input[type=\'hidden\']').map((i, elem) => {
-      const k = formSource(elem).attr('name')
-      const v = formSource(elem).attr('value')
+    formSource("input[type='hidden']")
+      .map((i, elem) => {
+        const k = formSource(elem).attr('name')
+        const v = formSource(elem).attr('value')
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
     const edit = {
       subject: formSource('#subject').attr('value'),
-      content: formSource('#e_textarea').text()
+      content: formSource('#e_textarea').text(),
     }
 
     const preText = formSource('#e_textarea').text()
@@ -679,11 +718,11 @@ export default class Mapper {
       hiddenFormInputs,
       existingImages,
       hiddenAttachFormInputs,
-      preText
+      preText,
     }
   }
 
-  static myReplies (html, opt) {
+  static myReplies(html, opt) {
     const $ = html.getCheerio()
 
     const pageNumSource = $('.pages a, .pages strong')
@@ -691,68 +730,71 @@ export default class Mapper {
     const pageNumArr = pageNumSource
       .map((i, elem) => $(elem).text())
       .get()
-      .map(e => e.match(/\d/g)) // array of string with digit
-      .filter(e => e != null) // filter null value
-      .map(e => parseInt(e.join(''))) // join the array and parseInt
+      .map((e) => e.match(/\d/g)) // array of string with digit
+      .filter((e) => e != null) // filter null value
+      .map((e) => parseInt(e.join(''))) // join the array and parseInt
 
-    const totalPageNum = pageNumArr.length === 0
-      ? 1
-      : Math.max(...pageNumArr)
+    const totalPageNum = pageNumArr.length === 0 ? 1 : Math.max(...pageNumArr)
 
-    const myreplies = $('.datalist > table > tbody > tr').map((i, elem) => {
-      const postSource = $(elem)
+    const myreplies = $('.datalist > table > tbody > tr')
+      .map((i, elem) => {
+        const postSource = $(elem)
 
-      return {
-        post: {
-          title: postSource.find('th a').text(),
-          messageId: postSource.find('th a').attr('pid'),
-          postId: postSource.find('th a').attr('ptid'),
-          inAppUrl: postSource.find('th a').attr('in-app-url')
-        },
-        topic: {
-          url: postSource.find('.forum a').attr('href'),
-          title: postSource.find('.forum a').text()
-        },
-        status: postSource.find('.nums').text(),
-        timestamp: postSource.find('.lastpost > em > span').attr('title') || postSource.find('.lastpost > em').text() || 0,
-        brief: postSource.find('.lighttxt').text()
-      }
-    }).get()
+        return {
+          post: {
+            title: postSource.find('th a').text(),
+            messageId: postSource.find('th a').attr('pid'),
+            postId: postSource.find('th a').attr('ptid'),
+            inAppUrl: postSource.find('th a').attr('in-app-url'),
+          },
+          topic: {
+            url: postSource.find('.forum a').attr('href'),
+            title: postSource.find('.forum a').text(),
+          },
+          status: postSource.find('.nums').text(),
+          timestamp:
+            postSource.find('.lastpost > em > span').attr('title') || postSource.find('.lastpost > em').text() || 0,
+          brief: postSource.find('.lighttxt').text(),
+        }
+      })
+      .get()
 
     // merge array
     for (let i = 0; i < myreplies.length; i += 2) {
       myreplies[i].brief = myreplies[i + 1].brief
     }
 
-    const replies = myreplies.filter(x => x.timestamp !== 0)
+    const replies = myreplies.filter((x) => x.timestamp !== 0)
 
     return {
       replies,
-      totalPageNum
+      totalPageNum,
     }
   }
 
-  static reportEditorXmlData (html, opt) {
+  static reportEditorXmlData(html, opt) {
     const $ = cheerio.load(html)
     const formSource = $('#postform')
     const relativeUrl = formSource.attr('action')
     const actionUrl = `${HKEPC.baseForumUrl}/${relativeUrl}&inajax=1`
 
     const hiddenFormInputs = {}
-    $('input[type=\'hidden\']').map((i, elem) => {
-      const k = $(elem).attr('name')
-      const v = $(elem).attr('value')
+    $("input[type='hidden']")
+      .map((i, elem) => {
+        const k = $(elem).attr('name')
+        const v = $(elem).attr('value')
 
-      hiddenFormInputs[k] = encodeURIComponent(v)
-      return v
-    }).get()
+        hiddenFormInputs[k] = encodeURIComponent(v)
+        return v
+      })
+      .get()
 
     // hard code that is report type
     hiddenFormInputs.type = '1'
 
     return {
       actionUrl,
-      hiddenFormInputs
+      hiddenFormInputs,
     }
   }
 }

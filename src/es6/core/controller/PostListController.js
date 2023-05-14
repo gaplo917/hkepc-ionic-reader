@@ -11,32 +11,52 @@ import { searchMultipleKeyword } from '../../utils/search'
 // b = start value
 // c = change in value
 // d = duration
-function easeInOutQuad (t, b, c, d) {
+function easeInOutQuad(t, b, c, d) {
   t /= d / 2
-  if (t < 1) return c / 2 * t * t + b
+  if (t < 1) return (c / 2) * t * t + b
   t--
-  return -c / 2 * (t * (t - 2) - 1) + b
+  return (-c / 2) * (t * (t - 2) - 1) + b
 }
 
 export class PostListController {
-  static get STATE () { return 'tab.topics-posts' }
+  static get STATE() {
+    return 'tab.topics-posts'
+  }
 
-  static get NAME () { return 'PostListController' }
+  static get NAME() {
+    return 'PostListController'
+  }
 
-  static get CONFIG () {
+  static get CONFIG() {
     return {
       url: '/topics/:topicId/page/:page?searchId=&searchText=&searchResp=',
       views: {
         main: {
           templateUrl: 'templates/post-list.html',
           controller: PostListController.NAME,
-          controllerAs: 'vm'
-        }
-      }
+          controllerAs: 'vm',
+        },
+      },
     }
   }
 
-  constructor ($scope, $state, $stateParams, $location, $ionicScrollDelegate, $ionicHistory, $ionicPopover, LocalStorageService, $ionicModal, ngToast, $q, apiService, rx, $timeout, AuthService) {
+  constructor(
+    $scope,
+    $state,
+    $stateParams,
+    $location,
+    $ionicScrollDelegate,
+    $ionicHistory,
+    $ionicPopover,
+    LocalStorageService,
+    $ionicModal,
+    ngToast,
+    $q,
+    apiService,
+    rx,
+    $timeout,
+    AuthService
+  ) {
     this.scope = $scope
     this.state = $state
     this.location = $location
@@ -69,21 +89,24 @@ export class PostListController {
 
     this.topicUiReady = false
 
-    this.paginationPopoverDelegate = PaginationPopoverDelegates({
-      $scope,
-      $ionicPopover,
-      $timeout,
-      $ionicScrollDelegate
-    }, {
-      getCurrentPage: () => this.currentPageNum,
-      getTotalPage: () => this.totalPageNum,
-      getLocalMinPage: () => (this.posts !== null && this.posts[0] && this.posts[0].pageNum) || 1,
-      onJumpPage: ({ to }) => {
-        this.reset()
-        this.currentPageNum = to
-        this.loadPosts(to)
+    this.paginationPopoverDelegate = PaginationPopoverDelegates(
+      {
+        $scope,
+        $ionicPopover,
+        $timeout,
+        $ionicScrollDelegate,
+      },
+      {
+        getCurrentPage: () => this.currentPageNum,
+        getTotalPage: () => this.totalPageNum,
+        getLocalMinPage: () => (this.posts !== null && this.posts[0] && this.posts[0].pageNum) || 1,
+        onJumpPage: ({ to }) => {
+          this.reset()
+          this.currentPageNum = to
+          this.loadPosts(to)
+        },
       }
-    })
+    )
 
     // .fromTemplateUrl() method
     $ionicPopover.fromTemplateUrl('templates/modals/filter-order.html').then((popover) => {
@@ -106,7 +129,8 @@ export class PostListController {
       this.paginationPopoverDelegate.remove()
     })
 
-    $scope.$eventToObservable('lastread')
+    $scope
+      .$eventToObservable('lastread')
       .throttle(300)
       .safeApply($scope, ([event, { page, id }]) => {
         console.log('received broadcast lastread', page, id)
@@ -121,10 +145,12 @@ export class PostListController {
     // $scope.$on('$ionicView.unloaded', (e) => {
     // })
 
-    this.LocalStorageService.get('showSticky', true).safeApply($scope, data => {
-      console.log('showSticky', data)
-      this.showSticky = String(data) === 'true'
-    }).subscribe()
+    this.LocalStorageService.get('showSticky', true)
+      .safeApply($scope, (data) => {
+        console.log('showSticky', data)
+        this.showSticky = String(data) === 'true'
+      })
+      .subscribe()
 
     this.loadMore()
   }
@@ -132,7 +158,7 @@ export class PostListController {
   /**
    * @return {Observable<{filterOpts: {}, filterMode}>}
    */
-  getFilterOptsObs () {
+  getFilterOptsObs() {
     return this.rx.Observable.combineLatest(
       this.LocalStorageService.getObject('latestPostTopicFilters', []),
       this.LocalStorageService.getObject('latestReplyTopicFilters', []),
@@ -141,18 +167,19 @@ export class PostListController {
       this.LocalStorageService.get('filterMode', '1'),
       (latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter, filterMode) => ({
         filterOpts: { latestPostTopicFilters, latestReplyTopicFilters, hlKeywords, userFilter },
-        filterMode
+        filterMode,
       })
     )
   }
 
-  loadPosts (page) {
+  loadPosts(page) {
     if (this.searchResp) {
       this.getFilterOptsObs()
         .safeApply(this.scope, ({ filterOpts, filterMode }) => {
           this.renderPostListResponse(this.searchResp, filterOpts, filterMode)
           this.searchResp = undefined
-        }).subscribe()
+        })
+        .subscribe()
     } else {
       this.rx.Observable.combineLatest(
         this.apiService.postListPage({
@@ -160,31 +187,32 @@ export class PostListController {
           pageNum: page,
           filter: this.filter,
           order: this.order,
-          searchId: this.searchId
+          searchId: this.searchId,
         }),
         this.getFilterOptsObs(),
         (resp, { filterOpts, filterMode }) => ({ resp, filterOpts, filterMode })
       )
         .safeApply(this.scope, ({ resp, filterOpts, filterMode }) => {
           this.renderPostListResponse(resp, filterOpts, filterMode)
-        }).subscribe()
+        })
+        .subscribe()
     }
   }
 
-  loadMore () {
+  loadMore() {
     if (this.hasMoreData) {
       const nextPage = parseInt(this.currentPageNum) + 1
       this.loadPosts(nextPage)
     }
   }
 
-  renderPostListResponse (resp, filterOpts, filterMode) {
+  renderPostListResponse(resp, filterOpts, filterMode) {
     const { userFilter, latestPostTopicFilters, latestReplyTopicFilters, hlKeywords } = filterOpts
     const { userIds: userIdsFilter, users: filteredUserInfos } = userFilter
     const { searchId, totalPageNum, categories, posts: nPosts, topicName, subTopicList, pageNum } = resp
     const { topicId: topicTypeOrId } = this
-    const existingPostIds = (this.posts || []).map(it => it.id)
-    const deduplicatedPosts = nPosts.filter(it => existingPostIds.indexOf(it.id) === -1)
+    const existingPostIds = (this.posts || []).map((it) => it.id)
+    const deduplicatedPosts = nPosts.filter((it) => existingPostIds.indexOf(it.id) === -1)
 
     this.searchId = searchId
     // only extract the number
@@ -193,39 +221,42 @@ export class PostListController {
     this.categories = categories
 
     // better UX to highlight the searchText
-    const posts = topicTypeOrId === 'search'
-      ? (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, this.searchText))
-      : (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, hlKeywords.join(' ')))
+    const posts =
+      topicTypeOrId === 'search'
+        ? (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, this.searchText))
+        : (this.posts || []).concat(this.highlightSearchText(deduplicatedPosts, hlKeywords.join(' ')))
 
-    this.posts = posts.map(it => {
-      const { topicId: postTopicId, author, tag } = it
-      const { id: authorId, name: authorName } = author
+    this.posts = posts
+      .map((it) => {
+        const { topicId: postTopicId, author, tag } = it
+        const { id: authorId, name: authorName } = author
 
-      const hasFilteredAuthor = userIdsFilter.indexOf(authorId) >= 0
-      const hasFilteredTopic = topicTypeOrId === 'latestPost'
-        ? latestPostTopicFilters.indexOf(postTopicId) >= 0
-        : topicTypeOrId === 'latest'
-          ? latestReplyTopicFilters.indexOf(postTopicId) >= 0
-          : false
-      const isMatchedFilter = hasFilteredAuthor || hasFilteredTopic
+        const hasFilteredAuthor = userIdsFilter.indexOf(authorId) >= 0
+        const hasFilteredTopic =
+          topicTypeOrId === 'latestPost'
+            ? latestPostTopicFilters.indexOf(postTopicId) >= 0
+            : topicTypeOrId === 'latest'
+            ? latestReplyTopicFilters.indexOf(postTopicId) >= 0
+            : false
+        const isMatchedFilter = hasFilteredAuthor || hasFilteredTopic
 
-      const remark = (hasFilteredAuthor && filteredUserInfos[authorId].remark) || ''
-      const remarkContent = remark ? `, ${remark}` : ''
+        const remark = (hasFilteredAuthor && filteredUserInfos[authorId].remark) || ''
+        const remarkContent = remark ? `, ${remark}` : ''
 
-      const filterReason = hasFilteredAuthor
-        ? `(已隱藏｜原因：${authorName}的帖子${remarkContent})`
-        : hasFilteredTopic
+        const filterReason = hasFilteredAuthor
+          ? `(已隱藏｜原因：${authorName}的帖子${remarkContent})`
+          : hasFilteredTopic
           ? `(已隱藏｜原因：${tag}版塊內的帖子)`
           : ''
 
-      return {
-        ...it,
-        isMatchedFilter,
-        filterMode,
-        filterReason
-      }
-    })
-      .filter(it => !(it.isMatchedFilter && String(it.filterMode) === '2'))
+        return {
+          ...it,
+          isMatchedFilter,
+          filterMode,
+          filterReason,
+        }
+      })
+      .filter((it) => !(it.isMatchedFilter && String(it.filterMode) === '2'))
 
     console.log('filtered postList', this.posts)
 
@@ -233,20 +264,28 @@ export class PostListController {
 
     const renderTopicName = () => {
       switch (topicTypeOrId) {
-        case 'search': return `${topicName} ${this.searchText}`
-        case 'latest': return '最新帖子'
-        case 'latestPost': return '最新發佈'
-        default: return topicName
+        case 'search':
+          return `${topicName} ${this.searchText}`
+        case 'latest':
+          return '最新帖子'
+        case 'latestPost':
+          return '最新發佈'
+        default:
+          return topicName
       }
     }
 
     // use exiting list if there is
-    this.subTopicList = this.subTopicList.length === 0
-      ? [{
-          id: topicTypeOrId,
-          name: renderTopicName()
-        }, ...subTopicList]
-      : this.subTopicList
+    this.subTopicList =
+      this.subTopicList.length === 0
+        ? [
+            {
+              id: topicTypeOrId,
+              name: renderTopicName(),
+            },
+            ...subTopicList,
+          ]
+        : this.subTopicList
 
     if (!this.topic) {
       this.topic = this.subTopicList[0]
@@ -268,16 +307,16 @@ export class PostListController {
     this.scope.$broadcast('scroll.infiniteScrollComplete')
   }
 
-  reset () {
+  reset() {
     this.currentPageNum = 1
     this.posts = null
     this.searchId = null
   }
 
-  doRefresh () {
+  doRefresh() {
     this.reset()
     if (this.filter) {
-      const category = this.categories.find(c => c.id === this.filter)
+      const category = this.categories.find((c) => c.id === this.filter)
       if (category) {
         requestAnimationFrame(() => {
           this.$timeout(() => {
@@ -289,7 +328,7 @@ export class PostListController {
     this.loadPosts(this.currentPageNum)
   }
 
-  centerSelectedTopic (subTopic, animated) {
+  centerSelectedTopic(subTopic, animated) {
     const getCurrentTime = () => {
       if (window.performance && window.performance.now) {
         return performance.now()
@@ -324,7 +363,7 @@ export class PostListController {
     }
   }
 
-  goToSubTopic (index, subTopic) {
+  goToSubTopic(index, subTopic) {
     this.centerSelectedTopic(subTopic, true)
 
     // swap the item in the list
@@ -337,27 +376,30 @@ export class PostListController {
     this.doRefresh()
   }
 
-  saveShowSticky (bool) {
+  saveShowSticky(bool) {
     this.LocalStorageService.set('showSticky', bool)
   }
 
-  doNewPost (topic) {
+  doNewPost(topic) {
     const { scope, state, authService, ngToast } = this
 
-    authService.isLoggedIn().safeApply(scope, isLoggedIn => {
-      if (isLoggedIn) {
-        state.go(Controllers.WriteNewPostController.STATE, {
-          topicId: this.topicId,
-          topic: JSON.stringify(topic),
-          categories: JSON.stringify(this.categories)
-        })
-      } else {
-        ngToast.danger('<i class="ion-alert-circled"> 發佈新主題需要會員權限，請先登入！</i>')
-      }
-    }).subscribe()
+    authService
+      .isLoggedIn()
+      .safeApply(scope, (isLoggedIn) => {
+        if (isLoggedIn) {
+          state.go(Controllers.WriteNewPostController.STATE, {
+            topicId: this.topicId,
+            topic: JSON.stringify(topic),
+            categories: JSON.stringify(this.categories),
+          })
+        } else {
+          ngToast.danger('<i class="ion-alert-circled"> 發佈新主題需要會員權限，請先登入！</i>')
+        }
+      })
+      .subscribe()
   }
 
-  doFilterOrder ($event) {
+  doFilterOrder($event) {
     const vm = this.filterOrderPopover.scope.vm
     vm.categories = this.categories
     vm.filter = this.filter
@@ -365,34 +407,33 @@ export class PostListController {
     this.filterOrderPopover.show($event)
   }
 
-  onBack () {
+  onBack() {
     if (this.ionicHistory.viewHistory().currentView.index !== 0) {
       this.ionicHistory.goBack()
     } else {
       this.ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true,
-        historyRoot: true
-
+        historyRoot: true,
       })
       this.state.go(Controllers.TopicListController.STATE)
     }
   }
 
-  postInAppUrl (post) {
+  postInAppUrl(post) {
     return post.isMatchedFilter ? '' : `/tab/topics/${post.topicId}/posts/${post.id}/page/1`
   }
 
-  onGoToPost (post) {
+  onGoToPost(post) {
     post.isMatchedFilter = false
     this.scope.$emit(PushHistoryRequest.NAME, new PushHistoryRequest(post))
   }
 
-  hasStickyPost (posts) {
-    return posts != null && posts && posts.filter(post => post.isSticky).length > 0
+  hasStickyPost(posts) {
+    return posts != null && posts && posts.filter((post) => post.isSticky).length > 0
   }
 
-  relativeMomentize (dateStr) {
+  relativeMomentize(dateStr) {
     if (moment(dateStr, 'YYYY-M-D hh:mm').diff(new Date(), 'days') >= -3) {
       return moment(dateStr, 'YYYY-M-D hh:mm').fromNow()
     } else {
@@ -400,14 +441,14 @@ export class PostListController {
     }
   }
 
-  highlightSearchText (posts, searchText) {
-    return posts.map(post => {
+  highlightSearchText(posts, searchText) {
+    return posts.map((post) => {
       // map to a search result
 
       const { hlContent } = searchMultipleKeyword(searchText.split(' '), post.name)
       return {
         ...post,
-        hlContent
+        hlContent,
       }
     })
   }
