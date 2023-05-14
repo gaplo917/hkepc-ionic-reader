@@ -27,7 +27,9 @@ export class VersionController {
   constructor($scope, $state, $ionicHistory, $http, $rootScope, apiService) {
     this.state = $state
     this.ionicHistory = $ionicHistory
-    const converter = new showdown.Converter()
+    const converter = new showdown.Converter({
+      disableForced4SpacesIndentedSublists: true,
+    })
 
     apiService
       .version($rootScope.isAndroidNative)
