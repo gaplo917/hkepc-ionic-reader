@@ -578,6 +578,7 @@ export class PostDetailController extends IRLifecycleOwner {
         {
           buttons: [
             '分享到 ...',
+            '開啟 HKEPC 原始連結',
             `${this.reversePostOrder ? '關閉' : '開啟'}倒轉看帖`,
             `${this.filterOnlyAuthorId ? '關閉' : '開啟'}只看 ${message.author.name} 的帖`,
             '關注此主題的新回覆',
@@ -594,33 +595,35 @@ export class PostDetailController extends IRLifecycleOwner {
               url: HKEPC.forum.findMessage(message.post.id, message.id),
             })
           } else if (index === 1) {
+            window.open(HKEPC.forum.findMessage(message.post.id, message.id), '_system', 'location=yes')
+          } else if (index === 2) {
             this.reversePostOrder = !this.reversePostOrder
             if (this.reversePostOrder) this.ngToast.success('<i class="ion-ios-checkmark"> 已開啟倒轉看帖功能！</i>')
             else ngToast.success('<i class="ion-ios-checkmark"> 已關閉倒轉看帖功能！</i>')
 
             this.doRefresh()
-          } else if (index === 2) {
+          } else if (index === 3) {
             this.filterOnlyAuthorId = this.filterOnlyAuthorId === undefined ? message.author.uid : undefined
             if (this.filterOnlyAuthorId !== undefined)
               ngToast.success(`<i class="ion-ios-checkmark"> 只看 ${message.author.name} 的帖！</i>`)
             else ngToast.success(`<i class="ion-ios-checkmark"> 已關閉只看 ${message.author.name} 的帖！</i>`)
 
             this.doRefresh()
-          } else if (index === 3) {
+          } else if (index === 4) {
             apiService
               .subscribeNewReply(this.postId)
               .safeApply(scope, () => {
                 ngToast.success('<i class="ion-ios-checkmark"> 成功關注此主題，你將能夠接收到新回覆的通知！</i>')
               })
               .subscribe()
-          } else if (index === 4) {
+          } else if (index === 5) {
             apiService
               .addFavPost(this.postId)
               .safeApply(scope, () => {
                 ngToast.success('<i class="ion-ios-checkmark"> 成功收藏此主題！</i>')
               })
               .subscribe()
-          } else if (index === 5) {
+          } else if (index === 6) {
             // this feature is made for apple review team, sosad
             this.state.go(Controllers.CMUsersController.STATE, {
               prefill: JSON.stringify({
@@ -631,7 +634,7 @@ export class PostDetailController extends IRLifecycleOwner {
             message.isMatchedFilter = true
             message.filterMode = '1'
             message.filterReason = '(已隱藏｜原因：帖子內容問題)'
-          } else if (index === 6) {
+          } else if (index === 7) {
             this.onReport(message)
           }
         }

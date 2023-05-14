@@ -4,6 +4,8 @@
 import * as HKEPC from '../../data/config/hkepc'
 import { FindMessageRequest } from '../model/requests'
 import { searchMultipleKeyword } from '../../utils/search'
+import * as Controllers from './PostDetailController'
+import { Bridge, Channel } from '../bridge'
 
 export class LikesController {
   static get STATE() {
@@ -29,6 +31,7 @@ export class LikesController {
 
   constructor($scope, AuthService, $state, ngToast, MessageService, $sanitize, $ionicActionSheet) {
     this.scope = $scope
+    this.state = $state
     this.ngToast = ngToast
     this.pageSize = 5
     this.sanitize = $sanitize
@@ -116,31 +119,62 @@ export class LikesController {
     this.scope.$emit(FindMessageRequest.NAME, new FindMessageRequest(postId, messageId))
   }
 
-  onMore(message) {
-    // Show the action sheet
-    this.ionicActionSheet.show({
-      buttons: [{ text: '開啟' }, { text: '開啟 HKEPC 原始連結' }],
-      titleText: '分享連結',
-      destructiveText: '從我的最愛移除',
-      cancelText: '取消',
-      cancel: () => {
-        // add cancel code..
-        return true
-      },
-      buttonClicked: (index) => {
-        if (index === 0) {
-          window.location.href = `/tab/topics/${message.post.topicId}/posts/${message.post.id}/page/${message.post.page}`
-        } else {
-          window.open(HKEPC.forum.findMessage(message.post.id, message.id))
-        }
-        return true
-      },
-      destructiveButtonClicked: (index) => {
-        this.messageService.remove(message)
-        this.messages = this.messages.filter((m) => m.id !== message.id)
-        return true
-      },
+  goToMessage(message) {
+    this.state.go(Controllers.PostDetailController.STATE, {
+      topicId: message.post.topicId,
+      postId: message.post.id,
+      page: message.post.page,
+      delayRender: 0,
+      focus: message.id,
     })
+  }
+
+  onMore(message) {
+    if (Bridge.isAvailable()) {
+      Bridge.callHandler(
+        Channel.actionSheet,
+        {
+          buttons: ['前往帖子', '開啟 HKEPC 原始連結', `從我的最愛移除`],
+          titleText: '更多功能',
+          cancelText: '取消',
+        },
+        (index) => {
+          if (index === 0) {
+            this.goToMessage(message)
+          } else if (index === 1) {
+            window.open(HKEPC.forum.findMessage(message.post.id, message.id), '_system', 'location=yes')
+          } else if (index === 2) {
+            this.messageService.remove(message)
+            this.messages = this.messages.filter((m) => m.id !== message.id)
+          }
+        }
+      )
+    } else {
+      // Show the action sheet
+      this.ionicActionSheet.show({
+        buttons: [{ text: '開啟' }, { text: '開啟 HKEPC 原始連結' }],
+        titleText: '分享連結',
+        destructiveText: '從我的最愛移除',
+        cancelText: '取消',
+        cancel: () => {
+          // add cancel code..
+          return true
+        },
+        buttonClicked: (index) => {
+          if (index === 0) {
+            this.goToMessage(message)
+          } else {
+            window.open(HKEPC.forum.findMessage(message.post.id, message.id), '_system', 'location=yes')
+          }
+          return true
+        },
+        destructiveButtonClicked: (index) => {
+          this.messageService.remove(message)
+          this.messages = this.messages.filter((m) => m.id !== message.id)
+          return true
+        },
+      })
+    }
   }
 
   loadLazyImage(uid, imageSrc) {
