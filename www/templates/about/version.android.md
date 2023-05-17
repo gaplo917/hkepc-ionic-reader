@@ -1,4 +1,13 @@
-**14 May 2023 - Release IR Extreme Android 5.1.0**
+**17 May 2023 - Release IR Android 5.1.0**
+
+#### App 更新 5.1.1
+
+- 加入「載入中」動畫於廣告過場頁面，避免用戶誤以為是 App 出現問題
+- 減少廣告出現次數 - 修正開 App 必出廣告問題
+
+---
+
+**14 May 2023 - Release IR Android 5.1.0**
 
 #### 內核更新 v5.1
 
@@ -21,7 +30,7 @@
 
 ---
 
-**1 May 2023 - Release IR Extreme 內核 v5.0.0, Android 5.0.0**
+**1 May 2023 - Release IR 內核 v5.0.0, Android 5.0.0**
 
 #### 內核更新
 
