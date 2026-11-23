@@ -4,6 +4,7 @@
 import * as HKEPC from '../../data/config/hkepc'
 import { CommonInfoExtractRequest } from '../model/requests'
 import { HybridHttp } from '../bridge/HybridHttp'
+import { parseLoginForm } from '../model/login-form'
 const cheerioWorker = new Worker(new URL('../cheerio-worker.js', import.meta.url))
 
 export class ApiService {
@@ -57,18 +58,29 @@ export class ApiService {
     return this.http.request(opt)
   }
 
-  login({ username, password, securityQuestionId, securityQuestionAns }) {
+  loginForm() {
+    return this.http
+      .request({
+        method: 'GET',
+        url: HKEPC.forum.loginForm(),
+      })
+      .map((resp) => parseLoginForm(resp.data))
+  }
+
+  login({ username, password, securityQuestionId, securityQuestionAns, formhash, loginsid, referer, cookietime }) {
     return this.http.request({
       method: 'POST',
       url: HKEPC.forum.login(),
       data: {
+        formhash,
+        loginsid,
+        referer: referer || 'https://www.hkepc.com/forum/',
+        loginfield: 'username',
         username,
         password,
         questionid: securityQuestionId,
-        answer: securityQuestionAns,
-        cookietime: 2592000,
-        referer: 'https://www.hkepc.com/forum/',
-        loginsubmit: true,
+        answer: securityQuestionAns || '',
+        cookietime: cookietime || 2592000,
       },
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })

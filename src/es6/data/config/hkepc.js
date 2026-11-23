@@ -62,7 +62,9 @@ module.exports = {
     },
     posts: (topicId, postId, page, orderType, filterOnlyAuthorId) =>
       `${BASE_FORUM_URL}/viewthread.php?fid=${topicId}&tid=${postId}&page=${page}&ordertype=${orderType}&authorid=${filterOnlyAuthorId}`,
-    login: () => `${BASE_FORUM_URL}/logging.php?action=login&loginsubmit=yes&loginfield=username`,
+    loginForm: () =>
+      `${BASE_FORUM_URL}/logging.php?action=login&infloat=yes&handlekey=login&inajax=1&ajaxtarget=fwin_content_login`,
+    login: () => `${BASE_FORUM_URL}/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1`,
     logout: (formhash) => `${BASE_FORUM_URL}/logging.php?action=logout&formhash=${formhash}`,
     news: (page) => `${BASE_URL}/moreNews/page/${page}`,
     replyPage: (reply) => {

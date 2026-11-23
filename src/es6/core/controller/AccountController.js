@@ -29,21 +29,28 @@ export class AccountController {
     }
   }
 
-  constructor($scope, $http, $state, LocalStorageService, AuthService, $ionicHistory, $timeout) {
+  constructor($scope, $http, $state, LocalStorageService, AuthService, apiService, ngToast, $ionicHistory, $timeout) {
     this.http = $http
     this.scope = $scope
     this.state = $state
     this.authService = AuthService
+    this.apiService = apiService
+    this.ngToast = ngToast
     this.version = HKEPC.version
     this.ionicHistory = $ionicHistory
     this.$timeout = $timeout
     this.isLoggedIn = false
     this.isReady = false
+    this.loginTokensReady = false
     this.loginForm = {
       username: null,
       password: null,
       securityQuestionId: '0',
       securityQuestionAns: '',
+      formhash: null,
+      loginsid: null,
+      referer: 'https://www.hkepc.com/forum/',
+      cookietime: '2592000',
     }
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -52,6 +59,9 @@ export class AccountController {
         .safeApply($scope, (isLoggedIn) => {
           this.isLoggedIn = isLoggedIn
           this.isReady = true
+          if (!isLoggedIn) {
+            this.captureLoginForm()
+          }
         })
         .subscribe()
 
@@ -81,23 +91,61 @@ export class AccountController {
     })
   }
 
-  login(username, password) {
+  captureLoginForm() {
+    this.loginTokensReady = false
+    let captured = false
+    this.apiService
+      .loginForm()
+      .safeApply(this.scope, (tokens) => {
+        captured = true
+        this.loginForm = {
+          ...this.loginForm,
+          ...tokens,
+        }
+        this.loginTokensReady = true
+      })
+      .subscribe(
+        () => {},
+        () => this.failLoginForm(),
+        () => {
+          if (!captured) this.failLoginForm()
+        }
+      )
+  }
+
+  failLoginForm() {
+    this.loginTokensReady = false
+    this.ngToast.danger('<i class="ion-alert-circled"> 無法取得登錄驗證，請再試一次</i>')
+    this.scope.$applyAsync()
+  }
+
+  login() {
     const authority = this.loginForm
+    if (!authority.formhash || !authority.loginsid) {
+      this.ngToast.danger('<i class="ion-alert-circled"> 登錄驗證尚未準備好</i>')
+      this.captureLoginForm()
+      return
+    }
 
     this.authService.login(authority, (err, username) => {
-      if (err !== null) {
-        this.authService.saveAuthority(authority)
+      if (err) {
+        this.captureLoginForm()
+        return
       }
+
+      this.authService.saveAuthority(authority)
 
       this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
 
-      // unset the password field
       this.loginForm = {
         ...this.loginForm,
         password: null,
         securityQuestionId: '0',
         securityQuestionAns: '',
+        formhash: null,
+        loginsid: null,
       }
+      this.loginTokensReady = false
 
       this.ionicHistory.clearCache()
 
@@ -118,6 +166,7 @@ export class AccountController {
     this.ionicHistory.clearCache()
 
     this.isLoggedIn = false
+    this.captureLoginForm()
   }
 
   onBack() {

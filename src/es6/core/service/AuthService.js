@@ -24,10 +24,14 @@ export class AuthService {
   }
 
   saveAuthority(authority) {
-    // remove the password before save
+    // remove the password and one-time login tokens before save
     delete authority.password
     delete authority.securityQuestionAns
     delete authority.securityQuestionId
+    delete authority.formhash
+    delete authority.loginsid
+    delete authority.referer
+    delete authority.cookietime
 
     return this.localStorageService.setObject('authority', authority)
   }
@@ -84,8 +88,19 @@ export class AuthService {
             cb('Fail!')
           }
         } else {
-          // native code
-          const $ = cheerio.load(resp.data)
+          // native code. inajax login returns XML, not the forum header.
+          const body = typeof resp.data === 'string' ? resp.data : ''
+          if (body.includes('歡迎您回來')) {
+            this.localStorageService.set(HKEPC.auth.id, 'dummy_val_for_non_proxied_client')
+
+            this.$timeout(() => {
+              this.ngToast.success(`<i class="ion-ios-checkmark"> ${authority.username} 登入成功! </i>`)
+            })
+            if (cb) cb(null, authority.username)
+            return
+          }
+
+          const $ = cheerio.load(body)
           const currentUsername = $('#umenu > cite').text()
           const formhash = $("input[name='formhash']").attr('value')
 
