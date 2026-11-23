@@ -1,8 +1,6 @@
 <ion-view view-title="帳號管理" class="account-view">
   <ion-content>
     <div class="list" ng-if="vm.isReady && !vm.isLoggedIn" style="margin-bottom: 0">
-      <p class="text-center less-important-info" ng-if="!vm.loginTokensReady">正在取得登錄驗證…</p>
-      <p class="text-center less-important-info" ng-if="vm.loginTokensReady">登錄驗證已準備</p>
       <label class="item item-input">
         <span class="input-label">登入名稱</span>
         <input type="text" placeholder="請輸入登入名稱" ng-model="vm.loginForm.username" />
@@ -34,10 +32,10 @@
       <div class="padding" ng-if="vm.isProxy()">
         <button
           class="button button-block button-assertive"
-          ng-class="vm.loginTokensReady && vm.loginForm.username && vm.loginForm.password && vm.agreeProxy ? '' : 'disabled'"
+          ng-class="!vm.loginInProgress && vm.loginForm.username && vm.loginForm.password && vm.agreeProxy ? '' : 'disabled'"
           ng-click="vm.login()"
         >
-          登入
+          {{ vm.loginInProgress ? '正在登入…' : '登入' }}
         </button>
       </div>
 
@@ -45,10 +43,10 @@
         <div class="padding">
           <button
             class="button button-block button-assertive"
-            ng-class="vm.loginTokensReady && vm.loginForm.username && vm.loginForm.password ? '' : 'disabled'"
+            ng-class="!vm.loginInProgress && vm.loginForm.username && vm.loginForm.password ? '' : 'disabled'"
             ng-click="vm.login()"
           >
-            登入
+            {{ vm.loginInProgress ? '正在登入…' : '登入' }}
           </button>
         </div>
       </div>

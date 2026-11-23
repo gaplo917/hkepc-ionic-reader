@@ -41,16 +41,12 @@ export class AccountController {
     this.$timeout = $timeout
     this.isLoggedIn = false
     this.isReady = false
-    this.loginTokensReady = false
+    this.loginInProgress = false
     this.loginForm = {
       username: null,
       password: null,
       securityQuestionId: '0',
       securityQuestionAns: '',
-      formhash: null,
-      loginsid: null,
-      referer: 'https://www.hkepc.com/forum/',
-      cookietime: '2592000',
     }
 
     $scope.$on('$ionicView.loaded', (e) => {
@@ -59,9 +55,6 @@ export class AccountController {
         .safeApply($scope, (isLoggedIn) => {
           this.isLoggedIn = isLoggedIn
           this.isReady = true
-          if (!isLoggedIn) {
-            this.captureLoginForm()
-          }
         })
         .subscribe()
 
@@ -91,18 +84,46 @@ export class AccountController {
     })
   }
 
-  captureLoginForm() {
-    this.loginTokensReady = false
+  login() {
+    const form = this.loginForm
+    if (this.loginInProgress) return
+    if (!form.username || !form.password) return
+    if (this.isProxy() && !this.agreeProxy) return
+
+    this.loginInProgress = true
     let captured = false
     this.apiService
       .loginForm()
       .safeApply(this.scope, (tokens) => {
         captured = true
-        this.loginForm = {
+        const authority = {
           ...this.loginForm,
           ...tokens,
         }
-        this.loginTokensReady = true
+        this.authService.login(authority, (err, username) => {
+          this.loginInProgress = false
+          this.scope.$applyAsync()
+          if (err) return
+
+          this.authService.saveAuthority(authority)
+
+          this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
+
+          this.loginForm = {
+            ...this.loginForm,
+            password: null,
+            securityQuestionId: '0',
+            securityQuestionAns: '',
+          }
+
+          this.ionicHistory.clearCache()
+
+          requestAnimationFrame(() => {
+            this.$timeout(() => {
+              this.onBack()
+            })
+          })
+        })
       })
       .subscribe(
         () => {},
@@ -114,47 +135,9 @@ export class AccountController {
   }
 
   failLoginForm() {
-    this.loginTokensReady = false
+    this.loginInProgress = false
     this.ngToast.danger('<i class="ion-alert-circled"> 無法取得登錄驗證，請再試一次</i>')
     this.scope.$applyAsync()
-  }
-
-  login() {
-    const authority = this.loginForm
-    if (!authority.formhash || !authority.loginsid) {
-      this.ngToast.danger('<i class="ion-alert-circled"> 登錄驗證尚未準備好</i>')
-      this.captureLoginForm()
-      return
-    }
-
-    this.authService.login(authority, (err, username) => {
-      if (err) {
-        this.captureLoginForm()
-        return
-      }
-
-      this.authService.saveAuthority(authority)
-
-      this.scope.$emit(LoginTabUpdateRequest.NAME, new LoginTabUpdateRequest(username))
-
-      this.loginForm = {
-        ...this.loginForm,
-        password: null,
-        securityQuestionId: '0',
-        securityQuestionAns: '',
-        formhash: null,
-        loginsid: null,
-      }
-      this.loginTokensReady = false
-
-      this.ionicHistory.clearCache()
-
-      requestAnimationFrame(() => {
-        this.$timeout(() => {
-          this.onBack()
-        })
-      })
-    })
   }
 
   logout() {
@@ -166,7 +149,6 @@ export class AccountController {
     this.ionicHistory.clearCache()
 
     this.isLoggedIn = false
-    this.captureLoginForm()
   }
 
   onBack() {
